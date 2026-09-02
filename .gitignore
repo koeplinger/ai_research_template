@@ -1,0 +1,37 @@
+# Local-only privacy enforcement: stop-word list and scanner. Never tracked.
+.privacy/
+
+# Local harness settings (the shared settings file, if any, is tracked)
+.claude/settings.local.json
+
+# Python
+*.py[cod]
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+.coverage
+htmlcov/
+
+# Editors and operating systems
+.idea/
+.DS_Store
+Thumbs.db
+
+# LaTeX build scratch (a compiled PDF is committed once it exists; scratch is not)
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
