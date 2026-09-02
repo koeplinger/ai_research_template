@@ -61,6 +61,11 @@ run the privacy scan; run the linter and the round gate once they exist
 (step 9); hand to the researcher; mark DONE only on his word. A step's
 "done when" is its closure criterion, written before the work starts.
 
+Slots a project fills are written `{{LIKE_THIS}}` in the text and listed in
+a Slots table at the end of the document, each with its meaning and examples
+from at least two disciplines. The instantiation procedure of step 14
+substitutes them.
+
 Writing rule for every artifact: generic in every sentence. No proper noun
 other than `leech_alg`. No domain noun from the source projects. Where an
 example is needed, draw it from at least two disciplines, and prefer
@@ -74,6 +79,7 @@ disciplines other than mathematics and physics.
 |---|---|
 | NOT STARTED | not begun |
 | OPEN | in progress |
+| READY | deliverables complete and scan clean; awaiting the researcher's acceptance |
 | DONE | deliverables exist, the done-when criterion is met, whole-tree scan clean, researcher accepted |
 | DEFERRED | postponed past close-out, reason recorded on the step |
 | DROPPED | will not be done, reason recorded on the step |
@@ -85,8 +91,8 @@ The single source of status for this build. Steps are executed top-down.
 | # | Step | Status | Date |
 |---|---|---|---|
 | 0 | Foundation of this build | DONE | 2026-09-02 |
-| 1 | Licensing and repository hygiene | NOT STARTED | |
-| 2 | Manifesto: operating rules for AI assistance | NOT STARTED | |
+| 1 | Licensing and repository hygiene | READY | 2026-09-02 |
+| 2 | Manifesto: operating rules for AI assistance | READY | 2026-09-02 |
 | 3 | Document genres and the state model | NOT STARTED | |
 | 4 | Editorial standards | NOT STARTED | |
 | 5 | Verification methodology | NOT STARTED | |
@@ -120,6 +126,12 @@ Recorded here so no step silently assumes them.
   harness settings file out of version control, which means a clone loses the
   hooks that enforce the manifesto. Proposed: track the shared settings file,
   ignore only the local one.
+- **Harness neutrality (steps 10, 13).** The manifesto names no assistant
+  vendor: §16's wiring is the slot `{{REPLY_HOOK}}`. Step 10 ships concrete
+  wirings under a per-harness directory, the first for the harness the
+  template is built with; a project on another harness fills the slot
+  differently or keeps the form by hand. `.gitignore` currently names that
+  first harness's local-settings path; step 10 revisits it.
 - **Privacy scanner as a template feature (step 9).** Proposed: yes, as a
   generic opt-in tool reading a git-ignored list, with an installer for the
   hooks; many projects must keep collaborator names, embargoed topics, or
@@ -150,7 +162,6 @@ stop-word list; local `pre-commit` and `commit-msg` hooks.
 **Done when.** All exist; the scanner's self-test passes; the whole-tree
 scan is clean.
 
-**Status.** DONE 2026-09-02.
 
 ### Step 1: Licensing and repository hygiene
 
@@ -171,48 +182,73 @@ how and why the split.
 project, generic across disciplines, every discipline-specific choice a
 marked slot.
 
-**Deliverables.** `MANIFESTO.md`, sixteen sections, generalized from the
-source lineage (fourteen in `leech_alg`; two added in later projects):
+**Deliverables.** `MANIFESTO.md`, seventeen sections, generalized from the
+source lineage (`leech_alg` carried fourteen; the rest were added in later
+projects and here). The file carries **two lenses**: the donor text, which
+a project copies as its own manifesto, and marked `> **Build lens.**`
+blocks stating where the rules differ while this template itself is built
+(most prominently §8: a project logs every prompt; the build logs none). A
+closing table summarizes the divergences; the instantiation procedure of
+step 14 strips every build-lens block. The preamble states that the rules
+are binding on the assistant and advisory toward the researcher, defines
+the words used throughout (researcher, assistant, main thread, subagent,
+harness, round, artifact, the three genres), and lists every file the
+manifesto points to. The sections:
 
-1. Role and identity: the assistant works as a domain expert of high
-   integrity (persona is a slot), always a tool in service of the human
-   researcher, never the author of the work.
-2. Attribution and originality: nothing presented as the assistant's own;
-   every non-trivial claim carries a reference; references collected in one
-   registry.
-3. Plagiarism and priority: the originality of every reference is verified;
-   known disputes recorded beside it.
-4. Uncertainty protocol: when unsure, say so and stop; never fabricate;
-   speculation labelled.
-5. Independent verification: a second, independent pass before anything is
-   presented as established; method and result of the pass recorded.
-6. Privacy and sensitivity: no personal or sensitive information about
-   anyone; the repository is written as if public.
+1. Role and identity: a thorough {{PERSONA}} of high integrity; a tool in
+   service of the researcher, never the author, never the holder of the
+   opinion; assists with reasoning, reading, computation, search,
+   documentation, and argument against a position.
+2. Attribution and originality: every non-trivial claim referenced or
+   pointed at the check that established it; original claims marked as
+   such; datasets and archival sources among the acceptable kinds; the
+   researcher decides adequacy and records it.
+3. Plagiarism, attribution, and standing: known disputes about a
+   reference's standing searched for and recorded; finding nothing is not
+   a verification.
+4. Uncertainty protocol: say so and stop; never fabricate; label
+   speculation.
+5. Independent verification: a second pass, recorded as the assistant's
+   check; the instrument or procedure of record; every claim carries a
+   verification status (by the researcher, by the assistant, deferred to a
+   named instrument, or unchecked); a claim is established when the
+   researcher says so.
+6. Privacy and sensitivity: no personal data beyond attribution; restricted
+   sources enter by locator only; written as if public; imports only under
+   the import policy.
 7. Respectful and professional language.
-8. Prompt logging: every prompt recorded, numbered contiguously, logged
-   first; the log is the authoritative record of inquiry.
-9. Terminology: a glossary with established terms (referenced) and
-   project-specific terms (defined); inclusion threshold stated.
-10. Scope discipline: nothing beyond what was asked; ambiguity is asked
-    about, not assumed.
-11. Editorial standards: pointer to the standards file; mechanical part
-    linted.
-12. Forward-evolving corrections: the immutable record is never altered; a
-    frozen artifact is corrected only with the researcher's authorization,
-    in the flow, with a date-only stamp; a current-state artifact is
-    corrected in place and silently; the findings file is the one
-    current-state artifact with an authorization gate.
-13. Document genres: pointer; the round gate is run before handing work back
-    and before any commit that touches documentation.
-14. Subagents: no write access to prose; a subagent finds, computes, and
-    reports; the main thread writes; a sweep reports before it writes.
-15. Git commits: the human performs every commit, push, tag, and branch.
-16. Status reporting: plain language; every reply ends in a status block
-    (DONE / RUNNING / WAITING ON YOU / IDLE); "running" names a live process
-    checked in the process table; enforced by a hook.
+8. Prompt logging: numbered, first act of the round, verbatim except for
+   what §6 excludes; the reason for any correction; immutable once
+   committed; the log versus the version history.
+9. Terminology: glossary; and the Ontology's predicates as the vocabulary
+   for recorded relations.
+10. Scope discipline: nothing beyond what was asked; reads only what the
+    task names and the researcher points at; no silence on an objection.
+11. Editorial standards: pointer; the voice read off the researcher's own
+    writing or stated by them; mechanical part checked on unfrozen
+    artifacts.
+12. Forward-evolving corrections: the immutable record never altered;
+    frozen artifacts corrected only with authorization, in the running
+    text, date-only stamp; current-state corrected in place; the reason
+    for a correction recorded in the log or the commit message; the two
+    authorization-gated current-state files.
+13. Document genres and the round check: exactly what is checked
+    mechanically per section; a failed check is reported.
+14. Subagents: write no tracked file; find, do not write; a sweep reports
+    before the main thread edits.
+15. Git commits: the researcher performs every commit, with the rationale.
+16. Status reporting and reminders: plain language; the status block,
+    specified precisely enough to check; "running" checked by the
+    assistant; reminders of what the stage calls for; enforcement through
+    the slot `{{REPLY_HOOK}}` where the harness allows it.
+17. Opposition: the assistant says when it disagrees and why; makes the
+    opposite case on request; records disagreement beside the claim;
+    proposes structured adversarial review when a claim is about to be
+    relied on.
 
-**Slots.** Persona; the discipline's vocabulary for "verification"; the
-verification tool of record.
+**Slots.** `{{PERSONA}}`; `{{VERIFICATION_TOOL}}`, the instrument or
+procedure of record; `{{REPLY_HOOK}}`, the harness wiring of the reply
+checker.
 
 **Done when.** Reads as naturally for a historian or an economist as for a
 physicist; every section generic or a marked slot; scan clean.
@@ -587,7 +623,8 @@ from the guide alone; scan clean.
 **Deliverables.** `tools/new_project.py` (or a documented manual procedure):
 copies the template, fills the slots (project name, discipline, persona,
 verification tool of record, researcher name, licenses' citation block,
-start date), removes `VISION.md`, `VISION_PLAN.md` and `example/`, resets
+start date), removes `VISION.md`, `VISION_PLAN.md` and `example/`, strips every
+`> **Build lens.**` block from `MANIFESTO.md`, resets
 the prompt log to entry 001, and runs the round gate.
 
 **Done when.** A fresh instantiation passes the round gate with no edits;

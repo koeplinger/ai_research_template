@@ -25,7 +25,9 @@ author's, appears in this repository.
 
 ## Licensing
 
-Code will be released under the MIT License; all written material under
-Creative Commons Attribution 4.0 International (CC BY 4.0). The license
-files arrive with step 1 of the plan. There is no warranty and no promise
-of fitness for any purpose.
+Code is under the MIT License ([LICENSE-CODE](LICENSE-CODE)); all written
+material is under Creative Commons Attribution 4.0 International
+([LICENSE.md](LICENSE.md)). Code is permissive so it can be lifted without
+friction; documents carry attribution so the methodology stays traceable to
+where it came from. There is no warranty and no promise of fitness for any
+purpose.
