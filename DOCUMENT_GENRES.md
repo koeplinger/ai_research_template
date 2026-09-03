@@ -303,8 +303,8 @@ header and nothing else about itself. What the sweep, audit, or referee
 pass found on its day stays; how the note's own sentences came to read as
 they do is the version history's and the prompt log's.
 
-**A plan's `## Execution status` section is a progress ledger**, and is
-exempt on the same ground: it records which task was done and when, which
+**A plan's `## Execution status` section, and a check's `## Executions`
+section, are progress ledgers**, and are exempt on the same ground: it records which task was done and when, which
 is exactly what lets a later reader, or a later session, resume the plan
 from the repository alone. The exemption stops there. The plan's **body**,
 its aspect, its directives, its task descriptions, states what is, like
@@ -348,8 +348,8 @@ the researcher with its output (`MANIFESTO.md` §13).
 
 1. **Header.** Every durable artifact, by the configured path patterns and
    excluding non-prose files, opens with a line matching `Created D Month
-   YYYY; updated D Month YYYY`, and nothing follows the second date on that
-   line.
+   YYYY; updated D Month YYYY`, and nothing but a closing period and the
+   closing emphasis mark follows the second date on that line.
 2. **Immutable.** No committed file under `prompt_logs/`, other than its
    `README.md`, differs from its committed version or is deleted.
 3. **Frozen.** For a frozen artifact whose body differs from its committed
@@ -362,7 +362,8 @@ the researcher with its output (`MANIFESTO.md` §13).
    ENGAGED and to frozen when it is CLOSED; a path resolving to nothing is
    reported.
 5. **Narrative.** On current-state paths, outside the two dated-record
-   patterns and outside any `## Execution status` section, the following
+   patterns and outside any `## Execution status` or `## Executions`
+   section, the following
    are matched case-insensitively as whole phrases, skipping text inside
    backticks and the italicized examples in this file and the editorial
    standards: *previously* followed by *read*, *said*, *stated*,

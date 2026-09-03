@@ -1,0 +1,4 @@
+# Pin exact versions: the instrument of record is identified by its
+# version (CHECK_METHODOLOGY.md section 3). Replace these examples with
+# the project's own.
+pytest==8.3.3

@@ -63,6 +63,7 @@ Verdict: confirmed
 Plan: 003, task 2
 Depends-on: 011, 014
 Backed-by: [check 021]
+Backs: [claim 011]
 Verified-by: assistant, collation against the source of record
 Instrument: the 1543 edition, consulted as a digital surrogate
 Frame: the base manuscript's foliation, fixed in [claim 002]
@@ -142,7 +143,7 @@ the duty is the assistant's under the consistency sweep
 | `asserts` | a claim to its statement | the claim's body | `CHECK_METHODOLOGY.md` §1 | reading | what is being claimed? |
 | `register` | a claim to its trust level | `Register:` | `CHECK_METHODOLOGY.md` §1 | `CHECK_METHODOLOGY.md` mechanical 1 | how far may this be trusted? |
 | `kind` | a claim to its claim kind | `Kind:`, lower case, spaces hyphenated (`internal-consistency`) | `CHECK_METHODOLOGY.md` §2 | `CHECK_METHODOLOGY.md` mechanical 1 | what would settle it? |
-| `verdict` | a claim to the conclusion reached | `Verdict:` with a value from the declared kind's vocabulary; the Inferential vocabulary takes two, comma-separated | `CHECK_METHODOLOGY.md` §2 | `CHECK_METHODOLOGY.md` mechanical 1 | what did the work conclude? |
+| `verdict` | a claim to the conclusion reached | `Verdict:` with a value from the declared kind's vocabulary, the Inferential vocabulary taking two, comma-separated; `none` while the register is `OPEN` or `SPECULATIVE` | `CHECK_METHODOLOGY.md` §2 | `CHECK_METHODOLOGY.md` mechanical 1 | what did the work conclude? |
 | `not-claimed` | a claim to what it explicitly does not assert | a `What is not claimed` section | `PRECEDENCE.md` ("tier 1 does not inflate") | reading; a claim relied on elsewhere that has none is reported by ontology 3 | where does this claim stop? |
 | `original` | a claim to the fact that it has no external source | `Original: <pointer to the evidence here>` | `MANIFESTO.md` §2 | ontology 3 | is this ours, and what backs it? |
 | `depends-on` | a claim to a claim it rests on | `Depends-on: NNN[, NNN]` | `CHECK_METHODOLOGY.md`, *Words used here* | ontology 4 | what falls if this falls? |
@@ -156,7 +157,7 @@ the duty is the assistant's under the consistency sweep
 
 | Predicate | Relates | Written as | Owner | Checked by | Answers |
 |---|---|---|---|---|---|
-| `backed-by` | a claim to the check that establishes it, and the check to the claim it gates | `Backed-by: [check NNN]` in the claim; the claim's token in the check's header | `CHECK_METHODOLOGY.md` §1, §8; `MANIFESTO.md` §2 | ontology 5: the pair resolves in both directions, and a claim registered `VERIFIED` or `RULED_OUT` names at least one | which check backs this? |
+| `backed-by` | a claim to the check that establishes it, and the check to the claim it backs | `Backed-by: [check NNN]` in the claim; `Backs: [claim NNN]` in the check | `CHECK_METHODOLOGY.md` §1, §8; `MANIFESTO.md` §2 | ontology 5: the pair resolves in both directions, and a claim registered `VERIFIED` or `RULED_OUT` names at least one | which check backs this? |
 | `gates` | a check to an assertion it would fail on | the reported assertion inside the check | `CHECK_METHODOLOGY.md` §5 | `CHECK_METHODOLOGY.md` mechanical 2, in a check program only | would this notice if the claim were false? |
 | `refutes` | a check to a claim it shows not to hold | `Verdict:` with the failing word of that kind's vocabulary | `CHECK_METHODOLOGY.md` §2 | reading: a failing verdict does not entail `RULED_OUT`, and the register is the researcher's (`CHECK_METHODOLOGY.md` §1) | what did we rule out? |
 | `records` | a check record to one execution of a check | a dated record naming the check and the party | `CHECK_METHODOLOGY.md` §8 | `CHECK_METHODOLOGY.md` mechanical 4 | when was this last actually run? |
@@ -313,10 +314,19 @@ artifact, `tools/artifacts.toml`. It holds one row per artifact kind:
 ```
 [[artifact]]
 kind      = "claim"
-glob      = "evidence_and_reasoning/claims/*.md"
+glob      = "evidence_and_reasoning/claims/[0-9]*.md"
 genre     = "plan-owned"
 required  = ["Register", "Kind", "Verdict", "Plan", "Verified-by"]
+
+[[artifact]]
+kind      = "check"
+glob      = "evidence_and_reasoning/checks/[0-9]*.md"
+genre     = "plan-owned"
+required  = ["Plan", "Backs", "Instrument", "Mutation"]
 ```
+
+The numbered form is the pattern; a folder's `README.md` and its
+`_template.md` fall outside it by construction.
 
 It is a current-state artifact, indexed like any other, and it is the
 single source of truth for filing conventions. A project that files its

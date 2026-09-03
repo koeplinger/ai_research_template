@@ -35,9 +35,11 @@ Beyond the words `MANIFESTO.md` and `DOCUMENT_GENRES.md` define:
   **gated check** is one whose verdict rests only on gated assertions.
 - A **verdict** is a check's conclusion in the vocabulary of its claim
   kind (§2).
-- A **check record** is the document recording one execution of a check:
-  the date, who ran it, the verdict, and the second pass. A check may be
-  executed more than once and then has more than one record.
+- A **check record** is the dated entry recording one execution of a
+  check: the date, who ran it, the verdict, and the second pass. For a
+  program it is the check's file under `evidence_and_reasoning/checks/`;
+  for a written procedure it is one dated entry under that file's
+  `## Executions`, and a check executed more than once has more than one.
 - A **mutation** is a named alteration to something an assertion claims to
   depend on, made to confirm that the check notices.
 - The **docket** of a plan is its list of items deferred to its closure.
@@ -50,7 +52,7 @@ can be implemented:
 ```
 Register: VERIFIED          one of VERIFIED, DERIVED, ATTESTED, SPECULATIVE, RULED_OUT, OPEN
 Kind: documentary           one of the kinds of §2
-Verdict: confirmed          a word from that kind's vocabulary
+Verdict: confirmed          a value from that kind's vocabulary; none while OPEN or SPECULATIVE
 Plan: 003, task 2           the owning plan (DOCUMENT_GENRES.md)
 ```
 

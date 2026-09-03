@@ -97,9 +97,9 @@ The single source of status for this build. Steps are executed top-down.
 | 4 | Editorial standards | DONE | 2026-09-02 |
 | 5 | Verification methodology | DONE | 2026-09-03 |
 | 6 | Precedence and the tension ledger | DONE | 2026-09-03 |
-| 7 | The Ontology | READY | 2026-09-03 |
-| 8a | Artifacts: the record core | NOT STARTED | |
-| 8b | Artifacts: claims and checks | NOT STARTED | |
+| 7 | The Ontology | DONE | 2026-09-03 |
+| 8a | Artifacts: the record core | READY | 2026-09-03 |
+| 8b | Artifacts: claims and checks | READY | 2026-09-03 |
 | 8c | Artifacts: references and sources | NOT STARTED | |
 | 8d | Artifacts: plans, roadmap, notes | NOT STARTED | |
 | 8e | Artifacts: prompt log and session onboarding | NOT STARTED | |
@@ -453,33 +453,53 @@ which is what `[claim NNN]` and `[check NNN]` resolve through.
 
 ### Step 8a: Artifacts: the record core
 
-**Deliverables.** Templates with placeholder slots and a short worked
-example each: `research_statement.md` (the question as posed; updated only
-on a significant deviation); `research_result.md` (the condensed summary,
-every sentence backed by a claim); `problem_statement.md` (the keystone: the
-researcher's thesis as falsifiable hypotheses, SPECULATIVE register, the
-ground plans are mined from); `terminology.md` (established and
-project-specific terms, with an index); `FINDINGS.md` (what the record has
-established, with stable identifiers and the authorization gate);
-`CURRENT_STATE.md` (the top-level technical summary: established, ruled
-out, open). The layout of the `evidence_and_reasoning/` directory and its
-indexing README.
+**Deliverables.** `evidence_and_reasoning/README.md` (the index, the
+reading order, the order of first use, the numbering conventions, and the
+directory's Slots table); `research_statement.md` (the question as posed,
+the lines of work with examples from three disciplines, scope, method;
+state deferred to `CURRENT_STATE.md`); `research_result.md` (every
+sentence carrying its claim token); `problem_statement.md` (the keystone:
+each hypothesis with what it takes as given, classified derived, imposed,
+or conjectured, and what would count against it; lines of work; what is
+deliberately not pursued); `terminology.md` (established and
+project-specific terms, and a *Names the sources use* table with a locus
+column and a mapping column that admits *by construction, rule fixed in a
+check*); `FINDINGS.md` (bare tokens, opaque keys assigned once, governance
+by pointer, proposals living in the reply and the log rather than the
+file); `CURRENT_STATE.md` (established, ruled out, open, engaged by
+pointer to the plan index). Guidance is in HTML comments the instance
+deletes; no template carries a Genre column or a second copy of state.
 
-**Done when.** Each template's fields map to Ontology predicates; scan clean.
+
+**Done when.** Each template's fields map to Ontology predicates; every
+example is discipline-mixed or neutral; scan clean.
 
 ### Step 8b: Artifacts: claims and checks
 
-**Deliverables.** `claims/` with its README (numbering, status
-vocabulary, genre rule) and a claim template (header with register, date,
-plan, program, record; CLAIM; WHAT IS NOT CLAIMED; REFERENCES); a
-check-record template (`check_NNN_results.md`: what was tested, results,
-discrepancies, verdict); a check-program template in the six-part structure
-with the `report(...)` helper, the failure and findings accumulators, and
-an exit status; a `python_project/` scaffold (README, requirements,
-`conftest`, `src/` with its lint-enforced index, `tests/`).
+**Deliverables.** `evidence_and_reasoning/claims/`: a README (numbered
+form as the configured pattern, index with Kind and Plan as navigation and
+no copy of the register, a *Not claims* row for the template) and
+`_template.md` pre-printing the five mandatory fields with every
+vocabulary in a comment, the seven verdict vocabularies included, and the
+conditional fields listed with their syntax to add when they apply rather
+than pre-printed empty. `evidence_and_reasoning/checks/`: a README (the
+two forms, one file each: a program's record, or a written procedure with
+one dated entry per execution under `## Executions`) and `_template.md`
+pre-printing `Plan`, `Backs`, `Instrument`, `Mutation`, `Frame`, and `By`,
+with the run's date and party in part 4, the second pass in part 6, and
+`name = value` lines the concordance check compares. `python_project/`:
+README (the contract in any language; a project with no programs told
+plainly that it is missing nothing), `requirements.txt`, `conftest.py`,
+`src/README.md` and `tests/README.md` as checked indexes, and
+`src/_template_check.py`: six parts, `report()` with no constant
+conditions, `value()` feeding the `RESULT:` line, a `MUTATIONS` binding
+the probe applies, and the verdict vocabularies with three-valued kinds
+set from which assertions failed.
 
-**Done when.** The template check runs, passes, and is shown to fail when
-its object is mutated; scan clean.
+
+**Done when.** The template compiles and carries no constant-condition
+report; a real check built from it runs, passes, and is shown to fail
+under its named mutation in step 11; scan clean.
 
 ### Step 8c: Artifacts: references and sources
 
@@ -671,6 +691,20 @@ the prompt log to entry 001, and runs the round gate.
 
 **Done when.** A fresh instantiation passes the round gate with no edits;
 scan clean.
+
+### Amendments to accepted files made in steps 8a and 8b
+
+Five, each forced by the templates and flagged at hand-over:
+`ONTOLOGY.md` admits `Verdict: none` while a claim is `OPEN` or
+`SPECULATIVE`, catalogues `Backs: [claim NNN]` as the check side of
+`backed-by`, and shows numbered-form globs (`[0-9]*.md`) so a folder's
+`README.md` and `_template.md` fall outside the claim and check patterns;
+`CHECK_METHODOLOGY.md` defines a check record as the dated entry recording
+one execution, so a written procedure's executions have a home;
+`DOCUMENT_GENRES.md` names a check's `## Executions` section beside a
+plan's `## Execution status` in the ledger exemption and in checker 5, and
+checker 1 admits the closing period and emphasis mark every accepted file
+already writes after the stamp's second date.
 
 ### Reviews on record
 
