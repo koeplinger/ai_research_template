@@ -95,9 +95,9 @@ The single source of status for this build. Steps are executed top-down.
 | 2 | Manifesto: operating rules for AI assistance | DONE | 2026-09-02 |
 | 3 | Document genres and the state model | DONE | 2026-09-02 |
 | 4 | Editorial standards | DONE | 2026-09-02 |
-| 5 | Verification methodology | READY | 2026-09-03 |
-| 6 | Precedence and the tension ledger | READY | 2026-09-03 |
-| 7 | The Ontology | NOT STARTED | |
+| 5 | Verification methodology | DONE | 2026-09-03 |
+| 6 | Precedence and the tension ledger | DONE | 2026-09-03 |
+| 7 | The Ontology | READY | 2026-09-03 |
 | 8a | Artifacts: the record core | NOT STARTED | |
 | 8b | Artifacts: claims and checks | NOT STARTED | |
 | 8c | Artifacts: references and sources | NOT STARTED | |
@@ -130,6 +130,12 @@ Recorded here so no step silently assumes them.
   discipline choice, "what a publishable deliverable is", is the slot
   `{{DELIVERABLE}}`: its form, its title convention, and what is released
   with a version of it. `paper/` stays the folder name whatever the form.
+- **The claims folder (resolved in step 7).** The Ontology hardcoded
+  `evidence_and_reasoning/claims/` while `CHECK_METHODOLOGY.md`
+  deliberately leaves the filing convention configurable. Resolved: no path
+  is hardcoded anywhere; `tools/artifacts.toml` holds the glob, and step 8b
+  ships `claims/` as the default rather than `key_claims/`, since *key
+  claim* is a term of art the template need not impose.
 - **Harness neutrality (steps 10, 13).** The manifesto names no assistant
   vendor: §16's wiring is the slot `{{REPLY_HOOK}}`. Step 10 ships concrete
   wirings under a per-harness directory, the first for the harness the
@@ -404,57 +410,46 @@ artifacts, checked by a tool, and queryable across the repository. This is
 the load-bearing deliverable of VISION.md and is designed here, before the
 artifact templates, so the templates implement it.
 
-**Deliverables.** `ONTOLOGY.md` with: (a) the catalogue, one entry per
-predicate: name, what it relates, definition, where it is written (artifact,
-field, surface syntax), how it is checked (tool, check), how it is queried;
-(b) the implementation matrix, predicates against artifacts against tools;
-(c) the surface-syntax conventions (reference keys, claim citations, plan
-pointers, status lines, date stamps, register labels).
+**Deliverables.** `ONTOLOGY.md`: the four-things contract (what a
+predicate relates, where it is written in exact surface syntax, how it is
+checked, what question it answers) delivered per row, with an **Answers**
+column on every catalogue table; **four surface forms** (field lines with
+a colon; stamps without one, since a colon after a date opens a change
+narrative; citation tokens with a grammar each, including a citation
+**locus** so a folio, table column, or survey wave can be cited; and
+governed files), plus an explicit list of the relations carried in prose
+and parsed by nothing; a catalogue of 43 predicates in eight groups, whose
+**Checked by** column points at the owning rulebook's numbered check
+rather than restating or extending it; `backed-by`, the claim-to-check
+link the whole system rests on, which the first draft omitted; the
+relations non-computational disciplines need (`cites-at`, `produced-from`,
+`witness-of`, `performed-by`, `frame`, `robustness`, `pre-registered`);
+derived predicates never stored; a register ordering declared for
+reporting only; the ontology's six own checks; eight queries, each saying
+where it enumerates and where the deciding is reading; **§7 Where the
+patterns live**, naming one configuration artifact as the single source of
+every path pattern in this file and in the two rulebooks that defer to it;
+and **§8 What to keep current**, ranking the fields into mandatory and
+written-when-they-apply, because an unranked list of eleven obligations
+per claim is a system a researcher abandons by the tenth claim.
 
-**Starting inventory**, generic names, extracted from the source
-methodology; to be pruned and completed:
 
-- `registered(work)`: a work consumed by project text has a registry entry.
-- `cites(artifact, work)`: surface: a bracketed key; checked: no dangling keys.
-- `held(source, license-note)`: a local copy exists with its redistribution
-  basis recorded.
-- `claims(claim, statement, register)`, register in {VERIFIED, DERIVED,
-  ATTESTED, SPECULATIVE, RULED OUT, OPEN}.
-- `not-claimed(claim, statement)`: the explicit scope fence.
-- `gated-by(assertion, check)`: a check whose verdict would fail if the
-  assertion were false; checked by the constant-condition guard, the
-  coverage audit, and the falsifiability probe.
-- `records(check-record, check-program)`.
-- `owned-by(artifact, plan)`, from which `live(artifact)` and
-  `frozen(artifact)` are derived, never stored.
-- `status(plan)` in {DRAFT, ENGAGED, CLOSED, ABANDONED};
-  `verdict(plan)` in {CONFIRMED, REFUTED, COMPLETE}.
-- `prerequisite(plan, plan-or-claim)`; `serves(plan, hypothesis)`.
-- `input-kind(input)` in {derived, imposed, conjectured}.
-- `corrected(frozen-artifact, date)`: a body change under authorization,
-  stamped with a date only.
-- `deprecated-by(artifact, artifact)`.
-- `restates(artifact, fact)`: the defect class; mitigated by
-  `single-source(fact, location)` and a shadow scan.
-- `in-tension(claim, public-statement, caution)`;
-  `authority-tier(statement)` in {1, 2, 3, 4}.
-- `reserved-by(claim, plan)`: the standing reservation.
-- `logged(prompt, number)`: immutable, contiguous, indexed;
-  `authorized(change, prompt)`: a human authorization recorded in the log.
-- `reviewed-by(paper, review)`; `deletion-ledger(rebuild)`;
-  `additions-ledger(round)`.
-- `defined(term, kind)`, kind in {established, project-specific}.
-- `indexed(file, index)`; `exists(path)`.
-- `finding(identifier, claim)`: the gated findings file.
-- `imported(artifact, origin, date)`: re-derived before built upon.
-- `deferred-to(claim, tool, version, script, output)`: what the researcher
-  handed to an external instrument, recorded so it is auditable.
-- `status-line(reply)`: the assistant's closing status block.
+**Done when.** Done as a specification. Two obligations it places on
+later steps are carried below rather than closed here.
 
-**Done when.** Every predicate appears in at least one template (step 8)
-and is checked or queried by at least one tool (step 9), or is marked
-"declared, not yet mechanized" with a reason; every template field maps to
-a predicate; scan clean.
+**Obligations this step places on step 8.** Every predicate names a
+template that pre-prints its field: the mandatory fields of §8 appear in
+the shipped claim, check, and check-record templates with their
+vocabularies in a comment, so that filling in the form is writing the
+predicate. A predicate with no template home is not shipped, and step 8
+either supplies the home or deletes the row.
+
+**Obligations this step places on step 9.** Deliver `tools/artifacts.toml`
+with one row per artifact kind (glob, genre default, required fields) as
+the single source of every path pattern; implement the ontology's six
+checks and eight queries; and make the claim and check path patterns real,
+which is what `[claim NNN]` and `[check NNN]` resolve through.
+
 
 ### Step 8a: Artifacts: the record core
 
@@ -474,7 +469,7 @@ indexing README.
 
 ### Step 8b: Artifacts: claims and checks
 
-**Deliverables.** `key_claims/` with its README (numbering, status
+**Deliverables.** `claims/` with its README (numbering, status
 vocabulary, genre rule) and a claim template (header with register, date,
 plan, program, record; CLAIM; WHAT IS NOT CLAIMED; REFERENCES); a
 check-record template (`check_NNN_results.md`: what was tested, results,
