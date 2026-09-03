@@ -176,13 +176,17 @@ is recorded.
 
 ## The tension ledger
 
-One table, four columns, one row per divergence. Rows are **never
+One table, five columns, one row per divergence. Rows are **never
 deleted** because this project's side "won": that is the point of the
 ledger.
 
-| # | What this project establishes | What the public record says | The caution that survives |
-|---|---|---|---|
-| 1 | the claim, with its citation and its register | the published statement, plainly and without polemic | what remains live |
+| # | What this project establishes | What the public record says | The caution that survives | Caution |
+|---|---|---|---|---|
+| T001 | the claim, with its citation and its register | the published statement or consensus, plainly and without polemic, with where it is said | what remains live | live, or closed D Month YYYY |
+
+The key `T###` is assigned once and never reused; `[tension T###]`
+resolves to the row (`ONTOLOGY.md` §1.3). The last column is read as
+recorded; whether a caution is *still* live is reading.
 
 ### How to add a row
 

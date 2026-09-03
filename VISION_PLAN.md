@@ -98,10 +98,10 @@ The single source of status for this build. Steps are executed top-down.
 | 5 | Verification methodology | DONE | 2026-09-03 |
 | 6 | Precedence and the tension ledger | DONE | 2026-09-03 |
 | 7 | The Ontology | DONE | 2026-09-03 |
-| 8a | Artifacts: the record core | READY | 2026-09-03 |
-| 8b | Artifacts: claims and checks | READY | 2026-09-03 |
-| 8c | Artifacts: references and sources | NOT STARTED | |
-| 8d | Artifacts: plans, roadmap, notes | NOT STARTED | |
+| 8a | Artifacts: the record core | DONE | 2026-09-03 |
+| 8b | Artifacts: claims and checks | DONE | 2026-09-03 |
+| 8c | Artifacts: references and sources | READY | 2026-09-03 |
+| 8d | Artifacts: plans, roadmap, notes | READY | 2026-09-03 |
 | 8e | Artifacts: prompt log and session onboarding | NOT STARTED | |
 | 8f | Artifacts: publication, reviews, imports | NOT STARTED | |
 | 9 | Mechanical enforcement: the tools | NOT STARTED | |
@@ -503,31 +503,48 @@ under its named mutation in step 11; scan clean.
 
 ### Step 8c: Artifacts: references and sources
 
-**Deliverables.** `references/` with its README (one file per topic; the
-registry is exhaustive of works consumed by project text; self-contained;
-originality verified) and the entry format (authors, title, venue, year,
-URL or DOI, topics, originality note, notes). `source_documents/` with its
-README (only freely redistributable documents held locally, each with a
-license note; everything else by canonical identifier; naming convention;
-no personal data).
+**Deliverables.** `evidence_and_reasoning/references/`: a README (every
+citation resolves here; organization by topic, repository, or data
+source; the key grammar and locus forms with examples; entry fields as
+bullets inside a `### [Key]` block with the default set, `Standing` in
+both its forms, `Disputed`, and `Witness of` with the rule for a work
+known only through its records) and a file template with
+discipline-mixed field guidance. `source_documents/README.md`: the
+source-of-record index, one row naming either a held file or folder with
+its license note or a locator with its access conditions, the form
+consulted, and the rule that a restricted source enters only as its terms
+allow. `evidence_and_reasoning/public_record_tensions.md`: the tension
+ledger in the five-column form, with unmatchable placeholders.
 
-**Done when.** Formats generic; scan clean.
+
+**Done when.** Formats generic; every row form matches the Ontology's
+predicates; scan clean.
 
 ### Step 8d: Artifacts: plans, roadmap, notes
 
-**Deliverables.** `research_plans/` with its README (the lifecycle DRAFT,
-ENGAGED, CLOSED with verdict, ABANDONED; both transitions the human's;
-artifact hygiene while a plan is open; more than one plan may be engaged
-and the assistant says so) and a plan template (status line; kind, whether
-hypothesis or foundation; the aspect isolated; why a plan and not a
-correction batch; prerequisites; tasks; sanity checks; deliverables;
-confirmation and refutation criteria pre-registered; out of scope; an
-execution status register that must be complete). `ROADMAP.md` template
-(the ledger; the dependency graph; the ground-truth bar). `notes/` with its
-README (dated; two registers, sketch and analytical note, never conflated).
+**Deliverables.** `evidence_and_reasoning/research_plans/`: a README
+(the lifecycle by pointer to the genres file, which now owns it; more
+than one plan engaged is said in the reply and seen in the index; an
+undecided outcome closes ABANDONED unless pre-registered otherwise) and a
+plan template carrying `Status`, `Serves`, and `Prerequisites` as field
+lines, a prose marker for a plan with or without a hypothesis, sections
+for the aspect, the hypothesis, the **design** with its assumptions
+classified, tasks, sanity checks, deliverables, pre-registered
+confirmation and refutation including what an undecided outcome closes
+as, out of scope, an optional standing reservation and docket, and a
+complete execution ledger with a fixed state vocabulary. `ROADMAP.md`:
+the plan index with the one deliberate status copy the checker compares,
+and a pointer to `PRECEDENCE.md` for what may be relied on in place of
+any authority rule of its own. `evidence_and_reasoning/notes/`: a README
+(two kinds, working and analytical, with a decision rule; what an
+analytical note may and may not do; a pre-registration protocol as an
+analytical note with no owning plan) and a template whose kind is a prose
+marker rather than a field.
+
 
 **Done when.** A plan can be drafted, engaged, executed, and closed on the
-templates alone; scan clean.
+templates alone, with every rule it relies on owned by a rulebook rather
+than by the README; scan clean.
 
 ### Step 8e: Artifacts: prompt log and session onboarding
 
@@ -691,6 +708,21 @@ the prompt log to entry 001, and runs the round gate.
 
 **Done when.** A fresh instantiation passes the round gate with no edits;
 scan clean.
+
+### Amendments to accepted files made in steps 8c and 8d
+
+Seven, each forced by the templates and flagged at hand-over.
+`DOCUMENT_GENRES.md` now states what no rulebook had: that both plan
+transitions are the researcher's, with the provenance in the log, and it
+glosses the four verdicts, ABANDONED covering an outcome the
+pre-registered criteria decided neither way. `ONTOLOGY.md` disambiguates
+`Prerequisites` (plans by bare number, claims by token), admits the
+found-form of `Standing` beside the none-found form, says that a registry
+entry's fields are bullets read by entry rather than header lines, and
+says that HTML comments are not read by the resolver, which is where every
+template's example tokens live. `PRECEDENCE.md`'s ledger template takes
+the five-column form the Ontology fixes, with the `T###` key and the
+`Caution` column.
 
 ### Amendments to accepted files made in steps 8a and 8b
 

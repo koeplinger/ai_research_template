@@ -14,6 +14,7 @@ which the record relates its parts is `ONTOLOGY.md`; the trust levels are
     research_statement.md   the question as posed
     research_result.md      what has been established, condensed
     problem_statement.md    the thesis being tested, and the plans drawn from it
+    research_plans/ROADMAP.md   what is open, and what each plan settles
     claims/README.md        the claims, by number
     the claims and checks the question in hand needs
 
@@ -33,13 +34,10 @@ a claim and its check. A claim needs an owning plan before it exists.
 | [editorial_standards.md](editorial_standards.md) | the prose standards and the recorded voice |
 | [claims/](claims/) | numbered claims, one file each, with the header lines `ONTOLOGY.md` fixes |
 | [checks/](checks/) | numbered checks: the record of each, and the procedure where a check is written rather than run |
-| references/ | the reference registry, one file per topic |
-| research_plans/ | numbered plans and the plan index |
-| notes/ | dated working notes |
-| public_record_tensions.md | the tension ledger |
-
-> **Build lens.** The last four rows are shipped by later steps of the
-> build; they stand so that the reading order is complete.
+| [references/](references/) | the reference registry, one file per topic, repository, or data source |
+| [research_plans/](research_plans/) | numbered plans and the plan index |
+| [notes/](notes/) | dated working notes, of two kinds |
+| [public_record_tensions.md](public_record_tensions.md) | the tension ledger |
 
 ## Conventions
 
@@ -50,8 +48,8 @@ a claim and its check. A claim needs an owning plan before it exists.
 - A check and its program share a number: `checks/NNN_*.md` records what
   `python_project/src/check_NNN_*.py` does, or is itself the written
   procedure. These are the defaults `tools/artifacts.toml` ships with.
-- Every file here carries the standard header stamp, and every claim and
-  check carries the field lines `ONTOLOGY.md` §1 fixes.
+- Every file here carries the standard header stamp, and every claim,
+  check, and plan carries the field lines `ONTOLOGY.md` §1 fixes.
 
 ## Slots
 

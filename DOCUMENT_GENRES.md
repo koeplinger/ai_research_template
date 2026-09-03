@@ -24,7 +24,17 @@ Beyond the words `MANIFESTO.md` defines: a **plan** is a numbered file
 under `evidence_and_reasoning/research_plans/` whose `Status:` header line
 holds exactly one of `DRAFT`, `ENGAGED <date>`, or `CLOSED <date>, verdict
 <VERDICT>`, the verdict one of CONFIRMED, REFUTED, COMPLETE, or ABANDONED.
-A plan is **open** while its status is DRAFT or ENGAGED. An artifact
+A plan is **open** while its status is DRAFT or ENGAGED. The verdicts:
+CONFIRMED, the hypothesis held and the results are claims; REFUTED, it
+failed and the refutation is itself a claim; COMPLETE, a plan with no
+hypothesis met its pre-registered closure criterion; ABANDONED, execution
+stopped without a verdict, or the pre-registered criteria decided neither
+way, and the reason is recorded. **Both transitions are the researcher's**,
+DRAFT to ENGAGED and ENGAGED to CLOSED: the researcher writes the line or
+directs the assistant to write it, the round's log entry is the
+provenance, and the assistant never changes it on its own initiative. When
+a plan's tasks are all executed it stays ENGAGED and the assistant reports
+it ready to close. An artifact
 **owned** by a plan carries the header line `Plan: NNN` (optionally `,
 task M`), which resolves to `evidence_and_reasoning/research_plans/NNN_*.md`.
 A **maintained** artifact is current state, changed only at the

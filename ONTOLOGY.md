@@ -90,7 +90,10 @@ superseded by paper/capstone_v2.md
 ### 1.3 Citation tokens
 
 Written inline in prose, in a table cell, or in a docstring. A bracket
-immediately followed by `(` or `[` is a markdown link and is skipped.
+immediately followed by `(` or `[` is a markdown link and is skipped. Text
+inside an HTML comment (`<!-- ... -->`) is not read at all: that is where
+a template's guidance and its example tokens live, and they resolve to
+nothing by design.
 
 | Token | Grammar | Resolves to |
 |---|---|---|
@@ -112,7 +115,9 @@ project. §7 says where those patterns live.
 Some predicates are written by a file existing at a governed path: a
 registry entry, a prompt-log entry, a dated review, a row in a ledger. The
 pattern comes from the configuration of §7, and the predicate's row names
-which.
+which. A registry entry's fields are bullets, `- Field: value`, inside its
+`### [ShortKey]` block; the tool reads them by entry, and they are not
+header lines.
 
 ---
 
@@ -134,7 +139,7 @@ the duty is the assistant's under the consistency sweep
 | `held` | a source of record to its local copy | a row in the source index naming the file | `MANIFESTO.md` §6 | `DOCUMENT_GENRES.md` checker 7 | do we have it, or only its locator? |
 | `consulted-at` | a source of record to its locator, where access conditions keep it out of the repository | the same row, giving shelfmark, release, or version, and access conditions | `MANIFESTO.md` §6 | ontology 3: the row has one of `held` or `consulted-at` | how would a second reader reach it? |
 | `witness-of` | one record of a work to the work: a manuscript, edition, facsimile, release, or vintage | `Witness of: [ShortKey]` in the registry entry | `MANIFESTO.md` §2 | ontology 2 | which of these are the same work? |
-| `standing-disputed` | a work to a dispute about its authorship, dating, authenticity, priority, replication, or currency | `Disputed: <what>, <source>` in the registry entry | `MANIFESTO.md` §3 | reading | is this source contested? |
+| `standing-disputed` | a work to a dispute about its authorship, dating, authenticity, priority, replication, or currency, or to the search that found none | `Disputed: <what>, <source>` in the registry entry; `Standing: searched <where>, <date>; none found`, or `...; found, see Disputed` | `MANIFESTO.md` §3 | reading | is this source contested, and was that checked? |
 
 ### 2.2 Claims
 
@@ -181,7 +186,7 @@ the duty is the assistant's under the consistency sweep
 |---|---|---|---|---|---|
 | `owned-by` | an artifact to its plan | `Plan: NNN[, task M]` | `DOCUMENT_GENRES.md` | `DOCUMENT_GENRES.md` checker 4 | is this live or frozen? |
 | `status` | a plan to its lifecycle state | `Status:` in the form `DOCUMENT_GENRES.md` fixes | `DOCUMENT_GENRES.md` | `DOCUMENT_GENRES.md` checker 6 | what is open? |
-| `prerequisite` | a plan to a plan or claim it builds on | `Prerequisites: NNN[, NNN]` or `none` | this file: no rulebook fixes plan structure | ontology 3 | what must land first? |
+| `prerequisite` | a plan to a plan or claim it builds on | `Prerequisites: NNN[, NNN][, [claim NNN]]` or `none`: plans by bare number, claims by token | this file: no rulebook fixes plan structure | ontology 3 | what must land first? |
 | `serves` | a plan to a keystone hypothesis | `Serves: <hypothesis>` or `Serves: none, <reason>` | `DOCUMENT_GENRES.md` | ontology 3 | why are we doing this? |
 | `reserved-by` | a claim to the plan holding a deferred question | `Reserved <date>, plan NNN` | `CHECK_METHODOLOGY.md` §6 | ontology query 4 | what is waiting on an unanswered question? |
 | `finding` | a stable key to what the record has established | a row in `FINDINGS.md` carrying `[finding F###]` | `MANIFESTO.md` §12 | reading; additions are the researcher's | what has this project established? |
