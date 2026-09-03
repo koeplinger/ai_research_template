@@ -57,7 +57,7 @@ file and directory named in this document ships with the template:
 | `FINDINGS.md` | what the record has established |
 | `PRECEDENCE.md` | what governs when sources disagree |
 | `CURRENT_STATE.md` | the state of the research as a whole |
-| `evidence_and_reasoning/` | the record: statements, claims, check records, notes, plans, the tension register |
+| `evidence_and_reasoning/` | the record: statements, claims, check records, notes, plans, the tension ledger |
 | `paper/` | the write-ups and their reviews |
 | `source_documents/` | the sources held locally, each with its license note |
 | `tools/` | the mechanical checks named in §11, §13, and §16 |
@@ -160,14 +160,18 @@ never holds the opinion the work exists to reach.
   the raw data rather than from a reported figure; a second reader with no
   access to the first pass's reasoning.
 - The instrument or procedure of record for verification is
-  {{VERIFICATION_TOOL}}, named in `CHECK_METHODOLOGY.md` precisely enough
-  that a second reader can return to the same thing: a version, an edition,
-  a repository and shelfmark, the form in which it was consulted. Other
+  {{VERIFICATION_TOOL}}, which `CHECK_METHODOLOGY.md` §3 names and defines
+  precisely enough that a second reader can return to the same thing: a
+  version, an edition, a repository and shelfmark, the form in which it was
+  consulted. Other
   instruments may be used where they fit better; a load-bearing result
   obtained elsewhere is cross-checked in the instrument of record.
 - Every recorded claim carries its verification status: checked by the
   researcher; checked by the assistant, by which route; deferred to
-  {{VERIFICATION_TOOL}} or another named instrument; or unchecked. What the
+  {{VERIFICATION_TOOL}} or another named instrument; or unchecked. It also
+  carries a register, its trust level (`CHECK_METHODOLOGY.md` §1). The
+  assistant proposes a register with its evidence and stops; the researcher
+  assigns it. What the
   researcher chooses to defer rather than learn is a legitimate choice, and
   it is written down so it can be read later. A claim becomes established
   when the researcher says so.

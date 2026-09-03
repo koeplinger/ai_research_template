@@ -96,7 +96,7 @@ The single source of status for this build. Steps are executed top-down.
 | 3 | Document genres and the state model | DONE | 2026-09-02 |
 | 4 | Editorial standards | DONE | 2026-09-02 |
 | 5 | Verification methodology | READY | 2026-09-03 |
-| 6 | Precedence and the tension register | READY | 2026-09-03 |
+| 6 | Precedence and the tension ledger | READY | 2026-09-03 |
 | 7 | The Ontology | NOT STARTED | |
 | 8a | Artifacts: the record core | NOT STARTED | |
 | 8b | Artifacts: claims and checks | NOT STARTED | |
@@ -276,7 +276,7 @@ write-up succeeded rather than corrected; maintained artifacts under
 generically with examples from three disciplines and its instrument
 deferred to `CHECK_METHODOLOGY.md`; state recorded once, the ROADMAP an
 index the checker compares with each plan; the current-state table
-extended (keystone, tension register, research statement, references,
+extended (keystone, tension ledger, research statement, references,
 tools, indexes); the header rule stated precisely and non-prose files
 excluded; the narrative ban renamed to the text's own past, with the
 subject-matter exception; dated records and the execution-status ledger
@@ -322,30 +322,31 @@ example is discipline-mixed; scan clean.
 passing check mean something.
 
 **Deliverables.** `CHECK_METHODOLOGY.md`: the check as the unit of
-verification, owned by a plan and carrying no status of its own; the
-**register** vocabulary (VERIFIED, DERIVED, ATTESTED, SPECULATIVE, RULED
-OUT, OPEN), reconciled with the manifesto's verification status (register
-says how far a statement is trusted, verification status says who checked
-it and by what route) and declared independent of claim kind; the **claim
-kinds** with a verdict vocabulary each (formal, computational, empirical,
-documentary, interpretive, internal-consistency), an empirical claim
-compared to the spread of independent determinations rather than a single
-accepted value; the philosophy (re-derive rather than transcribe; diagnose
-the anatomy of a mismatch; classify every input derived, imposed, or
-conjectured; a negative is a result); **a passing check is not a true
-claim**, in six rules generalized past algebra (fix the frame of
-reference; give every negative a positive control; show every assertion
-falsifiable by mutation; an empty search is not proof of absence; a count
-of branches is not a count of things; watch the citation, not just the
-work); the **standing reservation** in full, with examples from three
-disciplines; the **consistency sweep** as the mandatory closing move of
-every correction batch, its seven items, the structure lens, and what a
-rebuild owes (deletion ledger, additions ledger, whole-file pass); the
-six-part shape of a check in either form, with cost as measurement and
-never a gate; and **What is checked mechanically**, the closed list step 9
-implements, in which the falsifiability probe covers executing checks and
-a written check procedure instead states in its header which mutation
-would change its verdict.
+verification, owned by a plan and carrying no status of its own; a *Words
+used here* section defining claim, assertion, gated (in every sense used),
+verdict, check record, mutation, and docket; the **header lines** a claim
+and a check carry (`Register:`, `Kind:`, `Verdict:`, `Plan:`, `Mutation:`,
+and `Reserved <date>, plan NNN` with a comma so it cannot read as a change
+narrative), which is what makes the mechanical checks implementable; the
+**register** vocabulary (VERIFIED, DERIVED, ATTESTED, SPECULATIVE,
+RULED_OUT, OPEN) with **who assigns it** stated (the assistant proposes,
+the researcher assigns, because `MANIFESTO.md` §5 reserves establishment
+to the researcher) and reconciled with verification status; the seven
+**claim kinds** with a verdict vocabulary each, including Inferential for
+an estimate under stated assumptions, and register declared independent of
+kind; **the instrument or procedure of record**, which fills the
+`{{VERIFICATION_TOOL}}` pointer the manifesto makes; the philosophy; **a
+passing check is not a true claim** in six rules, with mutation and
+robustness check explicitly distinguished so that survival is a defect in
+the one case and the intended result in the other; the **standing
+reservation**; the **consistency sweep** in eight items, proposed by the
+assistant and run at the researcher's direction, with the structure lens
+and what a rebuild owes, and with the fix-or-bring rule keyed to
+maintained and authorization-gated artifacts rather than to genre alone;
+the six-part shape of a check, splitting a written check procedure into
+the procedure a plan freezes and one record per execution; and **What is
+checked mechanically**, six items step 9 implements.
+
 
 **Slots.** `{{CHECK_FORM}}`, what a check is in this project;
 `{{MUTATION_SET}}`, the alterations the probe applies.
@@ -368,28 +369,32 @@ proof; a re-execution of published code; a re-coding of a survey.
 **Done when.** Generic; the six-part check template of step 8b implements
 it; scan clean.
 
-### Step 6: Precedence and the tension register
+### Step 6: Precedence and the tension ledger
 
 **Goal.** What governs when sources disagree, in both directions.
 
-**Deliverables.** `PRECEDENCE.md`: the four tiers of authority (this
-project's gated claims; the sources of record, authority about what a
-document says and never about what is true; registered references,
-canonical identity only; the public record at large, including the
-assistant's own priors, lowest always); an explicit table mapping each
-register onto the tier it speaks from; the trump rule and its recording
-obligation; the rule in both directions (tier 4 never promoted silently,
-tier 1 never inflated past its wording); cautions surviving the trump;
-compliance mechanics; **What is checked mechanically**, two items with the
-rest named as reading; what the rulebook does not do (a claim is
-overturned by a better verification, never by an appeal to the
-literature), and that it does not settle priority. A tension-register
-template with its four columns, its "how to add a row" rule, and the
+**Deliverables.** `PRECEDENCE.md`: a *Words used here* section defining
+divergence (a pair of statements that cannot both hold at the claim's
+stated scope, so that a different sample or edition is not one), context,
+the public record, and the tension ledger; the four tiers, with tier 2
+covering a source consulted at its locator where access conditions keep it
+out of the repository and tier 3 the references not collated; a table
+mapping every register, and also the unregistered cases, onto the tier it
+speaks from; the assistant's priors and the researcher's memory declared
+not a tier; the trump rule with **who may apply it** (only for a register
+the researcher has assigned; otherwise propose and stop); the rule in both
+directions, with the routes for borrowed material split apart so that
+"marked as context" can no longer read as a route to established fact;
+cautions surviving; compliance, with the ledger row proposed by the
+assistant and entered at the researcher's direction and a standing
+reminder while it waits; **What is checked mechanically**, which claims
+nothing of its own and points at the two owners; what the rulebook does
+not do; and the ledger template with its four columns and its
 reversed-tension marker.
 
 
-**Done when.** Generic; every register maps to a tier; session onboarding
-(step 8e) loads it; scan clean.
+**Done when.** Generic; every register and every unregistered case maps to
+a tier; session onboarding (step 8e) loads it; scan clean.
 
 ### Step 7: The Ontology
 
@@ -672,16 +677,15 @@ the prompt log to entry 001, and runs the round gate.
 **Done when.** A fresh instantiation passes the round gate with no edits;
 scan clean.
 
-### Owed: an independent review of steps 5 and 6
+### Reviews on record
 
-Steps 1 to 4 were each reviewed by independent read-only critics before
-acceptance. For steps 5 and 6 that review was attempted twice and both
-runs lost every agent to server-side errors, so `CHECK_METHODOLOGY.md` and
-`PRECEDENCE.md` carry a self-review only, which is weaker: the same author
-checking their own work catches fewer leaks and no blind spots. The
-independent pass is owed and is run before close-out; step 12's breadth
-review covers part of it, and step 15 does not close while it is
-outstanding.
+Every step through 6 has had an independent read-only review before
+acceptance. Steps 5 and 6 were reviewed by six lenses over
+`CHECK_METHODOLOGY.md` and `PRECEDENCE.md`, which returned 149 findings,
+42 of them major, and the majors were applied. That review also reached
+four accepted files, and the amendments it forced there are recorded in
+the step 2, 3, and 4 entries.
+
 
 ### Tracked across steps: forward references
 

@@ -29,7 +29,9 @@ A plan is **open** while its status is DRAFT or ENGAGED. An artifact
 task M`), which resolves to `evidence_and_reasoning/research_plans/NNN_*.md`.
 A **maintained** artifact is current state, changed only at the
 researcher's direction. A **ledger** is a file that tracks status; the word
-*register* is reserved for trust level. A **sweep** is a pass over many
+*register* is reserved for a statement's trust level
+(`CHECK_METHODOLOGY.md`). *Registry* is a different word and keeps its
+ordinary sense of a catalogue, as in the reference registry. A **sweep** is a pass over many
 documents at once (`MANIFESTO.md` §14). The **public record** is the
 published literature, reference works, editions, and published estimates
 outside the repository. A **review** is a referee pass, internal or
@@ -156,9 +158,10 @@ a structure on which several statements' generality rests. Freezing does
 not settle the question, and restricting each claim's scope one at a time
 only spreads the deferral across the repository. A **standing reservation**
 records the deferred question once, in the plan that will resolve it, and
-each affected claim carries a `Reserved <date>` header line pointing to
-that plan. The line is bookkeeping and changes no genre; the checker does
-nothing with it. What a reservation says, what it licenses, and how a sweep
+each affected claim carries a `Reserved <D Month YYYY>, plan NNN` header
+line: a comma after the date and never a colon, so the line is a stamp and
+not a change narrative. It is bookkeeping and changes no genre; the checker
+does nothing with it. What a reservation says, what it licenses, and how a sweep
 treats a reserved claim are defined in `CHECK_METHODOLOGY.md`.
 
 ---
@@ -207,7 +210,7 @@ altitude that owns it, and referred to from below by link.
 | every indexing `README.md` | what is in this folder, and what each file does |
 | `evidence_and_reasoning/research_statement.md` | the question as posed; maintained, and changed only on a significant deviation of the question |
 | `evidence_and_reasoning/problem_statement.md` | the keystone: the researcher's thesis, stated as questions or hypotheses precise enough that evidence could count against them, from which plans are drawn; maintained; in the SPECULATIVE register, it orders the reading and trumps nothing. Every plan states which of its hypotheses it serves, or why it serves none; a plan opened while no keystone is designated says so |
-| `evidence_and_reasoning/public_record_tensions.md` | the tension register: one row per point where a result of the project diverges from the public record, added in the same round as the work that creates it (`PRECEDENCE.md`); maintained |
+| `evidence_and_reasoning/public_record_tensions.md` | the tension ledger: one row per point where a result of the project diverges from the public record. The assistant brings the row in the same round as the work that creates it; the row enters at the researcher's direction (`PRECEDENCE.md`); maintained |
 | `evidence_and_reasoning/research_result.md` | the condensed summary of `FINDINGS.md`, at the altitude of the write-up |
 | `evidence_and_reasoning/terminology.md` | the glossary |
 | `evidence_and_reasoning/editorial_standards.md` | the prose standards, including the recorded voice |
