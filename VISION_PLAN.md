@@ -91,12 +91,12 @@ The single source of status for this build. Steps are executed top-down.
 | # | Step | Status | Date |
 |---|---|---|---|
 | 0 | Foundation of this build | DONE | 2026-09-02 |
-| 1 | Licensing and repository hygiene | READY | 2026-09-02 |
-| 2 | Manifesto: operating rules for AI assistance | READY | 2026-09-02 |
-| 3 | Document genres and the state model | NOT STARTED | |
-| 4 | Editorial standards | NOT STARTED | |
-| 5 | Verification methodology | NOT STARTED | |
-| 6 | Precedence and the tension register | NOT STARTED | |
+| 1 | Licensing and repository hygiene | DONE | 2026-09-02 |
+| 2 | Manifesto: operating rules for AI assistance | DONE | 2026-09-02 |
+| 3 | Document genres and the state model | DONE | 2026-09-02 |
+| 4 | Editorial standards | DONE | 2026-09-02 |
+| 5 | Verification methodology | READY | 2026-09-03 |
+| 6 | Precedence and the tension register | READY | 2026-09-03 |
 | 7 | The Ontology | NOT STARTED | |
 | 8a | Artifacts: the record core | NOT STARTED | |
 | 8b | Artifacts: claims and checks | NOT STARTED | |
@@ -126,6 +126,10 @@ Recorded here so no step silently assumes them.
   harness settings file out of version control, which means a clone loses the
   hooks that enforce the manifesto. Proposed: track the shared settings file,
   ignore only the local one.
+- **The deliverable (resolved in steps 3 and 4).** VISION's third
+  discipline choice, "what a publishable deliverable is", is the slot
+  `{{DELIVERABLE}}`: its form, its title convention, and what is released
+  with a version of it. `paper/` stays the folder name whatever the form.
 - **Harness neutrality (steps 10, 13).** The manifesto names no assistant
   vendor: §16's wiring is the slot `{{REPLY_HOOK}}`. Step 10 ships concrete
   wirings under a per-harness directory, the first for the harness the
@@ -258,73 +262,103 @@ physicist; every section generic or a marked slot; scan clean.
 **Goal.** The rule that keeps documentation from turning into a change log
 of itself, and the rule that state is recorded once.
 
-**Deliverables.** `DOCUMENT_GENRES.md` covering: the three genres
-(immutable, frozen, current-state) and how each may change; a frozen
-artifact as a dated record corrected only with authorization, in the flow,
-with a date-only stamp, or deprecated and superseded; a current-state
-artifact as a description of what is, corrected in place, with the banned
-constructions enumerated (dated correction notices, settlement dates,
-supersession narratives, change-history footers, historical voice, process
-narrative, rename history, end-addenda); the corpus is current state in
-every genre; dated records (working notes, reviews) exempt by path because
-their subject is an event; an open plan's artifacts are live and freeze on
-closure; the findings file's authorization gate; maintained reading
-companions; the keystone problem statement and the precedence layer; the
-standing reservation; where state is recorded (once, in the tracker that
-owns it; an artifact names its owning plan and stops); denormalization as
-navigation, not duplication; versioned papers freeze and are succeeded, not
-corrected in place.
+**Deliverables.** `DOCUMENT_GENRES.md`: the three genres and how each may
+change; a *Words used here* section (plan status vocabulary `DRAFT`,
+`ENGAGED <date>`, `CLOSED <date>, verdict <V>` with ABANDONED a verdict;
+open means DRAFT or ENGAGED; the `Plan: NNN` ownership header line;
+maintained; ledger versus register; the public record); the prompt log
+immutable once committed, with no append exception, and the log's mutable
+index pointing from a wrong entry to its correction; the frozen table
+extended to derived material, imports, and written check procedures, with
+the release signal (`Released <date>` line plus changelog row); a released
+write-up succeeded rather than corrected; maintained artifacts under
+`paper/`; an open plan's artifacts live; the standing reservation stated
+generically with examples from three disciplines and its instrument
+deferred to `CHECK_METHODOLOGY.md`; state recorded once, the ROADMAP an
+index the checker compares with each plan; the current-state table
+extended (keystone, tension register, research statement, references,
+tools, indexes); the header rule stated precisely and non-prose files
+excluded; the narrative ban renamed to the text's own past, with the
+subject-matter exception; dated records and the execution-status ledger
+exempt; indexes and cross-references kept on purpose; and **What the
+checker verifies**, the closed, implementable list of eight checks that
+step 9 implements.
 
-**Done when.** Generic; each rule maps onto a check of the linter in step 9
-or is marked as a judgment rule; scan clean.
+**Slots.** `{{DELIVERABLE}}`, the publishable deliverable and what is
+released with it.
+
+**Done when.** Generic; the *What the checker verifies* list is closed and
+implementable, and every other rule is marked as the assistant's duty; scan
+clean.
 
 ### Step 4: Editorial standards
 
 **Goal.** The prose standards for every durable artifact, and the procedure
 by which a project derives the researcher's own voice.
 
-**Deliverables.** `editorial_standards.md` covering: the five standards
-(lead with the claim, then develop; one new thing per sentence, in
-dependency order; say each thing once; one consistent vocabulary; precision
-over good-sounding vagueness); the corollaries (few forward references; an
-introduction is the document compressed; write in the current state;
-descriptive headings, not declarative; never assert an equivalence the
-project could compute and did not; punctuation and spelling conventions as
-a slot); writing the papers (evidence first, prose second; every structural
-claim carries its evidence on the page; depth to an appendix rather than out
-of the paper; describe and stop; no advocacy; one fact, one home; a summary
-inherits every cut); writing a discussion (a position has a holder; concede
-in the flow; a verdict lands short; register declared once); **voice** as a
-slot with its procedure: read the rules off the researcher's own
-publications, record them, lint the mechanical part on live drafts only.
+**Deliverables.** `evidence_and_reasoning/editorial_standards.md`: scope
+by pointer to the manifesto's definition of a durable artifact, with the
+prompt-log carve-out; the five standards; a Conventions table holding the
+project's choices as slots; the corollaries, with the "never assert what
+could have been checked" rule led by its principle and illustrated from
+three disciplines, and the narrative rule reduced to a pointer to the
+genres file; *Writing for publication* scoped to every unfrozen `paper/`
+artifact, with evidence, prose, flow, and discussion rules glossed for
+non-computational disciplines and the deliverable's form a slot; *Voice*
+as a slot with the four goals and a mixed mathematics-and-history example
+record; **What is checked mechanically**, the closed list of editorial
+checks that step 9 implements; and how to apply.
 
-**Done when.** Generic; the mechanical subset enumerated for the linter;
-scan clean.
+**Slots.** `{{SPELLING}}` (language and variant); `{{DASH_CONVENTION}}`;
+`{{PAPER_PRONOUN}}` (the paper's agent); `{{REFERENCE_ADEQUACY}}`;
+`{{DELIVERABLE}}` (shared with the genres file); `{{VOICE}}`.
+
+**Done when.** Generic; the mechanical subset is a closed list; every
+example is discipline-mixed; scan clean.
 
 ### Step 5: Verification methodology
 
 **Goal.** The unit of work, the check, and the discipline that makes a
 passing check mean something.
 
-**Deliverables.** `CHECK_METHODOLOGY.md` covering: the check as one
-self-contained investigation of one claim, owned by a plan, carrying no
-status of its own; the philosophy (re-derive, do not transcribe; diagnose
-the anatomy of a mismatch before concluding; classify every input as
-derived, imposed, or conjectured; a negative result is a result); **a
-passing check is not a true claim**, with the rules generalized beyond
-algebra: fix the frame of reference (basis, coordinates, units, encoding,
-edition) or compute a second way; give every negative a positive control;
-show every assertion falsifiable by mutating the object; an empty search is
-not a proof of absence; a count of branches or buckets is not a count of
-solutions; watch the citation, not just the computation (a claim may not
-exceed what it cites); the standing reservation for deferred exactness; the
-**consistency sweep** as the mandatory closing move of every correction
-batch, with its seven items; the structure lens and what a rebuild owes (a
-deletion ledger, an additions ledger, a whole-file residue pass); the
-mechanical half (numeric concordance, fact concordance, residue); the
-six-part check structure (header, construction, sanity checks, main
-verification, discrepancy analysis, actionable summary); runtime as
-measurement, never a gate; conventions recorded in the glossary.
+**Deliverables.** `CHECK_METHODOLOGY.md`: the check as the unit of
+verification, owned by a plan and carrying no status of its own; the
+**register** vocabulary (VERIFIED, DERIVED, ATTESTED, SPECULATIVE, RULED
+OUT, OPEN), reconciled with the manifesto's verification status (register
+says how far a statement is trusted, verification status says who checked
+it and by what route) and declared independent of claim kind; the **claim
+kinds** with a verdict vocabulary each (formal, computational, empirical,
+documentary, interpretive, internal-consistency), an empirical claim
+compared to the spread of independent determinations rather than a single
+accepted value; the philosophy (re-derive rather than transcribe; diagnose
+the anatomy of a mismatch; classify every input derived, imposed, or
+conjectured; a negative is a result); **a passing check is not a true
+claim**, in six rules generalized past algebra (fix the frame of
+reference; give every negative a positive control; show every assertion
+falsifiable by mutation; an empty search is not proof of absence; a count
+of branches is not a count of things; watch the citation, not just the
+work); the **standing reservation** in full, with examples from three
+disciplines; the **consistency sweep** as the mandatory closing move of
+every correction batch, its seven items, the structure lens, and what a
+rebuild owes (deletion ledger, additions ledger, whole-file pass); the
+six-part shape of a check in either form, with cost as measurement and
+never a gate; and **What is checked mechanically**, the closed list step 9
+implements, in which the falsifiability probe covers executing checks and
+a written check procedure instead states in its header which mutation
+would change its verdict.
+
+**Slots.** `{{CHECK_FORM}}`, what a check is in this project;
+`{{MUTATION_SET}}`, the alterations the probe applies.
+
+
+**Carried in from steps 3 and 4.** `CHECK_METHODOLOGY.md` owns the
+definition of **register** (the statement's trust level) and reconciles it
+with the manifesto's verification status (who checked, §5); it defines the
+**standing reservation** instrument (what it says, what it licenses, how a
+sweep treats a reserved claim), which the genres file now only points to;
+and it treats a **written check procedure** (a collation protocol, an
+estimation protocol, a reading procedure) as a first-class check beside a
+check program.
 
 **Slot.** What "computation" means in the discipline, with a table of
 worked examples: a statistical re-analysis from raw data; an archival
@@ -338,20 +372,24 @@ it; scan clean.
 
 **Goal.** What governs when sources disagree, in both directions.
 
-**Deliverables.** `PRECEDENCE.md`: the four tiers of authority (the
-project's verified claims and the checks that gate them; the sources of
-record, authority about what a document says and never about what is true;
-registered references, canonical identity only; the public record at large,
-including the assistant's own priors, lowest always); the trump rule and
-its recording obligation; the rule runs both ways (the public record is
-never promoted silently; a verified claim does not inflate past its
-wording); cautions survive; compliance mechanics; what the rulebook does not
-do (a claim is overturned by a better computation, never by an appeal to the
-literature). A tension-register template with its four columns (what the
-project establishes; what the public record says; the caution that
-survives; a reversed-tension marker) and its "how to add a row" rule.
+**Deliverables.** `PRECEDENCE.md`: the four tiers of authority (this
+project's gated claims; the sources of record, authority about what a
+document says and never about what is true; registered references,
+canonical identity only; the public record at large, including the
+assistant's own priors, lowest always); an explicit table mapping each
+register onto the tier it speaks from; the trump rule and its recording
+obligation; the rule in both directions (tier 4 never promoted silently,
+tier 1 never inflated past its wording); cautions surviving the trump;
+compliance mechanics; **What is checked mechanically**, two items with the
+rest named as reading; what the rulebook does not do (a claim is
+overturned by a better verification, never by an appeal to the
+literature), and that it does not settle priority. A tension-register
+template with its four columns, its "how to add a row" rule, and the
+reversed-tension marker.
 
-**Done when.** Generic; session onboarding (step 8e) loads it; scan clean.
+
+**Done when.** Generic; every register maps to a tier; session onboarding
+(step 8e) loads it; scan clean.
 
 ### Step 7: The Ontology
 
@@ -376,7 +414,7 @@ methodology; to be pruned and completed:
 - `held(source, license-note)`: a local copy exists with its redistribution
   basis recorded.
 - `claims(claim, statement, register)`, register in {VERIFIED, DERIVED,
-  TEXTUAL, SPECULATIVE, RULED OUT, OPEN}.
+  ATTESTED, SPECULATIVE, RULED OUT, OPEN}.
 - `not-claimed(claim, statement)`: the explicit scope fence.
 - `gated-by(assertion, check)`: a check whose verdict would fail if the
   assertion were false; checked by the constant-condition guard, the
@@ -512,6 +550,10 @@ LLM, a network, or a dependency, each with a self-test.
   exists; every program appears in its index; no check assertion has a
   syntactically constant condition; the mechanical editorial rules on live
   drafts.
+- The linter's specification is the union of *What the checker verifies*
+  (`DOCUMENT_GENRES.md`) and *What is checked mechanically*
+  (`editorial_standards.md`); nothing else is mechanical, and each check
+  names the item it implements.
 - `check_round.py`: every round gate in one command: the linter; log
   numbering, indexing, and immutability; index coverage; and, when the
   publication pipeline is enabled, the build (refused on a stale log or
@@ -561,7 +603,7 @@ anyone remembering to fire them, and advisory by design.
   the project's code or claims before a paper freezes); the structure census
   (before any sentence-level edit to a section); the deletion ledger (for
   every rebuild); the coverage auditor (atomic assertions classified GATED,
-  PRINTED_ONLY, NOT_COMPUTED, MISMATCH, TEXTUAL, each gap refuted by a
+  PRINTED_ONLY, NOT_COMPUTED, MISMATCH, ATTESTED, each gap refuted by a
   second reader); the falsifiability probe as opposition to one's own
   checks.
 - *Support.* Every template carries a worked example; `governance/README.md`
@@ -630,12 +672,37 @@ the prompt log to entry 001, and runs the round gate.
 **Done when.** A fresh instantiation passes the round gate with no edits;
 scan clean.
 
+### Owed: an independent review of steps 5 and 6
+
+Steps 1 to 4 were each reviewed by independent read-only critics before
+acceptance. For steps 5 and 6 that review was attempted twice and both
+runs lost every agent to server-side errors, so `CHECK_METHODOLOGY.md` and
+`PRECEDENCE.md` carry a self-review only, which is weaker: the same author
+checking their own work catches fewer leaks and no blind spots. The
+independent pass is owed and is run before close-out; step 12's breadth
+review covers part of it, and step 15 does not close while it is
+outstanding.
+
+### Tracked across steps: forward references
+
+The rulebooks name files that later steps deliver. As of step 6 the
+governance documents name 22 paths that do not exist yet, among them
+`ONTOLOGY.md` (step 7), the record core and the indexes (steps 8a to 8f),
+and `tools/lint_docs.py`, `tools/check_round.py`, and
+`tools/check_status_reply.py` (step 9). This is expected while the
+template is built, and it has one consequence to keep in view: the
+dangling-path check (`DOCUMENT_GENRES.md`, *What the checker verifies*,
+item 7) cannot pass until step 9, and the linter is therefore not run
+against a partly built template. Step 15 verifies that every named path
+resolves; until then the privacy scan is the gate (`MANIFESTO.md` §13,
+build lens).
+
 ### Step 15: Close-out
 
 **Goal.** The template is complete enough to stand without this plan.
 
 **Deliverables.** A consistency sweep over the whole repository (every
-pointer resolves; every index complete; no duplicated state); every tool's
+pointer resolves, including the forward references tracked above; every index complete; no duplicated state); every tool's
 self-test and the round gate passing at the top level and inside
 `example/`; the README's under-construction notice removed; `VISION.md`
 kept as the durable statement of intent; **this file deleted**.

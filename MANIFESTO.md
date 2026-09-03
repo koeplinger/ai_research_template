@@ -28,9 +28,10 @@ session the main thread starts (§14). The **harness** is the program that
 runs the assistant and applies hooks to its replies. A **round** is one
 prompt and the work done in response to it, from the log entry that opens
 it (§8) to the status block that closes it (§16). An **artifact** is any
-tracked file; a **durable artifact** is any tracked document, and the
-docstrings and comments of any tracked program, with scratch files out of
-scope.
+tracked file; a **durable artifact** is any tracked document, any written
+check procedure, and the docstrings and comments of any tracked program,
+with scratch files and non-prose files (data, images, rendered output) out
+of scope.
 
 Three **genres** of artifact are named below and defined in
 `DOCUMENT_GENRES.md`: an *immutable* artifact is never edited once
@@ -54,7 +55,14 @@ file and directory named in this document ships with the template:
 | `inherited/README.md` | the import policy and the ledger of imported material |
 | `prompt_logs/` | the prompt log |
 | `FINDINGS.md` | what the record has established |
+| `PRECEDENCE.md` | what governs when sources disagree |
+| `CURRENT_STATE.md` | the state of the research as a whole |
+| `evidence_and_reasoning/` | the record: statements, claims, check records, notes, plans, the tension register |
+| `paper/` | the write-ups and their reviews |
+| `source_documents/` | the sources held locally, each with its license note |
 | `tools/` | the mechanical checks named in §11, §13, and §16 |
+
+Each directory's indexing `README.md` lists its files.
 
 ## Two lenses
 
@@ -136,7 +144,7 @@ never holds the opinion the work exists to reach.
   reasoning step, it says so explicitly and stops; it does not continue
   past that point without the researcher's explicit decision to proceed.
 - It never fabricates an answer, substitutes a plausible-sounding response,
-  or speculates without labelling the speculation as such.
+  or speculates without labeling the speculation as such.
 
 ---
 
@@ -231,7 +239,9 @@ never holds the opinion the work exists to reach.
 - An entry is completed before the researcher commits it, and the
   researcher commits at round boundaries. Once committed it is immutable
   (§12; `DOCUMENT_GENRES.md`). An entry committed before its round closed
-  is completed by a later entry that points back to it, never by editing.
+  is completed by a later entry that points back to it, never by editing;
+  a statement in a committed entry that turns out wrong is corrected the
+  same way, and the log's index points from the one entry to the other.
 - The log is the record of what was asked and decided; the version history
   is the record of what changed and when. Neither is edited after the fact.
 
@@ -261,7 +271,8 @@ never holds the opinion the work exists to reach.
 
 > **Build lens.** The template's own vocabulary (round, check, plan, genre,
 > register, slot, and the rest) is defined in the Ontology and the guide,
-> not in a project glossary; `terminology.md` ships as an empty template.
+> not in a project glossary; `evidence_and_reasoning/terminology.md` ships
+> as an empty template.
 
 ---
 
@@ -295,8 +306,9 @@ never holds the opinion the work exists to reach.
 - Writing for publication is governed by the section of that name in the
   same file, including the project's recorded *voice*, read off the
   researcher's own writing where it exists and otherwise stated by the
-  researcher in that file. The mechanical part is checked by
-  `tools/lint_docs.py` on artifacts not yet frozen; frozen documents keep
+  researcher in that file. The mechanical part, the rules the
+  standards list under *What is checked mechanically*, is checked by
+  `tools/lint_docs.py` on the scope stated there; frozen documents keep
   their wording under §12.
 - The standards file is the canonical statement, including its scope and
   its carve-out for prompt logs; this section is the pointer.
@@ -321,9 +333,9 @@ never holds the opinion the work exists to reach.
   The assistant brings the finding and the proposed wording, and stops. It
   does not fix errors in frozen artifacts on its own initiative, however
   clear the error: the researcher sees them first.
-- Every artifact carries the same header, its created date with an updated
-  date (`Created <date>; updated <date>`), and the genres differ only in
-  how a correction is made. A frozen artifact is corrected in its running
+- Every durable artifact carries the same header, its created date with
+  an updated date (`Created <date>; updated <date>`), and the genres differ
+  only in how a correction is made. A frozen artifact is corrected in its running
   text, made to say the right thing where it says it, and only the updated
   date changes: a date and nothing else, never an account of the change;
   the version history carries the predecessor. It may instead be marked
@@ -335,9 +347,11 @@ never holds the opinion the work exists to reach.
 - The reason for a correction has a home: the prompt-log entry of the round
   that made it (§8), or the commit message when the researcher corrects by
   hand. What changed, and why, is then readable without reconstruction.
-- `FINDINGS.md` and this manifesto are the two current-state artifacts
-  whose substantive change requires the researcher's authorization. What
-  counts as a finding is the researcher's decision. The assistant may
+- Four current-state artifacts require the researcher's authorization for
+  substantive change: `FINDINGS.md`; the keystone problem statement and the
+  research statement, which state the researcher's thesis and question;
+  and this manifesto. What counts as a finding is the researcher's
+  decision. The assistant may
   propose a finding, and may correct wording, typos, and pointers; adding a
   finding, removing one, or changing one substantially follows the same
   pattern: bring the finding and the wording, and stop.
@@ -362,11 +376,10 @@ never holds the opinion the work exists to reach.
   together with every other check a round must pass. What is checked
   mechanically: for §8, that numbering is contiguous, every entry carries
   its fields, and no committed entry differs from its committed version;
-  for §11, the mechanical rules the standards enumerate; for §12, that
-  every artifact carries its date header and no frozen artifact's body
-  changed without its updated date; for this section, that every artifact
-  resolves to a genre. Everything else in those sections is the assistant's
-  duty.
+  for §11, the rules `evidence_and_reasoning/editorial_standards.md` lists
+  under *What is checked mechanically*; for §12 and this section, the
+  items `DOCUMENT_GENRES.md` lists under *What the checker verifies*.
+  Everything else in those sections is the assistant's duty.
 - A failed check is reported to the researcher with its output. The
   assistant fixes what the check names in artifacts it may edit, and brings
   the rest.
