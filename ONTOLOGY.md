@@ -117,7 +117,10 @@ registry entry, a prompt-log entry, a dated review, a row in a ledger. The
 pattern comes from the configuration of §7, and the predicate's row names
 which. A registry entry's fields are bullets, `- Field: value`, inside its
 `### [ShortKey]` block; the tool reads them by entry, and they are not
-header lines.
+header lines. A version changelog's release row, the one
+`DOCUMENT_GENRES.md` §2 requires beside the `Released` stamp, is its last
+table row, whose first cell reads `(release)` and whose second names the
+version and its date.
 
 ---
 

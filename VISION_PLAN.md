@@ -100,10 +100,10 @@ The single source of status for this build. Steps are executed top-down.
 | 7 | The Ontology | DONE | 2026-09-03 |
 | 8a | Artifacts: the record core | DONE | 2026-09-03 |
 | 8b | Artifacts: claims and checks | DONE | 2026-09-03 |
-| 8c | Artifacts: references and sources | READY | 2026-09-03 |
-| 8d | Artifacts: plans, roadmap, notes | READY | 2026-09-03 |
-| 8e | Artifacts: prompt log and session onboarding | NOT STARTED | |
-| 8f | Artifacts: publication, reviews, imports | NOT STARTED | |
+| 8c | Artifacts: references and sources | DONE | 2026-09-04 |
+| 8d | Artifacts: plans, roadmap, notes | DONE | 2026-09-04 |
+| 8e | Artifacts: prompt log and session onboarding | READY | 2026-09-04 |
+| 8f | Artifacts: publication, reviews, imports | READY | 2026-09-04 |
 | 9 | Mechanical enforcement: the tools | NOT STARTED | |
 | 10 | Governance wiring: hooks, reminders, opposition, support | NOT STARTED | |
 | 11 | Worked example project | NOT STARTED | |
@@ -548,29 +548,50 @@ than by the README; scan clean.
 
 ### Step 8e: Artifacts: prompt log and session onboarding
 
-**Deliverables.** `prompt_logs/` with its README (numbering, immutability
-once tracked, corrections in a later entry, the supplemental corrigendum
-exception with its exact block form) and an entry template (date, number,
-description, the prompt verbatim, what was done in response, status). A
-`CLAUDE.md` template for session onboarding: the rulebooks, the precedence
-rule, the keystone, the cold-start reading order, the standing constraints.
+**Deliverables.** `prompt_logs/`: a README (Markdown entries, numbered
+and immutable once committed; the README and the template as the folder's
+two current-state files; the four parts of an entry the round check looks
+for; a *Completed or corrected by* column pointing from an earlier entry
+to the later one) and an entry template (the prompt verbatim between
+delimiters with the redaction form for restricted material; what was
+done; corrections and departures, where the reason lives; the closing
+status block, fenced and outside the header block). `ONBOARDING.md`, the
+session-onboarding file, vendor-neutral and named in the two rulebook
+tables that point at it: the first minutes as a reading order that opens
+the round's log entry and reads the manifesto in full before anything
+else; the precedence rule with who may apply it; the keystone; the
+standing constraints a session meets in its first minutes, the manifesto
+being the complete statement; a section for the researcher's standing
+directions that copies no slot value; and a setup rule for a first
+session, pointing at the guide step 13 ships.
 
-**Done when.** The round gate of step 9 can verify numbering, indexing, and
-immutability on the template alone; scan clean.
+
+**Done when.** The round check of step 9 can verify numbering, indexing,
+immutability, and the four parts on the template alone; scan clean.
 
 ### Step 8f: Artifacts: publication, reviews, imports
 
-**Deliverables.** `paper/` with its README (one living copy of the main
-write-up; versions freeze with their compiled output committed; a version
-is succeeded, not corrected; title-page convention; changelogs; standalone
-notes dated in the filename; build convention). `paper/reviews/` with its
-README (dated, names the producing model, genre by path) and a review
-template (what was independently re-derived and confirmed; corrections
-applied; what remains). `inherited/` with its README (the import policy: an
-import is a frozen copy at its original date with attribution, listed in an
-imported table and covered in the license; anything built on is re-derived).
+**Deliverables.** `paper/`: a README (one living copy, succeeded by
+default rather than corrected; the release as the researcher's stamp and
+changelog row, the first version having no changelog; dated notes
+date-first like every dated record; a blind referee before every freeze;
+form, page marking, and what is released with a version all deferred to
+`{{DELIVERABLE}}`; a numbered *Releasing a version* procedure) and a
+changelog template with a pre-printed release row, the deletion ledger,
+and the additions ledger, so that both ledgers a rebuild owes have one
+home. `paper/reviews/`: a README (naming, outside readers as their
+conditions allow, the structure lens and the refuter by pointer, the
+fix-or-bring rule as the check methodology states it, the blind referee
+as a fresh session or a subagent given the write-up alone) and a template
+whose identity line stays in prose, with a `Fix proposed` column and an
+optional `Plan:` line. `inherited/README.md`: the import policy and the
+one ledger of imports, which `LICENSE.md` now points at; imports by
+locator only where access conditions require; a candidate list at the
+researcher's direction, nothing copied.
 
-**Done when.** Formats generic; the pipeline slot documented; scan clean.
+
+**Done when.** Formats generic; every rule the READMEs rely on is owned by
+a rulebook; scan clean.
 
 ### Step 9: Mechanical enforcement: the tools
 
@@ -708,6 +729,24 @@ the prompt log to entry 001, and runs the round gate.
 
 **Done when.** A fresh instantiation passes the round gate with no edits;
 scan clean.
+
+### Amendments to accepted files made in steps 8e and 8f
+
+Six, each forced by the templates and flagged at hand-over.
+`DOCUMENT_GENRES.md` names `ONBOARDING.md` as the session-onboarding file,
+exempts an imported file under `inherited/` from the header stamp since it
+is a verbatim copy dated by its ledger row, and exempts `prompt_logs/
+_template.md` from immutability beside the README; `MANIFESTO.md` names
+`ONBOARDING.md` in its file table and gives the log entry example in
+Markdown, `001_short_description.md`, so that entries carry the stamp;
+`LICENSE.md` points at `inherited/README.md` as the one ledger of imports
+instead of keeping a second list; `ONTOLOGY.md` §1.4 fixes the form of a
+changelog's release row so the `released` predicate has a home.
+
+Two obligations this step places on later steps: step 9's
+`tools/artifacts.toml` carries the log-entry row and the four parts the
+round check looks for; step 13 ships `GETTING_STARTED.md`, which
+`ONBOARDING.md` already names for a first session's setup round.
 
 ### Amendments to accepted files made in steps 8c and 8d
 

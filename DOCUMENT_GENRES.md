@@ -62,7 +62,7 @@ YYYY`; dates in filenames are written `YYYY-MM-DD`.
 
 | Artifact | |
 |---|---|
-| the entries under `prompt_logs/` | every prompt, in order, with what was done in response; the folder's `README.md` is an index and is current state |
+| the entries under `prompt_logs/` | every prompt, in order, with what was done in response; the folder's `README.md` and `_template.md` are current state |
 
 An entry is **immutable once the researcher has committed it**; its own
 status line does not change this. An entry may be edited only while it is
@@ -216,7 +216,7 @@ altitude that owns it, and referred to from below by link.
 | `ONTOLOGY.md` | the predicates |
 | `CURRENT_STATE.md` | the state of the research |
 | `FINDINGS.md` | what the record has established; adding, removing, or substantially changing a finding requires the researcher's authorization |
-| the session-onboarding file | what every assistant session must know before it works |
+| `ONBOARDING.md` | the session-onboarding file: what every assistant session must know before it works |
 | every indexing `README.md` | what is in this folder, and what each file does |
 | `evidence_and_reasoning/research_statement.md` | the question as posed; maintained, and changed only on a significant deviation of the question |
 | `evidence_and_reasoning/problem_statement.md` | the keystone: the researcher's thesis, stated as questions or hypotheses precise enough that evidence could count against them, from which plans are drawn; maintained; in the SPECULATIVE register, it orders the reading and trumps nothing. Every plan states which of its hypotheses it serves, or why it serves none; a plan opened while no keystone is designated says so |
@@ -235,8 +235,9 @@ Month YYYY; updated D Month YYYY`, italicized in a document and in the
 leading comment of a program, so a reader knows how current it is. The
 date is the only thing a current-state artifact says about its own
 history. Non-prose files (data, images, rendered output, transcription
-files) carry no header; they are dated by the plan that owns them or the
-index that lists them. A tracked path that matches no genre in the
+files) carry no header, and neither does an imported file under
+`inherited/`, which is a verbatim copy; they are dated by the plan that
+owns them or the index that lists them. A tracked path that matches no genre in the
 checker's configuration is reported as unresolved; no default is assumed.
 
 **The version history is the history of these files.** They carry no
@@ -361,7 +362,8 @@ the researcher with its output (`MANIFESTO.md` §13).
    YYYY; updated D Month YYYY`, and nothing but a closing period and the
    closing emphasis mark follows the second date on that line.
 2. **Immutable.** No committed file under `prompt_logs/`, other than its
-   `README.md`, differs from its committed version or is deleted.
+   `README.md` and its `_template.md`, differs from its committed version
+   or is deleted.
 3. **Frozen.** For a frozen artifact whose body differs from its committed
    version, the updated date on the header line has changed. A change
    confined to the header (pointers, dates, `Released`, `Reserved`,

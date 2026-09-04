@@ -45,8 +45,10 @@ redistribution.
 ## Inherited material
 
 None. This template imports nothing from any other repository. A project
-built from this template lists here, with attribution and original dates,
-every artifact it imports under the import policy of `inherited/README.md`.
+built from this template lists every artifact it imports, with attribution
+and original dates, in the ledger of `inherited/README.md`, under the
+import policy stated there; this section then names the license each
+import is carried under.
 
 ## In a project built from this template
 

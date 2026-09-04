@@ -56,6 +56,7 @@ file and directory named in this document ships with the template:
 | `prompt_logs/` | the prompt log |
 | `FINDINGS.md` | what the record has established |
 | `PRECEDENCE.md` | what governs when sources disagree |
+| `ONBOARDING.md` | what every assistant session reads before it works |
 | `CURRENT_STATE.md` | the state of the research as a whole |
 | `evidence_and_reasoning/` | the record: statements, claims, check records, notes, plans, the tension ledger |
 | `paper/` | the write-ups and their reviews |
@@ -232,7 +233,7 @@ never holds the opinion the work exists to reach.
 
 - The assistant records every prompt in `prompt_logs/`, numbered
   contiguously and zero-padded to at least three digits
-  (`001_short_description.txt`, `002_...`), as the first act of the round
+  (`001_short_description.md`, `002_...`), as the first act of the round
   it opens. Rounds are sequential: a round closes before the next is
   logged.
 - An entry records the date; the prompt verbatim and unedited, except that
