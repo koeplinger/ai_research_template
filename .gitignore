@@ -4,6 +4,10 @@
 # Local harness settings (the shared settings file, if any, is tracked)
 .claude/settings.local.json
 
+# The run ledger, a local cache of check runs (tools/run_ledger.py), and the
+# copy it keeps of a corrupt one. Never tracked.
+.run_ledger.json*
+
 # Python
 *.py[cod]
 __pycache__/

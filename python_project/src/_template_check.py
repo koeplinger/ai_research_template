@@ -47,13 +47,23 @@ def value(name: str, v: object) -> object:
     return v
 
 
-# One entry per name on the Mutation line: a function the probe applies to
-# the object under test in a scratch copy, so the check can be shown to fail
-# under it (CHECK_METHODOLOGY.md, section 5).  A name with no entry here is
-# reported as unbound.
+# One entry per name on the Mutation line.  The probe (tools/falsifiability_probe.py)
+# calls the entry with what construct() returns and uses what the entry
+# returns in its place, so main() sanity checks and verifies the altered
+# object and the check is shown to fail under it (CHECK_METHODOLOGY.md,
+# section 5): an entry returns the altered object, and construct() is called
+# from main(), never at import.  A name with no entry here is reported as
+# unbound.
 MUTATIONS: dict[str, "callable"] = {
     # "variant-reading": lambda obj: obj.with_reading("B"),
 }
+
+# The data this check reads, as paths relative to the repository root; a
+# directory stands for every file under it.  The run ledger
+# (tools/run_ledger.py) hashes them with the program, so a change to any of
+# them makes the check stale; data read and not listed is outside the hash.
+# Leave the list empty where the check reads no file.
+BASIS: list[str] = []
 
 
 # ---------------------------------------------------------------------------

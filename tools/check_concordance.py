@@ -169,7 +169,7 @@ def run(root: Path, timeout: float, only: str | None) -> int:
 def selftest() -> int:
     failures = 0
     P2, K2 = "python_project/src/check_002_b.py", "evidence_and_reasoning/checks/002_b.md"
-    PRINT = 'print("RESULT: confirmed; count=" + str(len(sys.argv)))'
+    PRINT = 'print("RESULT: confirmed" + "".join(f"; {k}={v}" for k, v in VALUES.items()))'
 
     def case(name: str, ok: bool, detail: str = "") -> None:
         nonlocal failures
@@ -218,15 +218,15 @@ def selftest() -> int:
     case("a record with no part 4 and a program printing no value is noted, not reported", not f and any("nothing to compare" in x for x in n), str((f, n)))
     f, _, _, _ = run_on(sub(P2, "import sys\n", "import sys\nraise SystemExit(3)\n"))
     case("a program that stops before its RESULT line is reported with its exit status", any("prints no RESULT line on standard output (exited 3)" in x[3] for x in f), str(f))
-    f, n, _, _ = run_on(sub(P2, PRINT, 'print("RESULT: confirmed; count=2")\nraise SystemExit(1)'))
+    f, n, _, _ = run_on(sub(P2, PRINT, 'print("RESULT: confirmed; count=2")\n    raise SystemExit(1)'))
     case("a program that exits nonzero after its RESULT line is noted and still compared", any("exited 1" in x for x in n) and any("count: program prints '2', record states '1'" in x[3] for x in f), str((f, n)))
-    f, n, _, _ = run_on(sub(P2, PRINT, 'print("RESULT: confirmed; count=7")\n' + PRINT))
+    f, n, _, _ = run_on(sub(P2, PRINT, 'print("RESULT: confirmed; count=7")\n    ' + PRINT))
     case("two RESULT lines are noted and the last compared", not f and any("prints 2 RESULT lines" in x for x in n), str((f, n)))
-    f, n, _, _ = run_on(sub(P2, PRINT, 'print("RESULT: confirmed; count=" + str(len(sys.argv)) + "; range=1;2")'))
+    f, n, _, _ = run_on(sub(P2, PRINT, 'print("RESULT: confirmed; count=" + str(obj) + "; range=1;2")'))
     case("a RESULT part without '=' is noted", any("carries no '='" in x for x in n), str((f, n)))
     f, _, _, _ = run_on(sub(P2, "import sys\n", "import sys, time\ntime.sleep(5)\n"), timeout=1)
     case("a program that exceeds the timeout is reported as unfinished", any("did not finish (timed out" in x[3] for x in f), str(f))
-    f, n, _, _ = run_on(sub(P2, PRINT, PRINT + "\nimport time\ntime.sleep(5)\n"), timeout=1)
+    f, n, _, _ = run_on(sub(P2, PRINT, PRINT + "\n    import time\n    time.sleep(5)"), timeout=1)
     case("a RESULT line printed before a timeout is still compared", not f and any("did not finish" in x for x in n), str((f, n)))
 
     def drop_record(files):
@@ -234,7 +234,7 @@ def selftest() -> int:
         files["evidence_and_reasoning/checks/README.md"] = files["evidence_and_reasoning/checks/README.md"].replace("| [002](002_b.md) |\n", "")
     f, _, _, _ = run_on(drop_record)
     case("a program with no record is reported", any("no check record numbered 002" in x[3] for x in f), str(f))
-    f, n, _, _ = run_on(sub(P2, PRINT, 'print("RESULT: not confirmed; count=" + str(len(sys.argv)))'))
+    f, n, _, _ = run_on(sub(P2, PRINT, 'print("RESULT: not confirmed; count=" + str(obj))'))
     case("a verdict differing from the claim's is marked, never a finding", not f and any("(the words differ; never a finding)" in x for x in n), str((f, n)))
     _, _, ran, written = run_on(lambda files: None, only="002")
     case("--only runs the named program alone", ran == 1 and written == 0, str((ran, written)))

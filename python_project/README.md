@@ -56,9 +56,16 @@ python3 src/check_NNN_short_name.py   # one check
   truth does not depend on the computation asserts nothing, and the
   linter reports it.
 - **Every mutation is bound.** Each name in a check's `Mutation:` line is
-  a member of {{MUTATION_SET}}, bound in the program so the probe can
-  apply it (`CHECK_METHODOLOGY.md`, *What is checked mechanically*, item
-  3).
+  a member of {{MUTATION_SET}}, bound in the program's `MUTATIONS` to a
+  function that takes what `construct()` returns and returns the altered
+  object, so the probe can apply it around `construct()` and re-run
+  `main()` (`CHECK_METHODOLOGY.md`, *What is checked mechanically*, item
+  3; `tools/falsifiability_probe.py`). A check builds its object in
+  `construct()`, called from `main()`, never at import.
+- **Every data file a check reads is listed** in its `BASIS`, as paths
+  relative to the repository root, so the run ledger
+  (`tools/run_ledger.py`) knows when the check is stale; data read and not
+  listed is outside its hash.
 
 ## Slots
 

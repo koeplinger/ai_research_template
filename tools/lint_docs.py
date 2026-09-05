@@ -363,6 +363,15 @@ class Tree:
         self.claims = {self.num(f): f for f in self.files if self.kind(f) == "claim"}
         self.checks = {self.num(f): f for f in self.files if self.kind(f) == "check"}
         self.programs = {self.num(f): f for f in self.files if self.kind(f) == "check-program"}
+        self.ambiguous: list[tuple[str, str, str]] = []
+        for kind in ("claim", "check", "plan", "check-program"):
+            seen: dict[str, str] = {}
+            for f in self.files:
+                if self.kind(f) == kind:
+                    n = self.num(f)
+                    if n in seen:
+                        self.ambiguous.append((f, n, seen[n]))
+                    seen.setdefault(n, f)
         self.keys = set()
         for f in self.files:
             if self.kind(f) == "registry":
@@ -657,6 +666,8 @@ def check_ont_1_fields(t: Tree) -> None:
 
 
 def check_ont_2_tokens(t: Tree) -> None:
+    for f, n, other in t.ambiguous:
+        report("ONT-2", f, 1, f"number {n} is also {other}: a token naming it resolves to two files")
     fnd = t.first_of_kind("findings")
     findings_keys = set(re.findall(r"^\|\s*(F[0-9]{3,})\s*\|", t.text.get(fnd, "") if fnd else "", re.M))
     led = t.first_of_kind("ledger")
@@ -978,9 +989,9 @@ def fixture() -> dict[str, str]:
         "python_project/README.md": f"# Py\n\n{S}\n\n| File |\n|---|\n| [src/](src/) |\n| [conftest.py](conftest.py) |\n",
         "python_project/conftest.py": '"""Puts src on the path.\n\nCreated 1 January 2026; updated 1 January 2026.\n"""\nimport sys\n',
         "python_project/src/README.md": f"# Src\n\n{S}\n\n| File |\n|---|\n| [check_002_b.py](check_002_b.py) |\n",
-        "python_project/src/check_002_b.py": '"""Check 002: b.\n\nCreated 1 January 2026; updated 1 January 2026.\nPlan: 002, task 1\nBacks: [claim 002]\nInstrument: x\nMutation: variant-reading\n"""\nimport sys\nMUTATIONS: dict[str, "callable"] = {"variant-reading": lambda o: o}\nFAILURES = []\ndef report(n, ok, d=""):\n    if not ok:\n        FAILURES.append(n)\nreport("x", len(sys.argv) >= 1)\nprint("RESULT: confirmed; count=" + str(len(sys.argv)))\n',
+        "python_project/src/check_002_b.py": '"""Check 002: b.\n\nCreated 1 January 2026; updated 1 January 2026.\nPlan: 002, task 1\nBacks: [claim 002]\nInstrument: x\nMutation: variant-reading\n"""\nimport sys\nFAILURES = []\nVALUES = {}\ndef report(n, ok, d=""):\n    if not ok:\n        FAILURES.append(n)\ndef value(n, v):\n    VALUES[n] = v\n    return v\nMUTATIONS: dict[str, "callable"] = {"variant-reading": lambda o: o + 1}\nBASIS: list[str] = []\ndef construct():\n    return len(sys.argv)\ndef main():\n    obj = construct()\n    report("x", value("count", obj) == 1)\n    print("RESULT: confirmed" + "".join(f"; {k}={v}" for k, v in VALUES.items()))\n    return 1 if FAILURES else 0\nif __name__ == "__main__":\n    raise SystemExit(main())\n',
         "tools/README.md": f"# Tools\n\n{S}\n\n| File |\n|---|\n| [artifacts.toml](artifacts.toml) |\n",
-        ".gitignore": "*.log\n.privacy/\n__pycache__/\n*.py[cod]\n",
+        ".gitignore": "*.log\n.privacy/\n.run_ledger.json*\n__pycache__/\n*.py[cod]\n",
     }
 
 
@@ -1079,6 +1090,7 @@ def selftest() -> int:
     run_case("a claim token resolving to nothing", "ONT-2", "CURRENT_STATE.md", "[claim 042]", add("CURRENT_STATE.md", "\nSee [claim 042].\n"))
     run_case("a registry key resolving to nothing", "ONT-2", "CURRENT_STATE.md", "[Nope99]", add("CURRENT_STATE.md", "\nSee [Nope99].\n"))
     run_case("a plan token resolving to nothing", "ONT-2", "CURRENT_STATE.md", "plan 042", add("CURRENT_STATE.md", "\nSee plan 042.\n"))
+    run_case("a number carried by two claims", "ONT-2", "evidence_and_reasoning/claims/002_zz.md", "is also", lambda t, f: (w(t, "evidence_and_reasoning/claims/002_zz.md", f[C2]), w(t, "evidence_and_reasoning/claims/README.md", f["evidence_and_reasoning/claims/README.md"] + "| [002](002_zz.md) |\n")))
     run_case("a superseded-by path that does not exist", "ONT-2", "paper/main_v1.md", "stamp names a path", sub("paper/main_v1.md", "Released 3 January 2026", "Released 3 January 2026\nsuperseded by paper/gone.md"))
     run_case("a prerequisite naming no plan", "ONT-2", "evidence_and_reasoning/research_plans/002_b.md", "Prerequisites names no plan", sub("evidence_and_reasoning/research_plans/002_b.md", "Prerequisites: 001", "Prerequisites: 009"))
     run_case("a missing required field", "ONT-3", C1, "required field missing", sub(C1, "Verified-by: unchecked\n", ""))
@@ -1095,9 +1107,9 @@ def selftest() -> int:
     run_case("a kind outside the vocabulary", "CHECK-1", C1, "Kind not", sub(C1, "Kind: documentary", "Kind: textual"))
     run_case("a verdict outside its kind", "CHECK-1", C2, "not in the documentary", sub(C2, "Verdict: confirmed", "Verdict: proved"))
     run_case("a verdict on an OPEN claim", "CHECK-1", C1, "on a claim registered OPEN", sub(C1, "Verdict: none", "Verdict: confirmed"))
-    run_case("a constant-condition report", "CHECK-2", P2, "constant condition", sub(P2, "report(\"x\", len(sys.argv) >= 1)", "report(\"x\", 1 == 1)"))
-    run_case("a constant keyword condition", "CHECK-2", P2, "constant condition", sub(P2, "report(\"x\", len(sys.argv) >= 1)", "report(\"x\", ok=True)"))
-    run_case("an unbound mutation name", "CHECK-3", P2, "not bound", sub(P2, '"variant-reading": lambda o: o', ''))
+    run_case("a constant-condition report", "CHECK-2", P2, "constant condition", sub(P2, "report(\"x\", value(\"count\", obj) == 1)", "report(\"x\", 1 == 1)"))
+    run_case("a constant keyword condition", "CHECK-2", P2, "constant condition", sub(P2, "report(\"x\", value(\"count\", obj) == 1)", "report(\"x\", ok=True)"))
+    run_case("an unbound mutation name", "CHECK-3", P2, "not bound", sub(P2, '"variant-reading": lambda o: o + 1', ''))
     run_case("a check with no Mutation: line", "CHECK-3", K2, "no Mutation", sub(K2, "Mutation: variant-reading\n", ""))
     run_case("a mutation outside the project's set", "CHECK-3", K2, "not in the project's set", sub(K2, "Mutation: variant-reading", "Mutation: bogus"))
     run_case("the mutation set left unfilled", "CHECK-3", "tools/artifacts.toml", "unfilled", lambda t, f: w(t, "tools/artifacts.toml", cfg_text.replace('mutations = ["variant-reading"]', "mutations = []")))

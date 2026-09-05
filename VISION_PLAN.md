@@ -106,8 +106,8 @@ The single source of status for this build. Steps are executed top-down.
 | 8f | Artifacts: publication, reviews, imports | DONE | 2026-09-04 |
 | 9a | Tools: the configuration artifact and the linter | DONE | 2026-09-05 |
 | 9b | Tools: the round check, the reply hook, the privacy scan, the hook installer | DONE | 2026-09-05 |
-| 9c | Tools: the ontology queries, claim sites, concordance | READY | 2026-09-05 |
-| 9d | Tools: the falsifiability probe, the run ledger, the residue check | NOT STARTED | |
+| 9c | Tools: the ontology queries, claim sites, concordance | DONE | 2026-09-05 |
+| 9d | Tools: the falsifiability probe, the run ledger, the residue check | READY | 2026-09-05 |
 | 10 | Governance wiring: hooks, reminders, opposition, support | NOT STARTED | |
 | 11 | Worked example project | NOT STARTED | |
 | 12 | Breadth review beyond mathematics and physics | NOT STARTED | |
@@ -895,6 +895,96 @@ relied on elsewhere with no *What is not claimed* section
 query shows the fourth where it occurs. Whether the linter should grow
 these, or the catalogue should say they are reading, is a decision for
 the researcher; nothing in this step assumes either.
+
+### Step 9d as built
+
+`tools/falsifiability_probe.py`: the half of item 3 that executes. For
+every check program it applies the mutations the program's `Mutation:`
+line and its record's name, in a scratch copy of the whole tree (`.git`
+and the caches excepted), and re-runs the program with the mutation's
+function wrapped around its `construct()`, the way the check-program
+template binds a mutation, from the parent of the configured program
+directory with the argv of a direct run. Before any mutation is judged
+two runs must pass: the program run directly, and the program run through
+the probe's own harness unmutated; a direct run that fails or does not
+finish is noted and not judged, since a failing verdict may be the
+check's own result; a program that passes directly but not through the
+harness, or that has no `construct()` and `main()` to wrap, is reported as
+one the probe cannot probe. The matrix prints one cell per mutation:
+CAUGHT, SURVIVES (a CHECK-3 finding at the `Mutation:` line, worded as
+§5 words it), UNBOUND (the linter's finding, a name only the record
+carries included), or ERROR for an exception, a signal, or a timeout,
+none of which is a verdict. The harness reserves three exit statuses and
+reads them only beside its own marker line, so a program's own exit
+status is never mistaken for the harness's. A written procedure is listed
+with the sentence that its alteration is read from its Executions; a
+Robustness perturbation is not applied. `tools/run_ledger.py`: no
+rulebook item; a local, git-ignored cache of check runs keyed by a hash
+of what the tool can see of a verdict's basis: the program, the modules
+and packages under the program directory it imports transitively,
+relative imports included, the pinned dependencies, the interpreter's
+implementation and version, and the paths the program lists in a
+module-level `BASIS`, a directory standing for its files; every status
+line says that anything else the program reads is outside the hash.
+`status` says what is current, stale, or never run, a run that did not
+finish leaving its check stale; `run` recomputes exactly those, or
+everything when forced, and records each run's time, exit status, and
+`RESULT:` line, an unfinished run counted apart from a failure, cost
+measured and never a gate; `show` lists a check's cached runs; a corrupt
+ledger is said so and kept beside the new one. The check record stays
+the record. `tools/check_residue.py`: no rulebook item; what a rebuild
+leaves in a live draft, listed for the reading `CHECK_METHODOLOGY.md` §7
+says closes a rebuild round, every line a candidate for the reader:
+seams, dangling and orphaned references with labels pooled across every
+LaTeX source, phantoms read outside citation tokens, links, and
+quotations, echoes within a paragraph, a draft, or across the live
+drafts, structure, and a live changelog's deletion and additions ledgers
+against the draft, a cut restatement judged by count against the earlier
+version and the net word delta by body words. It reads every live draft
+under the write-up folder through the linter's prose view and, where the
+publication table is enabled, the LaTeX sources from the linter's file
+walk with their comments blank, its pipeline-specific, optional part.
+Every tool answers `--selftest` on the linter's fixture, whose check
+program now has the template's shape (`construct()`, `MUTATIONS`,
+`BASIS`, `value()`, `main()`), so a mutation can be applied to it and its
+`RESULT:` line takes the template's path. `tools/README.md` indexes all
+twelve files.
+
+**Independent review**, four read-only lenses (specification,
+correctness, contract with the linter and the templates, honesty of the
+self-tests), transcripts audited for scope: 71 findings, 11 major, every
+one applied. The largest: the scratch copy linked every folder but the
+program's into the real tree, so a check writing derived material under
+a mutation would have written it there; the probe judged mutations
+against a direct run only, so a program whose verdict is reached in its
+main guard would have shown every mutation caught; a direct run that
+fails was a finding, though a check backing a RULED_OUT claim fails by
+design; a run that timed out was cached as current; the ledger's basis
+missed packages and relative imports; labels were resolved per LaTeX
+file, so every cross-file reference was dangling; and the `BASIS`
+convention existed in the ledger's docstring alone.
+
+**Run on this repository** the probe finds no program, the ledger
+nothing to run, the residue check no live draft, and the round check
+reports the same two findings as before.
+
+**Amendments to accepted files made in 9d**, flagged at hand-over:
+`python_project/src/_template_check.py` pre-prints `BASIS` beside
+`MUTATIONS` and states the mutation contract the probe relies on (an
+entry returns the altered object; `construct()` is called from `main()`);
+`python_project/README.md` gains the matching design rules;
+`paper/README.md` fixes that a version's filename ends in `_vN` before
+its extension, which is how a changelog's ledgers are paired with it;
+`paper/_template_changelog.md` says what the net word delta counts;
+`.gitignore` names the run ledger in a block of its own; `tools/lint_docs.py`
+reports a number carried by two files of one kind under ONT-2, since a
+token naming it would resolve to two files, and its fixture's check
+program takes the template's shape. `tools/README.md` splits item 3
+between the linter's static half and the probe's executing half.
+
+**Observed, not changed.** `.gitignore` names one harness's local
+settings path, which the open decision on harness neutrality already
+assigns to step 10.
 
 ### Step 10: Governance wiring: hooks, reminders, opposition, support
 

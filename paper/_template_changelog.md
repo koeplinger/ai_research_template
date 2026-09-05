@@ -35,7 +35,7 @@
      Corrections replace; they do not append. Delete where nothing was
      rebuilt. -->
 
-Net word delta: <!-- +N or -N -->
+Net word delta: <!-- +N or -N: words of the body of vM less those of vN, headings and tables aside, comments and fences excluded; tools/check_residue.py recounts it -->
 
 | Section | Sentence added | Why |
 |---|---|---|

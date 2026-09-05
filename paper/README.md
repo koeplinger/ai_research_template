@@ -22,7 +22,9 @@ it are {{DELIVERABLE}}.
 - **Changes between versions go in a changelog**, `vN_to_vM_changelog.md`,
   which is live until vM releases and freezes then. Copy
   [`_template_changelog.md`](_template_changelog.md). The ledgers of a
-  rebuild live there.
+  rebuild live there. A version's filename ends in `_vN` before its
+  extension, as in a file named main_v2.md, which is how the ledgers are
+  paired with the version they describe (`tools/check_residue.py`).
 - **Standalone notes carry their date first in the filename**,
   `YYYY-MM-DD_short_topic.<ext>`, like every dated record; a note is
   released by the researcher's `Released` stamp, with no changelog, and
