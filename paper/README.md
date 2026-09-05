@@ -1,6 +1,6 @@
 # Paper
 
-*Created 4 September 2026; updated 4 September 2026.*
+*Created 4 September 2026; updated 5 September 2026.*
 
 The write-ups: the main write-up in its versions, standalone notes, and
 the reviews of both. `paper/` is the template's name for the
@@ -34,6 +34,12 @@ it are {{DELIVERABLE}}.
   itself. Scratch produced on the way is not committed. The prose is
   governed by `evidence_and_reasoning/editorial_standards.md`, *Writing
   for publication*, on every unfrozen draft here.
+- **Where the deliverable is built, the round check gates the build and
+  the bibliography** from the `[publication]` table of
+  `tools/artifacts.toml`, which names the build command, its sources,
+  outputs, and log, and the bibliography with its citation patterns; it
+  ships disabled. A project that publishes otherwise leaves it disabled,
+  and this bullet says so.
 
 ## Releasing a version
 

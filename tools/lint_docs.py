@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The genre and ontology linter: every statically decidable check, in one program.
 
-Created 4 September 2026; updated 4 September 2026.
+Created 4 September 2026; updated 5 September 2026.
 
 Reads tools/artifacts.toml, the single source of every path pattern and
 vocabulary (ONTOLOGY.md section 7), walks every tracked or untracked-but-
@@ -35,7 +35,7 @@ which version a changelog's release row belongs to (read, not checked);
 everything the rulebooks assign to reading.
 
 Usage
-    python3 tools/lint_docs.py              check; exit 1 on any finding
+    python3 tools/lint_docs.py              check; exit 1 on any finding (--quiet: the summary line only when there is a finding)
     python3 tools/lint_docs.py --list       kind, default genre, and derived genre of every file
     python3 tools/lint_docs.py --selftest   build a scratch project under git, plant each
                                             defect, confirm the named check fires at the
@@ -250,7 +250,7 @@ def prose_of(text: str, row: dict, cfg: dict, keep_backticks: bool = False) -> s
                 keep[i] = line
         return strip_unread("\n".join(keep), keep_backticks)
     if hk == "comment":
-        return "\n".join(l if l.lstrip().startswith("#") else "" for l in text.splitlines())
+        return strip_unread("\n".join(l if l.lstrip().startswith("#") else "" for l in text.splitlines()), keep_backticks)
     if row.get("kind") == "log-entry":
         p0, p1 = cfg["log"]["parts"][0], cfg["log"]["parts"][1]
         text = re.sub(re.escape(p0) + r".*?" + re.escape(p1), _blank, text, flags=re.S)
@@ -960,7 +960,7 @@ def fixture() -> dict[str, str]:
         "evidence_and_reasoning/notes/README.md": f"# N\n\n{S}\n\n| File |\n|---|\n| [2026-01-02_x.md](2026-01-02_x.md) |\n",
         "evidence_and_reasoning/notes/2026-01-02_x.md": f"# x: 2 January 2026\n\n{S}\n\n**Working note.** Found y.\n",
         "evidence_and_reasoning/references/README.md": f"# R\n\n{S}\n\n| File |\n|---|\n| [topic.md](topic.md) |\n",
-        "evidence_and_reasoning/references/topic.md": f"# References: topic\n\n{S}\n\n### [Key1]\n\n- Authors: A\n- Title: T\n- Where: W\n- Year: 2020\n- Identifier: doi\n- Keywords: k\n- Standing: searched x, 1 January 2026; none found\n",
+        "evidence_and_reasoning/references/topic.md": f"# References: topic\n\n{S}\n\n### [Key1]\n\n- Authors: A\n- Title: T\n- Where: W\n- Year: 2020\n- Identifier: doi\n- Keywords: k\n- Standing: searched x, 1 January 2026; none found\n\n### [Key2]\n\n- Authors: B\n- Title: U\n- Where: W\n- Year: 2021\n- Identifier: doi\n- Keywords: k\n- Standing: searched x, 1 January 2026; none found\n",
         "paper/README.md": f"# Paper\n\n{S}\n\n| File |\n|---|\n| [main_v1.md](main_v1.md) |\n| [v1_to_v2_changelog.md](v1_to_v2_changelog.md) |\n| [reviews/](reviews/) |\n",
         "paper/main_v1.md": f"# Main\n\n{S}\nReleased 3 January 2026\n\nThe write-up [claim 002].\n",
         "paper/v1_to_v2_changelog.md": f"# Changelog: v1 to v2\n\n{S}\n\n| Where | What | Why | Backed by |\n|---|---|---|---|\n| s1 | x | review | [claim 002] |\n",
@@ -973,27 +973,39 @@ def fixture() -> dict[str, str]:
         "python_project/src/README.md": f"# Src\n\n{S}\n\n| File |\n|---|\n| [check_002_b.py](check_002_b.py) |\n",
         "python_project/src/check_002_b.py": '"""Check 002: b.\n\nCreated 1 January 2026; updated 1 January 2026.\nPlan: 002, task 1\nBacks: [claim 002]\nInstrument: x\nMutation: variant-reading\n"""\nimport sys\nMUTATIONS: dict[str, "callable"] = {"variant-reading": lambda o: o}\nFAILURES = []\ndef report(n, ok, d=""):\n    if not ok:\n        FAILURES.append(n)\nreport("x", len(sys.argv) >= 1)\n',
         "tools/README.md": f"# Tools\n\n{S}\n\n| File |\n|---|\n| [artifacts.toml](artifacts.toml) |\n",
+        ".gitignore": "*.log\n.privacy/\n__pycache__/\n*.py[cod]\n",
     }
 
 
-def selftest() -> int:
-    # The shipped configuration, its one unfilled slot filled so that the
-    # scratch project is a project and not a template.
+def scratch_config() -> str:
+    """The shipped configuration, its one unfilled slot filled so that the
+    scratch project is a project and not a template."""
     cfg_text = (ROOT / "tools" / "artifacts.toml").read_text()
     assert "\nmutations = []\n" in cfg_text
-    cfg_text = cfg_text.replace("\nmutations = []\n", '\nmutations = ["variant-reading"]\n')
+    return cfg_text.replace("\nmutations = []\n", '\nmutations = ["variant-reading"]\n')
+
+
+def scratch_project(tmp: Path, files: dict[str, str], cfg_text: str) -> None:
+    """Write the fixture and the configuration under `tmp`."""
+    (tmp / "tools").mkdir(parents=True, exist_ok=True)
+    (tmp / "tools" / "artifacts.toml").write_text(cfg_text)
+    for rel, body in files.items():
+        (tmp / rel).parent.mkdir(parents=True, exist_ok=True)
+        (tmp / rel).write_text(body)
+
+
+def scratch_commit(tmp: Path) -> None:
+    """Make `tmp` a repository with everything committed, so the history
+    checks have a HEAD to read."""
+    for args in (["init", "-q"], ["add", "-A"], ["-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "fixture"]):
+        subprocess.run(["git", *args], cwd=tmp, capture_output=True)
+
+
+def selftest() -> int:
+    cfg_text = scratch_config()
     failures, covered = 0, set()
-
-    def write_all(tmp: Path, files: dict[str, str]) -> None:
-        (tmp / "tools").mkdir(parents=True, exist_ok=True)
-        (tmp / "tools" / "artifacts.toml").write_text(cfg_text)
-        for rel, body in files.items():
-            (tmp / rel).parent.mkdir(parents=True, exist_ok=True)
-            (tmp / rel).write_text(body)
-
-    def commit(tmp: Path) -> None:
-        for args in (["init", "-q"], ["add", "-A"], ["-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "fixture"]):
-            subprocess.run(["git", *args], cwd=tmp, capture_output=True)
+    write_all = lambda tmp, files: scratch_project(tmp, files, cfg_text)
+    commit = scratch_commit
 
     def run_case(name: str, item: str, path: str, needle: str, mutate) -> None:
         nonlocal failures
@@ -1083,7 +1095,7 @@ def selftest() -> int:
     run_case("a mutation outside the project's set", "CHECK-3", K2, "not in the project's set", sub(K2, "Mutation: variant-reading", "Mutation: bogus"))
     run_case("the mutation set left unfilled", "CHECK-3", "tools/artifacts.toml", "unfilled", lambda t, f: w(t, "tools/artifacts.toml", cfg_text.replace('mutations = ["variant-reading"]', "mutations = []")))
     run_case("the dash convention left unfilled", "EDIT-1", "tools/artifacts.toml", "unfilled", lambda t, f: w(t, "tools/artifacts.toml", cfg_text.replace('dashes = "no-em-dash"', 'dashes = ""')))
-    run_case("a party off the roster, roster unfilled", "ONT-3", "tools/artifacts.toml", "roster unfilled", sub(C2, "Verified-by: researcher", "Verified-by: Dr. Who"))
+    run_case("a party off the roster, roster unfilled", "ONT-3", "tools/artifacts.toml", "roster unfilled", sub(C2, "Verified-by: researcher", "Verified-by: an outsider"))
 
     missing = [i for i in ITEMS if i not in covered]
     for i in missing:

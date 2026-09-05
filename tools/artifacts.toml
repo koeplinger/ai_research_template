@@ -8,7 +8,7 @@
 # folder by the KIND of the row that names them, never by a second copy
 # of the path.  Current state; indexed in tools/README.md.
 #
-# Created 4 September 2026; updated 4 September 2026.
+# Created 4 September 2026; updated 5 September 2026.
 #
 # Rows are matched top to bottom and the FIRST matching glob wins, so a
 # specific row (a template, an index) stands above the general row for
@@ -31,7 +31,8 @@
 # A Plan: header line overrides any default but immutable, self, and
 # exempt: live while that plan is DRAFT or ENGAGED, frozen when CLOSED.
 # header: stamp (a markdown artifact) | docstring (a program) |
-#         comment (a configuration file: its comments are its prose) | none
+#         comment (a configuration file or a shell script: its comment lines
+#         are its prose) | none
 # required: field lines that must be present (ONTOLOGY.md, section 8)
 # skip: check identifiers this row is exempt from, honored by every check
 #       in one place; an escape hatch, each use with its reason beside it
@@ -91,13 +92,43 @@ internal-consistency = ["consistent", "inconsistent"]
 names = []
 
 [log]
-# The parts of a log entry the round check looks for (prompt_logs/README.md);
-# the region between the first two is verbatim and read by no check.
+# The parts of a log entry the round check looks for (prompt_logs/README.md):
+# the first two delimit the verbatim region, which no check reads; the last
+# is the closing status, whose fenced block the round check reads.
 parts = ["--- PROMPT START ---", "--- PROMPT END ---", "## What was done", "## Corrections and departures", "## Closing status"]
 
 [registry]
 # {{REFERENCE_FIELDS}}: the bullets a registry entry must carry.
 required = ["Authors", "Title", "Where", "Year", "Identifier", "Keywords", "Standing"]
+
+[publication]
+# The mechanical part of {{DELIVERABLE}}: the pipeline the round check gates
+# (tools/check_round.py, ROUND-3 and ROUND-4), as paper/README.md,
+# Conventions, says.  Disabled in the template.  A project that builds its
+# deliverable fills this in; a project that publishes otherwise leaves it
+# disabled.  The build itself is the researcher's to run: the check never
+# runs it, it names the command.  Freshness is by modification time, which
+# a checkout does not preserve: build once after a clone or a branch switch
+# before the gate is meaningful.
+enabled = false
+build = ""          # the command that builds the deliverable, named in a finding
+sources = []        # globs of what the build reads, in reading order: first-citation order follows it, alphabetically within a glob
+outputs = []        # globs of what the build writes; each must be newer than every source
+log = ""            # the build's log, if it writes one; newer than every source, matching no error marker; usually git-ignored
+log_errors = []     # regular expressions, one per error marker
+bibliography = ""   # the bibliography source, if the deliverable has one; empty skips ROUND-4
+entry = ""          # a regular expression whose first group is an entry's key, matched line by line in the bibliography
+cite = ""           # a regular expression whose first group is the keys at a citation site, comma-separated, matched line by line in the sources, comments included
+# A LaTeX deliverable with its bibliography in first-citation order:
+# enabled = true
+# build = "latexmk -pdf paper/main.tex"
+# sources = ["paper/*.tex", "paper/*.bib"]
+# outputs = ["paper/main.pdf"]
+# log = "paper/main.log"
+# log_errors = ['^! ', 'Undefined control sequence', 'Citation .* undefined', 'Reference .* undefined']
+# bibliography = "paper/references.bib"
+# entry = '^@\w+\{([^,\s]+),'
+# cite = '\\cite[a-z]*\*?(?:\[[^\]]*\])*\{([^}]*)\}'
 
 # ---------------------------------------------------------------- artifacts
 
@@ -288,6 +319,13 @@ kind = "rendered"
 glob = "paper/**/*.tex"
 genre = "exempt"
 header = "none"
+# A typeset source is out of the linter's reach: the editorial checks read
+# markdown, and the header check reads a stamp.  Its prose is the sweep's.
+[[artifact]]
+kind = "bibliography"
+glob = "paper/**/*.bib"
+genre = "exempt"
+header = "none"
 
 [[artifact]]
 kind = "log-entry"
@@ -312,6 +350,12 @@ kind = "tool"
 glob = "tools/*.py"
 genre = "current-state"
 header = "docstring"
+
+[[artifact]]
+kind = "tool"
+glob = "tools/*.sh"
+genre = "current-state"
+header = "comment"
 
 [[artifact]]
 kind = "config"

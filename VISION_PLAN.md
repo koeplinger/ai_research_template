@@ -104,8 +104,8 @@ The single source of status for this build. Steps are executed top-down.
 | 8d | Artifacts: plans, roadmap, notes | DONE | 2026-09-04 |
 | 8e | Artifacts: prompt log and session onboarding | DONE | 2026-09-04 |
 | 8f | Artifacts: publication, reviews, imports | DONE | 2026-09-04 |
-| 9a | Tools: the configuration artifact and the linter | READY | 2026-09-04 |
-| 9b | Tools: the round check, the reply hook, the privacy scan, the hook installer | NOT STARTED | |
+| 9a | Tools: the configuration artifact and the linter | DONE | 2026-09-05 |
+| 9b | Tools: the round check, the reply hook, the privacy scan, the hook installer | READY | 2026-09-05 |
 | 9c | Tools: the ontology queries, claim sites, concordance | NOT STARTED | |
 | 9d | Tools: the falsifiability probe, the run ledger, the residue check | NOT STARTED | |
 | 10 | Governance wiring: hooks, reminders, opposition, support | NOT STARTED | |
@@ -716,6 +716,92 @@ rule reads; the spelling examples in the `{{SPELLING}}` row of
 item 1 skips; the root README gains its stamp and a table of the root's
 files, which the index check reads and step 13's rewrite keeps;
 `LICENSE.md`'s stamp gains the updated date the header rule requires.
+
+### Step 9b as built
+
+`tools/check_round.py`: every gate in one command. It runs the linter
+in-process and passes its findings through under their own tags, GENRES-2
+(the log's immutability) and GENRES-8 (index coverage, the log's index
+included) among them, routes every finding through the linter's gate so
+a row's `skip` list holds for all of them, and adds four gates of its
+own. ROUND-1, the log's numbering: contiguous from 001, zero-padded, no
+number twice, every name of the form `NNN_short_description.md`. ROUND-2,
+the parts of an entry still open to editing, that is, uncommitted or
+differing from its committed version: the parts `[log]` names, each once
+and in order, searched after the verbatim region and outside fenced code,
+and under the last part a fenced status block of the §16 form with no
+RUNNING line; a committed entry is immutable and completed by a later
+entry, so it is not re-read. ROUND-3 and ROUND-4, the publication
+pipeline's gates, from a new `[publication]` table of
+`tools/artifacts.toml`, disabled in the template: every output and the
+build log newer than every source by modification time, which the
+docstring and the table say a checkout does not preserve, the log free of
+the configured error markers, the build named in the finding and never
+run by the check; every bibliography entry cited, no citation the
+bibliography lacks, no entry defined twice, and the entries in
+first-citation order, the sources taken in configured order. Every
+misconfiguration of the table is a finding, never a traceback.
+`--scratch DIR` writes the linter's clean fixture with the tools into a
+directory, for exercising the hooks in a throwaway repository.
+`tools/check_status_reply.py`: the §16 form on a reply read from a file or
+standard input, exit 0 or 1 with each reason; its two readings of the
+section are stated in its docstring (a line breaks at a newline only; a
+status line separated from the block by a blank line is reported); it
+knows no harness, since the wiring is `{{REPLY_HOOK}}`.
+`tools/privacy_scan.py`: the generic, opt-in form of the build's own
+mechanism, reading a git-ignored list at `.privacy/stopwords.txt`
+(whole-word patterns, with the underscore a separator in paths and a word
+character in contents, and `~` substring patterns) over the working tree,
+the staged content and paths, or a commit message with git's comment
+lines skipped; absent the list, or where git cannot list the tree, it
+gives no verdict and exits 2. It runs beside the round check, never inside
+it, as `MANIFESTO.md` §13's build lens says. `tools/install_hooks.sh`:
+writes `pre-commit` (the staged privacy scan, refusing; then the round
+check over the working tree, reporting, or refusing under `--strict`) and
+`commit-msg` (the message scan, refusing); every refusal names the
+override, `--no-verify`, and asks that the commit message say why (§12);
+a hook it did not write, or a hooks directory shared by `core.hooksPath`,
+is left alone unless forced; `--uninstall` removes what it wrote; its
+self-test exercises both hooks end to end in a throwaway repository,
+including a hit that is staged only. Every tool answers `--selftest`, with
+the planted stop word generated at run time so no tool's own text carries
+it; the round check's self-test reuses the linter's fixture through three
+helpers the linter now exposes. `tools/README.md` indexes all six files.
+
+**Independent review**, four read-only lenses (specification, correctness,
+configuration, honesty), transcripts audited for scope: 72 findings,
+8 major, every one applied. The largest: the installed round gate refused
+the researcher's commit, against the manifesto's opening rule and VISION's
+warning that a blocking mechanism is routed around without trace, so it
+now reports and the commit proceeds unless the hooks were installed
+strict, while the privacy scan keeps refusing and every refusal asks for
+a reason in the commit message; ROUND-2 re-read committed entries, which
+§8 sanctions committing mid-round and forbids editing, so a finding could
+never be cleared; the parts search read the verbatim prompt region the
+configuration promises no check reads; the round check carried the
+privacy scan, which no owner places there; the configuration sent a
+project to a sentence of `paper/README.md` that did not exist; and the
+installer's self-test could pass on the round check's scan without the
+staged scan ever running.
+
+**Run on this repository** the round check reports two findings, both
+true: `GETTING_STARTED.md` and `CLOSING_NOTE.md`, which the rulebooks
+name and no step so far has delivered. From this step on the end of
+every step runs the round check and the privacy scan, as `MANIFESTO.md`
+§13's build lens says.
+
+**Amendments to accepted files made in 9b**, flagged at hand-over:
+`paper/README.md` gains the bullet the configuration points at, that the
+round check gates the build and the bibliography from `[publication]`
+where the deliverable is built; `prompt_logs/README.md` gains the sentence
+that owns the closing-status checks, the §16 form in a fence with no
+RUNNING line, verified on an entry still open to editing;
+`tools/lint_docs.py` exposes its fixture and scratch helpers, reads a
+shell script's comments as prose under the `comment` header kind with the
+unread spans blanked, and its fixture gains a second registry key and a
+`.gitignore`; `tools/artifacts.toml` gains the `[publication]` table, a
+`paper/**/*.bib` row, a `tools/*.sh` row, and the note that a typeset
+source is out of the linter's reach.
 
 ### Step 10: Governance wiring: hooks, reminders, opposition, support
 

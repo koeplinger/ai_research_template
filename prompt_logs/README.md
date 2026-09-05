@@ -1,6 +1,6 @@
 # Prompt logs
 
-*Created 4 September 2026; updated 4 September 2026.*
+*Created 4 September 2026; updated 5 September 2026.*
 
 Every prompt is recorded here, numbered contiguously and zero-padded to
 at least three digits, `NNN_short_description.md`, as the first act of
@@ -26,7 +26,11 @@ text, licensed data, personal data) is replaced by a locator and a note
 that it was removed before logging; what was done in response; the reason
 for any correction or departure from the rules made in the round; and the
 round's closing status block. These are the parts the round check looks
-for.
+for, on an entry still open to editing. The closing status is the
+round's final status block in the form `MANIFESTO.md` §16 fixes, inside
+a fence so that its labels are not read as header fields; it carries no
+`RUNNING` line, since the round has closed. The round check verifies the
+form.
 
 ## Contents
 
