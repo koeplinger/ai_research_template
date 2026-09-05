@@ -15,8 +15,9 @@ WHAT EACH TAG IMPLEMENTS
   EDIT-1..2     editorial_standards.md, What is checked mechanically, 1 and 2
   ONT-1..6      ONTOLOGY.md, section 5, checks 1 to 6
   CHECK-1..3    CHECK_METHODOLOGY.md, What is checked mechanically, 1 to 3
-                (item 5 is GENRES-8; item 6, the citation sites, is the
-                listing tool that ships beside this one)
+                (item 4 is CHECK-4, reported by tools/check_concordance.py;
+                item 5 is GENRES-8; item 6, the citation sites, is the
+                sites query of tools/query_ontology.py)
 
 WHAT IS NEVER READ: HTML comments, fenced code, and backtick spans, in every
 file; a program's code, so that only its docstrings and comments are prose;
@@ -106,12 +107,21 @@ TOKEN_FINDING = re.compile(r"\[finding (F[0-9]{3,})\]")
 TOKEN_TENSION = re.compile(r"\[tension (T[0-9]{3,})\]")
 TOKEN_PLAN = re.compile(rf"(?<![\w/])plan ({NUM})(?![\w-])")
 TOKEN_KEY = re.compile(r"\[([A-Z][A-Za-z0-9]{2,31})(?:,\s*[^\]]+)?\](?![\(\[])")
-LINK_RE = re.compile(r"\[([^\]]*)\]\(([^)]+)\)")
+LINK_RE = re.compile(r"\[([^\]]*)\](?:\(([^)]+)\)|\[[^\]]*\])")
 BACKTICK_PATH_RE = re.compile(r"`([A-Za-z0-9_][A-Za-z0-9_./-]*(?:/|\.(?:md|py|toml|txt|sh|json|tex|pdf)))`")
 PLACEHOLDER = re.compile(r"NNN|YYYY|<|>|\{\{|_short_|\*|\[0-9\]|name\.md|topic\.md|D Month|\bv[NM](?=[_.])|_v[NM]\b")
 
 FINDINGS: list[tuple[str, str, int, str]] = []
 _TREE: "Tree | None" = None
+
+
+def use(tree: "Tree") -> "Tree":
+    """Install `tree` as the tree report() consults for skip lists, and
+    start a fresh findings list; every tool that reports calls this."""
+    global _TREE
+    _TREE = tree
+    FINDINGS.clear()
+    return tree
 
 
 def report(item: str, path: str, line: int, msg: str) -> None:
@@ -547,7 +557,7 @@ def check_genres_7_paths(t: Tree) -> None:
         base = (t.root / f).parent
         seen: set[str] = set()
         for i, line in enumerate(clean.splitlines(), 1):
-            cands = [m.group(2) for m in LINK_RE.finditer(line)] + BACKTICK_PATH_RE.findall(line)
+            cands = [m.group(2) for m in LINK_RE.finditer(line) if m.group(2)] + BACKTICK_PATH_RE.findall(line)
             for c in cands:
                 c = c.split("#")[0].strip()
                 if not c or c in seen or PLACEHOLDER.search(c) or "://" in c or c.startswith("mailto:"):
@@ -892,10 +902,7 @@ ITEMS = ["GENRES-1", "GENRES-2", "GENRES-3", "GENRES-4", "GENRES-5", "GENRES-6",
 
 
 def run_checks(root: Path) -> Tree:
-    global _TREE
-    FINDINGS.clear()
-    t = Tree(root, load_config(root))
-    _TREE = t
+    t = use(Tree(root, load_config(root)))
     for c in CHECKS:
         c(t)
     return t
@@ -946,13 +953,13 @@ def fixture() -> dict[str, str]:
         "evidence_and_reasoning/README.md": f"# E\n\n{S}\n\n| File |\n|---|\n| [research_statement.md](research_statement.md) |\n| [editorial_standards.md](editorial_standards.md) |\n| [public_record_tensions.md](public_record_tensions.md) |\n| [claims/](claims/) |\n| [checks/](checks/) |\n| [research_plans/](research_plans/) |\n| [notes/](notes/) |\n| [references/](references/) |\n",
         "evidence_and_reasoning/research_statement.md": f"# RS\n\n{S}\n\nThe question.\n",
         "evidence_and_reasoning/editorial_standards.md": f"# Ed\n\n{S}\n\n",
-        "evidence_and_reasoning/public_record_tensions.md": f"# T\n\n{S}\n\n| # | a | b | c | Caution |\n|---|---|---|---|---|\n| T001 | [claim 002] | [Key1] | x | live |\n",
+        "evidence_and_reasoning/public_record_tensions.md": f"# T\n\n{S}\n\n| # | What this project establishes | What the public record says | The caution that survives | Caution (live, or closed D Month YYYY) |\n|---|---|---|---|---|\n| T001 | [claim 002] | [Key1] | x | live |\n",
         "evidence_and_reasoning/claims/README.md": f"# Claims\n\n{S}\n\n| Claim |\n|---|\n| [001](001_a.md) |\n| [002](002_b.md) |\n",
         "evidence_and_reasoning/claims/001_a.md": f"# Claim 001: a\n\n{S}\nRegister: OPEN\nKind: documentary\nVerdict: none\nPlan: 001, task 1\nVerified-by: unchecked\nBacked-by: [check 001]\n\n## Claim\n\nSays so [Key1, p. 2].\n",
         "evidence_and_reasoning/claims/002_b.md": f"# Claim 002: b\n\n{S}\nRegister: VERIFIED\nKind: documentary\nVerdict: confirmed\nPlan: 002, task 1\nVerified-by: researcher\nBacked-by: [check 002]\n\n## Claim\n\nHolds [Key1, f. 3r].\n",
         "evidence_and_reasoning/checks/README.md": f"# Checks\n\n{S}\n\n| Check |\n|---|\n| [001](001_a.md) |\n| [002](002_b.md) |\n",
         "evidence_and_reasoning/checks/001_a.md": f"# Check 001: a\n\n{S}\nPlan: 001, task 1\nBacks: [claim 001]\nInstrument: the edition\nMutation: variant-reading\n\n## 1\n\nx\n",
-        "evidence_and_reasoning/checks/002_b.md": f"# Check 002: b\n\n{S}\nPlan: 002, task 1\nBacks: [claim 002]\nInstrument: the edition\nMutation: variant-reading\n\n## 1\n\ny\n",
+        "evidence_and_reasoning/checks/002_b.md": f"# Check 002: b\n\n{S}\nPlan: 002, task 1\nBacks: [claim 002]\nInstrument: the edition\nMutation: variant-reading\n\n## 1. What is checked\n\ny\n\n## 4. Results\n\ncount = 1\n",
         "evidence_and_reasoning/research_plans/README.md": f"# Plans\n\n{S}\n\n| Plan |\n|---|\n| [001](001_a.md) |\n| [002](002_b.md) |\n| [ROADMAP.md](ROADMAP.md) |\n",
         "evidence_and_reasoning/research_plans/001_a.md": f"# Plan 001: a\n\n{S}\nStatus: ENGAGED 1 January 2026\nServes: none, setup\nPrerequisites: none\n\n## Execution status\n\n| Task | State |\n|---|---|\n| 1 | done |\n",
         "evidence_and_reasoning/research_plans/002_b.md": f"# Plan 002: b\n\n{S}\nStatus: CLOSED 2 January 2026, verdict COMPLETE\nServes: none, setup\nPrerequisites: 001\n\n## Execution status\n\n| Task | State |\n|---|---|\n| 1 | done |\n",
@@ -971,7 +978,7 @@ def fixture() -> dict[str, str]:
         "python_project/README.md": f"# Py\n\n{S}\n\n| File |\n|---|\n| [src/](src/) |\n| [conftest.py](conftest.py) |\n",
         "python_project/conftest.py": '"""Puts src on the path.\n\nCreated 1 January 2026; updated 1 January 2026.\n"""\nimport sys\n',
         "python_project/src/README.md": f"# Src\n\n{S}\n\n| File |\n|---|\n| [check_002_b.py](check_002_b.py) |\n",
-        "python_project/src/check_002_b.py": '"""Check 002: b.\n\nCreated 1 January 2026; updated 1 January 2026.\nPlan: 002, task 1\nBacks: [claim 002]\nInstrument: x\nMutation: variant-reading\n"""\nimport sys\nMUTATIONS: dict[str, "callable"] = {"variant-reading": lambda o: o}\nFAILURES = []\ndef report(n, ok, d=""):\n    if not ok:\n        FAILURES.append(n)\nreport("x", len(sys.argv) >= 1)\n',
+        "python_project/src/check_002_b.py": '"""Check 002: b.\n\nCreated 1 January 2026; updated 1 January 2026.\nPlan: 002, task 1\nBacks: [claim 002]\nInstrument: x\nMutation: variant-reading\n"""\nimport sys\nMUTATIONS: dict[str, "callable"] = {"variant-reading": lambda o: o}\nFAILURES = []\ndef report(n, ok, d=""):\n    if not ok:\n        FAILURES.append(n)\nreport("x", len(sys.argv) >= 1)\nprint("RESULT: confirmed; count=" + str(len(sys.argv)))\n',
         "tools/README.md": f"# Tools\n\n{S}\n\n| File |\n|---|\n| [artifacts.toml](artifacts.toml) |\n",
         ".gitignore": "*.log\n.privacy/\n__pycache__/\n*.py[cod]\n",
     }

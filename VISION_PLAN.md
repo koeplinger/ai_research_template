@@ -105,8 +105,8 @@ The single source of status for this build. Steps are executed top-down.
 | 8e | Artifacts: prompt log and session onboarding | DONE | 2026-09-04 |
 | 8f | Artifacts: publication, reviews, imports | DONE | 2026-09-04 |
 | 9a | Tools: the configuration artifact and the linter | DONE | 2026-09-05 |
-| 9b | Tools: the round check, the reply hook, the privacy scan, the hook installer | READY | 2026-09-05 |
-| 9c | Tools: the ontology queries, claim sites, concordance | NOT STARTED | |
+| 9b | Tools: the round check, the reply hook, the privacy scan, the hook installer | DONE | 2026-09-05 |
+| 9c | Tools: the ontology queries, claim sites, concordance | READY | 2026-09-05 |
 | 9d | Tools: the falsifiability probe, the run ledger, the residue check | NOT STARTED | |
 | 10 | Governance wiring: hooks, reminders, opposition, support | NOT STARTED | |
 | 11 | Worked example project | NOT STARTED | |
@@ -802,6 +802,99 @@ unread spans blanked, and its fixture gains a second registry key and a
 `.gitignore`; `tools/artifacts.toml` gains the `[publication]` table, a
 `paper/**/*.bib` row, a `tools/*.sh` row, and the note that a typeset
 source is out of the linter's reach.
+
+### Step 9c as built
+
+`tools/query_ontology.py`: the seven answerable questions of
+`ONTOLOGY.md` §6, one command each and `all` for those that take no
+claim. *rests-on* walks `Depends-on` and `Backed-by` from a claim depth
+first, each member's subtree under it, and prints each member with its
+register, flagging a member weaker than the claim relying on it by the
+ordering of §4 and a RULED_OUT member always, saying of a register §4
+does not order that it is unordered, and marking a member reached twice,
+a cycle, and a dependency or check that resolves to nothing; a check is
+a leaf of the walk. *unverified* keeps that closure to OPEN, SPECULATIVE,
+and RULED_OUT members and to `Verified-by` unchecked or deferred, an
+unresolved dependency included. *deferred* lists every deferral with its
+instrument. *radius* is the blast radius. *literature* prints every row
+of the tension ledger with its columns as recorded, an empty cell said to
+be empty, and says that whether a caution is still live is reading.
+*unfinished* lists plans by status, claims by register with membership
+taken from the configured vocabulary, reservations by plan, and every
+`Serves: none`. *sites* lists every place a claim or a check record cites
+a claim, in its header or its body, with both registers and the cited
+claim's *What is not claimed* quoted in full beside the citing line, an
+absent section and an empty one told apart, the comparison of rule six
+left to reading. Question 8 has no command, as §6 says.
+`tools/claim_sites.py`: the three things question 4 names (every token
+site by line, with the finding and tension rows among them by key; every
+claim whose `Depends-on` names it, with its register; the Reserved
+cluster), then, under a heading that says it is beyond the question, the
+claim's own backing and plan, and at the end what a token search cannot
+see: a restatement without the token, a derived table that used the
+claim unnamed, a write-up's paraphrase, a token inside an unread span, an
+indirect dependent, and the files whose configured row has no header,
+named by kind. `tools/check_concordance.py`: item 4 of
+`CHECK_METHODOLOGY.md`'s mechanical list and only that, tagged CHECK-4 to
+continue the linter's numbering of that list: it runs every check
+program unbuffered, from the parent of the configured program directory
+as `python_project/README.md` says, takes the last `RESULT:` line on
+standard output, reads the record's part 4 through the same prose view
+the linter uses, and reports at the true line every named value that
+differs, is stated and not printed, or printed and not stated, a program
+that prints no such line, and a program with no record; a written
+procedure is listed and not compared; a nonzero exit, a second `RESULT`
+line, a part without `=`, and a timeout after the line was printed are
+noted and still compared; the verdict word is printed beside the backed
+claim's `Verdict:`, marked where the words differ, never a finding, since
+who assigns the register is `CHECK_METHODOLOGY.md` §1's. The plan's own
+sketch of this tool (single-sourced figures, a shadow scan for the wrong
+value in the right context) was narrowed by the accepted rulebook, which
+assigns both to the sweep; the docstring says so. Every tool answers
+`--selftest` on the linter's fixture, extended with the claims a query
+needs, the extended tree shown clean under the linter before any answer
+is asserted, and a second tree the linter rejects for the branches a
+clean tree cannot reach. `tools/README.md` indexes all nine files.
+
+**Independent review**, four read-only lenses (specification,
+correctness, contract with the linter and the templates, honesty of the
+self-tests), transcripts audited for scope: 74 findings, 19 major, every
+one applied. The largest: the rests-on walk printed every member's
+subtree under the last sibling, misattributing checks to claims; the
+concordance check read the record's part 4 from raw text, so a value in a
+pasted fence or a comment was compared, and reported every disagreement
+at line 1; the unverified query dropped a RULED_OUT member that §4 says
+is reported always; and three self-test cases passed for reasons other
+than the ones they named, among them a case for an uncited claim run on a
+cited one.
+
+**Run on this repository** every query answers "none", the concordance
+runs no program, and the round check reports the same two findings as
+before.
+
+**Amendments to accepted files made in 9c**, flagged at hand-over:
+`tools/lint_docs.py` gains a public `use()` that installs the tree its
+`report()` consults and clears the findings, so the tools reach the skip
+list through one contract rather than a private name; its link pattern
+treats a reference-style link as a link, as `ONTOLOGY.md` §1.3 says; its
+tag table names CHECK-4 and the sites query; its fixture's check program
+prints a `RESULT:` line, its record states the value, and its tension
+ledger carries the template's column headings. `tools/README.md` no
+longer says every self-test plants a defect, since a query's confirms an
+answer. The reply checker's self-test case for a paragraph separator now
+carries the separator it names.
+
+**Observed, not changed.** The catalogue of `ONTOLOGY.md` §2 assigns six
+items to the ontology checks that the linter of 9a does not implement:
+an ATTESTED claim citing without a locus (`cites-at`), a `Released` stamp
+without its changelog row or the reverse (`released`), a `Pre-registered`
+date not preceding the earliest record's (`pre-registered`), a claim
+relied on elsewhere with no *What is not claimed* section
+(`not-claimed`), a source-index row with neither `held` nor
+`consulted-at`, and `Witness of` resolving (`witness-of`). The sites
+query shows the fourth where it occurs. Whether the linter should grow
+these, or the catalogue should say they are reading, is a decision for
+the researcher; nothing in this step assumes either.
 
 ### Step 10: Governance wiring: hooks, reminders, opposition, support
 

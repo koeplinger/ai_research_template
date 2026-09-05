@@ -91,7 +91,7 @@ def selftest() -> int:
         ("text after the label that contains a colon", "DONE: x: y\n", True),
         ("Windows line endings", "Text.\r\n\r\nDONE: a\r\n", True),
         ("a reply that is only a status block", "DONE: a\n", True),
-        ("a paragraph separator inside the last line is not a line break", "DONE: amore\n", True),
+        ("a paragraph separator inside the last line is not a line break", "DONE: a\u2028more\n", True),
         ("no block at all", "Did the thing and that is all.\n", False),
         ("prose ending in a label word", "It is done.\n", False),
         ("prose after the block", "DONE: a\n\nLet me know.\n", False),
