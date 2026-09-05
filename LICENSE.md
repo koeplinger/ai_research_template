@@ -1,6 +1,6 @@
 # Licensing
 
-*Created 2 September 2026.*
+*Created 2 September 2026; updated 4 September 2026.*
 
 This repository combines written material and executable code. Different
 licenses apply to the two.

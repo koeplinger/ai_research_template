@@ -347,7 +347,7 @@ never holds the opinion the work exists to reach.
   superseded, with a `superseded by <path>` line in its header. A
   current-state artifact is corrected in place, without an account of the
   change in the artifact itself: it describes what is, and the version
-  history carries what it used to say; its updated date changes too, so a
+  history carries its earlier text; its updated date changes too, so a
   reader knows how current the description is.
 - The reason for a correction has a home: the prompt-log entry of the round
   that made it (§8), or the commit message when the researcher corrects by

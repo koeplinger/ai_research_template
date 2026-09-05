@@ -155,8 +155,8 @@ assistant can read the results directly. A trail of "this was found, then
 corrected, then re-scoped" is not a result; it is noise that costs the
 reader time and invites them to mistake a superseded statement for a live
 one. So while the plan is open, **a correction is made by making the
-document say the right thing**: no dated addendum, no narration of what it
-used to say. The history lives in the prompt log and the version history.
+document say the right thing**: no dated addendum, no narration of its
+earlier text. The history lives in the prompt log and the version history.
 On closure the frozen rules above apply in full.
 
 ### A standing reservation
@@ -253,8 +253,8 @@ must never appear:
 - A settlement date: *"settled <date>"*, *"was open through version <N>"*,
   *"now proved"*, *"now confirmed"*, *"now attested"*, *"now replicated"*,
   *"SETTLED (was OPEN)"*.
-- A supersession narrative: *"this supersedes the earlier statement that
-  ..."*.
+- A supersession narrative:
+  *"this supersedes the earlier statement that ..."*.
 - A change-history footer: *"Last updated: <date> (new entries: ...;
   previous update: ...)"*. The standard header is the whole of it.
 - **A sentence whose subject is a change in the text** rather than a fact,

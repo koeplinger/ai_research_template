@@ -1,0 +1,396 @@
+# tools/artifacts.toml
+#
+# The single source of every path pattern, artifact kind, genre default,
+# required field, and closed vocabulary the tools read (ONTOLOGY.md,
+# section 7).  A project that files its artifacts elsewhere edits this one
+# file, and every tool follows: the tools locate the log, the plan index,
+# the registry, the findings file, the tension ledger, and the write-up
+# folder by the KIND of the row that names them, never by a second copy
+# of the path.  Current state; indexed in tools/README.md.
+#
+# Created 4 September 2026; updated 4 September 2026.
+#
+# Rows are matched top to bottom and the FIRST matching glob wins, so a
+# specific row (a template, an index) stands above the general row for
+# its folder.  Globs are relative to the repository root; `*` and `?`
+# never cross a slash, `**` matches any depth, and "[0-9]*" is how a
+# numbered form excludes README.md and the _template files.
+#
+# genre, the default the linter derives from (ONTOLOGY.md, section 3):
+#   current-state  described what is; corrected in place
+#   immutable      never edited once committed
+#   frozen         a dated record; frozen on writing
+#   plan-owned     follows the owning plan's Status: line
+#   self           a plan: follows its own Status: line
+#   dated-record   frozen on writing, or with the plan its Plan: line
+#                  names; exempt from the narrative and path checks
+#   release        live until its Released stamp (a version) or its
+#                  (release) row (a changelog); a Plan: line overrides
+#   exempt         no header, no genre check: non-prose, imported, or the
+#                  build's own north star
+# A Plan: header line overrides any default but immutable, self, and
+# exempt: live while that plan is DRAFT or ENGAGED, frozen when CLOSED.
+# header: stamp (a markdown artifact) | docstring (a program) |
+#         comment (a configuration file: its comments are its prose) | none
+# required: field lines that must be present (ONTOLOGY.md, section 8)
+# skip: check identifiers this row is exempt from, honored by every check
+#       in one place; an escape hatch, each use with its reason beside it
+
+[template]
+python = "3.11"
+
+[editorial]
+# The linter's reading of {{SPELLING}} and {{DASH_CONVENTION}}
+# (editorial_standards.md, What is checked mechanically, item 1).  An empty
+# value means unfilled: the check is skipped and reported once.
+#   spelling: "us" | "uk" | "none" (no variant list applies) | ""
+#   dashes:   "no-em-dash" | "spaced-em-dash" | "none" | ""
+spelling = "us"
+dashes = "no-em-dash"
+# Starter word lists, keyed by the convention they are WRONG under; the
+# project extends them.
+[editorial.wrong_words]
+us = ["labelled", "labelling", "organise", "organised", "organises", "organisation", "recognise", "recognised", "summarise", "summarised", "colour", "colours", "behaviour", "centre", "analyse", "analysed", "modelling", "modelled", "travelling", "fulfil", "licence"]
+uk = ["labeled", "labeling", "organize", "organized", "organizes", "organization", "recognize", "recognized", "summarize", "summarized", "color", "colors", "behavior", "center", "analyze", "analyzed", "modeling", "modeled", "traveling", "fulfill", "license"]
+
+[narrative]
+# The two files whose italicized examples the narrative check skips
+# (DOCUMENT_GENRES.md, What the checker verifies, item 5).
+italic_examples_in = ["DOCUMENT_GENRES.md", "evidence_and_reasoning/editorial_standards.md"]
+
+[fields]
+# The header field names ONTOLOGY.md catalogues (sections 1.1 and 2); an
+# unrecognized name is reported (ontology check 1).
+names = ["Register", "Kind", "Verdict", "Plan", "Depends-on", "Backed-by", "Backs", "Verified-by", "Instrument", "Frame", "Mutation", "Robustness", "Original", "Prerequisites", "Serves", "Status", "By", "Produced-from"]
+# A header field that writes derived state is reported (ontology check 6).
+derived = ["Genre", "Tier", "Live", "Frozen"]
+
+[vocab]
+registers = ["VERIFIED", "DERIVED", "ATTESTED", "SPECULATIVE", "RULED_OUT", "OPEN"]
+kinds = ["formal", "computational", "empirical", "inferential", "documentary", "interpretive", "internal-consistency"]
+plan_status = ["DRAFT", "ENGAGED", "CLOSED"]
+plan_verdicts = ["CONFIRMED", "REFUTED", "COMPLETE", "ABANDONED"]
+# {{MUTATION_SET}}: the names a Mutation: line may carry.  Empty means
+# unfilled; the name check is skipped and reported once, when a check
+# exists to apply it to.
+mutations = []
+[vocab.verdicts]
+formal = ["proved", "disproved"]
+computational = ["reproduced", "not reproduced"]
+empirical = ["compatible", "in tension", "refuted"]
+# Two values, one from each pair, comma-separated.
+inferential = [["identified as stated", "assumption unsupported"], ["replicated", "not replicated"]]
+documentary = ["confirmed", "not confirmed"]
+interpretive = ["supported", "underdetermined", "contradicted"]
+internal-consistency = ["consistent", "inconsistent"]
+
+[parties]
+# {{PARTIES}}: the roster By: and Verified-by: may name, beyond the
+# researcher and the assistant.  Empty means unfilled; the roster check is
+# skipped and reported once, when a By: line exists to apply it to.
+names = []
+
+[log]
+# The parts of a log entry the round check looks for (prompt_logs/README.md);
+# the region between the first two is verbatim and read by no check.
+parts = ["--- PROMPT START ---", "--- PROMPT END ---", "## What was done", "## Corrections and departures", "## Closing status"]
+
+[registry]
+# {{REFERENCE_FIELDS}}: the bullets a registry entry must carry.
+required = ["Authors", "Title", "Where", "Year", "Identifier", "Keywords", "Standing"]
+
+# ---------------------------------------------------------------- artifacts
+
+[[artifact]]
+kind = "vision"
+glob = "VISION.md"
+genre = "exempt"
+header = "none"
+# The build's north star, changed only at the researcher's direction and
+# removed at instantiation; it keeps its own dash convention.
+
+[[artifact]]
+kind = "build-plan"
+glob = "VISION_PLAN.md"
+genre = "current-state"
+skip = ["GENRES-7"]
+# It names deliverables of later steps by design; deleted at close-out.
+
+[[artifact]]
+kind = "license-text"
+glob = "LICENSE-CODE"
+genre = "exempt"
+header = "none"
+
+[[artifact]]
+kind = "rulebook"
+glob = "MANIFESTO.md"
+genre = "current-state"
+[[artifact]]
+kind = "rulebook"
+glob = "DOCUMENT_GENRES.md"
+genre = "current-state"
+[[artifact]]
+kind = "rulebook"
+glob = "CHECK_METHODOLOGY.md"
+genre = "current-state"
+[[artifact]]
+kind = "rulebook"
+glob = "PRECEDENCE.md"
+genre = "current-state"
+[[artifact]]
+kind = "rulebook"
+glob = "ONTOLOGY.md"
+genre = "current-state"
+[[artifact]]
+kind = "rulebook"
+glob = "evidence_and_reasoning/editorial_standards.md"
+genre = "current-state"
+
+[[artifact]]
+kind = "onboarding"
+glob = "ONBOARDING.md"
+genre = "current-state"
+[[artifact]]
+kind = "state"
+glob = "CURRENT_STATE.md"
+genre = "current-state"
+[[artifact]]
+kind = "findings"
+glob = "FINDINGS.md"
+genre = "current-state"
+[[artifact]]
+kind = "license"
+glob = "LICENSE.md"
+genre = "current-state"
+[[artifact]]
+kind = "closing-note"
+glob = "CLOSING_NOTE.md"
+genre = "frozen"
+
+# Templates before the numbered forms they sit beside.
+[[artifact]]
+kind = "template"
+glob = "**/_template*.md"
+genre = "current-state"
+[[artifact]]
+kind = "template"
+glob = "python_project/src/_template*.py"
+genre = "current-state"
+header = "docstring"
+
+# Every folder index, the root README included.
+[[artifact]]
+kind = "index"
+glob = "**/README.md"
+genre = "current-state"
+
+[[artifact]]
+kind = "statement"
+glob = "evidence_and_reasoning/research_statement.md"
+genre = "current-state"
+[[artifact]]
+kind = "result"
+glob = "evidence_and_reasoning/research_result.md"
+genre = "current-state"
+[[artifact]]
+kind = "keystone"
+glob = "evidence_and_reasoning/problem_statement.md"
+genre = "current-state"
+[[artifact]]
+kind = "glossary"
+glob = "evidence_and_reasoning/terminology.md"
+genre = "current-state"
+[[artifact]]
+kind = "ledger"
+glob = "evidence_and_reasoning/public_record_tensions.md"
+genre = "current-state"
+
+[[artifact]]
+kind = "claim"
+glob = "evidence_and_reasoning/claims/[0-9]*.md"
+genre = "plan-owned"
+required = ["Register", "Kind", "Verdict", "Plan", "Verified-by"]
+
+[[artifact]]
+kind = "check"
+glob = "evidence_and_reasoning/checks/[0-9]*.md"
+genre = "plan-owned"
+required = ["Plan", "Backs", "Instrument", "Mutation"]
+
+[[artifact]]
+kind = "plan"
+glob = "evidence_and_reasoning/research_plans/[0-9]*.md"
+genre = "self"
+required = ["Status", "Serves", "Prerequisites"]
+
+[[artifact]]
+kind = "plan-index"
+glob = "evidence_and_reasoning/research_plans/ROADMAP.md"
+genre = "current-state"
+
+[[artifact]]
+kind = "note"
+glob = "evidence_and_reasoning/notes/20[0-9][0-9]-*.md"
+genre = "dated-record"
+
+[[artifact]]
+kind = "registry"
+glob = "evidence_and_reasoning/references/*.md"
+genre = "current-state"
+
+[[artifact]]
+kind = "review"
+glob = "paper/reviews/20[0-9][0-9]-*.md"
+genre = "dated-record"
+
+[[artifact]]
+kind = "changelog"
+glob = "paper/*changelog*.md"
+genre = "release"
+
+# A maintained companion under paper/ is listed here explicitly, above the
+# version row (DOCUMENT_GENRES.md, Maintained artifacts under paper/):
+# [[artifact]]
+# kind = "companion"
+# glob = "paper/reading_companion.md"
+# genre = "current-state"
+
+[[artifact]]
+kind = "version"
+glob = "paper/*.md"
+genre = "release"
+
+# Rendered and non-prose output released with a version; prose under
+# paper/ that matches no row above is reported unresolved.
+[[artifact]]
+kind = "rendered"
+glob = "paper/**/*.pdf"
+genre = "exempt"
+header = "none"
+[[artifact]]
+kind = "rendered"
+glob = "paper/**/*.png"
+genre = "exempt"
+header = "none"
+[[artifact]]
+kind = "rendered"
+glob = "paper/**/*.svg"
+genre = "exempt"
+header = "none"
+[[artifact]]
+kind = "rendered"
+glob = "paper/**/*.csv"
+genre = "exempt"
+header = "none"
+[[artifact]]
+kind = "rendered"
+glob = "paper/**/*.tex"
+genre = "exempt"
+header = "none"
+
+[[artifact]]
+kind = "log-entry"
+glob = "prompt_logs/[0-9]*.md"
+genre = "immutable"
+
+[[artifact]]
+kind = "check-program"
+glob = "python_project/src/check_[0-9]*.py"
+genre = "plan-owned"
+header = "docstring"
+required = ["Plan", "Backs", "Instrument", "Mutation"]
+
+[[artifact]]
+kind = "program"
+glob = "python_project/**/*.py"
+genre = "current-state"
+header = "docstring"
+
+[[artifact]]
+kind = "tool"
+glob = "tools/*.py"
+genre = "current-state"
+header = "docstring"
+
+[[artifact]]
+kind = "config"
+glob = "tools/*.toml"
+genre = "current-state"
+header = "comment"
+
+[[artifact]]
+kind = "imported"
+glob = "inherited/**"
+genre = "exempt"
+header = "none"
+
+[[artifact]]
+kind = "source"
+glob = "source_documents/**"
+genre = "exempt"
+header = "none"
+
+[[artifact]]
+kind = "non-prose"
+glob = "**/requirements.txt"
+genre = "exempt"
+header = "none"
+[[artifact]]
+kind = "non-prose"
+glob = ".gitignore"
+genre = "exempt"
+header = "none"
+
+# ---------------------------------------------------------------- indexes
+# Every file matching `lists` (the README itself excepted) must be named in
+# the README (DOCUMENT_GENRES.md, What the checker verifies, item 8).
+
+[[index]]
+readme = "README.md"
+lists = "*.md"
+[[index]]
+readme = "evidence_and_reasoning/README.md"
+lists = "evidence_and_reasoning/*"
+[[index]]
+readme = "evidence_and_reasoning/claims/README.md"
+lists = "evidence_and_reasoning/claims/*"
+[[index]]
+readme = "evidence_and_reasoning/checks/README.md"
+lists = "evidence_and_reasoning/checks/*"
+[[index]]
+readme = "evidence_and_reasoning/research_plans/README.md"
+lists = "evidence_and_reasoning/research_plans/*"
+[[index]]
+readme = "evidence_and_reasoning/notes/README.md"
+lists = "evidence_and_reasoning/notes/*"
+[[index]]
+readme = "evidence_and_reasoning/references/README.md"
+lists = "evidence_and_reasoning/references/*"
+[[index]]
+readme = "paper/README.md"
+lists = "paper/*"
+[[index]]
+readme = "paper/reviews/README.md"
+lists = "paper/reviews/*"
+[[index]]
+readme = "prompt_logs/README.md"
+lists = "prompt_logs/*"
+[[index]]
+readme = "python_project/README.md"
+lists = "python_project/*"
+[[index]]
+readme = "python_project/src/README.md"
+lists = "python_project/src/*"
+[[index]]
+readme = "python_project/tests/README.md"
+lists = "python_project/tests/*"
+[[index]]
+readme = "tools/README.md"
+lists = "tools/*"
+[[index]]
+readme = "inherited/README.md"
+lists = "inherited/*"
+[[index]]
+readme = "source_documents/README.md"
+lists = "source_documents/*"

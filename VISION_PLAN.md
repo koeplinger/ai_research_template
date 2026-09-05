@@ -102,9 +102,12 @@ The single source of status for this build. Steps are executed top-down.
 | 8b | Artifacts: claims and checks | DONE | 2026-09-03 |
 | 8c | Artifacts: references and sources | DONE | 2026-09-04 |
 | 8d | Artifacts: plans, roadmap, notes | DONE | 2026-09-04 |
-| 8e | Artifacts: prompt log and session onboarding | READY | 2026-09-04 |
-| 8f | Artifacts: publication, reviews, imports | READY | 2026-09-04 |
-| 9 | Mechanical enforcement: the tools | NOT STARTED | |
+| 8e | Artifacts: prompt log and session onboarding | DONE | 2026-09-04 |
+| 8f | Artifacts: publication, reviews, imports | DONE | 2026-09-04 |
+| 9a | Tools: the configuration artifact and the linter | READY | 2026-09-04 |
+| 9b | Tools: the round check, the reply hook, the privacy scan, the hook installer | NOT STARTED | |
+| 9c | Tools: the ontology queries, claim sites, concordance | NOT STARTED | |
+| 9d | Tools: the falsifiability probe, the run ledger, the residue check | NOT STARTED | |
 | 10 | Governance wiring: hooks, reminders, opposition, support | NOT STARTED | |
 | 11 | Worked example project | NOT STARTED | |
 | 12 | Breadth review beyond mathematics and physics | NOT STARTED | |
@@ -595,6 +598,22 @@ a rulebook; scan clean.
 
 ### Step 9: Mechanical enforcement: the tools
 
+Executed as four sub-steps, each with its own review cycle, because the
+tools are the largest deliverable of the build and each later tool reads
+the configuration and the linter of the first: **9a** the configuration
+artifact `tools/artifacts.toml` and `tools/lint_docs.py`, which implements
+every item the three rulebooks and the Ontology list as checked
+mechanically that a static read of the tree can decide; **9b** the round
+check, the reply hook, the generic privacy scan, and the hook installer;
+**9c** the ontology queries, claim sites, and concordance; **9d** the
+falsifiability probe, the run ledger, and the residue check. Every tool:
+no dependency beyond the Python standard library (3.11 or later, for its
+TOML reader), a `--selftest` that constructs failing and passing cases so
+the tool is shown to fire, and a report that names the rulebook item each
+finding implements.
+
+
+
 **Goal.** The checks that keep the record honest, none of which need an
 LLM, a network, or a dependency, each with a self-test.
 
@@ -638,6 +657,65 @@ LLM, a network, or a dependency, each with a self-test.
 **Done when.** Every tool passes its own self-test; the round gate passes on
 the bare template; each linter check names the genre rule it enforces and
 each rule names its check; scan clean.
+
+### Step 9a as built
+
+`tools/artifacts.toml`: 45 artifact rows matched first-wins with a
+slash-aware glob (the folder patterns the tools locate the log, the plan
+index, and the registry by are derived from the rows, never repeated);
+16 index rows, the root README among them; the field catalogue and the
+derived-state names; the register, kind, verdict, plan-status, and
+plan-verdict vocabularies, the inferential verdict as its two pairs; the
+`{{MUTATION_SET}}` and `{{PARTIES}}` slots, empty in the template and
+reported as unfilled once a check or a party exists to apply them to; the
+log's five parts; the registry's required bullets; the editorial
+conventions the linter reads (`us`, `no-em-dash` for the build, both
+dash conventions implemented); and a `skip` escape hatch honored by every
+check in one place, used once, for this plan's forward references.
+`tools/lint_docs.py`: eighteen checks tagged GENRES-1 to 8, EDIT-1 and 2,
+ONT-1 to 6, CHECK-1 to 3, each naming its owner's item, and a docstring
+that says what it does not decide. What is read: a program's docstrings
+and comments only, a configuration file's comments only, never a log
+entry's verbatim region, never quoted text or block quotes for the
+editorial checks, and never the italicized examples of the two files the
+narrative rule names, for that check alone; every skipped span is blanked
+rather than removed so line numbers stay true. The genre derivation
+follows `ONTOLOGY.md` §3: a `Plan:` line overrides every default but
+immutable, self, and exempt; a dated record is frozen otherwise; a
+release is live until its `Released` stamp or its release row. `--list`
+prints kind, default genre, and derived genre; `--selftest` builds the
+scratch project under git, so the two history checks run, plants 50
+defects, and confirms each check fires at the named file with the named
+message while the unplanted tree is clean. `tools/README.md` indexes
+both.
+
+**Independent review**, four read-only lenses (specification, correctness,
+configuration, honesty of self-test and docstring), transcripts audited
+for scope: 72 findings, 26 major, every one applied. The largest: the
+self-test's scratch tree was not a git repository, so the two history
+checks had never been shown to fire and one was excluded from the
+verdict; italics were blanked from every check, hiding real prose;
+a stamp of the wrong form fell silently out of the header; the
+mutation-name check did not read the template's own annotated form;
+the constant-condition check trusted its own fixture.
+
+**Run on this repository** the linter reports five findings, all true
+and all owned: `tools/check_round.py` and `tools/check_status_reply.py`
+are 9b's; `GETTING_STARTED.md` is step 13's; and `CLOSING_NOTE.md`, which
+`DOCUMENT_GENRES.md` names as frozen on writing, has its row in the
+configuration but no template, which step 13 supplies as
+`_template_closing_note.md` beside the guide.
+
+**Amendments made in 9a**, flagged at hand-over: two rulebook sentences
+that stated the narrative ban by quoting the banned phrase itself (in
+`DOCUMENT_GENRES.md` and `MANIFESTO.md` §12) are reworded to "its
+earlier text", so the rulebooks pass their own check; one italic example
+in `DOCUMENT_GENRES.md` is reflowed onto one line, the form the narrative
+rule reads; the spelling examples in the `{{SPELLING}}` row of
+`editorial_standards.md` are quoted rather than italicized, the form
+item 1 skips; the root README gains its stamp and a table of the root's
+files, which the index check reads and step 13's rewrite keeps;
+`LICENSE.md`'s stamp gains the updated date the header rule requires.
 
 ### Step 10: Governance wiring: hooks, reminders, opposition, support
 

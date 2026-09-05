@@ -298,7 +298,7 @@ reader nothing checkable is vague; cut it or make it concrete.
 
 | Slot | Meaning | Examples |
 |---|---|---|
-| `{{SPELLING}}` | The language of project prose and its spelling variant | US English (*-ize*, *center*, *labeled*); UK English (*-ise*, *centre*, *labelled*); German, post-1996 orthography |
+| `{{SPELLING}}` | The language of project prose and its spelling variant | US English ("center", "labeled", the "-ize" ending); UK English ("centre", "labelled", the "-ise" ending); German, post-1996 orthography |
 | `{{DASH_CONVENTION}}` | How asides and ranges are punctuated | no em-dashes, an aside moves to a comma, a colon, parentheses, or a second sentence, en-dashes for name joins and numeric ranges; spaced em-dashes for asides |
 | `{{PAPER_PRONOUN}}` | The agent that performs the paper's acts | *we*, also for a single author, as in mathematics and physics; *I* for a single author, as in history and law; the document as agent (*this article argues*), with no first-person pronoun, as some humanities venues require |
 | `{{REFERENCE_ADEQUACY}}` | Which kind of reference is adequate for which kind of claim (`MANIFESTO.md` §2) | a journal article or monograph for any specialist claim, an archival document by shelfmark for any claim about what a source says, a dataset by release for any figure (history of medicine); a DOI-bearing source for every empirical claim, encyclopedic sources for background only (empirical economics) |
