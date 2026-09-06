@@ -109,7 +109,7 @@ The single source of status for this build. Steps are executed top-down.
 | 9c | Tools: the ontology queries, claim sites, concordance | DONE | 2026-09-05 |
 | 9d | Tools: the falsifiability probe, the run ledger, the residue check | DONE | 2026-09-05 |
 | 10 | Governance wiring: hooks, reminders, opposition, support | DONE | 2026-09-06 |
-| 11 | Worked example project | READY | 2026-09-06 |
+| 11 | Worked example project | DONE | 2026-09-06 |
 | 12 | Breadth review beyond mathematics and physics | NOT STARTED | |
 | 13 | The guide | NOT STARTED | |
 | 14 | Instantiation procedure | NOT STARTED | |
@@ -1262,7 +1262,11 @@ non-physics lenses (a historian, an empirical social scientist, a
 biologist, a legal scholar or a machine-learning researcher), each asked
 where they are fenced out, what jargon is unexplained, and which slot they
 cannot fill. Findings applied; the slot table in the guide completed with
-one filled example per lens.
+one filled example per lens. The documentation consistency sweep defined
+(see *Tracked across steps: the documentation consistency sweep* below):
+its standard prompt under `governance/roles/`, its row in
+`governance/reminders.md`, and its pointer from `CHECK_METHODOLOGY.md`
+§7, each lens asked whether the prompt reads in its discipline.
 
 **Done when.** No artifact assumes a discipline outside a marked slot; scan
 clean.
@@ -1270,6 +1274,8 @@ clean.
 ### Step 13: The guide
 
 **Goal.** What VISION.md promises the researcher on day one and throughout.
+The guide lists the prompts the methodology suggests, the documentation
+consistency sweep among them, and recommends when each is made.
 
 **Deliverables.** `README.md` rewritten as the entry point (what the template
 provides, the map of the repository, licenses, lineage);
@@ -1294,7 +1300,8 @@ start date), removes `VISION.md`, `VISION_PLAN.md` and `example/`, strips every
 the prompt log to entry 001, and runs the round gate.
 
 **Done when.** A fresh instantiation passes the round gate with no edits;
-scan clean.
+scan clean. The procedure ends by recommending the documentation
+consistency sweep as the first prompt after the slots are filled.
 
 ### Amendments to accepted files made in steps 8e and 8f
 
@@ -1366,6 +1373,24 @@ item 7) cannot pass until step 9, and the linter is therefore not run
 against a partly built template. Step 15 verifies that every named path
 resolves; until then the privacy scan is the gate (`MANIFESTO.md` §13,
 build lens).
+
+### Tracked across steps: the documentation consistency sweep
+
+Added at the acceptance of step 11 (6 September 2026), at the researcher's
+direction: "Make a documentation consistency sweep" is to be a prompt the
+methodology suggests, listed and recommended in the final documentation.
+It is the reading counterpart of the round check over a project's
+documentation, as `CHECK_METHODOLOGY.md` §7's sweep is over its record:
+every pointer resolves, every index is complete, no state is recorded
+twice, every restatement of a rule or a fact agrees with its home, every
+copied file's dates are current, slot values read in their sentences, the
+glossary covers the terms the documents use, and nothing addressed to the
+template's own construction survives in a project. The review of the
+worked example (step 11, its log entry 008) is the model of what such a
+sweep finds. Step 12 defines it (a role file with the prompt verbatim, a
+reminder row, a pointer from §7); step 13 lists and recommends it among
+the suggested prompts; step 14 recommends it as the first prompt after
+instantiation.
 
 ### Step 15: Close-out
 
