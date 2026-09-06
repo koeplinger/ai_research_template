@@ -358,6 +358,26 @@ genre = "current-state"
 header = "comment"
 
 [[artifact]]
+kind = "wiring"
+glob = "governance/harness/**/*.py"
+genre = "current-state"
+header = "docstring"
+
+[[artifact]]
+kind = "governance"
+glob = "governance/**/*.md"
+genre = "current-state"
+
+[[artifact]]
+kind = "harness-settings"
+glob = ".claude/**"
+genre = "exempt"
+header = "none"
+# The settings file of the harness the template was built with
+# (governance/harness/claude_code/README.md); a project on another harness
+# deletes the folder and this row.
+
+[[artifact]]
 kind = "config"
 glob = "tools/*.toml"
 genre = "current-state"
@@ -432,6 +452,18 @@ lists = "python_project/tests/*"
 [[index]]
 readme = "tools/README.md"
 lists = "tools/*"
+[[index]]
+readme = "governance/README.md"
+lists = "governance/*"
+[[index]]
+readme = "governance/roles/README.md"
+lists = "governance/roles/*"
+[[index]]
+readme = "governance/harness/README.md"
+lists = "governance/harness/*"
+[[index]]
+readme = "governance/harness/claude_code/README.md"
+lists = "governance/harness/claude_code/*"
 [[index]]
 readme = "inherited/README.md"
 lists = "inherited/*"

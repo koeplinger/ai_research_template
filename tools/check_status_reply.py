@@ -19,6 +19,9 @@ It knows no harness.  The wiring that runs it after each reply is
 wiring hands the reply text to this program and maps its exit status to
 whatever the harness does with a bounced reply.
 
+Programmatic interface, for a wiring in this repository: check(text)
+returns the reasons, empty when the block conforms.
+
 Usage
     python3 tools/check_status_reply.py REPLY.txt    the reply in a file
     ... | python3 tools/check_status_reply.py        the reply on standard input

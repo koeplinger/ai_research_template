@@ -107,8 +107,8 @@ The single source of status for this build. Steps are executed top-down.
 | 9a | Tools: the configuration artifact and the linter | DONE | 2026-09-05 |
 | 9b | Tools: the round check, the reply hook, the privacy scan, the hook installer | DONE | 2026-09-05 |
 | 9c | Tools: the ontology queries, claim sites, concordance | DONE | 2026-09-05 |
-| 9d | Tools: the falsifiability probe, the run ledger, the residue check | READY | 2026-09-05 |
-| 10 | Governance wiring: hooks, reminders, opposition, support | NOT STARTED | |
+| 9d | Tools: the falsifiability probe, the run ledger, the residue check | DONE | 2026-09-05 |
+| 10 | Governance wiring: hooks, reminders, opposition, support | READY | 2026-09-05 |
 | 11 | Worked example project | NOT STARTED | |
 | 12 | Breadth review beyond mathematics and physics | NOT STARTED | |
 | 13 | The guide | NOT STARTED | |
@@ -125,10 +125,11 @@ Recorded here so no step silently assumes them.
   close reading of a public-domain historical document against a secondary
   claim about it; a reproduction of a small, published computational result
   from open code.
-- **Harness settings tracked or not (step 10).** The source lineage keeps the
-  harness settings file out of version control, which means a clone loses the
-  hooks that enforce the manifesto. Proposed: track the shared settings file,
-  ignore only the local one.
+- **Harness settings tracked or not (resolved in step 10).** The source
+  lineage keeps the harness settings file out of version control, which
+  means a clone loses the hooks that enforce the manifesto. Resolved: the
+  shared settings file, `.claude/settings.json`, is tracked; only the
+  per-user file beside it is ignored.
 - **The deliverable (resolved in steps 3 and 4).** VISION's third
   discipline choice, "what a publishable deliverable is", is the slot
   `{{DELIVERABLE}}`: its form, its title convention, and what is released
@@ -139,12 +140,14 @@ Recorded here so no step silently assumes them.
   is hardcoded anywhere; `tools/artifacts.toml` holds the glob, and step 8b
   ships `claims/` as the default rather than `key_claims/`, since *key
   claim* is a term of art the template need not impose.
-- **Harness neutrality (steps 10, 13).** The manifesto names no assistant
-  vendor: §16's wiring is the slot `{{REPLY_HOOK}}`. Step 10 ships concrete
-  wirings under a per-harness directory, the first for the harness the
-  template is built with; a project on another harness fills the slot
-  differently or keeps the form by hand. `.gitignore` currently names that
-  first harness's local-settings path; step 10 revisits it.
+- **Harness neutrality (resolved in step 10; step 13 documents it).** The
+  manifesto names no assistant vendor: §16's wiring is the slot
+  `{{REPLY_HOOK}}`. Resolved: the wirings live under `governance/harness/`,
+  one folder per harness, the first for the harness the template is built
+  with, whose settings file sits where that harness reads it; a project on
+  another harness deletes both, adds its own folder, and fills the slot, or
+  keeps the form by hand. `.gitignore` names the first harness's per-user
+  settings file and says so.
 - **Privacy scanner as a template feature (step 9).** Proposed: yes, as a
   generic opt-in tool reading a git-ignored list, with an installer for the
   hooks; many projects must keep collaborator names, embargoed topics, or
@@ -1017,6 +1020,79 @@ anyone remembering to fire them, and advisory by design.
 **Done when.** Each mechanism is documented with its trigger, its output,
 and what it does not decide; the hooks run on a fresh clone after the
 installer; scan clean.
+
+### Step 10 as built
+
+*Hooks.* `.claude/settings.json`, tracked at the repository root where
+the harness reads it, names two hooks: at session start,
+`tools/session_brief.py`, whose output the harness adds to the session's
+context; when the assistant stops, `governance/harness/claude_code/stop_hook.py`,
+which reads the reply's final text from the session transcript (the
+assistant's text since the last user record, subagent records aside) and
+hands it to `tools/check_status_reply.py`, bouncing a non-conforming
+block back to the assistant with the reasons and never bouncing twice.
+Both commands resolve the repository through the variable the harness
+sets and fall back to the working directory. `governance/harness/README.md`
+holds the slot, one folder per harness; the first folder's README says
+how the wiring is installed, what it does not decide, and how a project
+on another harness replaces it. The git hooks are `tools/install_hooks.sh`'s
+(step 9b), unchanged.
+
+*Reminders.* `tools/session_brief.py` prints the reading order verbatim
+from `ONBOARDING.md`, every plan with its status and the count engaged,
+and the reminders the record can compute, each named as
+`governance/reminders.md` names it: log the prompt first, more than one
+plan engaged, the plan-closure checklist, the sweep after a correction to
+a frozen artifact, the findings gate, a verification not recorded. The
+reminders file gives every standing instruction of `MANIFESTO.md` §16,
+computed or reading, with its trigger, its output, what computes it, and
+what it does not decide, and gathers the plan-closure checklist from the
+rulebooks in one place.
+
+*Opposition.* `governance/roles/`: the refuter, the blind referee, the
+structure census, the deletion ledger, the coverage auditor (every atomic
+assertion classified GATED, PRINTED_ONLY, NOT_COMPUTED, MISMATCH, or
+ATTESTED, each gap handed to the refuter), and the probe as opposition to
+one's own checks. Each file states the role, when it fires, what the
+reader may read, the prompt verbatim with bracketed slots, the form of
+the output and where it is recorded, what the role does not decide, and a
+worked example of its output.
+
+*Support.* `governance/README.md` maps every mechanism, tool or not, to
+the rule it serves, the moment it fires, its output, and what it does
+not decide, and says how a mechanism is removed legibly. The worked
+example every template carries is the example project of step 11, which
+is the researcher's first model of a round; this step ships the worked
+examples of the roles' outputs.
+
+**Independent review**, four read-only lenses (specification,
+correctness, contract with the rulebooks and the tools, honesty),
+transcripts audited for scope: 73 findings, 7 major, every one applied.
+The correctness reviewer returned nothing on its first run and was run
+again alone on the corrected files. The largest: the plan-closure
+checklist required a findings row for every established claim, which
+§12 leaves to the researcher; the coverage auditor's class table assigned
+a register, which §1 reserves; the structure census bound every
+sentence-level edit where the rulebook binds a review; the stop hook
+broke the transcript at every line separator, tearing a record whose
+text carried one; a role's prompt named a file the reader was told not to
+open; and the deletion ledger's worked example did not reconcile with its
+own rows.
+
+**Verified end to end.** Every self-test passes; on a fresh copy of the
+tree the installer writes both git hooks, the settings' two commands run
+from another directory with the harness variable set, a non-conforming
+reply is bounced and a conforming one passes, and a clean commit goes
+through the installed hooks. The round check reports the same two
+findings as before; scan clean.
+
+**Amendments to accepted files made in step 10**, flagged at hand-over:
+`paper/reviews/_template.md` admits a narrowed verdict in the *Refuted?*
+column, the refuter's third outcome; `tools/check_status_reply.py` states
+its programmatic interface, which the wiring uses; the root `README.md`
+lists `governance/`; `.gitignore` names the first harness's per-user
+settings file and says so; `tools/artifacts.toml` gains rows for the
+governance documents, the harness wiring, and the harness settings.
 
 ### Step 11: Worked example project
 

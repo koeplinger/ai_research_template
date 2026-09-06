@@ -1,7 +1,9 @@
 # Local-only privacy enforcement: stop-word list and scanner. Never tracked.
 .privacy/
 
-# Local harness settings (the shared settings file, if any, is tracked)
+# The per-user settings file of the harness the template was built with
+# (governance/harness/claude_code/README.md); the shared file beside it is
+# tracked. A project on another harness replaces this line with its own.
 .claude/settings.local.json
 
 # The run ledger, a local cache of check runs (tools/run_ledger.py), and the

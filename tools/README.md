@@ -27,6 +27,7 @@ the commit message.
 | [falsifiability_probe.py](falsifiability_probe.py) | The falsifiability probe (`CHECK_METHODOLOGY.md` *What is checked mechanically*, item 3, the half that executes): every check program re-run under each mutation it or its record names, in a scratch copy of the tree, the mutation wrapped around its `construct()` as the template binds it; a survival, and a program the harness cannot probe, are CHECK-3 findings; the matrix is printed; a direct run that fails is noted, not judged; a written procedure is listed, its alteration read from its record. |
 | [run_ledger.py](run_ledger.py) | The run ledger. No rulebook item: a local, git-ignored cache of check runs keyed by a hash of what each verdict rests on as the tool can see it (the program, the project modules it imports, the pinned dependencies, the interpreter, and the data it lists in `BASIS`; anything else is outside the hash and every status line says so), so `run` recomputes exactly what changed or did not finish; `status` says what is stale; cost is measured, never a gate. |
 | [check_residue.py](check_residue.py) | The residue check: what a rebuild leaves in a live draft, listed for the reading that closes the round (`CHECK_METHODOLOGY.md` §7): seams, dangling and orphaned references, phantoms, echoes, structure, and a live changelog's ledgers against the draft. No rulebook item; candidates for the reader, tags RESIDUE-1 to 7. Reads a typeset source when the pipeline is enabled. |
+| [session_brief.py](session_brief.py) | The session brief (`MANIFESTO.md` §16; `ONBOARDING.md`): the reading order, the plans by status with the count engaged, and the standing reminders the record can compute, named in `governance/reminders.md`; printed at session start through the harness wiring and on demand. Advisory: it prints, decides nothing. |
 | [install_hooks.sh](install_hooks.sh) | Installs the local git hooks, since hooks are not cloned: on pre-commit the staged privacy scan, refusing, and the round check over the working tree, reporting (refusing under `--strict`); on commit-msg the message scan. Leaves a hook it did not write alone. |
 
 ```bash
@@ -40,6 +41,7 @@ python3 tools/check_concordance.py      # every check program against its record
 python3 tools/falsifiability_probe.py   # every check program under each mutation it names; --only NNN, --timeout S
 python3 tools/run_ledger.py status      # what is stale; run [--only NNN] [--force] [--timeout S], show NNN
 python3 tools/check_residue.py          # what a rebuild left in the live drafts
+python3 tools/session_brief.py          # the reading order, the plans, the reminders; --reminders
 tools/install_hooks.sh                  # once per clone; --strict, --force, --uninstall
 ```
 

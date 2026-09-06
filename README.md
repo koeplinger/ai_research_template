@@ -1,6 +1,6 @@
 # AI Research Template
 
-*Created 2 September 2026; updated 4 September 2026.*
+*Created 2 September 2026; updated 5 September 2026.*
 
 **Under construction.** Start here:
 
@@ -29,7 +29,7 @@ template, and **no prompt log is kept for the build-out**.
 | [CURRENT_STATE.md](CURRENT_STATE.md) | Where the project stands, corrected in place |
 | [FINDINGS.md](FINDINGS.md) | The findings, one row each, by pointer to their claims |
 | [LICENSE.md](LICENSE.md), [LICENSE-CODE](LICENSE-CODE) | The licenses, documents and code |
-| [tools/](tools/), [evidence_and_reasoning/](evidence_and_reasoning/), [paper/](paper/), [prompt_logs/](prompt_logs/), [python_project/](python_project/), [inherited/](inherited/), [source_documents/](source_documents/) | The folders, each with its own README |
+| [tools/](tools/), [governance/](governance/), [evidence_and_reasoning/](evidence_and_reasoning/), [paper/](paper/), [prompt_logs/](prompt_logs/), [python_project/](python_project/), [inherited/](inherited/), [source_documents/](source_documents/) | The folders, each with its own README |
 
 ## Lineage
 
