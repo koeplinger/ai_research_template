@@ -1,6 +1,6 @@
 # Reviews
 
-*Created 4 September 2026; updated 4 September 2026.*
+*Created 4 September 2026; updated 6 September 2026.*
 
 Review records for the write-ups under `paper/`: dated records of what a
 referee pass found, against the document as it stood. Naming:
@@ -22,7 +22,8 @@ reader instructed to refute it (`MANIFESTO.md` §17); a fix to a
 current-state target that is neither maintained nor one of the four
 `MANIFESTO.md` §12 names may be applied, and every other fix is brought
 with its proposed wording (`CHECK_METHODOLOGY.md` §7). The ledgers of a
-rebuild live in the version changelog; the review points at them.
+rebuild live in the version changelog, or in the review itself where the
+version is the first and has no changelog; the review points at them.
 
 A **blind referee** review is taken before a version freezes
 (`MANIFESTO.md` §17): a reader with no access to the first pass's

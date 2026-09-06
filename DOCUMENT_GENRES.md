@@ -1,6 +1,6 @@
 # Document genres
 
-*Created 2 September 2026; updated 2 September 2026.*
+*Created 2 September 2026; updated 6 September 2026.*
 
 Every artifact in a repository built from this template belongs to exactly
 one of three genres, and the genre determines how the artifact may be
@@ -81,7 +81,7 @@ finds the one finds the other.
 
 | Artifact | Frozen when |
 |---|---|
-| a released version of the main write-up, together with what is released with it, {{DELIVERABLE}} | released by the researcher: a `Released <date>` header line on the version, and a row in the changelog |
+| a released version of the main write-up, together with what is released with it, {{DELIVERABLE}} | released by the researcher: a `Released <date>` header line on the version, and a row in the changelog; a first version has no changelog, and its stamp alone releases it |
 | a standalone note or write-up under `paper/` not owned by an open plan | on release, the same way |
 | a review under `paper/reviews/` not owned by an open plan | on writing |
 | a version changelog under `paper/` | on release of the later version |
@@ -89,7 +89,7 @@ finds the one finds the other.
 | a dated note not owned by an open plan | on writing |
 | a check program or written check procedure not owned by an open plan | when a claim, record, note, or paper cites its path; the checker searches for the path, and the assistant judges the rest |
 | imported material under `inherited/` | on import, at its original date (`MANIFESTO.md` §6) |
-| `CLOSING_NOTE.md` | on writing: it records why the project was closed, on the day it closed |
+| CLOSING_NOTE.md, a file at the root present only once the project has closed | on writing: it records why the project was closed, on the day it closed |
 
 `paper/` is the template's name for the deliverable's folder whatever the
 deliverable's form: an article, an edition, a working paper with its

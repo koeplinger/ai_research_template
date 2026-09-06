@@ -1,6 +1,6 @@
 # Roadmap
 
-*Created 3 September 2026; updated 3 September 2026.*
+*Created 3 September 2026; updated 6 September 2026.*
 
 The plan index: every plan, one line and a link each, with its status.
 The status column is a deliberate copy of each plan's `Status:` line, kept
@@ -20,6 +20,13 @@ for the state of the plans.
 | Plan | Question it settles | Status |
 |---|---|---|
 | <!-- [001](001_short_name.md) --> | <!-- one line, naming the hypothesis it serves in prose --> | <!-- DRAFT --> |
+
+## Not plans
+
+| File | |
+|---|---|
+| [README.md](README.md) | the folder's rules and lifecycle |
+| [_template.md](_template.md) | the plan template; not a plan |
 
 ## What may be relied on
 

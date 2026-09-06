@@ -8,7 +8,7 @@
 # folder by the KIND of the row that names them, never by a second copy
 # of the path.  Current state; indexed in tools/README.md.
 #
-# Created 4 September 2026; updated 5 September 2026.
+# Created 4 September 2026; updated 6 September 2026.
 #
 # Rows are matched top to bottom and the FIRST matching glob wins, so a
 # specific row (a template, an index) stands above the general row for
@@ -131,6 +131,15 @@ cite = ""           # a regular expression whose first group is the keys at a ci
 # cite = '\\cite[a-z]*\*?(?:\[[^\]]*\])*\{([^}]*)\}'
 
 # ---------------------------------------------------------------- artifacts
+
+[[artifact]]
+kind = "example"
+glob = "example/**"
+genre = "exempt"
+header = "none"
+# The worked example is a project of its own, instantiated from this
+# template and checked by its own copy of the tools from inside example/;
+# the template's tools do not read it.
 
 [[artifact]]
 kind = "vision"
@@ -423,7 +432,7 @@ lists = "evidence_and_reasoning/claims/*"
 readme = "evidence_and_reasoning/checks/README.md"
 lists = "evidence_and_reasoning/checks/*"
 [[index]]
-readme = "evidence_and_reasoning/research_plans/README.md"
+readme = "evidence_and_reasoning/research_plans/ROADMAP.md"
 lists = "evidence_and_reasoning/research_plans/*"
 [[index]]
 readme = "evidence_and_reasoning/notes/README.md"

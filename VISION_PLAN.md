@@ -108,8 +108,8 @@ The single source of status for this build. Steps are executed top-down.
 | 9b | Tools: the round check, the reply hook, the privacy scan, the hook installer | DONE | 2026-09-05 |
 | 9c | Tools: the ontology queries, claim sites, concordance | DONE | 2026-09-05 |
 | 9d | Tools: the falsifiability probe, the run ledger, the residue check | DONE | 2026-09-05 |
-| 10 | Governance wiring: hooks, reminders, opposition, support | READY | 2026-09-05 |
-| 11 | Worked example project | NOT STARTED | |
+| 10 | Governance wiring: hooks, reminders, opposition, support | DONE | 2026-09-06 |
+| 11 | Worked example project | READY | 2026-09-06 |
 | 12 | Breadth review beyond mathematics and physics | NOT STARTED | |
 | 13 | The guide | NOT STARTED | |
 | 14 | Instantiation procedure | NOT STARTED | |
@@ -119,12 +119,11 @@ The single source of status for this build. Steps are executed top-down.
 
 Recorded here so no step silently assumes them.
 
-- **Worked example domain (step 11).** Must be outside mathematics and
-  physics, small enough to complete, and free of anything private. Candidates:
-  a replication of a published descriptive statistic from an open dataset; a
-  close reading of a public-domain historical document against a secondary
-  claim about it; a reproduction of a small, published computational result
-  from open code.
+- **Worked example domain (resolved in step 11).** Must be outside
+  mathematics and physics, small enough to complete, and free of anything
+  private. Resolved: a close reading of a synthetic administrative register
+  against a synthetic secondary note, both shipped with the example and
+  written for it, so that nothing in it is a claim about the world.
 - **Harness settings tracked or not (resolved in step 10).** The source
   lineage keeps the harness settings file out of version control, which
   means a clone loses the hooks that enforce the manifesto. Resolved: the
@@ -1109,6 +1108,150 @@ so its log is kept); a short paper with one review; every gate passing.
 
 **Done when.** The round gate and the probe pass inside `example/`; a
 newcomer can read it in under an hour; scan clean.
+
+### Step 11 as built
+
+*The domain.* A close reading of a synthetic administrative record
+against a synthetic secondary note: a fictional town's market roll for
+1851 and 1852, written by a program shipped with the example, and a
+two-page fictional note stating a count of market days for 1851. (The
+source was first called a register, and renamed before the first commit:
+the rulebooks reserve *register* for a claim's trust level, and the
+collision met a newcomer in the first paragraph.) Nothing
+in the example is a claim about the world; every sentence is about the
+two shipped files. This resolves the open decision on the example's
+domain (outside mathematics and physics, small, free of anything
+private).
+
+*The fence.* The example is a snapshot of the template at commit
+`a460878`, instantiated on 6 September 2026, and its README says so
+under *The fence*: changes to the template's methodology after that
+commit do not propagate into the example; where the example falls out
+of step with the refined rulebooks or the guide, it is flagged for
+deletion or a complete re-do at the researcher's word, never patched
+into the shape of every later rule; a small incremental update (a
+re-copied tool, a corrected sentence) is allowed and is recorded in the
+example's own log; the example is never re-run because a rule changed;
+and nothing in it is ground truth for the template, whose rulebooks
+govern where the two disagree. The README carries the one command that
+shows what the template has changed since the snapshot. Steps 12 to 14
+therefore change the rules without touching the example, and the
+researcher decides its fate at close-out.
+
+*Instantiation, by hand.* No procedure existed, so the example was
+instantiated by the steps its log entry 001 records, for step 14 to fix
+as the procedure and check against: copy the rulebooks, the folder
+indexes, the templates, the tools, the governance folder, the licenses,
+the ignore file, and the harness settings file (70 files); strip the 21
+build-lens blocks and the manifesto's two build-only sections; fill the
+15 slots, in each Slots table as the slot name followed by its value
+and in the bodies as the value alone; leave the build's own files
+behind (`VISION_PLAN.md`; `VISION.md` was kept, since the rulebooks name
+it, with a README row saying why); remove from the onboarding file the
+sentence that sends a setup round to the getting-started guide; start
+the log at 001. Two things the by-hand run taught for step 14: a slot
+value that contains backticks breaks the backtick pairing where the
+value lands inside an existing code span, so either the procedure
+strips them or the rulebook text does not nest a slot in a code span
+(the example's ontology and probe role carry the mutation set as plain
+text for that reason); and the templates and indexes copied into a
+project carry the template's own created dates, which the example kept.
+
+*The rounds.* Eight log entries, each with the prompt verbatim, what was
+done, the corrections and departures, and the closing status block:
+setup and the slots; the two sources, generated and registered; the
+first plan drafted and engaged, with a counting protocol written before
+the check ran; tasks 1 to 3 (two checks, three claims, the registers
+assigned); task 4, the tension row, the finding, and a drafted second
+plan holding the two candidate explanations; the note, its blind
+referee, the refuters, and the release; the closure; and the review of
+the whole before the first commit, with the corrections it directed.
+Both parties were played by the assistant that built the template, at
+the researcher's direction to produce the example; the example's README
+says so, and every second pass recorded in the researcher's role says
+who performed it. The record at closure: seven claims across every
+register (VERIFIED, DERIVED, ATTESTED, RULED_OUT, OPEN, SPECULATIVE),
+four checks (three programs with mutations bound, one of them failing by
+design with its control, and a written procedure with its planted
+alteration caught), three tension rows, three findings, one analytical
+note fixing a rule of reading, one released note with its review.
+
+*The review as the rules prescribe it.* The note went to a blind referee
+(a subagent given the note and nothing else) that returned the structure
+lens, what it re-derived, ten findings, and what the document rests on;
+each finding went to its own refuter (a subagent given the finding, the
+passage, and the artifacts it cites). Five findings stood, four were
+narrowed, one was refuted, and the review record carries every verdict
+beside its finding with the outcome. Two findings needed the record,
+not the note: the note asserted a weekday no check had computed, and the
+note's source states a weekday the register contradicts. That became
+task 5 of the first plan, added while engaged with its reason in the plan,
+and a fourth check, a seventh claim, a second tension row, and a third
+finding, each brought and directed in the log. The referee also caught
+a real defect the tools cannot see: a sentence asserting a result for a
+reading the record had never tested.
+
+*The review of the whole.* Three read-only lenses over the finished
+example (a newcomer's hour, the consistency sweep of the methodology's
+section 7, and the contract with the rulebooks, genericness, and
+leakage), restricted to the example and the root rulebooks, transcripts
+audited for scope: 63 findings, many the same defect from two sides.
+Thirteen substantive ones went to refuters, one reader per finding, in
+the example's own form: seven stand, five narrowed, one refuted. What
+they changed is the example's log entry 008, in full; the largest were
+the rename, the attribution of every second pass to the assistant in the
+researcher's role, a positive control the failing check lacked, the
+withdrawal of a pre-registration stamp the log's order did not support
+(the roll was generated to a named count before the protocol), the
+dropping of a standing reservation that held no established claim, a
+third tension row, and a findings row cut back to what its claim
+establishes. The mechanical findings (stale dates on copied files, slot
+values pasted into running prose, template placeholders left unfilled,
+build text that survived instantiation) were applied without refutation,
+and the log says so as a departure. The newcomer lens's verdict, that
+the artifacts teach by demonstration and only the entry breaks, is what
+the README's numbered path and *Running it* section answer.
+
+*What the test drive changed in the template.* `DOCUMENT_GENRES.md`:
+the `CLOSING_NOTE.md` row is plain text, since a linked path to a file
+that exists only at close-out fails the path check in every project.
+`evidence_and_reasoning/research_plans/README.md` and `ROADMAP.md`: the
+plan index is the roadmap, with a *Not plans* table, so the README is
+the folder's rules and the roadmap the one list every plan appears in;
+`tools/artifacts.toml` names the roadmap as the index row and
+`tools/lint_docs.py`'s fixture follows. `tools/lint_docs.py`: the
+unfilled-roster check skips rows whose header is `none`, since a
+project's copies of the templates would otherwise report their own
+placeholders. `tools/artifacts.toml`: an `example/**` row, exempt, with
+the reason beside it: the example is a project of its own, checked by
+its own copy of the tools from inside its folder, and the template's
+tools do not read it. The root `README.md` lists `example/`. From the
+review of the whole: `DOCUMENT_GENRES.md` and `ONTOLOGY.md` state, where
+`released` is defined, that a first version has no changelog and its
+stamp alone releases it, and `governance/roles/deletion_ledger.md` and
+`paper/reviews/README.md` place a first version's rebuild ledgers in its
+review; the example's copies carry the same words, as its fence allows.
+
+*Left for later steps.* For step 14, the instantiation procedure: whether
+a project keeps `VISION.md` (the ontology and the governance map cite
+it; the example kept it); that a slot's full value belongs in the Slots
+tables and a short handle in the bodies, since a long value pasted into
+running prose reads badly and a value with backticks breaks a code span;
+that the manifesto's lineage line and the harness README's build-lens
+sentence need rewriting at instantiation; that the copied files' updated
+dates should be stamped with the instantiation date, and whether the
+created dates should be too; that the copyright holder and the citation
+in the licenses are replaced. For step 13, the onboarding file's sentence
+naming the getting-started guide stays a known finding of the root round
+check until the guide exists.
+
+*Verified.* Inside `example/`: the round check, 0 findings over 104
+files; the concordance check, three programs and no disagreement; the
+probe, every bound mutation caught; the residue check, nothing; the
+session brief, no computable reminder; the run ledger, three programs
+current; the generator's three tests pass. At the root: the round check
+reports the one expected finding (the guide's path, step 13); scan
+clean over the whole tree, the example included.
 
 ### Step 12: Breadth review beyond mathematics and physics
 

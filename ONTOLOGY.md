@@ -1,6 +1,6 @@
 # Ontology: the predicates the artifacts share
 
-*Created 3 September 2026; updated 3 September 2026.*
+*Created 3 September 2026; updated 6 September 2026.*
 
 The artifacts of a project built from this template are one system, not a
 folder of forms, because they share a vocabulary. This file is that
@@ -199,7 +199,7 @@ the duty is the assistant's under the consistency sweep
 | Predicate | Relates | Written as | Owner | Checked by | Answers |
 |---|---|---|---|---|---|
 | `created`, `updated` | an artifact to its dates | the `Created` stamp | `DOCUMENT_GENRES.md` | `DOCUMENT_GENRES.md` checker 1 | how current is this? |
-| `released` | a version to its release | the `Released` stamp, and a changelog row | `DOCUMENT_GENRES.md` | ontology 3: both or neither | is this out? |
+| `released` | a version to its release | the `Released` stamp, and a changelog row where a previous version exists | `DOCUMENT_GENRES.md` | ontology 3: both or neither, the first version excepted | is this out? |
 | `superseded-by` | an artifact to the one that replaces it | the `superseded by` stamp on the **replaced** artifact, holding the path to its replacement | `DOCUMENT_GENRES.md` | ontology 2 | am I reading the current one? |
 | `logged` | a prompt to its entry | a numbered file at the log path | `MANIFESTO.md` §8 | `DOCUMENT_GENRES.md` checker 2 | what was asked, and when? |
 | `authorized` | a change to the prompt that authorized it | named in the log entry | `MANIFESTO.md` §12 | reading | who said to do this? |

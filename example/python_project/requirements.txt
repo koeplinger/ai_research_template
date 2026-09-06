@@ -1,0 +1,4 @@
+# Pin exact versions: the instrument of record is identified by its
+# version (CHECK_METHODOLOGY.md section 3). The checks of this example use
+# the standard library only; pytest runs the foundation suite.
+pytest==9.0.2
