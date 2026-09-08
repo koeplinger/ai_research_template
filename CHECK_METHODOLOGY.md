@@ -1,6 +1,6 @@
 # Check methodology
 
-*Created 2 September 2026; updated 3 September 2026.*
+*Created 2 September 2026; updated 8 September 2026.*
 
 This file defines the unit of verification in a repository built from this
 template: the **check**. It owns four things the other rulebooks point to:
@@ -34,7 +34,7 @@ Beyond the words `MANIFESTO.md` and `DOCUMENT_GENRES.md` define:
   that assertion were false. An assertion so covered is **gated**, and a
   **gated check** is one whose verdict rests only on gated assertions.
 - A **verdict** is a check's conclusion in the vocabulary of its claim
-  kind (§2). Four of those words are used here in senses a discipline may
+  kind (§2). Five of those words are used here in senses a discipline may
   not expect, and are fixed once:
   - **reproduced**: the same result is reached again from the same data
     and the same procedure, on the instrument of record. Some fields call

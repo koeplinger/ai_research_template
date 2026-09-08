@@ -99,7 +99,8 @@ derived = ["Genre", "Tier", "Live", "Frozen"]
 # follow (GLOSSARY.md, "Renaming a word this template uses").  Rename before
 # any artifact carries the field: the log is immutable and a frozen artifact
 # keeps its wording, so the cost rises with every round.  The templates under
-# evidence_and_reasoning/ are edited to match by hand; they are prose.
+# evidence_and_reasoning/ and python_project/src/ are edited to match by
+# hand; they are prose, and tools/new_project.py does the mechanical part.
 #   register: how far a statement may be trusted   (Trust, Warrant, Grade)
 #   instrument: the tool or procedure of record    (Instrument-of-record)
 #   mutation: the planted alteration a check must fail under  (Planted-fault)
@@ -252,6 +253,13 @@ genre = "current-state"
 kind = "rulebook"
 glob = "GLOSSARY.md"
 genre = "current-state"
+[[artifact]]
+kind = "work-list"
+glob = "TODO.md"
+genre = "current-state"
+# The template's own open work, kept while the template is maintained and
+# left behind at instantiation: a project's open work is its plans and its
+# roadmap.
 [[artifact]]
 kind = "guide"
 glob = "GETTING_STARTED.md"

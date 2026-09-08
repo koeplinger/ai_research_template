@@ -43,6 +43,7 @@ belongs to the template's own construction rather than to your project.
 | Leave behind | And also |
 |---|---|
 | the worked example, the example folder | its rows in `README.md` and `governance/README.md`, and its row in `tools/artifacts.toml` |
+| the template's own work list, TODO.md | its row in `README.md`; your project's open work is its plans and its roadmap |
 | `.review/`, interim review records, if present | nothing; add it to `.gitignore` if you keep the folder for your own reviews |
 
 Removing a folder means removing the pointers to it as well, or the path
@@ -299,7 +300,7 @@ biologist, a scholar of contract law, and a machine-learning researcher.
 - every result is a mean and a spread over a stated number of seeds; *significantly* only with the test named
 
 **`{{REPLY_HOOK}}`**
-- the tracked settings file `.claude/settings.json` at the repository root, whose stop hook runs `governance/harness/claude_code/stop_hook.py` after each reply, as `governance/harness/claude_code/README.md` describes. Four of the five fill it the same way, since the template ships one wiring
+- the harness wiring the template ships, named by its folder under `governance/harness/` and by the settings file that folder's README points at. Four of the five fill it the same way, since one wiring ships; a project on another harness fills it with its own, or with *none, with the form kept by hand*
 - as shipped
 - as shipped
 - none, where the work is done in a harness that cannot run a command after a reply, with the form kept by hand and that said here
@@ -433,9 +434,13 @@ voice, is:
 ## Questions that come up early
 
 **Do I have to use an AI assistant?** No. Every rule here is about the
-record, and a human writing the record by hand obeys the same ones. The
-parts that assume an assistant are the prompt log, which becomes a work
-log, and the harness wiring, which you delete.
+record, and a human writing the record by hand obeys the same ones. What
+assumes an assistant: the prompt log, which becomes a work log of what was
+asked and done; the harness wiring, which you delete; the status block
+after each reply and the check that reads it; the standing roles under
+`governance/roles/`, which a colleague plays instead of a subagent; and
+the reminders, which nobody prints for you. The record, the checks, the
+registers and the plans are unchanged.
 
 **Do I have to write programs?** No. `{{CHECK_FORM}}` may be a written
 procedure alone, and the rulebooks treat a written procedure as a check in

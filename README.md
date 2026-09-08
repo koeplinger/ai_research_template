@@ -63,6 +63,7 @@ Three things meant to be one system, described in
 | [GETTING_STARTED.md](GETTING_STARTED.md) | The walkthrough: clone, slots, first round, first plan, first check, first commit |
 | [HOW_IT_FITS_TOGETHER.md](HOW_IT_FITS_TOGETHER.md) | The system as one thing, the round as the unit of time, and the prompts to make |
 | [FORKING.md](FORKING.md) | How to change or remove a mechanism deliberately and legibly |
+| [TODO.md](TODO.md) | What this template does not have yet, and what each item would touch |
 | [MANIFESTO.md](MANIFESTO.md) | The methodology: what the record is, who does what, and the round |
 | [DOCUMENT_GENRES.md](DOCUMENT_GENRES.md) | The three genres of artifact and what the checker verifies |
 | [CHECK_METHODOLOGY.md](CHECK_METHODOLOGY.md) | Registers, claim kinds, and the shape of a check |

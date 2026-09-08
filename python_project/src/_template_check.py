@@ -128,7 +128,7 @@ def discrepancies(obj) -> None:
 # Part 6: summary and the RESULT line.  The verdict is in the vocabulary of
 # the claim's kind (CHECK_METHODOLOGY.md, section 2):
 #   formal: proved | disproved            computational: reproduced | not reproduced
-#   empirical: compatible | in tension | refuted
+#   empirical: compatible | in tension | refuted | inconclusive
 #   inferential: identified as stated | assumption unsupported, and
 #                replicated | not replicated  (two values, comma-separated)
 #   documentary: confirmed | not confirmed

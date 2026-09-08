@@ -123,7 +123,8 @@ FIELD_DEFAULTS = {
 
 # ------------------------------------------------- what a project does not get
 
-LEAVE_BEHIND = ["example", ".review", ".git", ".privacy", "tools/new_project.py"]
+LEAVE_BEHIND = ["example", ".review", ".git", ".privacy", "TODO.md",
+                "tools/new_project.py"]
 
 # The pointers to what was left behind: (path, exact text, what it becomes).
 # A miss is reported rather than guessed at, because a pointer that moved
@@ -131,6 +132,8 @@ LEAVE_BEHIND = ["example", ".review", ".git", ".privacy", "tools/new_project.py"
 POINTERS: list[tuple[str, str, str]] = [
     ("README.md",
      "| see it working | [example/](example/): a small complete project, every gate passing |\n", ""),
+    ("README.md",
+     "| [TODO.md](TODO.md) | What this template does not have yet, and what each item would touch |\n", ""),
     ("README.md",
      "| [example/](example/) | A worked example: a small project instantiated from this template, with its own README, log, and fence |\n", ""),
     ("governance/README.md",
@@ -143,6 +146,15 @@ POINTERS: list[tuple[str, str, str]] = [
     ("HOW_IT_FITS_TOGETHER.md",
      "**Starting.** `tools/new_project.py` makes the project from the template\nand asks for the sixteen slots; then the research statement and the\nkeystone.",
      "**Starting.** The slots, then the research statement and the keystone."),
+    ("tools/artifacts.toml",
+     '''[[artifact]]
+kind = "work-list"
+glob = "TODO.md"
+genre = "current-state"
+# The template's own open work, kept while the template is maintained and
+# left behind at instantiation: a project's open work is its plans and its
+# roadmap.
+''', ""),
     ("tools/artifacts.toml",
      '''[[artifact]]
 kind = "example"

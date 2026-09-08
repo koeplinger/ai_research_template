@@ -184,7 +184,7 @@ the duty is the assistant's under the consistency sweep
 | `robustness` | a check to a perturbation the claim asserts independence *from* | `Robustness: <name>[, <name>]`, names disjoint from `Mutation:` | `CHECK_METHODOLOGY.md` §5 | ontology 3: the two lists are disjoint. Survival is the intended result here, and a failure is a finding | what does this not depend on? |
 | `verification-status` | a claim to who checked it and how | `Verified-by: researcher \| assistant, <route> \| deferred, <instrument> \| unchecked \| <party>, <route>` | `MANIFESTO.md` §5 | ontology 3 | who actually checked this? |
 | `deferred-to` | a claim to an instrument or party the researcher chose not to check behind | the `deferred` form of `Verified-by:` | `MANIFESTO.md` §5; `VISION.md` | ontology query 3 | what did we take on trust? |
-| `pre-registered` | a check or claim to a protocol fixed before the evidence was consulted | `Pre-registered <D Month YYYY>, <locator>` | `CHECK_METHODOLOGY.md` §2, and the notes folder's index | ontology 3: the date precedes the earliest record's date, and the locator resolves | was this confirmatory, or exploratory? |
+| `pre-registered` | a check or claim to a protocol fixed before the evidence was consulted | `Pre-registered <D Month YYYY>, <locator>` | `evidence_and_reasoning/notes/README.md`, which defines the protocol note | ontology 3: the date precedes the earliest record's date, and the locator resolves | was this confirmatory, or exploratory? |
 | `performed-by` | a check record, transcription, coding pass, or derived artifact to the party that produced it | `By: <party>` from `{{PARTIES}}` | `MANIFESTO.md` §5 | ontology 3: every name resolves to the roster | whose work is this? |
 
 ### 2.4 Derived material
@@ -386,8 +386,10 @@ predicate that answers no question is a field that will go stale, and a
 stale field is worse than none, because a reader trusts it.
 
 Add the row with its Answers cell, the syntax to §1 if it is a new form,
-the check to §5 or the reason it is *reading*, the field to the template,
-and the required-field entry to `tools/artifacts.toml`.
+the check to §5 or the reason it is *reading*, the field to the template
+that ships it, and, in `tools/artifacts.toml`, the name to `[fields] names`,
+the role to `[fields.roles]` so a project can rename it, and the
+required-field entry to the artifact row that must carry it.
 
 The closed vocabularies (`Register`, `Kind`, and each kind's verdicts) are
 `CHECK_METHODOLOGY.md`'s. A project that needs another verdict or another

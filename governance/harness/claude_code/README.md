@@ -1,6 +1,6 @@
 # Harness wiring: Claude Code
 
-*Created 5 September 2026; updated 5 September 2026.*
+*Created 5 September 2026; updated 8 September 2026.*
 
 The wiring for one command-line harness, the one this template was built
 with. It is the wiring a project records in the reply-hook slot
@@ -48,13 +48,6 @@ assistant's by reading, as `governance/reminders.md` says.
 
 ## Another harness
 
-A project on another harness deletes `.claude/` and this folder, removes
-the `harness-settings` row from `tools/artifacts.toml`, replaces the
-`.claude/settings.local.json` line of `.gitignore` with its own per-user
-file, adds a folder beside this one named for its harness with the
-equivalent wiring
-(a command run after each reply that pipes the reply's text into
-`tools/check_status_reply.py` and treats exit 1 as a bounce; a command
-run at session start that prints `tools/session_brief.py`), and records
-the choice in the reply-hook slot. A project whose harness can run neither
-keeps the form of §16 by hand and says so in the same slot.
+`../README.md`, *Adding a wiring, and removing one*, says what it costs.
+That list lives one level up on purpose: a recipe for leaving this harness
+should not be inside the folder it tells you to delete.

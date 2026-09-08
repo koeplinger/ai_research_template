@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The falsifiability probe: every check program re-run under each mutation it names, in a scratch copy of the tree (CHECK_METHODOLOGY.md, What is checked mechanically, item 3, the half that executes).
 
-Created 5 September 2026; updated 5 September 2026.
+Created 5 September 2026; updated 8 September 2026.
 
 For a check that executes, the probe applies exactly the mutations the
 check names to a scratch copy and re-runs it, reporting it under CHECK-3
@@ -26,16 +26,16 @@ callable entry in MUTATIONS, which the linter's CHECK-3 reports; ERROR
 where the run ended in an exception, a signal, or a timeout, said as
 such, since none is a verdict.  Before any mutation is judged, two runs
 must pass: the program run directly, and the program run through the
-probe's own harness with no mutation.  A program whose direct run fails or
+probe's own wrapper with no mutation.  A program whose direct run fails or
 does not finish is noted and not judged, since a failing verdict may be
 the check's own result (a claim RULED_OUT is backed by one), and nothing
 is learned from re-running it; a program that passes directly but not
-through the harness, or that has no construct() and main() to wrap, is
+through the wrapper, or that has no construct() and main() to wrap, is
 reported as one the probe cannot probe.  A construct() called at import
 time, rather than from main(), is outside the probe's reach.  The probe
-reserves the exit statuses 97, 98, and 99 for its own harness and reads
+reserves the exit statuses 97, 98, and 99 for its own wrapper and reads
 them only beside its own PROBE: line, so a program's own exit status is
-never mistaken for the harness's.  It honors a row's `skip` list, like
+never mistaken for the wrapper's.  It honors a row's `skip` list, like
 the linter.
 
 WHAT IT DOES NOT DECIDE.  A written check procedure has nothing to run:
@@ -199,7 +199,7 @@ def probe(t: lint_docs.Tree, timeout: float, only: str | None = None) -> tuple[l
                         lint_docs.report("CHECK-3", prog, 1, f"cannot be probed: {detail} (the template's form)")
                     else:
                         lint_docs.report("CHECK-3", prog, 1, f"cannot be probed: its verdict is not reached by calling main() as the template's form does ({detail})")
-                    matrix.append(f"  [check {num}]  direct: passes  harness: FAILS ({detail})  " + "  ".join(f"{n}: not probed" for n in names))
+                    matrix.append(f"  [check {num}]  direct: passes  wrapped: FAILS ({detail})  " + "  ".join(f"{n}: not probed" for n in names))
                     continue
                 cells = []
                 for k, n in enumerate(names):
@@ -212,7 +212,7 @@ def probe(t: lint_docs.Tree, timeout: float, only: str | None = None) -> tuple[l
                         lint_docs.report("CHECK-3", prog, 1, f"cannot be probed: {detail} (the template's form)")
                         cells += [f"{m}: not probed" for m in names[k + 1:]]
                         break
-                matrix.append(f"  [check {num}]  direct: passes  harness: passes  " + "  ".join(cells))
+                matrix.append(f"  [check {num}]  direct: passes  wrapped: passes  " + "  ".join(cells))
     for num, rec in sorted(t.checks.items()):
         if num not in t.programs and (not only or num == only):
             if names_of(t, rec):
@@ -303,13 +303,13 @@ def selftest() -> int:
     f, m, _, _, _ = run_on(sub(P2, GOOD, '"variant-reading": lambda o: __import__("time").sleep(5) or o'), timeout=1)
     case("a mutated run that exceeds the timeout is ERROR", not f and any("ERROR (timed out" in x for x in m), str((f, m)))
     f, m, _, _, _ = run_on(sub(P2, "def construct():\n    return len(sys.argv)\ndef main():\n    obj = construct()\n", "def main():\n    obj = len(sys.argv)\n"))
-    case("a program without construct() cannot be probed and is reported", any("cannot be probed: no construct() to wrap" in x[3] for x in f) and any("harness: FAILS (no construct() to wrap)" in x for x in m), str((f, m)))
+    case("a program without construct() cannot be probed and is reported", any("cannot be probed: no construct() to wrap" in x[3] for x in f) and any("wrapped: FAILS (no construct() to wrap)" in x for x in m), str((f, m)))
     f, m, _, _, _ = run_on(sub(P2, 'if __name__ == "__main__":\n    raise SystemExit(main())', 'if __name__ == "__main__":\n    SEED = 1\n    raise SystemExit(main())').__call__ and (lambda files: (sub(P2, "def main():\n    obj = construct()\n", "def main():\n    obj = construct() + SEED - 1\n")(files), sub(P2, 'if __name__ == "__main__":\n    raise SystemExit(main())', 'if __name__ == "__main__":\n    SEED = 1\n    raise SystemExit(main())')(files))))
-    case("a program that passes directly but not through the harness is reported, not judged", any("its verdict is not reached by calling main()" in x[3] for x in f) and any("harness: FAILS" in x and "not probed" in x for x in m), str((f, m)))
+    case("a program that passes directly but not through the wrapper is reported, not judged", any("its verdict is not reached by calling main()" in x[3] for x in f) and any("wrapped: FAILS" in x and "not probed" in x for x in m), str((f, m)))
     f, m, _, _, _ = run_on(sub(P2, "    return 1 if FAILURES else 0\n", "    return None\n"))
     case("a main() that returns no exit status is not a verdict: not probed", any("main() returned no exit status" in x[3] for x in f), str((f, m)))
     f, m, _, _, _ = run_on(sub(P2, "    return 1 if FAILURES else 0\n", "    return 99 if FAILURES else 0\n"))
-    case("a program's own exit status 99 under a mutation is CAUGHT, not the harness's code", not f and any("variant-reading: CAUGHT" in x for x in m), str((f, m)))
+    case("a program's own exit status 99 under a mutation is CAUGHT, not the wrapper's code", not f and any("variant-reading: CAUGHT" in x for x in m), str((f, m)))
     two_cfg = lint_docs.scratch_config().replace('mutations = ["variant-reading"]', 'mutations = ["variant-reading", "other"]')
     two = lambda files: (sub(P2, "Mutation: variant-reading", "Mutation: variant-reading, other")(files),
                          sub(P2, GOOD, GOOD + ', "other": lambda o: o')(files),

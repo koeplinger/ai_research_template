@@ -78,7 +78,7 @@ FIELD_RE = re.compile(r"^([A-Z][A-Za-z-]*): ?(.*)$")
 def status_re(cfg: dict) -> re.Pattern:
     """The three forms a plan's Status: line may take, the verdict names
     from the configuration."""
-    v = "|".join(map(re.escape, cfg["vocab"].get("plan_verdicts", ["CONFIRMED", "REFUTED", "COMPLETE", "ABANDONED"])))
+    v = "|".join(map(re.escape, cfg["vocab"].get("plan_verdicts", ["CONFIRMED", "REFUTED", "COMPLETE", "INCONCLUSIVE", "ABANDONED"])))
     return re.compile(rf"^(?:DRAFT|ENGAGED {DATE}|CLOSED {DATE}, verdict (?:{v}))$")
 
 

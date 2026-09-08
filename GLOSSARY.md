@@ -84,7 +84,7 @@ that a reader outside the field they come from is not stopped by them.
 | **apparatus** | an edition's record of what its witnesses read where they differ | the rule that a claim is not re-derived from a source's own summary |
 | **vintage** | the release or edition of a dataset, as against its name | the discrepancy analysis of a check |
 | **provenance** | where a thing came from and by what steps, recorded so a reader can follow it back | throughout |
-| **pre-registration** | fixing what will count as confirmation before the evidence is consulted | `CHECK_METHODOLOGY.md` §5, and the `Pre-registered` stamp |
+| **pre-registration** | fixing what will count as confirmation before the evidence is consulted | the plan's *Confirmation and refutation* section, the `Pre-registered` stamp (`ONTOLOGY.md` §2), and the protocol note `evidence_and_reasoning/notes/README.md` describes |
 
 ## The finding tags
 
@@ -121,8 +121,8 @@ Three kinds of name, with three costs:
    `Frame:`, and the rest). Configured: `tools/artifacts.toml` carries a
    `[fields.roles]` table mapping each role to the name this project
    writes, and every tool reads the name from there. Change it there,
-   change the templates under `evidence_and_reasoning/` to match, and the
-   checks follow. Do this before any artifact carries the field. A
+   change the templates under `evidence_and_reasoning/` and
+   `python_project/src/` to match, and the checks follow. Do this before any artifact carries the field. A
    registry bullet, `Standing:` among them, is not a header field: it is
    renamed in `[registry] required` and in the registry's own template.
 
