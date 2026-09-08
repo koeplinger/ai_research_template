@@ -59,6 +59,7 @@ serves and the moment it fires.
 | the configuration, `tools/artifacts.toml` | `ONTOLOGY.md` §7 | when a project files its artifacts elsewhere | one edit that every tool follows | the filing convention |
 | the hook installer, `tools/install_hooks.sh` | `MANIFESTO.md` §13 and §6 | once per clone | the git hooks | whether to install strict |
 | the harness wirings, [harness/](harness/) | `MANIFESTO.md` §16, `{{REPLY_HOOK}}` | after each reply; at session start | the tools run at those moments | which harness: the researcher's |
+| the guide: [GETTING_STARTED.md](../GETTING_STARTED.md), [HOW_IT_FITS_TOGETHER.md](../HOW_IT_FITS_TOGETHER.md), [FORKING.md](../FORKING.md) | `VISION.md`, *Expectation*: clear guidance on how to begin, and as the project proceeds | when a project is instantiated; at each stage, by the list of prompts the second names | the walkthrough, the system with the round as its unit of time, the prompts to make and when, and how to change a mechanism legibly | any of it: the repository is the researcher's (`FORKING.md`) |
 | the worked example, [example/](../example/) | `VISION.md`, *Support*: the researcher's first model of a round | when the researcher starts, and whenever a form is in doubt | a complete small project, every gate passing, fenced as its README says | anything of the researcher's own: it is a model, never ground truth |
 
 ## Removing a mechanism

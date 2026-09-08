@@ -111,7 +111,7 @@ The single source of status for this build. Steps are executed top-down.
 | 10 | Governance wiring: hooks, reminders, opposition, support | DONE | 2026-09-06 |
 | 11 | Worked example project | DONE | 2026-09-06 |
 | 12 | Breadth review beyond mathematics and physics | READY | 2026-09-08 |
-| 13 | The guide | NOT STARTED | |
+| 13 | The guide | READY | 2026-09-08 |
 | 14 | Instantiation procedure | NOT STARTED | |
 | 15 | Close-out | NOT STARTED | |
 
@@ -1426,6 +1426,112 @@ a mechanism deliberately and legibly); a frequently-asked-questions section.
 
 **Done when.** A reader who has never seen the lineage can start a project
 from the guide alone; scan clean.
+
+### Step 13 as built
+
+**The guide is four files.** `README.md`, rewritten as the entry point:
+what the template is, the bet it makes, what it cannot do, a table sending
+each kind of reader to the right place, and the map of the root.
+`GETTING_STARTED.md`, the walkthrough from clone to first commit in nine
+steps. `HOW_IT_FITS_TOGETHER.md`, the system as one thing, with the round
+as its unit of time, the stages of a project, and **the prompts this
+methodology suggests**. `FORKING.md`, how to change or remove a mechanism
+so the change is legible. Two of them carry a frequently-asked-questions
+section, one for the questions of the first day and one for the questions
+that come later.
+
+**The prompts, at the researcher's direction.** The list is eleven rows,
+each with the prompt, when to make it, and what comes back: the
+documentation consistency sweep first, then the record's sweep, the
+refuter, the blind referee, the coverage auditor, the falsifiability
+probe, the structure census, the deletion ledger, the case against a
+conclusion, the plan-closure checklist, and the dependency queries. The
+review added two the first draft had missed, the concordance check and the
+reading that closes a rebuild round. Three rules close the section: every
+finding goes to a refuter before it is acted on, a sweep reports before it
+edits, and a role is played by a reader with no access to the first pass's
+reasoning. `README.md` points at the list directly, since it is consulted
+rather than read.
+
+**The review, and what it found.** Four read-only readers over the guide
+and the tree: a newcomer who had never seen the template and tried to
+start a real project in a field of its own choosing from the guide alone,
+which is this step's stated done-when; an accuracy reader checking every
+factual statement against the file it describes; a reader checking the
+prompts list against the roles, reminders and tools that exist; and a
+reader checking the guide against what `VISION.md` promises of it. 56
+merged findings, each to its own refuter: **6 stand, 33 narrowed, 17
+refuted.**
+
+The newcomer's verdict was *not quite*, and it named three places it would
+have stopped. All three are now closed.
+
+- **Filling a slot was never explained.** The guide said to fill each slot
+  where its owner defines it and never said what filling one physically
+  is. The convention (the value written into the Slots table row after the
+  slot name, the token replaced by the value everywhere else) was visible
+  only in the worked example and in this plan, both of which step 1 tells
+  the reader to delete. §3 now shows the before and after of one row,
+  gives the grep that finds what is left, and says that a long value goes
+  in the table with a short handle in the sentence.
+- **"Fill both halves, or the check is skipped" was false for three slots
+  of five.** The spelling, the dash convention and the registry's required
+  fields ship *filled*, so an unfilled prose half does not skip the check:
+  it leaves the template's answer enforced against the project. A reader
+  writing UK English would have had US spelling enforced on their prose
+  and not known why. §3 now has a table of the six slots with a machine
+  half, saying for each what it ships as, and states the distinction: an
+  empty value skips the check and says so, a shipped default runs it
+  against you.
+- **Deleting the build plan and the worked example broke the round
+  check.** The pointers to both remained in the README, the governance
+  map and the configuration, so the path check reported files the reader
+  had never touched, in the same step that said a clean run means a clean
+  commit. §1 now says what else to strike with each, and §8 says what to
+  expect if it was missed.
+
+**A licensing defect, found by the newcomer and standing.** `LICENSE.md`
+told a project to *replace* the recommended citation with its own. The
+written material is under CC BY 4.0, which requires credit to the original
+and an indication of changes, so a project following that instruction
+would have been out of compliance with the license it inherits. Both
+`LICENSE.md` and the walkthrough now say to *add* the project's own and
+keep the template's, with the one-line form the credit takes. This is an
+amendment to an accepted file, flagged at hand-over.
+
+**Other things the review corrected.** The configuration's row for
+`VISION.md` said it is "removed at instantiation" while the README and the
+guide said it is kept, which is the class of contradiction the
+documentation sweep exists to find. The guide claimed every predicate has
+a header field, that the round check runs every check, and that the
+privacy scan refuses unconditionally, each an overstatement of something
+true in part. It omitted three shipped artifacts from its own table of
+what a project is built from, the stage that produces the write-up from
+its list of stages, and the command that picks the work back up at the
+start of a session. It attributed a slot to the wrong owner, quoted an
+unsourced statistic in its own voice, and misdescribed what removing the
+privacy scan, the harness wiring or the Python suite touches. The
+seven-column slot table, unreadable in any narrow render, is now a
+three-column summary with the five filled examples below it.
+
+**The build lens is now marked in the README.** The *Under construction*
+section is build text that every project would have inherited; it is a
+`> **Build lens.**` block, so the strip of §2 finds it like the others.
+
+**The round check is clean over 184 files** and every one of the eleven
+self-tests passes; the privacy scan is clean over the whole tree. The
+guide is about 7,600 words, of which the walkthrough is half.
+
+**Records.** The four lens reports with their verdicts on the done-when,
+the 56 merged findings, and every refuter verdict are under `.review/`
+(git-excluded): `step13_guide.md`.
+
+**Left for step 14.** The instantiation procedure, which is what §1 and §2
+of the walkthrough describe by hand: the by-hand steps of step 11, the
+lessons of step 12 (rename before the record exists; the slot value in the
+table and a handle in the sentence), and now the newcomer's three
+stopping points are its specification. When it ships, §1 and §2 become its
+description rather than its substitute.
 
 ### Step 14: Instantiation procedure
 

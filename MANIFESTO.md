@@ -51,6 +51,7 @@ file and directory named in this document ships with the template:
 | `ONTOLOGY.md` | the predicates in which claims, sources, checks, and plans are related |
 | `evidence_and_reasoning/editorial_standards.md` | the prose standards, and the project's recorded voice |
 | `GLOSSARY.md` | the method's own words, what each will be mistaken for, and how to rename one |
+| `GETTING_STARTED.md`, `HOW_IT_FITS_TOGETHER.md`, `FORKING.md` | the guide: the walkthrough, the system and the prompts to make, and how to change a mechanism |
 | `evidence_and_reasoning/terminology.md` | the project's glossary: its own subject-matter terms |
 | `evidence_and_reasoning/references/` | the reference registry |
 | `inherited/README.md` | the import policy and the ledger of imported material |

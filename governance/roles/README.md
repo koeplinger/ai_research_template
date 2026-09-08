@@ -30,5 +30,7 @@ Each file states the role, when it fires, what the reader may read
 inside the repository; each prompt narrows that further), the prompt
 verbatim, the form of the output, what the role does not decide, and a
 worked example. The prompts are generic: a project fills the bracketed
-slots and changes nothing else, so that a departure from the standard
-prompt is visible.
+placeholders and changes nothing else, so that a departure from the
+standard prompt is visible. Those placeholders are not slots in this
+methodology's sense (`GLOSSARY.md`): they are filled afresh at each use,
+not once per project.

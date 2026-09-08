@@ -52,10 +52,20 @@ import is carried under.
 
 ## In a project built from this template
 
-Replace the copyright holder in `LICENSE-CODE` and the recommended citation
-above with the project's own. Keep the split between code and written
-material unless there is a reason to change it, and if there is, record the
-reason here.
+Add the project's own copyright holder to `LICENSE-CODE`, beside the
+template's, and add the project's own recommended citation above.
+
+**Keep the template's citation**, and say that the project's material is
+adapted from it. The written material is under CC BY 4.0, which requires
+that credit be given to the original and that changes be indicated; a
+project that replaces the citation rather than adding to it is out of
+compliance with the license it inherits. One line is enough:
+
+    Adapted from Jens Koeplinger, "AI Research Template"
+    (ai_research_template), 2026, under CC BY 4.0; changed for this project.
+
+Keep the split between code and written material unless there is a reason
+to change it, and if there is, record the reason here.
 
 ## No warranty
 

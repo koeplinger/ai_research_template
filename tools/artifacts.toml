@@ -214,8 +214,9 @@ kind = "vision"
 glob = "VISION.md"
 genre = "exempt"
 header = "none"
-# The build's north star, changed only at the researcher's direction and
-# removed at instantiation; it keeps its own dash convention.
+# The statement of intent, changed only at the researcher's direction and
+# kept with the project, because the rulebooks and the governance map cite
+# it (ONTOLOGY.md, governance/README.md); it keeps its own dash convention.
 
 [[artifact]]
 kind = "build-plan"
@@ -257,6 +258,18 @@ genre = "current-state"
 [[artifact]]
 kind = "rulebook"
 glob = "GLOSSARY.md"
+genre = "current-state"
+[[artifact]]
+kind = "guide"
+glob = "GETTING_STARTED.md"
+genre = "current-state"
+[[artifact]]
+kind = "guide"
+glob = "HOW_IT_FITS_TOGETHER.md"
+genre = "current-state"
+[[artifact]]
+kind = "guide"
+glob = "FORKING.md"
 genre = "current-state"
 
 [[artifact]]

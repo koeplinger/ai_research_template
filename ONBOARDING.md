@@ -26,7 +26,8 @@ This file points; the rulebooks govern:
       -> FINDINGS.md                 what the record has established
       -> evidence_and_reasoning/README.md, and its reading order
 
-If the slots are still unfilled, the round is **setup**, and its work is:
+If the slots are still unfilled, the round is **setup**, and
+`GETTING_STARTED.md` walks it through. In short, its work is:
 fill each slot where its owner defines it, stopping at every one for the
 researcher's value, the Slots table at the end of each rulebook naming
 what the slot means and giving examples from several disciplines; rename
