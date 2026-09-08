@@ -25,6 +25,7 @@ template, and **no prompt log is kept for the build-out**.
 | [CHECK_METHODOLOGY.md](CHECK_METHODOLOGY.md) | Registers, claim kinds, and the shape of a check |
 | [PRECEDENCE.md](PRECEDENCE.md) | Which artifact wins when two disagree |
 | [ONTOLOGY.md](ONTOLOGY.md) | The predicates the tools read and the surface syntax that carries them |
+| [GLOSSARY.md](GLOSSARY.md) | The method's own words, what each will be mistaken for, and how to rename one |
 | [ONBOARDING.md](ONBOARDING.md) | The reading order for a new assistant or collaborator |
 | [CURRENT_STATE.md](CURRENT_STATE.md) | Where the project stands, corrected in place |
 | [FINDINGS.md](FINDINGS.md) | The findings, one row each, by pointer to their claims |

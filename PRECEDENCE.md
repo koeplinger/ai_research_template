@@ -55,7 +55,12 @@ exactly this order.
    of the repository, consulted at its recorded locator, shelfmark, or
    release and indexed there (`MANIFESTO.md` §6). This is authority about
    what the source **says**, never about what is **true**. A claim of this
-   project resting on such a collation is `ATTESTED`.
+   project resting on such a collation is `ATTESTED`; where the collation
+   is itself gated, an alteration planted and caught and a second pass
+   recorded, the claim may be `VERIFIED` on the same evidence
+   (`CHECK_METHODOLOGY.md` §1, §2), and what is then verified is still
+   what the source says and not that it is right. The tier is the same;
+   the register says how far the reading of it may be trusted.
 3. **Registered references**: works cited but not collated here. Their
    canonical identity is authoritative; their content is not.
 4. **The public record at large**: published literature not registered

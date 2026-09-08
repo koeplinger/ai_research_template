@@ -95,6 +95,9 @@ NARRATIVE = [
     (re.compile(r"\bCorrection\s+of\s+record\b", re.I), "Correction of record"),
     (re.compile(r"^Last updated:.*\(", re.I), "Last updated: (...)"),
 ]
+# The default list; a project reads its own from [editorial] paper_phrases,
+# because a phrase this list bans is another field's precise sentence
+# ("robust to <perturbation>" is the honest result of a robustness check).
 PAPER_PHRASES = ["without loss of generality", "clearly", "it is easy to see",
                  "it follows immediately", "as is well known", "it is well established that",
                  "scholars agree", "robust to", "remarkable", "striking", "beautiful",
@@ -124,21 +127,65 @@ def use(tree: "Tree") -> "Tree":
     return tree
 
 
-def report(item: str, path: str, line: int, msg: str) -> None:
+def report(item: str, path: str, line: int, msg: str, part: str = "") -> None:
     """Every finding passes here, so `skip` in the row for `path` is honored
-    by every check in one place."""
+    by every check in one place.  An item that enforces two separable rules
+    passes `part`, and a row may then skip one half by naming `ITEM/part`
+    without silencing the other."""
     if _TREE is not None:
         row = _TREE.rows.get(path)
-        if row and item in row.get("skip", []):
+        skip = row.get("skip", []) if row else []
+        if item in skip or (part and f"{item}/{part}" in skip):
             return
     FINDINGS.append((item, path, line, msg))
 
 
 # ------------------------------------------------------------------ config
 
+# Header field names by the ROLE each plays, so that a project which must
+# rename one (its discipline having taken the word) edits [fields.roles] in
+# tools/artifacts.toml and every tool follows (GLOSSARY.md, "Renaming a word
+# this template uses"; ONTOLOGY.md section 1.1).  F() is the name in force.
+ROLES: dict[str, str] = {
+    "register": "Register", "kind": "Kind", "verdict": "Verdict", "plan": "Plan",
+    "depends-on": "Depends-on", "backed-by": "Backed-by", "backs": "Backs",
+    "verified-by": "Verified-by", "instrument": "Instrument", "frame": "Frame",
+    "mutation": "Mutation", "robustness": "Robustness", "original": "Original",
+    "prerequisites": "Prerequisites", "serves": "Serves", "status": "Status",
+    "by": "By", "produced-from": "Produced-from",
+}
+_NAMES: dict[str, str] = dict(ROLES)
+
+
+def F(role: str) -> str:
+    """The field name this project writes for a role."""
+    return _NAMES[role]
+
+
+def bind_field_names(cfg: dict) -> None:
+    """Adopt the project's field names from [fields.roles]; unknown roles are
+    reported by the configuration check, not here."""
+    _NAMES.update(ROLES)
+    for role, name in (cfg.get("fields", {}).get("roles") or {}).items():
+        if role in ROLES and isinstance(name, str) and name:
+            _NAMES[role] = name
+    # The shipped rows name their required fields by the shipped names; a
+    # renamed project means the same fields, so translate them in place and
+    # every consumer of the configuration sees this project's names.
+    rename = {ROLES[r]: n for r, n in _NAMES.items() if n != ROLES[r]}
+    if rename:
+        for row in cfg.get("artifact", []):
+            if row.get("required"):
+                row["required"] = [rename.get(x, x) for x in row["required"]]
+        f = cfg.setdefault("fields", {})
+        f["names"] = [rename.get(x, x) for x in f.get("names", [])]
+
+
 def load_config(root: Path) -> dict:
     with open(root / "tools" / "artifacts.toml", "rb") as fh:
-        return tomllib.load(fh)
+        cfg = tomllib.load(fh)
+    bind_field_names(cfg)
+    return cfg
 
 
 def git(root: Path, *args: str) -> str:
@@ -359,7 +406,7 @@ class Tree:
         self.headers = {f: header_block(self.text[f], (self.rows[f] or {}).get("header", "stamp"))
                         for f in self.files if self.rows[f]}
         self.plans = {self.num(f): f for f in self.files if self.kind(f) == "plan"}
-        self.plan_status = {f: fields_of(self.headers[f][0]).get("Status", (0, ""))[1] for f in self.plans.values()}
+        self.plan_status = {f: fields_of(self.headers[f][0]).get(F("status"), (0, ""))[1] for f in self.plans.values()}
         self.claims = {self.num(f): f for f in self.files if self.kind(f) == "claim"}
         self.checks = {self.num(f): f for f in self.files if self.kind(f) == "check"}
         self.programs = {self.num(f): f for f in self.files if self.kind(f) == "check-program"}
@@ -398,7 +445,7 @@ class Tree:
 
     def plan_of(self, f: str) -> tuple[str | None, str]:
         """(plan file, status) named by this artifact's Plan: line, if any."""
-        pl = fields_of(self.headers[f][0]).get("Plan") if f in self.headers else None
+        pl = fields_of(self.headers[f][0]).get(F("plan")) if f in self.headers else None
         if not pl or not pl[1]:
             return None, ""
         num = pl[1].split(",")[0].strip()
@@ -487,13 +534,13 @@ def check_genres_4_resolution(t: Tree) -> None:
             continue
         fl = fields_of(t.headers[f][0])
         if row["kind"] == "plan":
-            st = fl.get("Status")
+            st = fl.get(F("status"))
             if not st or not st[1]:
-                report("GENRES-4", f, 1, "plan carries no Status: line")
+                report("GENRES-4", f, 1, f"plan carries no {F('status')}: line")
             elif not status_re(t.cfg).match(st[1]):
-                report("GENRES-4", f, st[0], f"Status: not one of the three forms: {st[1]!r}")
+                report("GENRES-4", f, st[0], f"{F('status')}: not one of the three forms: {st[1]!r}")
             continue
-        pl = fl.get("Plan")
+        pl = fl.get(F("plan"))
         if pl and pl[1]:
             pf, st = t.plan_of(f)
             if not pf:
@@ -510,7 +557,7 @@ def check_genres_5_narrative(t: Tree) -> None:
         clean = t.prose(f)
         for i, line in enumerate(clean.splitlines(), 1):
             if STAMP_NARRATIVE_RE.search(line):
-                report("GENRES-5", f, i, "a stamp followed by a colon opens a change narrative")
+                report("GENRES-5", f, i, "a stamp followed by a colon opens a change narrative", "stamp")
         if t.genre(f) != "current-state" or row["genre"] == "dated-record":
             continue
         if f in italic_files:
@@ -523,7 +570,7 @@ def check_genres_5_narrative(t: Tree) -> None:
                 continue
             for rx, name in NARRATIVE:
                 if rx.search(line):
-                    report("GENRES-5", f, i, f"narration of the text's own past: {name}")
+                    report("GENRES-5", f, i, f"narration of the text's own past: {name}", "narrative")
 
 
 def check_genres_6_ledger(t: Tree) -> None:
@@ -537,8 +584,8 @@ def check_genres_6_ledger(t: Tree) -> None:
             continue
         cells = [c.strip() for c in line.strip().strip("|").split("|")]
         if status_col is None:
-            if "Status" in cells:
-                status_col = cells.index("Status")
+            if F("status") in cells:
+                status_col = cells.index(F("status"))
             continue
         m = re.search(rf"\[[^\]]*\]\(({NUM})_[^)]*\)|(?<!\S)({NUM})(?!\S)", line)
         if not m or set(line) <= set("|- "):
@@ -607,10 +654,12 @@ def check_edit_1(t: Tree) -> None:
             continue
         clean = blank_quoted(t.prose(f))
         for i, line in enumerate(clean.splitlines(), 1):
-            if dashes == "no-em-dash" and "—" in line:
-                report("EDIT-1", f, i, "em-dash where the convention is none")
+            if dashes in ("no-em-dash", "en-dash-asides") and "—" in line:
+                report("EDIT-1", f, i, f"em-dash where the convention is {dashes}")
             elif dashes == "spaced-em-dash" and re.search(r"\S—|—\S", line):
                 report("EDIT-1", f, i, "em-dash touching a character where the convention is spaced")
+            elif dashes == "unspaced-em-dash" and re.search(r"\s—|—\s", line):
+                report("EDIT-1", f, i, "em-dash with a space beside it where the convention is unspaced")
             if wrx:
                 m = wrx.search(line)
                 if m:
@@ -618,7 +667,12 @@ def check_edit_1(t: Tree) -> None:
 
 
 def check_edit_2(t: Tree) -> None:
-    rx = re.compile(r"\b(" + "|".join(re.escape(p) for p in PAPER_PHRASES) + r")\b", re.I)
+    phrases = t.cfg.get("editorial", {}).get("paper_phrases")
+    if phrases is None:
+        phrases = PAPER_PHRASES
+    if not phrases:
+        return
+    rx = re.compile(r"\b(" + "|".join(re.escape(p) for p in phrases) + r")\b", re.I)
     paper = t.dir_of_kind("version")
     for f, row in t.rows.items():
         if not row or not paper or not f.startswith(paper + "/"):
@@ -636,7 +690,7 @@ def check_edit_2(t: Tree) -> None:
 
 
 def check_ont_1_fields(t: Tree) -> None:
-    names = set(t.cfg["fields"]["names"])
+    names = set(t.cfg["fields"]["names"]) | set(_NAMES.values())
     derived = set(t.cfg["fields"]["derived"])
     for f, row in t.rows.items():
         if not row or row.get("header", "stamp") == "none":
@@ -703,10 +757,16 @@ def check_ont_2_tokens(t: Tree) -> None:
             m = re.match(rf"^superseded by (\S.*)$|^Pre-registered {ANYDATE}, (\S.*)$", s)
             if m:
                 p = (m.group(1) or m.group(2)).strip()
-                if not ((base / p).exists() or (t.root / p).exists()):
+                # A Pre-registered locator may be an external registry
+                # identifier or a URL rather than a path in this repository
+                # (evidence_and_reasoning/notes/README.md); only a locator
+                # that looks like a path is resolved.
+                looks_like_path = "/" in p or "." in p.rsplit("/", 1)[-1]
+                external = re.match(r"^[A-Za-z][A-Za-z0-9+.-]*://", p) or not looks_like_path
+                if not external and not ((base / p).exists() or (t.root / p).exists()):
                     report("ONT-2", f, ln, f"stamp names a path that does not exist: {p}")
         if row["kind"] == "plan":
-            pre = fields_of(t.headers[f][0]).get("Prerequisites")
+            pre = fields_of(t.headers[f][0]).get(F("prerequisites"))
             if pre and pre[1] and pre[1].strip() != "none":
                 bare = re.sub(r"\[claim [^\]]+\]", " ", pre[1])
                 for n in re.findall(rf"\b({NUM})\b", bare):
@@ -724,15 +784,15 @@ def check_ont_3_required(t: Tree) -> None:
         for name in row.get("required", []):
             if name not in fl:
                 report("ONT-3", f, 1, f"required field missing: {name}")
-        for name in sorted(set(row.get("required", [])) | {"Register", "Kind", "Verdict", "Status", "Serves", "Prerequisites", "Backs", "Mutation"}):
+        for name in sorted(set(row.get("required", [])) | {F(r) for r in ("register", "kind", "verdict", "status", "serves", "prerequisites", "backs", "mutation")}):
             if name in fl and not fl[name][1]:
                 report("ONT-3", f, fl[name][0], f"field present but empty: {name}")
         if row["kind"] in ("check", "check-program"):
-            mut = {x.strip() for x in fl.get("Mutation", (0, ""))[1].split(",") if x.strip()}
-            rob = {x.strip() for x in fl.get("Robustness", (0, ""))[1].split(",") if x.strip()}
+            mut = {x.strip() for x in fl.get(F("mutation"), (0, ""))[1].split(",") if x.strip()}
+            rob = {x.strip() for x in fl.get(F("robustness"), (0, ""))[1].split(",") if x.strip()}
             if mut & rob:
-                report("ONT-3", f, fl["Mutation"][0], f"Mutation and Robustness share names: {sorted(mut & rob)}")
-        for name in ("By", "Verified-by"):
+                report("ONT-3", f, fl[F("mutation")][0], f"{F('mutation')} and {F('robustness')} share names: {sorted(mut & rob)}")
+        for name in (F("by"), F("verified-by")):
             if name in fl and fl[name][1]:
                 v = fl[name][1].split(",")[0].strip()
                 if v in ("researcher", "assistant", "deferred", "unchecked"):
@@ -741,9 +801,22 @@ def check_ont_3_required(t: Tree) -> None:
                 if parties and v not in parties:
                     report("ONT-3", f, fl[name][0], f"{name} names a party not on the roster: {v!r}")
         if row["kind"] == "registry":
+            reg = t.cfg["registry"]
+            per_kind = reg.get("by_kind") or {}
             for m in re.finditer(r"^### \[([A-Z][A-Za-z0-9]{2,31})\]\n(.*?)(?=^### |\Z)", t.text[f], re.M | re.S):
                 key, body = m.group(1), m.group(2)
-                for name in t.cfg["registry"]["required"]:
+                # An entry may declare its kind; the required bullets are then
+                # that kind's, so a registry mixing kinds enforces more than
+                # their intersection (evidence_and_reasoning/references/README.md).
+                km = re.search(r"^- Kind:[ \t]*(.+?)[ \t]*$", body, re.M)
+                ekind = km.group(1) if km else ""
+                need = list(reg.get("required", []))
+                if per_kind:
+                    if ekind and ekind not in per_kind:
+                        report("ONT-3", f, t.text[f][:m.start()].count("\n") + 1,
+                               f"entry [{key}] declares a kind no [registry.by_kind] table names: {ekind!r}")
+                    need = need + [x for x in per_kind.get(ekind, []) if x not in need]
+                for name in need:
                     if not re.search(rf"^- {re.escape(name)}:", body, re.M):
                         report("ONT-3", f, t.text[f][:m.start()].count("\n") + 1, f"entry [{key}] lacks the bullet {name}")
     if saw_party and not parties and not warned_party:
@@ -753,12 +826,12 @@ def check_ont_3_required(t: Tree) -> None:
 def check_ont_4_depends(t: Tree) -> None:
     graph: dict[str, list[str]] = {}
     for num, f in t.claims.items():
-        dep = fields_of(t.headers[f][0]).get("Depends-on")
+        dep = fields_of(t.headers[f][0]).get(F("depends-on"))
         graph[num] = []
         if dep and dep[1]:
             for d in [x.strip() for x in dep[1].split(",") if x.strip()]:
                 if d not in t.claims:
-                    report("ONT-4", f, dep[0], f"Depends-on names no claim: {d}")
+                    report("ONT-4", f, dep[0], f"{F('depends-on')} names no claim: {d}")
                 else:
                     graph[num].append(d)
     state: dict[str, int] = {}
@@ -779,51 +852,51 @@ def check_ont_4_depends(t: Tree) -> None:
 def check_ont_5_backing(t: Tree) -> None:
     for num, f in t.claims.items():
         fl = fields_of(t.headers[f][0])
-        bb = fl.get("Backed-by")
-        if fl.get("Register", (0, ""))[1] in ("VERIFIED", "RULED_OUT") and not (bb and TOKEN_CHECK.findall(bb[1])):
-            report("ONT-5", f, 1, "a claim registered VERIFIED or RULED_OUT names no check in Backed-by")
+        bb = fl.get(F("backed-by"))
+        if fl.get(F("register"), (0, ""))[1] in ("VERIFIED", "RULED_OUT") and not (bb and TOKEN_CHECK.findall(bb[1])):
+            report("ONT-5", f, 1, f"a claim registered VERIFIED or RULED_OUT names no check in {F('backed-by')}")
         if not bb:
             continue
         for cn in TOKEN_CHECK.findall(bb[1]):
             cf = t.checks.get(cn)
             if not cf:
-                report("ONT-5", f, bb[0], f"Backed-by [check {cn}] resolves to no check")
-            elif num not in TOKEN_CLAIM.findall(fields_of(t.headers[cf][0]).get("Backs", (0, ""))[1]):
-                report("ONT-5", f, bb[0], f"[check {cn}] does not name [claim {num}] in its Backs")
+                report("ONT-5", f, bb[0], f"{F('backed-by')} [check {cn}] resolves to no check")
+            elif num not in TOKEN_CLAIM.findall(fields_of(t.headers[cf][0]).get(F("backs"), (0, ""))[1]):
+                report("ONT-5", f, bb[0], f"[check {cn}] does not name [claim {num}] in its {F('backs')}")
     for cn, cf in list(t.checks.items()) + list(t.programs.items()):
-        backs = fields_of(t.headers[cf][0]).get("Backs")
+        backs = fields_of(t.headers[cf][0]).get(F("backs"))
         if not backs:
             continue
         for num in TOKEN_CLAIM.findall(backs[1]):
             cl = t.claims.get(num)
             if not cl:
-                report("ONT-5", cf, backs[0], f"Backs [claim {num}] resolves to no claim")
-            elif cn not in TOKEN_CHECK.findall(fields_of(t.headers[cl][0]).get("Backed-by", (0, ""))[1]):
-                report("ONT-5", cf, backs[0], f"[claim {num}] does not name [check {cn}] in its Backed-by")
+                report("ONT-5", cf, backs[0], f"{F('backs')} [claim {num}] resolves to no claim")
+            elif cn not in TOKEN_CHECK.findall(fields_of(t.headers[cl][0]).get(F("backed-by"), (0, ""))[1]):
+                report("ONT-5", cf, backs[0], f"[claim {num}] does not name [check {cn}] in its {F('backed-by')}")
 
 
 def check_check_1_register(t: Tree) -> None:
     v = t.cfg["vocab"]
     for num, f in t.claims.items():
         hdr = t.headers[f][0]
-        for name in ("Register", "Kind", "Verdict"):
+        for name in (F("register"), F("kind"), F("verdict")):
             n = sum(1 for _, s in hdr if s.startswith(name + ":"))
             if n > 1:
                 report("CHECK-1", f, 1, f"{name} present {n} times, not once")
         fl = fields_of(hdr)
-        reg, kind, ver = fl.get("Register", (1, "")), fl.get("Kind", (1, "")), fl.get("Verdict", (1, ""))
+        reg, kind, ver = fl.get(F("register"), (1, "")), fl.get(F("kind"), (1, "")), fl.get(F("verdict"), (1, ""))
         if reg[1] and reg[1] not in v["registers"]:
-            report("CHECK-1", f, reg[0], f"Register not in the vocabulary: {reg[1]!r}")
+            report("CHECK-1", f, reg[0], f"{F('register')} not in the vocabulary: {reg[1]!r}")
         if kind[1] and kind[1] not in v["kinds"]:
-            report("CHECK-1", f, kind[0], f"Kind not in the vocabulary: {kind[1]!r}")
+            report("CHECK-1", f, kind[0], f"{F('kind')} not in the vocabulary: {kind[1]!r}")
         if not ver[1]:
             continue
         if ver[1] == "none":
             if reg[1] not in ("OPEN", "SPECULATIVE", ""):
-                report("CHECK-1", f, ver[0], f"Verdict none on a claim registered {reg[1]}")
+                report("CHECK-1", f, ver[0], f"{F('verdict')} none on a claim registered {reg[1]}")
             continue
         if reg[1] in ("OPEN", "SPECULATIVE"):
-            report("CHECK-1", f, ver[0], f"Verdict {ver[1]!r} on a claim registered {reg[1]}")
+            report("CHECK-1", f, ver[0], f"{F('verdict')} {ver[1]!r} on a claim registered {reg[1]}")
         allowed = v["verdicts"].get(kind[1])
         if allowed is None:
             continue
@@ -833,7 +906,7 @@ def check_check_1_register(t: Tree) -> None:
         else:
             ok = len(parts) == 1 and parts[0] in allowed
         if not ok:
-            report("CHECK-1", f, ver[0], f"Verdict {ver[1]!r} not in the {kind[1]} vocabulary")
+            report("CHECK-1", f, ver[0], f"{F('verdict')} {ver[1]!r} not in the {kind[1]} vocabulary")
 
 
 def _is_constant(node: ast.AST) -> bool:
@@ -869,7 +942,7 @@ def check_check_3_mutation(t: Tree) -> None:
         if kind not in ("check", "check-program") or t.is_template(f):
             continue
         fl = fields_of(t.headers[f][0])
-        mut = fl.get("Mutation")
+        mut = fl.get(F("mutation"))
         if not mut or not mut[1]:
             report("CHECK-3", f, 1, "no Mutation: line")
             continue
@@ -1053,6 +1126,37 @@ def selftest() -> int:
         print(f"  [{'PASS' if ok else 'FAIL'}] the unplanted tree is clean under every check"
               + ("" if ok else f": {[(x[0], x[1], x[3][:50]) for x in FINDINGS]}"))
 
+    # A project whose discipline has taken one of the field names renames it
+    # in [fields.roles] and the tools follow (GLOSSARY.md, "Renaming a word
+    # this template uses").  Two cases: the renamed tree is clean, and a
+    # check still fires under the new name.
+    def renamed(tmp: Path, extra=None) -> None:
+        files = {rel: (body.replace("Register:", "Trust:").replace("Mutation:", "Planted-fault:")
+                       .replace("Register\n", "Trust\n"))
+                 for rel, body in fixture().items()}
+        if extra:
+            files.update(extra(files))
+        cfg = (cfg_text.replace('register = "Register"', 'register = "Trust"')
+                       .replace('mutation = "Mutation"', 'mutation = "Planted-fault"'))
+        scratch_project(tmp, files, cfg)
+        commit(tmp)
+        run_checks(tmp)
+
+    with tempfile.TemporaryDirectory() as d:
+        renamed(Path(d))
+        ok = not FINDINGS
+        failures += 0 if ok else 1
+        print(f"  [{'PASS' if ok else 'FAIL'}] a tree whose fields are renamed in [fields.roles] is clean"
+              + ("" if ok else f": {[(x[0], x[1], x[3][:50]) for x in FINDINGS]}"))
+
+    with tempfile.TemporaryDirectory() as d:
+        C = "evidence_and_reasoning/claims/001_a.md"
+        renamed(Path(d), lambda f: {C: f[C].replace("Trust: OPEN", "Trust: PROVEN")})
+        hit = any(x[0] == "CHECK-1" and "Trust not in the vocabulary" in x[3] for x in FINDINGS)
+        failures += 0 if hit else 1
+        print(f"  [{'PASS' if hit else 'FAIL'}] a renamed field's vocabulary is still checked, under the new name"
+              + ("" if hit else f": {[(x[0], x[3][:60]) for x in FINDINGS]}"))
+
     def w(tmp, rel, body):
         (tmp / rel).parent.mkdir(parents=True, exist_ok=True)
         (tmp / rel).write_text(body)
@@ -1096,6 +1200,20 @@ def selftest() -> int:
     run_case("a missing required field", "ONT-3", C1, "required field missing", sub(C1, "Verified-by: unchecked\n", ""))
     run_case("an empty field", "ONT-3", C1, "present but empty", sub(C1, "Verified-by: unchecked", "Verified-by:"))
     run_case("a registry entry lacking a bullet", "ONT-3", "evidence_and_reasoning/references/topic.md", "lacks the bullet", sub("evidence_and_reasoning/references/topic.md", "- Standing: searched x, 1 January 2026; none found\n", ""))
+    # A registry that declares entry kinds enforces each kind's own bullets
+    # rather than their intersection.
+    R = "evidence_and_reasoning/references/topic.md"
+
+    def by_kind(extra_cfg, mutate_registry):
+        def go(tmp, files):
+            (tmp / "tools" / "artifacts.toml").write_text(cfg_text.replace(
+                "[registry.by_kind]", "[registry.by_kind]\n" + extra_cfg))
+            w(tmp, R, mutate_registry(files[R]))
+        return go
+    run_case("a registry entry missing its kind's bullet", "ONT-3", R, "lacks the bullet Repository",
+             by_kind('archival = ["Repository"]\n', lambda b: b.replace("### [Key1]\n", "### [Key1]\n\n- Kind: archival\n", 1)))
+    run_case("a registry entry declaring an unconfigured kind", "ONT-3", R, "declares a kind",
+             by_kind('archival = ["Repository"]\n', lambda b: b.replace("### [Key1]\n", "### [Key1]\n\n- Kind: printed\n", 1)))
     run_case("Mutation and Robustness sharing a name", "ONT-3", K2, "share names", sub(K2, "Mutation: variant-reading", "Mutation: variant-reading\nRobustness: variant-reading"))
     run_case("a dependency naming no claim", "ONT-4", C1, "names no claim", sub(C1, "Verified-by: unchecked", "Verified-by: unchecked\nDepends-on: 042"))
     run_case("a dependency cycle", "ONT-4", C1, "cycle", sub(C1, "Verified-by: unchecked", "Verified-by: unchecked\nDepends-on: 001"))

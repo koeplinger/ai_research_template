@@ -30,10 +30,9 @@ rulebook's own numbered check rather than repeating or extending it.
 
 > **Build lens.** The template records no research, so every predicate
 > here is shipped and none is instantiated. The checks and queries below
-> are specified and not yet implemented: the tools arrive with the
-> template's own build, and until then the only mechanical check in this
-> repository is the privacy scan (`MANIFESTO.md` §13). The build's own
-> state lives in `VISION_PLAN.md`, which is not an ontology artifact.
+> are implemented: `tools/README.md` names the tool that runs each, and
+> the round check runs them together. The build's own state lives in
+> `VISION_PLAN.md`, which is not an ontology artifact.
 
 ---
 
@@ -104,6 +103,18 @@ nothing by design.
 | `[finding F###]` | an opaque key, assigned once and never reused | that row of `FINDINGS.md` |
 | `[tension T###]` | the same | that row of the tension ledger |
 | `plan NNN` | lowercase, never inside a header line | that plan file |
+
+**A bracketed word that is not a citation is written in backticks.** The
+`[ShortKey]` grammar matches any capitalized word of three to
+thirty-two characters in square brackets, and several disciplines write
+one in running prose for something else: an editorial interpolation in a
+transcription, a special token in a model's vocabulary, a bracketed short
+name. No tool reads inside a backtick span, a fenced block, or an HTML
+comment, so such a word goes in backticks and resolves to nothing, while a
+real citation is written bare so that it resolves. A project whose prose
+is thick with them says so in `evidence_and_reasoning/terminology.md` and
+keeps the convention; the rule is the same one `FINDINGS.md` states from
+the other side, that a token in backticks is skipped by the resolver.
 
 **Paths are never hardcoded here.** `[claim NNN]` and `[check NNN]`
 resolve through the configured patterns, because `CHECK_METHODOLOGY.md`
@@ -181,7 +192,7 @@ the duty is the assistant's under the consistency sweep
 
 | Predicate | Relates | Written as | Owner | Checked by | Answers |
 |---|---|---|---|---|---|
-| `produced-from` | a derived artifact (transcription, collation, extract, table, figure) to the source it came from and the check or program that produced it | `Produced-from: <source token>, <check or path>` | `CHECK_METHODOLOGY.md` §8 | ontology 2 | where did this material come from? |
+| `produced-from` | a derived artifact (transcription, collation, extract, table, figure) to the source it came from and the check or program that produced it | `Produced-from: <source token>, <check or path>`, pre-printed by `evidence_and_reasoning/derived/_template.md` | `CHECK_METHODOLOGY.md` §8 | ontology 2 | where did this material come from? |
 
 ### 2.5 Plans and state
 

@@ -23,13 +23,21 @@ speculation; a current-state artifact can carry established fact.
 Beyond the words `MANIFESTO.md` defines: a **plan** is a numbered file
 under `evidence_and_reasoning/research_plans/` whose `Status:` header line
 holds exactly one of `DRAFT`, `ENGAGED <date>`, or `CLOSED <date>, verdict
-<VERDICT>`, the verdict one of CONFIRMED, REFUTED, COMPLETE, or ABANDONED.
+<VERDICT>`, the verdict one of CONFIRMED, REFUTED, COMPLETE, INCONCLUSIVE,
+or ABANDONED.
 A plan is **open** while its status is DRAFT or ENGAGED. The verdicts:
 CONFIRMED, the hypothesis held and the results are claims; REFUTED, it
 failed and the refutation is itself a claim; COMPLETE, a plan with no
-hypothesis met its pre-registered closure criterion; ABANDONED, execution
-stopped without a verdict, or the pre-registered criteria decided neither
-way, and the reason is recorded. **Both transitions are the researcher's**,
+hypothesis met its pre-registered closure criterion; INCONCLUSIVE, the
+plan was executed as designed and the pre-registered rule decided neither
+way, which is a result and is recorded as one, the interval or the
+coverage the design reached being the claim it leaves; ABANDONED,
+execution stopped, and the reason is recorded.
+
+The five are a closed vocabulary, configured in `tools/artifacts.toml`
+under `[vocab] plan_verdicts`. A project whose discipline closes a plan in
+a way none of them names adds a value there and defines it here, in the
+same round and with the reason in the log. **Both transitions are the researcher's**,
 DRAFT to ENGAGED and ENGAGED to CLOSED: the researcher writes the line or
 directs the assistant to write it, the round's log entry is the
 provenance, and the assistant never changes it on its own initiative. When
@@ -39,9 +47,17 @@ it ready to close. An artifact
 task M`), which resolves to `evidence_and_reasoning/research_plans/NNN_*.md`.
 A **maintained** artifact is current state, changed only at the
 researcher's direction. A **ledger** is a file that tracks status; the word
-*register* is reserved for a statement's trust level
-(`CHECK_METHODOLOGY.md`). *Registry* is a different word and keeps its
-ordinary sense of a catalogue, as in the reference registry. A **sweep** is a pass over many
+*register* names a statement's trust level (`CHECK_METHODOLOGY.md`)
+wherever these rulebooks use it of a statement, and a ledger is not called
+one. That reservation is over the method's own vocabulary and not over the
+language: where a project's subject matter has registers of its own, an
+admission register, a land register, register data, it calls them that, as
+the model prose in these files does, and disambiguates by naming the thing
+("the register file", "the trust level") wherever both could be meant. A
+project whose sources are registers renames the field instead, in one
+place (`GLOSSARY.md`, *Renaming a word this template uses*). *Registry* is
+a different word and keeps its ordinary sense of a catalogue, as in the
+reference registry. A **sweep** is a pass over many
 documents at once (`MANIFESTO.md` §14). The **public record** is the
 published literature, reference works, editions, and published estimates
 outside the repository. A **review** is a referee pass, internal or
@@ -83,11 +99,11 @@ finds the one finds the other.
 |---|---|
 | a released version of the main write-up, together with what is released with it, {{DELIVERABLE}} | released by the researcher: a `Released <date>` header line on the version, and a row in the changelog; a first version has no changelog, and its stamp alone releases it |
 | a standalone note or write-up under `paper/` not owned by an open plan | on release, the same way |
-| a review under `paper/reviews/` not owned by an open plan | on writing |
+| a review under `paper/reviews/` not owned by an open plan | when the round that acts on it closes: a review is written across that round, and freezes with its last column filled |
 | a version changelog under `paper/` | on release of the later version |
-| **everything a plan owns**: the plan file, its claims, its check records, its check programs and written check procedures, its dated notes, its derived material (transcriptions, collations, extracts, tables, figures), and the write-ups and reviews it produces | **when the plan closes**, with any verdict |
+| **everything a plan owns**: the plan file, its claims, its check records, its check programs and written check procedures, its dated notes, its derived material (transcriptions, collations, extracts, tables, figures), which lives under `evidence_and_reasoning/derived/`, and the write-ups and reviews it produces | **when the plan closes**, with any verdict |
 | a dated note not owned by an open plan | on writing |
-| a check program or written check procedure not owned by an open plan | when a claim, record, note, or paper cites its path; the checker searches for the path, and the assistant judges the rest |
+| a check program or written check procedure not owned by an open plan | when a claim, record, note, or paper cites its path; the checker searches for the path, and the assistant judges the rest. The shipped configuration requires a `Plan:` line on every numbered check, so this row has no filing home until a project adds one: a row for the unowned form, or a plan that owns the shared machinery |
 | imported material under `inherited/` | on import, at its original date (`MANIFESTO.md` §6) |
 | CLOSING_NOTE.md, a file at the root present only once the project has closed | on writing: it records why the project was closed, on the day it closed |
 
@@ -387,11 +403,31 @@ the researcher with its output (`MANIFESTO.md` §13).
    record*; *Last updated:* followed by an opening parenthesis; and any of
    *Corrected*, *Updated*, *Extended*, *Hardened*, *Narrowed*, *Reserved*
    followed by a date and a colon, in every genre.
+
+   The last group, a stamp word followed by a date and a colon, is about
+   the *document*, and is checked in every genre. The rest is a phrase
+   list, and a phrase list cannot tell a document narrating its own past
+   from a subject matter whose sentences take the same shape: a source
+   that ceased to record something after a date, a parameter a search
+   returned, a holding stated to be current at a date. **A hit on
+   subject-matter prose is brought, not rewritten**: the check is
+   advisory, the sentence is content, and the round's log entry records
+   that it was read and left. A project whose subject matter collides with
+   the list persistently silences that half alone,
+   `skip = ["GENRES-5/narrative"]` on the kind's row in
+   `tools/artifacts.toml` with the reason beside it, and keeps the stamp
+   half; the reverse skip is `GENRES-5/stamp`.
 6. **Ledger.** The status column of
    `evidence_and_reasoning/research_plans/ROADMAP.md` agrees with each plan's
    `Status:` line.
 7. **Paths.** Every repository path named in a current-state document
-   exists.
+   exists. A path is recognized by shape: a markdown link's target, or a
+   backticked span that ends in a slash or in one of the extensions the
+   configuration lists. So a shelfmark, a citation, or an identifier that
+   happens to end in a listed extension is read as a path and reported;
+   written without backticks, or with the extension not among those
+   listed, it is not. A project whose loci take that shape says so in its
+   glossary and writes them plainly.
 8. **Index.** Every file in a directory that has an indexing `README.md`
    appears in it.
 

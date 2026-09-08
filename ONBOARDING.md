@@ -26,8 +26,18 @@ This file points; the rulebooks govern:
       -> FINDINGS.md                 what the record has established
       -> evidence_and_reasoning/README.md, and its reading order
 
-If the slots are still unfilled, the round is setup: follow
-`GETTING_STARTED.md` and stop at every slot for the researcher's value.
+If the slots are still unfilled, the round is **setup**, and its work is:
+fill each slot where its owner defines it, stopping at every one for the
+researcher's value, the Slots table at the end of each rulebook naming
+what the slot means and giving examples from several disciplines; rename
+any field name the project's own discipline has taken, in
+`tools/artifacts.toml` under `[fields.roles]`, before any artifact carries
+it (`GLOSSARY.md`, *Renaming a word this template uses*); write the
+research statement and the keystone; and close by making the
+documentation consistency sweep
+(`governance/roles/documentation_sweep.md`), which is what catches a slot
+value that does not read in its sentence and a file still speaking in the
+template's voice.
 
 ## Precedence
 
@@ -81,9 +91,9 @@ meets in its first minutes.
 
 <!-- The researcher's standing directions, one line each with the prompt
      that set it, so a session knows them without re-deriving them. Do
-     not copy slot values here: the instrument of record is
-     CHECK_METHODOLOGY.md section 3, the mutation set and parties are
-     ONTOLOGY.md's Slots, spelling and pronoun are
+     not copy slot values here: the instrument of record and the mutation
+     set are CHECK_METHODOLOGY.md's Slots, the parties and the citation
+     locus are ONTOLOGY.md's, spelling and pronoun are
      editorial_standards.md's Conventions. -->
 
 ## Slots

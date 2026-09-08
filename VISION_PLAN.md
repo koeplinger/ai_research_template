@@ -110,7 +110,7 @@ The single source of status for this build. Steps are executed top-down.
 | 9d | Tools: the falsifiability probe, the run ledger, the residue check | DONE | 2026-09-05 |
 | 10 | Governance wiring: hooks, reminders, opposition, support | DONE | 2026-09-06 |
 | 11 | Worked example project | DONE | 2026-09-06 |
-| 12 | Breadth review beyond mathematics and physics | NOT STARTED | |
+| 12 | Breadth review beyond mathematics and physics | READY | 2026-09-08 |
 | 13 | The guide | NOT STARTED | |
 | 14 | Instantiation procedure | NOT STARTED | |
 | 15 | Close-out | NOT STARTED | |
@@ -1270,6 +1270,145 @@ its standard prompt under `governance/roles/`, its row in
 
 **Done when.** No artifact assumes a discipline outside a marked slot; scan
 clean.
+
+### Step 12 as built
+
+**The method.** Five discipline lenses read every artifact of the template
+in full, each as the researcher who would adopt it: a historian of
+medicine working from archival institutional records, an empirical
+microeconomist working from survey microdata, a molecular biologist
+running sequencing and wet-lab work, a scholar of contract law, and a
+machine-learning researcher. Each was asked where it is fenced out, what
+jargon is unexplained, which slot it cannot fill, where a discipline is
+assumed outside a marked slot, and whether the documentation consistency
+sweep's prompt reads in its field; each also filled all fifteen slots with
+real values for a project of its own. Read-only, bounded to the
+repository, transcripts audited afterwards: 2,509 tool calls over 111
+agents, no writes, nothing read outside the tree.
+
+The five returned 213 findings, merged to 105. Each merged finding went to
+its own refuter, one reader per finding, under the project's own rule that
+every finding is handed to a reader instructed to refute it. **Three
+stand, 48 are narrowed, 54 are refuted.**
+
+**The meta-finding, which shaped the work.** The refutation rate is the
+result. Again and again a lens reported being fenced out, and the refuter
+found the provision already there, in another file, under a heading the
+lens had not read: the form of a check is a slot and nothing assumes a
+program; a written procedure is a check in every rule; uncertainty is part
+of the claim; the comparison rule is already conditional; the plan
+template already offers a no-hypothesis form. **The template is more
+general than a first reading of it shows.** So the step's work was mostly
+signposting rather than new provisions: saying at the point of use what
+was true elsewhere, and giving the reader a word, an example, or a
+configuration key where they had been left to infer one.
+
+**What was built.**
+
+- *`GLOSSARY.md`*, the method's own words. A quarter of the findings were
+  one defect: every name this methodology could choose is already taken by
+  somebody's field, and the collisions were unlisted. The file says what
+  each word means here, what it will be mistaken for (a register, a
+  mutation, an instrument, a frame, a locus, a probe, a construct, a
+  sweep, authority, standing, the public record, and the rest), which
+  words a project may rename, and what a rename costs. It also gathers the
+  borrowed terms the rulebooks use in rule text and the finding tags.
+  `MANIFESTO.md` §9 now names it as the home of the method's vocabulary,
+  which it had promised to a guide that does not exist.
+- *Renaming, made real.* The field names the tools read were hardcoded, so
+  the template's answer to its most-raised finding would have been "you
+  cannot". `tools/artifacts.toml` now carries `[fields.roles]`, a role to
+  name mapping; every tool reads the name from there, the shipped rows'
+  required-field lists are translated at load, and two self-tests prove a
+  renamed tree is clean and still checked under its new names. The
+  defaults do not change: a project renames only what its own discipline
+  has taken, and the glossary says to do it before the record exists.
+- *The documentation consistency sweep*, at the researcher's direction:
+  `governance/roles/documentation_sweep.md` with its prompt verbatim, a
+  reminder row, a row in the governance map, and a pointer from
+  `CHECK_METHODOLOGY.md` §7, which distinguishes it from the sweep of the
+  record. All five lenses said the prompt reads in their discipline; their
+  repairs are in it (name the files rather than the categories, never write
+  bare *the sweep*, say what a copied file is, run the tools first and take
+  their findings as given, and an item 8 the project fills with what its
+  own documentation must keep in step, with five worked instances).
+- *A home for derived material.* `evidence_and_reasoning/derived/`, with
+  its index, its template, two configuration rows and an index row. The
+  rulebooks made derived material a plan's to own and shipped a
+  `Produced-from` predicate for it, and there was nowhere to put it: a
+  transcription, a collation, an extract, a coded table or a figure
+  produced before release matched no row and was reported unresolved. This
+  fenced out every discipline, not one.
+- *Vocabularies widened where a whole discipline had no value.* A fifth
+  plan verdict, `INCONCLUSIVE`, for a plan executed as designed whose
+  pre-registered rule decided neither way, which is a result and not an
+  abandonment; `inconclusive` among the empirical verdicts; two more dash
+  conventions and a linter branch for each; the registry's required
+  bullets configurable per entry kind, so a registry holding cases,
+  datasets, reagents and articles enforces more than their intersection;
+  the banned-phrase list moved into the configuration, because a phrase
+  that is advocacy in one field is another's precise sentence.
+- *Tolerance, where the registers live.* `CHECK_METHODOLOGY.md` §1 now says
+  that a measured or estimated quantity carries its tolerance and that
+  `VERIFIED` and `RULED_OUT` are read at it, and §5 says a mutation is one
+  whose effect exceeds it. The rule had existed only as a design rule of
+  the shipped Python suite, which a project using written procedures is
+  told does not apply to it.
+- *Scope repairs.* The narrative check's two halves are separately
+  skippable and a hit on subject-matter prose is brought, not rewritten; a
+  bracketed word that is not a citation goes in backticks; a check
+  procedure's planted alteration may go on the project's own side of the
+  comparison, or be the run's controls; a claim resting on a gated
+  collation may be `VERIFIED` without leaving tier 2; a pre-registration's
+  locator may be an external registry identifier; `BASIS` need not name
+  data the repository deliberately does not hold; a round with a live
+  process does not close, and the log says how that is carried.
+- *A sixteenth slot,* `{{DISCLOSURE_RULE}}`: what may leave the repository
+  where the sources or an ethics approval bind it, named once at setup
+  rather than rediscovered per table.
+
+**The documentation sweep's own first catch.** Seven statements in the
+template disagreed with themselves and were corrected: a section
+cross-reference off by one, the manifesto overstating what the reply hook
+does, three statements of when a review freezes, the governance map saying
+the worked example had not shipped, the ontology's build lens saying the
+tools were unimplemented, an onboarding pointer naming the wrong slot
+owner, and a spelling list treating *licence* and *license* as variants
+when they are noun and verb. This is the class the new standing prompt
+exists to find, found by running it.
+
+**The round check is clean for the first time.** The onboarding file's
+setup branch had named a guide that does not exist, so every project
+inherited a failing gate on its first round and learned to read past it.
+The branch now says what a setup round does, in the file that is read at
+the start of every session, and points at the sweep to close it. The
+guide, when step 13 ships it, becomes the longer walkthrough that branch
+can name.
+
+**Left for later steps.** The instantiation procedure the manifesto
+promises does not exist, which is the one major finding that stands
+outright; it is step 14's, and step 14 also carries what the by-hand
+instantiation of step 11 taught. `GETTING_STARTED.md` is step 13's. The
+worked example exercises no empirical or inferential claim, so the two
+kinds most of these disciplines use are defined and never shown working;
+the example is fenced and is not re-run for a rule change, so whether to
+extend it by one plan or leave it is the researcher's, at step 15.
+
+**The example is now out of step, by design.** Step 12 amended the
+rulebooks; `example/` is a snapshot at commit `a460878` and does not
+follow. Its own gates still pass on its own copies (round check clean over
+104 files), and its README says where it stands.
+
+**Records.** The five lens reports, the 105 merged findings with their
+refuter verdicts, and the five complete filled slot sets are under
+`.review/` (git-excluded): `step12_breadth.md` and `step12_slot_sets.md`.
+The filled sets are what step 13's guide completes its slot table from,
+one worked example per discipline.
+
+**Verified.** The round check reports 0 findings over 181 files; every one
+of the eleven tools' self-tests passes, including two new cases for the
+renaming and two for the per-kind registry; the privacy scan is clean over
+the whole tree; the example's own round check is clean over its 104 files.
 
 ### Step 13: The guide
 

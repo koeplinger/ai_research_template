@@ -7,7 +7,8 @@ Prerequisites: <!-- plans by number, a claim as [claim NNN], or: none -->
 
 <!-- HEADER FIELDS. Delete these comments in the instance.
      Status         DRAFT | ENGAGED D Month YYYY | CLOSED D Month YYYY,
-                    verdict CONFIRMED | REFUTED | COMPLETE | ABANDONED.
+                    verdict CONFIRMED | REFUTED | COMPLETE | INCONCLUSIVE
+                    | ABANDONED.
                     The researcher writes it or directs it
                     (DOCUMENT_GENRES.md, Words used here).
      Serves         the keystone hypothesis this plan serves, or none with
@@ -34,12 +35,17 @@ Prerequisites: <!-- plans by number, a claim as [claim NNN], or: none -->
 
 ## Design
 
-<!-- The sources, sample, series, witnesses, or specification the tasks
-     will bear on, and the identifying or interpretive assumptions, each
-     classified derived, imposed, or conjectured (CHECK_METHODOLOGY.md
-     section 4): the instrument and its exclusion restriction; the dating
-     or attribution a reading rests on; the release and the sample
-     definition. -->
+<!-- The sources, sample, series, witnesses, specimens, system, or
+     specification the tasks will bear on, and the assumptions and design
+     choices the result will rest on, each classified derived, imposed, or
+     conjectured (CHECK_METHODOLOGY.md section 4). What to name depends on
+     the discipline: the instrumental variable and its exclusion
+     restriction; the dating or attribution a reading rests on; the
+     release and the sample definition; the model system, the perturbation
+     and how it was validated, the readout and its positive and negative
+     controls, the number of replicates and what fixed it, and whether
+     measurement was blinded; the training data, the split, and what was
+     held out. -->
 
 ## Tasks
 

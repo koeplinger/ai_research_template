@@ -23,6 +23,7 @@ advisory: it says, it records nothing, and it acts only with direction.
 | **tension-row-not-entered** | a divergence was found and its row brought but not yet entered at the researcher's direction (`PRECEDENCE.md`) | the row, restated in the reply | reading | whether the row enters: the researcher's |
 | **finding-proposed-not-brought** | the assistant has proposed a finding in work and not yet put it to the researcher (§12) | the proposal, in the reply | reading | what counts as a finding |
 | **second-pass-not-taken** | a non-trivial conclusion is about to be presented without its independent second pass (§5) | the pass taken, or the statement that it was not | reading | the route the discipline requires: `CHECK_METHODOLOGY.md` §3 |
+| **documentation-sweep-owed** | the rulebooks, the indexes, the templates, or the configuration have been edited as a batch, or the project has just been instantiated and its slots filled (`governance/roles/documentation_sweep.md`) | a proposal to make the documentation consistency sweep, with the prompt | reading | whether to make it: the researcher's |
 | **adversarial-review-owed** | a claim is about to be relied on and has had no structured adversarial review (§17) | a proposal to run the refuter or the referee (`governance/roles/`) | reading | whether to run it: the researcher's |
 
 ## The plan-closure checklist

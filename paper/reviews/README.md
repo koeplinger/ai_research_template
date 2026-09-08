@@ -10,8 +10,10 @@ or an outside reader named as the report's conditions allow
 what it found, verbatim only where its conditions permit (`MANIFESTO.md`
 §6). A review is a dated record: its subject is an event, so it is exempt
 from the narrative rule (`DOCUMENT_GENRES.md`, *Dated records*); it is
-written across the round that acts on it and freezes when that round
-closes, or with the plan that owns it. Copy [`_template.md`](_template.md)
+written across the round that acts on it. When it freezes is
+`DOCUMENT_GENRES.md` §2's: a review no plan owns freezes when that round
+closes, its *Refuted?* and *Outcome* columns and its last section filled;
+a review a plan owns freezes with that plan. Copy [`_template.md`](_template.md)
 to start one.
 
 ## What a review is

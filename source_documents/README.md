@@ -29,11 +29,19 @@ never neither (`ONTOLOGY.md` §2.1, `held` and `consulted-at`).
 ## Rules
 
 - **A held source is never edited, renamed, or moved.** Anything derived
-  from it lives outside this folder.
+  from it lives outside this folder, under
+  `evidence_and_reasoning/derived/`, with its `Produced-from` line naming
+  the source and the locus range it came from.
 - **A restricted source enters the repository only in the form its terms
   allow**: cited by locus, quoted or excerpted as far as its terms permit
   and no further, in a prompt log, a note, or a check alike
   (`MANIFESTO.md` §6, §8).
 - **The form consulted is part of the record.** A reading against a
   digital surrogate says so; a second reader returns to the same form
-  (`CHECK_METHODOLOGY.md` §3).
+  (`CHECK_METHODOLOGY.md` §3). Where that form is a working copy no second
+  reader can obtain (the researcher's own photographs under a
+  personal-use permission, an extract cut under an access agreement), the
+  row names it as such and names what the second reader returns to
+  instead: the original at its shelfmark, or the extract re-cut from the
+  release at its identifier. The return has to be possible for somebody
+  else, and saying whose copy was read is part of saying how.

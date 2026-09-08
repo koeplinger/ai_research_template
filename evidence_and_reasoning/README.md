@@ -36,6 +36,7 @@ a claim and its check. A claim needs an owning plan before it exists.
 | [checks/](checks/) | numbered checks: the record of each, and the procedure where a check is written rather than run |
 | [references/](references/) | the reference registry, one file per topic, repository, or data source |
 | [research_plans/](research_plans/) | numbered plans and the plan index |
+| [derived/](derived/) | what a plan made from a source: transcriptions, collations, extracts, tables, figures |
 | [notes/](notes/) | dated working notes, of two kinds |
 | [public_record_tensions.md](public_record_tensions.md) | the tension ledger |
 

@@ -83,13 +83,13 @@ def closure(t: lint_docs.Tree, num: str) -> list[tuple[int, str, str, str]]:
 
     def walk(n: str, depth: int) -> None:
         fl = fields(t, t.claims[n])
-        for c in lint_docs.TOKEN_CHECK.findall(fl.get("Backed-by", (0, ""))[1]):
+        for c in lint_docs.TOKEN_CHECK.findall(fl.get(lint_docs.F("backed-by"), (0, ""))[1]):
             note = "" if c in t.checks else "   (resolves to no check)"
             if ("check", c) in seen:
                 note += "   (listed above)"
             seen.add(("check", c))
             out.append((depth + 1, "check", c, note))
-        for d in [x.strip() for x in fl.get("Depends-on", (0, ""))[1].split(",") if x.strip()]:
+        for d in [x.strip() for x in fl.get(lint_docs.F("depends-on"), (0, ""))[1].split(",") if x.strip()]:
             if d not in t.claims:
                 out.append((depth + 1, "claim", d, "   (resolves to no claim)"))
                 continue
@@ -130,7 +130,7 @@ def unverified(t: lint_docs.Tree, num: str) -> list[str]:
             out.append(f"  [claim {n}]  (resolves to no claim)")
             continue
         reg = register(t, n)
-        vb = fields(t, t.claims[n]).get("Verified-by", (0, ""))[1]
+        vb = fields(t, t.claims[n]).get(lint_docs.F("verified-by"), (0, ""))[1]
         why = []
         if reg in ("OPEN", "SPECULATIVE"):
             why.append(reg)
@@ -150,7 +150,7 @@ def unverified(t: lint_docs.Tree, num: str) -> list[str]:
 def deferred(t: lint_docs.Tree) -> list[str]:
     out = ["Deferred to an instrument or party (Verified-by: deferred):"]
     for n, f in sorted(t.claims.items()):
-        vb = fields(t, f).get("Verified-by", (0, ""))[1]
+        vb = fields(t, f).get(lint_docs.F("verified-by"), (0, ""))[1]
         if vb.split(",")[0].strip() == "deferred":
             out.append(f"  [claim {n}]  {register(t, n)}  {vb}")
     if len(out) == 1:
@@ -250,7 +250,7 @@ def sites(t: lint_docs.Tree) -> list[str]:
             continue
         own = t.num(f)
         own_reg = register(t, own) if kind == "claim" else "check"
-        backs = lint_docs.TOKEN_CLAIM.findall(fields(t, f).get("Backs", (0, ""))[1]) if kind == "check" else []
+        backs = lint_docs.TOKEN_CLAIM.findall(fields(t, f).get(lint_docs.F("backs"), (0, ""))[1]) if kind == "check" else []
         for i, line in enumerate(t.prose(f).splitlines(), 1):
             for n in lint_docs.TOKEN_CLAIM.findall(lint_docs.LINK_RE.sub(" ", line)):
                 if kind == "claim" and n == own:

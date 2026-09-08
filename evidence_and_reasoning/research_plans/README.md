@@ -15,7 +15,7 @@ artifact the work produces names the plan that owns it. Copy
 
 A plan's `Status:` header line holds exactly one of `DRAFT`, `ENGAGED D
 Month YYYY`, or `CLOSED D Month YYYY, verdict <V>`, the verdict one of
-`CONFIRMED`, `REFUTED`, `COMPLETE`, or `ABANDONED`. What each verdict
+`CONFIRMED`, `REFUTED`, `COMPLETE`, `INCONCLUSIVE`, or `ABANDONED`. What each verdict
 means, and that both transitions are the researcher's, is
 `DOCUMENT_GENRES.md`, *Words used here*: the researcher writes the line
 or directs the assistant to write it, and the assistant never changes it

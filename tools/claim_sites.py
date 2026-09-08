@@ -59,7 +59,7 @@ def fields(t: lint_docs.Tree, f: str) -> dict[str, tuple[int, str]]:
 
 def register(t: lint_docs.Tree, num: str) -> str:
     f = t.claims.get(num)
-    return fields(t, f).get("Register", (0, "?"))[1] if f else "?"
+    return fields(t, f).get(lint_docs.F("register"), (0, "?"))[1] if f else "?"
 
 
 def unread_kinds(t: lint_docs.Tree) -> list[str]:
@@ -112,7 +112,7 @@ def sites(t: lint_docs.Tree, num: str) -> list[str]:
     out.append("")
     out.append("Depended on by:")
     deps = [(n, g) for n, g in sorted(t.claims.items())
-            if num in [x.strip() for x in fields(t, g).get("Depends-on", (0, ""))[1].split(",")]]
+            if num in [x.strip() for x in fields(t, g).get(lint_docs.F("depends-on"), (0, ""))[1].split(",")]]
     for n, g in deps:
         out.append(f"  [claim {n}]  {register(t, n)}  {g}")
     if not deps:
@@ -126,7 +126,7 @@ def sites(t: lint_docs.Tree, num: str) -> list[str]:
         out.append("Reserved cluster: none (no Reserved stamp)")
     out.append("")
     out.append("Beyond question 4, for the reader:")
-    backed = lint_docs.TOKEN_CHECK.findall(fl.get("Backed-by", (0, ""))[1])
+    backed = lint_docs.TOKEN_CHECK.findall(fl.get(lint_docs.F("backed-by"), (0, ""))[1])
     for n in backed:
         out.append(f"  Backed-by names [check {n}]" + ("" if n in t.checks else "  (resolves to no check)"))
     if not backed:

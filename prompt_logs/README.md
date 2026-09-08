@@ -32,6 +32,17 @@ a fence so that its labels are not read as header fields; it carries no
 `RUNNING` line, since the round has closed. The round check verifies the
 form.
 
+A reply that hands work back while a process is still live (a long
+computation, a submitted job, a run in another environment) reports it
+with the `RUNNING` line §16 requires, and **does not close the round**: a
+round runs to the status block that closes it (`MANIFESTO.md` §1, *Words
+used throughout*), and that block comes when the process is done. Where
+the researcher commits before then, the entry is committed open and a
+later entry completes it, pointing back (`MANIFESTO.md` §8); the last
+column above carries the pointer. So a project whose work outlasts a
+sitting is not obliged either to close a round falsely or to leave one
+unlogged.
+
 ## Contents
 
 | Log | Description | Completed or corrected by |

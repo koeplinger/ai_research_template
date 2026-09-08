@@ -269,13 +269,17 @@ assistant's duty.
 1. On every durable artifact: the dash convention, as the character rule
    {{DASH_CONVENTION}} names; the spelling variant, by a word list of the
    common variants for {{SPELLING}}, skipping quoted text.
-2. On every unfrozen artifact under `paper/`: the phrases *without loss of
-   generality*, *clearly*, *it is easy to see*, *it follows immediately*,
-   *as is well known*, *it is well established that*, *scholars agree*,
-   *robust to*, and the words *remarkable*, *striking*, *beautiful*, *the
-   point at issue*, matched case-insensitively as whole phrases, skipping
-   quoted text; and body headings that begin with an article or end in a
-   question mark.
+2. On every unfrozen artifact under `paper/`: the phrases the project
+   lists in `tools/artifacts.toml` under `[editorial] paper_phrases`,
+   matched case-insensitively as whole phrases, skipping quoted text; and
+   body headings that begin with an article or end in a question mark.
+   The list ships as *without loss of generality*, *clearly*, *it is easy
+   to see*, *it follows immediately*, *as is well known*, *it is well
+   established that*, *scholars agree*, *robust to*, *remarkable*,
+   *striking*, *beautiful*, *the point at issue*. It is the project's to
+   edit: a phrase that is advocacy in one field is another's precise
+   sentence, and a hit on a sentence whose evidence is on the page is
+   brought, not cut.
 3. The current-state narrative check of `DOCUMENT_GENRES.md`, on the scope
    stated there.
 

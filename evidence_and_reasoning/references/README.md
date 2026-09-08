@@ -50,6 +50,10 @@ the template shows the default set.
 - Year:              of the version consulted, or the range the discipline assigns
 - Identifier:        DOI, shelfmark, release and version, or URL with the date retrieved
 - Keywords:          for finding it across files
+- Kind:              (optional) the sort of work this entry is, where the
+                     project's registry holds several and each needs its
+                     own fields; the required bullets are then this kind's
+                     as well, configured under [registry.by_kind]
 - Standing:          searched <where>, D Month YYYY; none found | found, see Disputed
 - Disputed:          <what>, [ShortKey of the source]        (only where a dispute exists)
 - Witness of:        [ShortKey]                              (only where this is one record of a work)

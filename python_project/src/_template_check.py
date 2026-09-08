@@ -74,7 +74,13 @@ BASIS: list[str] = []
 
 
 def construct():
-    """Build the object under test and return it."""
+    """Build the object under test and return it.
+
+    The name is the tools' contract, not a word about the subject matter:
+    the probe calls this to build the object it then alters (GLOSSARY.md,
+    "Renaming a word this template uses").  Say in one line here what this
+    particular check builds.
+    """
     raise NotImplementedError("part 2: construction")
 
 

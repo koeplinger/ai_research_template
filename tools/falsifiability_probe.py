@@ -129,7 +129,7 @@ def fields(t: lint_docs.Tree, f: str) -> dict[str, tuple[int, str]]:
 
 
 def names_of(t: lint_docs.Tree, f: str) -> list[str]:
-    return [x.strip() for x in fields(t, f).get("Mutation", (0, ""))[1].split(",") if x.strip()]
+    return [x.strip() for x in fields(t, f).get(lint_docs.F("mutation"), (0, ""))[1].split(",") if x.strip()]
 
 
 def scratch_copy(root: Path, tmp: Path) -> Path:
@@ -178,7 +178,7 @@ def probe(t: lint_docs.Tree, timeout: float, only: str | None = None) -> tuple[l
             for num, prog in todo:
                 ran += 1
                 rec = t.checks.get(num)
-                mline = fields(t, prog).get("Mutation", (1, ""))[0]
+                mline = fields(t, prog).get(lint_docs.F("mutation"), (1, ""))[0]
                 names = list(dict.fromkeys(names_of(t, prog) + (names_of(t, rec) if rec else [])))
                 if rec and names_of(t, rec) != names_of(t, prog):
                     notes.append(f"NOTE      {rec}: its Mutation line ({', '.join(names_of(t, rec)) or 'none'}) differs from the program's ({', '.join(names_of(t, prog)) or 'none'}); both are applied")

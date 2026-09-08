@@ -6,9 +6,9 @@ Plan: <!-- NNN, where a plan owns this review; otherwise delete the line and the
 A referee pass by <!-- reviewer: a party from the roster, or an outside reader as the report's conditions allow --> of `<!-- path -->` at <!-- version or commit -->; blind: <!-- yes, no access to the project's claims and checks | no -->.
 
 <!-- Keep the line above; it is the record's identity. The record is
-     written across the round that acts on it, and freezes when the
-     Outcome column and the last section are filled. Delete these
-     comments in the instance. -->
+     written across the round that acts on it; when it freezes is
+     DOCUMENT_GENRES.md section 2's, by whether a plan owns it. Delete
+     these comments in the instance. -->
 
 ## Structure lens
 

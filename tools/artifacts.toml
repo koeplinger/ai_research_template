@@ -35,7 +35,13 @@
 #         are its prose) | none
 # required: field lines that must be present (ONTOLOGY.md, section 8)
 # skip: check identifiers this row is exempt from, honored by every check
-#       in one place; an escape hatch, each use with its reason beside it
+#       in one place; an escape hatch, each use with its reason beside it.
+#       Where an item enforces two separable rules, one half is named after
+#       a slash and skipped alone: "GENRES-5/narrative" silences the
+#       phrase list, which in some subject matter matches ordinary
+#       sentences about the thing studied rather than about the document,
+#       while "GENRES-5/stamp" keeps watching for a stamp that opens a
+#       change narrative; the reverse skip is the other way round.
 
 [template]
 python = "3.11"
@@ -45,14 +51,34 @@ python = "3.11"
 # (editorial_standards.md, What is checked mechanically, item 1).  An empty
 # value means unfilled: the check is skipped and reported once.
 #   spelling: "us" | "uk" | "none" (no variant list applies) | ""
-#   dashes:   "no-em-dash" | "spaced-em-dash" | "none" | ""
+#   dashes:   "no-em-dash"       an em-dash anywhere is reported
+#             "spaced-em-dash"   an em-dash without spaces around it
+#             "unspaced-em-dash" an em-dash with a space beside it
+#             "en-dash-asides"   an em-dash anywhere, the house style
+#                                setting asides with spaced en-dashes
+#             "none"             no dash check applies
+#             ""                 unfilled: skipped, and reported once
 spelling = "us"
 dashes = "no-em-dash"
+# The phrases the standards ban in a live draft under the write-up folder
+# (editorial_standards.md, What is checked mechanically, item 2).  A project
+# edits this list, because a phrase banned as advocacy in one field is
+# another's precise sentence: "robust to <perturbation>" is the honest
+# result of a robustness check, and "scholars agree" with the works cited
+# beside it is a literature review doing its job.  An empty list turns the
+# check off; removing the key leaves the shipped list in force.
+paper_phrases = ["without loss of generality", "clearly", "it is easy to see",
+                 "it follows immediately", "as is well known", "it is well established that",
+                 "scholars agree", "robust to", "remarkable", "striking", "beautiful",
+                 "the point at issue"]
 # Starter word lists, keyed by the convention they are WRONG under; the
-# project extends them.
+# project extends them.  Pairs that differ by part of speech rather than by
+# variant are left out on purpose: licence and license, practice and
+# practise, are both correct in UK usage, the first the noun and the second
+# the verb, so neither list can carry either.
 [editorial.wrong_words]
-us = ["labelled", "labelling", "organise", "organised", "organises", "organisation", "recognise", "recognised", "summarise", "summarised", "colour", "colours", "behaviour", "centre", "analyse", "analysed", "modelling", "modelled", "travelling", "fulfil", "licence"]
-uk = ["labeled", "labeling", "organize", "organized", "organizes", "organization", "recognize", "recognized", "summarize", "summarized", "color", "colors", "behavior", "center", "analyze", "analyzed", "modeling", "modeled", "traveling", "fulfill", "license"]
+us = ["labelled", "labelling", "organise", "organised", "organises", "organisation", "recognise", "recognised", "summarise", "summarised", "colour", "colours", "behaviour", "centre", "analyse", "analysed", "modelling", "modelled", "travelling", "fulfil"]
+uk = ["labeled", "labeling", "organize", "organized", "organizes", "organization", "recognize", "recognized", "summarize", "summarized", "color", "colors", "behavior", "center", "analyze", "analyzed", "modeling", "modeled", "traveling", "fulfill"]
 
 [narrative]
 # The two files whose italicized examples the narrative check skips
@@ -66,11 +92,42 @@ names = ["Register", "Kind", "Verdict", "Plan", "Depends-on", "Backed-by", "Back
 # A header field that writes derived state is reported (ontology check 6).
 derived = ["Genre", "Tier", "Live", "Frozen"]
 
+[fields.roles]
+# The name this project writes for each header field, by the ROLE the field
+# plays.  Every tool reads the name from here, so a project whose discipline
+# has taken one of these words renames it in this table alone, and the checks
+# follow (GLOSSARY.md, "Renaming a word this template uses").  Rename before
+# any artifact carries the field: the log is immutable and a frozen artifact
+# keeps its wording, so the cost rises with every round.  The templates under
+# evidence_and_reasoning/ are edited to match by hand; they are prose.
+#   register: how far a statement may be trusted   (Trust, Warrant, Grade)
+#   instrument: the tool or procedure of record    (Instrument-of-record)
+#   mutation: the planted alteration a check must fail under  (Planted-fault)
+#   frame: what fixes the quantities stated        (Stated-in)
+register = "Register"
+kind = "Kind"
+verdict = "Verdict"
+plan = "Plan"
+depends-on = "Depends-on"
+backed-by = "Backed-by"
+backs = "Backs"
+verified-by = "Verified-by"
+instrument = "Instrument"
+frame = "Frame"
+mutation = "Mutation"
+robustness = "Robustness"
+original = "Original"
+prerequisites = "Prerequisites"
+serves = "Serves"
+status = "Status"
+by = "By"
+produced-from = "Produced-from"
+
 [vocab]
 registers = ["VERIFIED", "DERIVED", "ATTESTED", "SPECULATIVE", "RULED_OUT", "OPEN"]
 kinds = ["formal", "computational", "empirical", "inferential", "documentary", "interpretive", "internal-consistency"]
 plan_status = ["DRAFT", "ENGAGED", "CLOSED"]
-plan_verdicts = ["CONFIRMED", "REFUTED", "COMPLETE", "ABANDONED"]
+plan_verdicts = ["CONFIRMED", "REFUTED", "COMPLETE", "INCONCLUSIVE", "ABANDONED"]
 # {{MUTATION_SET}}: the names a Mutation: line may carry.  Empty means
 # unfilled; the name check is skipped and reported once, when a check
 # exists to apply it to.
@@ -78,7 +135,7 @@ mutations = []
 [vocab.verdicts]
 formal = ["proved", "disproved"]
 computational = ["reproduced", "not reproduced"]
-empirical = ["compatible", "in tension", "refuted"]
+empirical = ["compatible", "in tension", "refuted", "inconclusive"]
 # Two values, one from each pair, comma-separated.
 inferential = [["identified as stated", "assumption unsupported"], ["replicated", "not replicated"]]
 documentary = ["confirmed", "not confirmed"]
@@ -98,8 +155,19 @@ names = []
 parts = ["--- PROMPT START ---", "--- PROMPT END ---", "## What was done", "## Corrections and departures", "## Closing status"]
 
 [registry]
-# {{REFERENCE_FIELDS}}: the bullets a registry entry must carry.
+# {{REFERENCE_FIELDS}}: the bullets EVERY registry entry must carry.
 required = ["Authors", "Title", "Where", "Year", "Identifier", "Keywords", "Standing"]
+# Further bullets required of an entry that declares "- Kind: <name>", so
+# that a registry holding several kinds of work enforces more than their
+# intersection rather than dropping to it.  Empty means every entry is
+# checked against `required` alone and a Kind: bullet is optional prose.
+# A project fills this with its own kinds; the names below are examples of
+# the shape, commented out.
+[registry.by_kind]
+# archival = ["Repository", "Collection", "Reference", "Form consulted", "Access conditions"]
+# dataset  = ["Producer", "Release", "Retrieved"]
+# software = ["Version", "Repository"]
+# case     = ["Court", "Judgment date", "Jurisdiction", "Currency"]
 
 [publication]
 # The mechanical part of {{DELIVERABLE}}: the pipeline the round check gates
@@ -185,6 +253,10 @@ genre = "current-state"
 [[artifact]]
 kind = "rulebook"
 glob = "evidence_and_reasoning/editorial_standards.md"
+genre = "current-state"
+[[artifact]]
+kind = "rulebook"
+glob = "GLOSSARY.md"
 genre = "current-state"
 
 [[artifact]]
@@ -273,6 +345,25 @@ genre = "current-state"
 kind = "note"
 glob = "evidence_and_reasoning/notes/20[0-9][0-9]-*.md"
 genre = "dated-record"
+
+[[artifact]]
+kind = "derived"
+glob = "evidence_and_reasoning/derived/[0-9]*.md"
+genre = "plan-owned"
+required = ["Plan", "Produced-from", "By"]
+# What a plan makes from a source before anything is released: a
+# transcription, a collation, a coding scheme.  Prose, so it carries the
+# stamp and the fields; it freezes with the plan that owns it
+# (DOCUMENT_GENRES.md section 2).
+[[artifact]]
+kind = "derived-nonprose"
+glob = "evidence_and_reasoning/derived/*"
+genre = "exempt"
+header = "none"
+# The non-prose forms of the same thing: a table, a figure, an alignment,
+# an extract.  No header; dated by the row that lists it in the folder's
+# index and by the check that produced it.  This row stands below the
+# prose row, so a .md there matches the prose row first.
 
 [[artifact]]
 kind = "registry"
@@ -440,6 +531,9 @@ lists = "evidence_and_reasoning/notes/*"
 [[index]]
 readme = "evidence_and_reasoning/references/README.md"
 lists = "evidence_and_reasoning/references/*"
+[[index]]
+readme = "evidence_and_reasoning/derived/README.md"
+lists = "evidence_and_reasoning/derived/*"
 [[index]]
 readme = "paper/README.md"
 lists = "paper/*"

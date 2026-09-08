@@ -124,7 +124,7 @@ def gone_frozen(t: lint_docs.Tree, f: str, row: dict) -> bool:
     if not old:
         return False
     hdr, _ = lint_docs.header_block(old, row.get("header", "stamp"))
-    pl = lint_docs.fields_of(hdr).get("Plan")
+    pl = lint_docs.fields_of(hdr).get(lint_docs.F("plan"))
     if pl and pl[1]:
         pf = t.plans.get(pl[1].split(",")[0].strip())
         return bool(pf) and t.plan_status.get(pf, "").startswith("CLOSED")
@@ -187,13 +187,13 @@ def reminders(t: lint_docs.Tree) -> list[str]:
                    + " (CHECK_METHODOLOGY.md section 7: a consistency sweep closes every correction batch)")
     fnd = t.first_of_kind("findings")
     cited = set(lint_docs.TOKEN_CLAIM.findall(lint_docs.LINK_RE.sub(" ", t.prose(fnd)))) if fnd else set()
-    established = [n for n, f in sorted(t.claims.items()) if fields(t, f).get("Register", (0, ""))[1] in ("VERIFIED", "RULED_OUT") and n not in cited]
+    established = [n for n, f in sorted(t.claims.items()) if fields(t, f).get(lint_docs.F("register"), (0, ""))[1] in ("VERIFIED", "RULED_OUT") and n not in cited]
     if established:
         out.append("REMINDER  findings-gate: established and cited by no findings row: " + ", ".join(f"[claim {n}]" for n in established)
                    + " (MANIFESTO.md section 12: bring the finding and its wording, and stop)")
     unchecked = [n for n, f in sorted(t.claims.items())
-                 if fields(t, f).get("Register", (0, ""))[1] not in ("OPEN", "SPECULATIVE", "")
-                 and fields(t, f).get("Verified-by", (0, ""))[1].split(",")[0].strip() == "unchecked"]
+                 if fields(t, f).get(lint_docs.F("register"), (0, ""))[1] not in ("OPEN", "SPECULATIVE", "")
+                 and fields(t, f).get(lint_docs.F("verified-by"), (0, ""))[1].split(",")[0].strip() == "unchecked"]
     if unchecked:
         out.append("REMINDER  verification-not-recorded: registered beyond OPEN yet Verified-by unchecked: " + ", ".join(f"[claim {n}]" for n in unchecked)
                    + " (MANIFESTO.md section 5)")

@@ -22,6 +22,7 @@ serves and the moment it fires.
 | Mechanism | Rule | Fires | Output | Does not decide |
 |---|---|---|---|---|
 | the session brief, `tools/session_brief.py` | `MANIFESTO.md` §16; `ONBOARDING.md` | at session start, through the harness wiring, and on demand | the reading order, the plans by status, the reminders the record can compute | anything: it prints |
+| the documentation consistency sweep, [roles/documentation_sweep.md](roles/documentation_sweep.md) | `CHECK_METHODOLOGY.md` §7, which sweeps the record; this sweeps the documentation | after a batch of edits to the rulebooks, indexes, templates, or configuration; first of all after instantiation | the disagreements between documents, each with its two homes | which of two disagreeing statements yields: the researcher's |
 | the standing reminders, [reminders.md](reminders.md) | §16, and the section each names | at the stage of work each names | one sentence in the reply, once | the action: taken only with direction |
 
 ## Checks
@@ -34,7 +35,7 @@ serves and the moment it fires.
 | the falsifiability probe, `tools/falsifiability_probe.py` | `CHECK_METHODOLOGY.md` item 3 (executing) and §5 | before a check is relied on; before a plan closes | the matrix, and a survival as a finding | whether the mutation set is adequate |
 | the status-block check, `tools/check_status_reply.py` | `MANIFESTO.md` §16 | after each reply, through the harness wiring | the reasons a block does not conform | the truth of any line |
 | the privacy scan, `tools/privacy_scan.py` | none in the donor text; `MANIFESTO.md` §6 on what must not enter; opt-in | beside the round check where a stop-word list exists, and on every commit where the hooks are installed | every place a stop word appears | what belongs on the list: the researcher's. The one mechanism that refuses (a commit, on a finding), overridden with `--no-verify` and the reason in the commit message (`MANIFESTO.md` §12) |
-| the run ledger, `tools/run_ledger.py` | none; `CHECK_METHODOLOGY.md` §8 on cost | when a check's basis may have changed | what is stale, and the cost of each run | anything: a cache |
+| the run ledger, `tools/run_ledger.py` | none; `CHECK_METHODOLOGY.md` §8 on cost | when a check *program*'s basis may have changed; a project whose checks are all written procedures never uses it | what is stale, and the cost of each run | anything: a cache |
 | the residue check, `tools/check_residue.py` | none; `CHECK_METHODOLOGY.md` §7 on a rebuild | after a rebuild or a correction batch to a live draft | candidates for the reading that closes the round | any of them: candidates |
 | the ontology queries, `tools/query_ontology.py`, and `tools/claim_sites.py` | `ONTOLOGY.md` §6 | when a question of §6 is asked; before a claim is revisited | the answer from the fields, flagged where §4 decides | what it says is reading |
 
@@ -58,7 +59,7 @@ serves and the moment it fires.
 | the configuration, `tools/artifacts.toml` | `ONTOLOGY.md` §7 | when a project files its artifacts elsewhere | one edit that every tool follows | the filing convention |
 | the hook installer, `tools/install_hooks.sh` | `MANIFESTO.md` §13 and §6 | once per clone | the git hooks | whether to install strict |
 | the harness wirings, [harness/](harness/) | `MANIFESTO.md` §16, `{{REPLY_HOOK}}` | after each reply; at session start | the tools run at those moments | which harness: the researcher's |
-| the worked example, when it ships | `VISION.md`, *Support*: the researcher's first model of a round | when the researcher starts | a complete small project | anything of the researcher's own |
+| the worked example, [example/](../example/) | `VISION.md`, *Support*: the researcher's first model of a round | when the researcher starts, and whenever a form is in doubt | a complete small project, every gate passing, fenced as its README says | anything of the researcher's own: it is a model, never ground truth |
 
 ## Removing a mechanism
 

@@ -50,7 +50,8 @@ file and directory named in this document ships with the template:
 | `CHECK_METHODOLOGY.md` | how a claim is verified: the check, and the instrument or procedure of record |
 | `ONTOLOGY.md` | the predicates in which claims, sources, checks, and plans are related |
 | `evidence_and_reasoning/editorial_standards.md` | the prose standards, and the project's recorded voice |
-| `evidence_and_reasoning/terminology.md` | the glossary |
+| `GLOSSARY.md` | the method's own words, what each will be mistaken for, and how to rename one |
+| `evidence_and_reasoning/terminology.md` | the project's glossary: its own subject-matter terms |
 | `evidence_and_reasoning/references/` | the reference registry |
 | `inherited/README.md` | the import policy and the ledger of imported material |
 | `prompt_logs/` | the prompt log |
@@ -201,6 +202,16 @@ never holds the opinion the work exists to reach.
   material or licensed data among others, does not enter the repository. It
   is recorded by locator, version or shelfmark, and access conditions; what
   is derived from it enters only in a form those conditions allow.
+- **What may leave the repository is {{DISCLOSURE_RULE}}.** Where the
+  sources or the ethics approval bind what may be published about them,
+  the binding rule is named once here rather than rediscovered per table:
+  the minimum cell size and the dominance rule a statistical agency
+  imposes, the consent scope and the controlled-access conditions of human
+  data, the anonymization a review board required, the embargo a partner
+  set, or none, said plainly where there is none. Every released figure,
+  table, and printed value is read against it before release, and the
+  party who approves a release under it, where one is required, is on the
+  roster.
 - The repository is written as if public from its first commit, whether or
   not it is public yet.
 - Material from other repositories, private collections, or unpublished work
@@ -274,10 +285,11 @@ never holds the opinion the work exists to reach.
   predicates of `ONTOLOGY.md`. The assistant uses that vocabulary when it
   records such a relation, so that it can be checked and queried.
 
-> **Build lens.** The template's own vocabulary (round, check, plan, genre,
-> register, slot, and the rest) is defined in the Ontology and the guide,
-> not in a project glossary; `evidence_and_reasoning/terminology.md` ships
-> as an empty template.
+The template's own vocabulary (round, check, plan, genre, register, slot,
+and the rest) is defined in `GLOSSARY.md`, which also names what each word
+will be mistaken for and which words a project may rename. It is not the
+project glossary's to carry: `evidence_and_reasoning/terminology.md` holds
+the project's own subject-matter terms and ships empty.
 
 ---
 
@@ -466,8 +478,11 @@ never holds the opinion the work exists to reach.
   Where the harness can run a check after each reply, that check is
   `tools/check_status_reply.py`; the wiring is {{REPLY_HOOK}}, recorded
   where the harness configuration lives. A reply whose status block does
-  not conform is bounced back to the assistant before the researcher sees
-  it. Without such a hook the form is the assistant's duty alone. The hook
+  not conform is bounced back to the assistant, which answers again in the
+  same turn. The researcher sees both the bounced reply and the one that
+  replaces it: the bounce produces the conforming follow-up, it does not
+  withhold the first. Without such a hook the form is the assistant's duty
+  alone. The hook
   checks form; the truth of every line remains the assistant's duty under
   this section. The checker is self-testing: `--selftest` runs it against
   accepting and rejecting cases without the harness.
@@ -525,7 +540,7 @@ unenforced, and the prompt log records why.
 | 5 | second pass in the instrument or procedure of record; verification status on every claim | self-tests, whole-tree scan, end-to-end tests, adversarial read-only review |
 | 6 | no personal data; restricted sources by locator only; import policy | nothing project-specific from any source; `leech_alg` the only name; local stop-word scanner |
 | 8 | **every prompt logged**, immutably | **no prompt logged**; `VISION_PLAN.md` and the version history are the record |
-| 9 | project glossary; the Ontology's predicates in use | the Ontology and the guide; glossary ships empty |
+| 9 | project glossary; the Ontology's predicates in use | `GLOSSARY.md` for the method's words; the project glossary ships empty |
 | 10 | reads what its task names and what the researcher points at | source projects only when named, main thread only |
 | 11 | the researcher's voice | plain, generic, discipline-neutral |
 | 12 | three genres; frozen artifacts; reasons in the prompt log | `VISION.md` at the researcher's direction; everything else current state; reasons in the commit message |
@@ -540,6 +555,7 @@ Sections 3, 4, 7, and 15 apply identically under both lenses.
 
 | Slot | Meaning | Examples |
 |---|---|---|
+| `{{DISCLOSURE_RULE}}` | What may leave the repository, where the sources or an ethics approval bind it (§6); *none beyond §6* where nothing does | *the agency's minimum cell size of ten and its dominance rule, with the output-control officer on the roster*; *the controlled-access conditions of the data release, and the consent scope the approval fixed*; *the partner's embargo until the stated date*; *none beyond §6: the sources are open* |
 | `{{PERSONA}}` | The domain expert the assistant works as (§1) | *mathematician*; *historian of medicine*; *empirical microeconomist*; *molecular biologist*; *scholar of contract law* |
 | `{{VERIFICATION_TOOL}}` | The instrument or procedure of record for independent verification (§5), named in `CHECK_METHODOLOGY.md` precisely enough that a second reader can return to it | a computer-algebra system at a stated version; a statistics environment pinned to exact package versions, holding the raw data; the source of record itself, original or facsimile, collated by a second reader; a survey's documented release |
 | `{{REPLY_HOOK}}` | Where and how the harness runs `tools/check_status_reply.py` after each reply (§16) | a per-repository settings file of a command-line harness that supports post-reply hooks; a wrapper script around a hosted assistant's interface that post-processes each reply; none, with the form kept by hand |
