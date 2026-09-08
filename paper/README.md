@@ -6,7 +6,8 @@ The write-ups: the main write-up in its versions, standalone notes, and
 the reviews of both. `paper/` is the template's name for the
 deliverable's folder whatever its form (`DOCUMENT_GENRES.md` §2); the
 form, how a version marks itself on the page, and what is released with
-it are {{DELIVERABLE}}.
+it are the deliverable's, which `DOCUMENT_GENRES.md` fixes in its Slots
+table.
 
 ## Conventions
 
@@ -31,9 +32,9 @@ it are {{DELIVERABLE}}.
   freezes then.
 - **Every version has a blind referee review before it freezes**
   (`MANIFESTO.md` §17), under [`reviews/`](reviews/).
-- **What is released with a version** is {{DELIVERABLE}}: where the
-  deliverable is built, its build output; where it is not, the file
-  itself. Scratch produced on the way is not committed. The prose is
+- **What is released with a version** is what the deliverable names:
+  where the deliverable is built, its build output; where it is not, the
+  file itself. Scratch produced on the way is not committed. The prose is
   governed by `evidence_and_reasoning/editorial_standards.md`, *Writing
   for publication*, on every unfrozen draft here.
 - **Where the deliverable is built, the round check gates the build and
@@ -51,7 +52,7 @@ it are {{DELIVERABLE}}.
 3. The researcher directs the release: the `Released D Month YYYY` stamp
    goes into the version's header, and the changelog's release row is
    written.
-4. What {{DELIVERABLE}} releases with the version is produced and
+4. What the deliverable releases with the version is produced and
    committed by the researcher.
 5. The previous version is marked `superseded by <path>`.
 6. The changelog and the review freeze with the round that closes.

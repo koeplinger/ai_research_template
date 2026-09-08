@@ -3,7 +3,7 @@
 *Created 5 September 2026; updated 5 September 2026.*
 
 The wiring for one command-line harness, the one this template was built
-with. It is the wiring a project records in `{{REPLY_HOOK}}`
+with. It is the wiring a project records in the reply-hook slot
 (`MANIFESTO.md` §16), and the session-start presentation of the reading
 order, for which `ONBOARDING.md` defines no slot; nothing else. The rules
 the hooks serve live in the rulebooks; this folder only says how this
@@ -55,5 +55,5 @@ equivalent wiring
 (a command run after each reply that pipes the reply's text into
 `tools/check_status_reply.py` and treats exit 1 as a bounce; a command
 run at session start that prints `tools/session_brief.py`), and records
-the choice in `{{REPLY_HOOK}}`. A project whose harness can run neither
+the choice in the reply-hook slot. A project whose harness can run neither
 keeps the form of §16 by hand and says so in the same slot.

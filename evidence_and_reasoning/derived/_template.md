@@ -13,7 +13,7 @@ Frame: <!-- the conventions this derivation imposed, which every claim leaning o
                    live while the plan is open, frozen when it closes.
      Produced-from the source and what made it (ONTOLOGY.md section 2). The
                    source token resolves to a registry entry; the locus
-                   range is in the units {{CITATION_LOCUS}} fixes.
+                   range is given in the units of {{CITATION_LOCUS}}.
      By            a party from the roster; for material made across
                    several sittings, the party who is answerable for it,
                    with each sitting under Provenance below.

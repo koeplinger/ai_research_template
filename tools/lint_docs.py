@@ -670,9 +670,9 @@ def check_edit_2(t: Tree) -> None:
     phrases = t.cfg.get("editorial", {}).get("paper_phrases")
     if phrases is None:
         phrases = PAPER_PHRASES
-    if not phrases:
-        return
-    rx = re.compile(r"\b(" + "|".join(re.escape(p) for p in phrases) + r")\b", re.I)
+    # An empty list turns off the phrase half; the heading rule beside it is
+    # not the project's to configure and keeps running.
+    rx = re.compile(r"\b(" + "|".join(re.escape(p) for p in phrases) + r")\b", re.I) if phrases else None
     paper = t.dir_of_kind("version")
     for f, row in t.rows.items():
         if not row or not paper or not f.startswith(paper + "/"):
@@ -681,7 +681,7 @@ def check_edit_2(t: Tree) -> None:
             continue
         clean = blank_quoted(t.prose(f))
         for i, line in enumerate(clean.splitlines(), 1):
-            m = rx.search(line)
+            m = rx.search(line) if rx else None
             if m:
                 report("EDIT-2", f, i, f"phrase the standards ban in a live draft: {m.group(1)!r}")
             h = re.match(r"^#{2,}\s+(.*)$", line)
@@ -1069,11 +1069,29 @@ def fixture() -> dict[str, str]:
 
 
 def scratch_config() -> str:
-    """The shipped configuration, its one unfilled slot filled so that the
-    scratch project is a project and not a template."""
+    """The project's configuration, with the fixture's own vocabulary forced
+    in, so that the scratch project is a project and not a template.  It does
+    not require the project to have left any value unfilled: a project fills
+    its mutation set and its roster on the first day, and the tools must
+    still be able to test themselves afterwards."""
     cfg_text = (ROOT / "tools" / "artifacts.toml").read_text()
-    assert "\nmutations = []\n" in cfg_text
-    return cfg_text.replace("\nmutations = []\n", '\nmutations = ["variant-reading"]\n')
+    for table, key, value in (("vocab", "mutations", '["variant-reading"]'),
+                              ("parties", "names", "[]"),
+                              ("registry", "required",
+                               '["Authors", "Title", "Where", "Year", "Identifier", "Keywords", "Standing"]')):
+        # Under the named table, because `names` is a key of two of them.
+        # The value may run over several lines; it ends at the next key, the
+        # next table header, or a comment line beginning one of them.
+        start = cfg_text.find(f"\n[{table}]\n")
+        if start == -1:
+            continue
+        rest = cfg_text[start + 1:]
+        m = re.search(r"^\[", rest[1:], re.M)
+        end = m.start() + 1 if m else len(rest)
+        body = re.sub(rf"^{key} = (?:.|\n)*?(?=^[A-Za-z_]+ = |^#|^\[|\Z)",
+                      f"{key} = {value}\n", rest[:end], count=1, flags=re.M)
+        cfg_text = cfg_text[:start + 1] + body + rest[end:]
+    return cfg_text
 
 
 def scratch_project(tmp: Path, files: dict[str, str], cfg_text: str) -> None:

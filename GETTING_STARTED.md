@@ -7,6 +7,22 @@ with a project whose first plan is engaged, whose first claim is checked,
 and whose first commit is clean. It assumes nothing about your field and
 no prior knowledge of where the template came from.
 
+**Steps 1 to 3 have a tool.** `tools/new_project.py` does them: it copies
+the template, removes what belongs to the template's own construction and
+the pointers to it, strips the build lens, asks you for each of the
+sixteen slots, writes both halves of every value, renames any field your
+discipline has taken, adds your licenses beside the template's, writes a
+front page, installs the hooks, and runs the round check in the new tree.
+
+```bash
+python3 tools/new_project.py --template > answers.toml   # then fill it in
+python3 tools/new_project.py --into ../my-project --answers answers.toml
+```
+
+Leave out `--answers` and it asks for each value instead. Read steps 1 to
+3 anyway: they say what it is doing and why, and you have to make the same
+decisions either way. Steps 4 onward are yours.
+
 Read `HOW_IT_FITS_TOGETHER.md` when you want to know *why* the parts are
 shaped as they are. Read this file to get moving. The whole of it is one
 sitting, and the first round is the longest part.
@@ -25,8 +41,8 @@ belongs to the template's own construction rather than to your project.
 
 | Leave behind | And also |
 |---|---|
-| the build plan, `VISION_PLAN.md` | the pointer to it in `README.md`, in the *Under construction* section, which goes with it |
-| the worked example, `example/` | its rows in `README.md` and `governance/README.md`, and its row in `tools/artifacts.toml` |
+| the build plan, VISION_PLAN.md | the pointer to it in `README.md`, in the *Under construction* section, which goes with it |
+| the worked example, the example folder | its rows in `README.md` and `governance/README.md`, and its row in `tools/artifacts.toml` |
 | `.review/`, interim review records, if present | nothing; add it to `.gitignore` if you keep the folder for your own reviews |
 
 Removing a folder means removing the pointers to it as well, or the path
@@ -118,8 +134,10 @@ file that owns it.
    grep -rno "{{[A-Z_]*}}" --include=*.md . | sort -u
    ```
 
-   That list is empty when the slots are filled, and the documentation
-   consistency sweep of §9 checks the sentences.
+   What that list should show when the slots are filled is the Slots
+   table rows and nothing else: a filled row keeps its token, with the
+   value after it. A token anywhere else is a slot still unfilled. The
+   documentation consistency sweep of §9 then reads the sentences.
 
 There are sixteen.
 

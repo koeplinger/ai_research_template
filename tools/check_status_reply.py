@@ -14,8 +14,9 @@ section admits no blank line inside the block and a line so placed is
 read as prose by anyone who reads only the end.  The program checks the
 form and nothing else; that every line is true is the assistant's duty.
 
-It knows no harness.  The wiring that runs it after each reply is
-{{REPLY_HOOK}}, recorded where the harness configuration lives; that
+It knows no harness.  The wiring that runs it after each reply is the one
+MANIFESTO.md section 16 names in its Slots table, recorded where the
+harness configuration lives; that
 wiring hands the reply text to this program and maps its exit status to
 whatever the harness does with a bounced reply.
 

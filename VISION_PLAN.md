@@ -112,7 +112,7 @@ The single source of status for this build. Steps are executed top-down.
 | 11 | Worked example project | DONE | 2026-09-06 |
 | 12 | Breadth review beyond mathematics and physics | READY | 2026-09-08 |
 | 13 | The guide | READY | 2026-09-08 |
-| 14 | Instantiation procedure | NOT STARTED | |
+| 14 | Instantiation procedure | READY | 2026-09-08 |
 | 15 | Close-out | NOT STARTED | |
 
 ## Open decisions for the researcher
@@ -1636,6 +1636,113 @@ sweep finds. Step 12 defines it (a role file with the prompt verbatim, a
 reminder row, a pointer from §7); step 13 lists and recommends it among
 the suggested prompts; step 14 recommends it as the first prompt after
 instantiation.
+
+### Step 14 as built
+
+**`tools/new_project.py`**, and the guide's sections 1 to 3 as its
+description. It copies the template; leaves behind the build's own files
+(the plan, the worked example, the review records, the git history, the
+privacy list, and itself) and removes the pointers to each, comment blocks
+included; makes the new tree a git repository; strips every build-lens
+blockquote and the manifesto's two lens sections; fills the sixteen slots,
+writing the value into the Slots table of the file that owns it and
+substituting the token in prose everywhere else; writes each machine half
+under its own table; renames any header field the project's discipline has
+taken; converts the shipped prose to the project's spelling variant; adds
+the project's copyright and citation to the licenses and keeps the
+template's; writes a project front page; stamps every file it changed with
+the project's start date; installs the git hooks; and runs the round check
+in the new tree. It asks for every value, or reads them from an answers
+file `--template` writes. It ends by naming the first prompt of the new
+project, the documentation consistency sweep.
+
+**Done when: a fresh instantiation passes the round gate with no edits.**
+It does, and the self-test is that claim: twenty-three cases, run against
+the live template, including the round check in the new tree, the tools'
+own self-tests inside it, a project in the other spelling variant, and one
+with two header fields renamed.
+
+**The review, and how much of it was right.** Four read-only readers: one
+who instantiated a real project of its own choosing and tried to live in
+the result, one reading the program for correctness and safety, one
+checking it against the guide it implements, and one hunting what an
+instantiation leaves behind. 51 merged findings, each to its own refuter:
+**7 stand, 33 narrowed, 11 refuted.** The runner's verdict on the
+done-when was that it did **not** hold for its run, and it was right.
+
+The serious ones, all now fixed:
+
+- *Nine of the ten tools could not test themselves in any real project.*
+  `lint_docs.py`'s fixture read the project's own configuration and
+  asserted the mutation set was still unfilled, which it is only in the
+  template. A project that filled its faults on the first day, as the
+  guide instructs, had every self-test crash on an assertion. This was the
+  template's bug, not the procedure's, and the worst finding of the step: a
+  methodology whose first rule is that a check must be able to fail was
+  shipping instruments that could not verify themselves the moment the
+  project became real. The fixture now forces its own vocabulary under each
+  named table and depends on nothing the project filled in.
+- *Writing the roster destroyed the header-field catalogue.* The
+  configuration has a `names` key under two tables, and the procedure
+  replaced the first it found, which is the list of the eighteen recognized
+  field names. It reported success. The setter is now section-aware, and a
+  self-test reads the result back.
+- *A project in the other spelling variant inherited a failing gate.* The
+  shipped prose is written in one variant and the check runs over every
+  file, so a project answering `uk` (the choice of two of the guide's own
+  five worked examples) met ten findings in rulebooks it had never touched.
+  The two starter word lists are parallel, so the procedure now converts
+  the shipped prose, and a self-test instantiates in the other variant.
+- *The build-lens blockquotes were only half stripped.* The pattern matched
+  the marker and not the line it opens, so the first sentence and the rest
+  of each blockquote survived. Every one is now removed, and a self-test
+  looks for the marker in the result.
+- *Slot substitution reached where it should not, and stopped short where
+  it should have gone.* A Slots row in a file that does not own the slot
+  had its token replaced, turning a pointer into a bare value; program
+  source was substituted, though its diagnostics name slots on purpose; the
+  rename missed indented mentions in the templates' own legends; and the
+  warning that a value had broken the sentence it landed in was suppressed
+  in exactly the files where the value is longest.
+- *The procedure copied itself into every project* and could be pointed at
+  a directory inside the template, copying the tree into itself. Both
+  refused or removed now, with self-tests.
+- *An answers file was trusted without being read.* A pipe in a value broke
+  a table row, a string where a list belonged was iterated character by
+  character, a backslash was parsed as a regular-expression escape, and a
+  quotation mark corrupted the configuration. Every value is now checked
+  for shape before anything is written, and a bad one is refused with the
+  reason and nothing on disk.
+- *A failure left a half-made project behind.* The whole run is now one
+  attempt: on any error the target is removed and the reason printed.
+- *The result still spoke as the template.* The manifesto's opening
+  addressed an assistant working on the template itself; the licenses told
+  a project to replace the citation CC BY requires it to keep; the
+  copyright year was this program's rather than the project's; the files
+  the procedure rewrote kept the template's dates. All corrected, the last
+  by re-stamping every file the procedure changed.
+
+**What the review changed in the template itself**, beyond the procedure:
+the self-test fixture's independence from the project's configuration; an
+empty banned-phrase list no longer disabling the heading rule beside it;
+the manifesto's opening; and thirteen sentences that pasted a long slot
+value into running prose, which now take a short handle with the value in
+the Slots table alone.
+
+**Records.** The four lens reports with their verdicts, the 51 merged
+findings and every refuter verdict are under `.review/` (git-excluded):
+`step14_instantiation.md`.
+
+**Verified.** `tools/new_project.py --selftest`: twenty-three cases, all
+passing. Every one of the twelve tools' self-tests passes. The round check
+is clean over 185 files and the privacy scan over the whole tree; a fresh
+instantiation is clean over 79.
+
+**Left for step 15.** The procedure's own row in the governance map and
+the tools index is removed from a project by the procedure itself, which
+is the one mechanism that deletes its own entry; close-out should check
+that the map still reads. `VISION.md` is kept by a project and the
+close-out sweep is where its build-time sentences are read once more.
 
 ### Step 15: Close-out
 

@@ -175,7 +175,9 @@ compute. Then open the round's log entry, which is the first act of the
 round. Where the harness can run a command at session start, it prints
 this for you.
 
-**Starting.** The slots, the research statement, the keystone. Then the
+**Starting.** `tools/new_project.py` makes the project from the template
+and asks for the sixteen slots; then the research statement and the
+keystone. Then the
 documentation consistency sweep, which catches what instantiation left
 behind. Nothing else yet.
 

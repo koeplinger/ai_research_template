@@ -3,7 +3,7 @@
 
 Created 5 September 2026; updated 5 September 2026.
 
-This is the wiring MANIFESTO.md section 16 calls {{REPLY_HOOK}}, for a
+This is the wiring MANIFESTO.md section 16 calls the reply hook, for a
 command-line harness that runs a command when the assistant stops and
 hands it, on standard input, a JSON object naming the session's
 transcript.  The hook reads the transcript, takes the assistant's text

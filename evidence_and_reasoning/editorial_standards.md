@@ -83,7 +83,7 @@ The project's choices, recorded once and used throughout.
   paragraph then answers. Where a point is substantial enough to need
   marking, start a paragraph or a subsection; where it is not, state it in
   the prose. The title of a write-up follows its venue's convention, per
-  {{DELIVERABLE}}.
+  the deliverable's form, in the Slots table below.
 - **Never assert what the project could have checked and did not.**
   Phrases that assert an equivalence, an immateriality, or a consensus the
   project could have verified are cut or replaced by the verification: in
@@ -116,7 +116,8 @@ then recognize why it is relevant, and only then accept it. The standard
 is *gentle in each step, comprehensive over the material*: each move small
 enough to follow without effort, the sequence complete enough to leave
 nothing owed. The form of the write-up (whether it has a results section,
-a discussion, an appendix, or notes in their place) is {{DELIVERABLE}}.
+a discussion, an appendix, or notes in their place) is the deliverable's,
+in the Slots table below.
 
 ### Evidence
 

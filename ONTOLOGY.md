@@ -394,9 +394,9 @@ catalogue follows.
 
 ## Slots
 
-Three slots are this file's. `{{MUTATION_SET}}`, `{{CHECK_FORM}}`, and
-`{{VERIFICATION_TOOL}}` appear above but belong to `CHECK_METHODOLOGY.md`,
-and `{{DELIVERABLE}}` to `DOCUMENT_GENRES.md`; a project fills each once,
+Three slots are this file's. The mutation set, the check form, and the
+instrument of record appear above but belong to `CHECK_METHODOLOGY.md`,
+and the deliverable to `DOCUMENT_GENRES.md`; a project fills each once,
 where its owner defines it.
 
 | Slot | Meaning | Examples |

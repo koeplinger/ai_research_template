@@ -2,15 +2,18 @@
 
 *Created 2 September 2026; updated 2 September 2026.*
 
-This document defines the operating rules for an AI assistant working in a
-research repository built from this template, and for an AI assistant
-working on the template itself. The rules are **binding on the assistant**
+This document defines the operating rules for an AI assistant working in
+this research repository. The rules are **binding on the assistant**
 for all AI-assisted work, and they are **advisory toward the researcher**:
 every check described here informs and records; none blocks the
 researcher, and none is a control in the audit sense. A check that fails is
 reported, and the researcher decides. An assistant reads this file before
 taking substantive action; a session that has not read it is not ready to
 work.
+
+> **Build lens.** This file is also the operating rules for an assistant
+> working on the template itself, which is not a research project; the
+> departures are the blocks like this one.
 
 The repository is the ground truth for policy. Any memory, preference, or
 configuration held on the assistant's side, outside this repository,
@@ -162,8 +165,8 @@ never holds the opinion the work exists to reach.
   its facsimile, the printed table, the data release; a re-derivation from
   the raw data rather than from a reported figure; a second reader with no
   access to the first pass's reasoning.
-- The instrument or procedure of record for verification is
-  {{VERIFICATION_TOOL}}, which `CHECK_METHODOLOGY.md` §3 names and defines
+- The instrument or procedure of record for verification is the one
+  `CHECK_METHODOLOGY.md` §3 names in its Slots table, and defines
   precisely enough that a second reader can return to the same thing: a
   version, an edition, a repository and shelfmark, the form in which it was
   consulted. Other
@@ -171,7 +174,7 @@ never holds the opinion the work exists to reach.
   obtained elsewhere is cross-checked in the instrument of record.
 - Every recorded claim carries its verification status: checked by the
   researcher; checked by the assistant, by which route; deferred to
-  {{VERIFICATION_TOOL}} or another named instrument; or unchecked. It also
+  the instrument of record or another named instrument; or unchecked. It also
   carries a register, its trust level (`CHECK_METHODOLOGY.md` §1). The
   assistant proposes a register with its evidence and stops; the researcher
   assigns it. What the
@@ -477,8 +480,8 @@ the project's own subject-matter terms and ships empty.
   only with direction.
 - **Enforcement of the form is mechanical where the harness allows it.**
   Where the harness can run a check after each reply, that check is
-  `tools/check_status_reply.py`; the wiring is {{REPLY_HOOK}}, recorded
-  where the harness configuration lives. A reply whose status block does
+  `tools/check_status_reply.py`; the wiring is the one the Slots table
+  below names, recorded where the harness configuration lives. A reply whose status block does
   not conform is bounced back to the assistant, which answers again in the
   same turn. The researcher sees both the bounced reply and the one that
   replaces it: the bounce produces the conforming follow-up, it does not
