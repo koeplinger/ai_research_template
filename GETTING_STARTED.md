@@ -57,6 +57,14 @@ expect.
 | `tools/`, `governance/` | the checks and the standing roles |
 | `LICENSE.md`, `LICENSE-CODE` | with your own copyright added, below |
 
+**The harness.** What you have just copied includes one wiring, for
+Anthropic's Claude in its command-line harness, and step 1's hook install
+arms it. If that is your assistant, there is nothing to do. If it is not,
+`governance/harness/README.md`, *Adding a wiring, and removing one*, is
+the recipe, and `{{REPLY_HOOK}}` in §3 is where you record what you did.
+Nothing else in the template is vendor-specific, and the tools know no
+harness.
+
 **The licenses.** Add your own copyright holder to `LICENSE-CODE` beside
 the template's, and add your project's own recommended citation to
 `LICENSE.md`. **Keep the template's citation** as the work yours is

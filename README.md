@@ -25,6 +25,36 @@ archival history, empirical economics, molecular biology, law, machine
 learning, and mathematics, and where a decision belongs to a discipline it
 is a **slot** you fill rather than a rule you obey.
 
+## One harness ships, and it is Anthropic's
+
+**Today this template is armed for one AI assistant: Anthropic's Claude,
+in its command-line harness.** Nothing in the methodology depends on that,
+and no rule names a vendor; but the *wiring* does, and the wiring is
+installed and running from the moment you instantiate a project.
+
+Concretely, what ships and is armed: a settings file at the repository
+root that the harness reads, a hook that checks the form of every reply
+after it is written, and a command that prints the reading order at the
+start of each session. `governance/harness/claude_code/` holds the
+adapter; `governance/harness/README.md` holds the table of wirings and the
+list of what a second one costs.
+
+**If you work with a different assistant or harness**, everything except
+that wiring still applies: the record, the checks, the registers, the
+plans, the roles and the tools are all harness-free, and they run on their
+own. What you do is fill the reply-hook slot with your own wiring or with
+*none, with the form kept by hand*, and add or remove a folder under
+`governance/harness/` by the recipe there. Be aware that the instantiation
+procedure does not yet ask which harness you want: it copies the shipped
+one, so a project on another assistant removes it afterwards rather than
+declining it up front.
+
+**Vendor independence is intended, and is scheduled rather than promised.**
+[TODO.md](TODO.md) holds that work and what each part of it touches, with
+support for further assistants added one at a time. It moves at a
+deliberate pace now: the template is live and working, so the bar for
+changing it is higher than it was while it was being built.
+
 ## Start here
 
 | If you want to | Read |

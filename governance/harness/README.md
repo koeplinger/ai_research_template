@@ -15,8 +15,11 @@ standard input, a repository root).
 | [claude_code/](claude_code/) | the command-line harness this template was built with; its settings file is `.claude/settings.json` at the repository root |
 
 The template endorses no harness (`VISION.md`, *Non-goals and limits*).
-One wiring ships because one had to; the rest of this file is what a
-second costs.
+One wiring ships because one had to, and it is Anthropic's Claude in its
+command-line harness; the rest of this file is what a second costs. The
+instantiation procedure does not yet ask which harness a project wants, so
+a project on another one removes the shipped wiring rather than declining
+it.
 
 ## Adding a wiring, and removing one
 
@@ -39,8 +42,8 @@ does with the verdict, is the adapter's business.
 4. in `.gitignore`: the harness's per-user settings file, if it has one,
    beside the line that names the shipped harness's;
 5. a row in the table above;
-6. the `{{REPLY_HOOK}}` slot, which is what a project answers to say which
-   wiring it uses.
+6. the reply-hook slot of `MANIFESTO.md`, which is what a project answers
+   to say which wiring it uses.
 
 **To remove one**, the same list in reverse, and then delete the folder
 and its settings file. **Do not delete `tools/check_status_reply.py`**:

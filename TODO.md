@@ -10,9 +10,14 @@ project's own open work belongs in its plans and its roadmap
 
 Each item says what it is, why it is wanted, and what it would touch, so
 that whoever picks one up knows the size of it before they start. Nothing
-here is scheduled and nothing here is promised: the template is complete
-and usable as it stands, and every item below makes it better rather than
-finished.
+here is promised: the template is complete and usable as it stands, and
+every item below makes it better rather than finished.
+
+**The pace is deliberate.** The template is live and working, so the bar
+for changing it is higher than it was while it was being built: each item
+below arrives on its own, with its own review, rather than as part of a
+push to finish. The first item is the one a reader is most likely to trip
+over, because the shipped harness is armed by default.
 
 ---
 
