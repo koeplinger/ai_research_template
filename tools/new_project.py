@@ -6,8 +6,8 @@ Created 8 September 2026; updated 8 September 2026.
 What it does, printing each step and what it could not do:
 
   1. copies the tree, leaving behind what belongs to the template's own
-     construction (the build plan, the worked example, the interim review
-     records, the git history, the local privacy list, and this program),
+     construction (the worked example, the interim review records, the git
+     history, the local privacy list, and this program),
      and makes the new tree a git repository;
   2. removes the pointers to what it left behind, each with the comment
      block that belonged to it, so the path check has nothing to report;
@@ -123,8 +123,7 @@ FIELD_DEFAULTS = {
 
 # ------------------------------------------------- what a project does not get
 
-LEAVE_BEHIND = ["VISION_PLAN.md", "example", ".review", ".git", ".privacy",
-                "tools/new_project.py"]
+LEAVE_BEHIND = ["example", ".review", ".git", ".privacy", "tools/new_project.py"]
 
 # The pointers to what was left behind: (path, exact text, what it becomes).
 # A miss is reported rather than guessed at, because a pointer that moved
@@ -155,15 +154,6 @@ header = "none"
 # the template's tools do not read it.
 
 ''', ""),
-    ("tools/artifacts.toml",
-     '''[[artifact]]
-kind = "build-plan"
-glob = "VISION_PLAN.md"
-genre = "current-state"
-skip = ["GENRES-7"]
-# It names deliverables of later steps by design; deleted at close-out.
-
-''', ""),
 ]
 POINTERS.append(
     ("GETTING_STARTED.md",
@@ -179,8 +169,9 @@ python3 tools/new_project.py --template > answers.toml   # then fill it in
 python3 tools/new_project.py --into ../my-project --answers answers.toml
 ```
 
-Leave out `--answers` and it asks for each value instead. Read steps 1 to
-3 anyway: they say what it is doing and why, and you have to make the same
+Add `--yes` to take the file as it stands; without it the tool asks about
+every value, showing what the file gave, and without `--answers` it asks
+about all of them. Read steps 1 to 3 anyway: they say what it is doing and why, and you have to make the same
 decisions either way. Steps 4 onward are yours.""",
      """**Steps 1 to 3 were done for this project** by the template's
 instantiation procedure, which does not travel with a project: it copied
@@ -605,6 +596,11 @@ def restamp(root: Path, date: str) -> int:
     n = 0
     for p in walk(root, (".md",)):
         s = read(p)
+        # A template's stamp is a placeholder a researcher fills when they
+        # copy it; dating half of it would seed every artifact with a
+        # half-filled header.
+        if "Created D Month YYYY" in s:
+            continue
         out = STAMP.sub(lambda m: m.group(1) + date + m.group(3), s, count=1)
         if out != s:
             p.write_text(out, encoding="utf-8")
@@ -885,7 +881,7 @@ def selftest() -> int:
         check("every owner's Slots row carries its value", not unfilled, str(unfilled[:3]))
         check("nothing of the template's own construction is left",
               not any((dst / x).exists() for x in
-                      ("VISION_PLAN.md", "example", ".review", "tools/new_project.py")))
+                      ("example", ".review", "tools/new_project.py")))
         check("no build lens survives",
               not [str(f.relative_to(dst)) for f in walk(dst, (".md",))
                    if "Build lens" in read(f) and f.name not in ABOUT_SLOTS])

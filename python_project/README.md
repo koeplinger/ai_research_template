@@ -10,8 +10,8 @@ program names the plan it belongs to and the claim it backs, and
 The template presumes a Python interpreter for its tools and ships this
 suite in Python. A project that writes its checks in another language
 keeps the same layout and the same contract (a printed verdict, a nonzero
-exit on failure, a `RESULT:` summary line) and records the language in
-`CHECK_METHODOLOGY.md`'s `{{CHECK_FORM}}`.
+exit on failure, a `RESULT:` summary line) and records the language in the check form
+`CHECK_METHODOLOGY.md` names in its Slots table.
 
 Removing this folder is more than deleting it: the root `README.md` lists
 it, `tools/artifacts.toml` carries its `[[artifact]]` and `[[index]]`

@@ -54,6 +54,14 @@ where a reader who meets an unfamiliar word should look first.
 | **hook** | a command the harness runs at a named moment, such as after each reply | a hook in a web framework; a hook in fishing or writing |
 | **subagent** | a reader given one task and no access to this conversation's reasoning | an agent in the economic sense |
 | **build lens** | a passage of these rulebooks addressed to the template's own construction, stripped when a project is instantiated | a lens in optics; a build in the software sense |
+| **assertion** | one independently falsifiable statement inside a claim; what a check gates, one at a time | an assertion in the programming sense, which is one way to write one |
+| **check record** | the dated entry recording one execution of a check: the date, who ran it, the verdict, and the second pass | the check itself, which is the investigation; a record in the archival sense |
+| **second pass** | an independent route to the same result, taken by another party or another method, and recorded beside the first | a second reading; a second attempt at the same route, which is not one |
+| **instrument of record** | the tool or procedure a second reader returns to in order to repeat a verification, named precisely enough that they reach the same thing | see *instrument* above |
+| **docket** | a plan's list of items deferred to its closure | a court's docket; a ticket queue |
+| **structure lens** | the pass a review takes before any sentence-level finding: per section, the inventory, the order, and where each fact is established | a lens in optics; the *build lens* above, which is a different thing |
+| **coverage** | of a search or a design: what it could have found, established and stated, so that finding nothing means something | test coverage in the software sense, which is a different measure |
+| **blast radius** | every place a claim is relied on, which is what moves if the claim moves | anything explosive |
 | **derived**, of an input | forced by prior structure, as against *imposed* (a choice the project made) and *conjectured* (assumed and not established), the three kinds every input of a check is classified into (`CHECK_METHODOLOGY.md` §4) | the `DERIVED` register, which is a trust level and not an input kind; *derived material*, which is what a plan made from a source; a derived cell line, a derived allele, a derived variable |
 | **imposed** | of an input: a choice the project made, which it states as a choice rather than as a fact | imposed in the sense of forced from outside |
 | **conjectured** | of an input: assumed and not established, so that what rests on it is no stronger | a conjecture in the mathematical sense, which is a claim and not an input |
@@ -110,11 +118,13 @@ Three kinds of name, with three costs:
    the round's log entry. The tools do not read prose.
 
 2. **A header field name** (`Register:`, `Mutation:`, `Instrument:`,
-   `Frame:`, `Standing:`, and the rest). Configured: `tools/artifacts.toml`
-   carries a `[fields.roles]` table mapping each role to the name this
-   project writes, and every tool reads the name from there. Change it
-   there, change the templates under `evidence_and_reasoning/` to match,
-   and the checks follow. Do this before any artifact carries the field.
+   `Frame:`, and the rest). Configured: `tools/artifacts.toml` carries a
+   `[fields.roles]` table mapping each role to the name this project
+   writes, and every tool reads the name from there. Change it there,
+   change the templates under `evidence_and_reasoning/` to match, and the
+   checks follow. Do this before any artifact carries the field. A
+   registry bullet, `Standing:` among them, is not a header field: it is
+   renamed in `[registry] required` and in the registry's own template.
 
 3. **A value in a closed vocabulary** (`VERIFIED`, `reproduced`, and the
    rest). Configured under `[vocab]` in the same file. A project may

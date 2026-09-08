@@ -74,8 +74,8 @@ Report, before editing anything:
    that owns it, naming both;
 5. every file carried over from the template whose header still bears the
    template's dates, or whose text still describes the template rather
-   than this project (a build-lens block, a pointer to the template's own
-   build plan, an unfilled placeholder from a template file);
+   than this project (a build-lens block, an unfilled placeholder from a
+   template file, a sentence about the template's own construction);
 6. every slot value that does not read as a sentence where it was
    substituted, and every slot filled in two places with different values;
 7. every term this project's documents use in two senses, and every term
@@ -138,7 +138,9 @@ The refuter is given the finding, the two passages, and the ontology's
 version rather than contradicting the folder index, and the folder index
 is the only statement under which a first version can release at all.
 
-The fix, one clause where `released` is defined, is brought with its
-wording, since a rulebook is maintained (`MANIFESTO.md` §12). The
+The fix, one clause where `released` is defined, could be applied under
+the Output rule above, since a rulebook is neither maintained nor one of
+the four `MANIFESTO.md` §12 names. It is brought instead, because a sweep
+that rewrites the rule it was reading has stopped being a sweep. The
 researcher directs it. The round's log entry records the sweep, the
 finding, the verdict, and the change.

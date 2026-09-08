@@ -8,7 +8,7 @@
 # folder by the KIND of the row that names them, never by a second copy
 # of the path.  Current state; indexed in tools/README.md.
 #
-# Created 4 September 2026; updated 6 September 2026.
+# Created 4 September 2026; updated 8 September 2026.
 #
 # Rows are matched top to bottom and the FIRST matching glob wins, so a
 # specific row (a template, an index) stands above the general row for
@@ -27,7 +27,7 @@
 #   release        live until its Released stamp (a version) or its
 #                  (release) row (a changelog); a Plan: line overrides
 #   exempt         no header, no genre check: non-prose, imported, or the
-#                  build's own north star
+#                  statement of intent
 # A Plan: header line overrides any default but immutable, self, and
 # exempt: live while that plan is DRAFT or ENGAGED, frozen when CLOSED.
 # header: stamp (a markdown artifact) | docstring (a program) |
@@ -217,13 +217,6 @@ header = "none"
 # The statement of intent, changed only at the researcher's direction and
 # kept with the project, because the rulebooks and the governance map cite
 # it (ONTOLOGY.md, governance/README.md); it keeps its own dash convention.
-
-[[artifact]]
-kind = "build-plan"
-glob = "VISION_PLAN.md"
-genre = "current-state"
-skip = ["GENRES-7"]
-# It names deliverables of later steps by design; deleted at close-out.
 
 [[artifact]]
 kind = "license-text"

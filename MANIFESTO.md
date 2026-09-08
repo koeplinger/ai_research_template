@@ -1,6 +1,6 @@
 # Manifesto: operating rules for AI assistance
 
-*Created 2 September 2026; updated 2 September 2026.*
+*Created 2 September 2026; updated 8 September 2026.*
 
 This document defines the operating rules for an AI assistant working in
 this research repository. The rules are **binding on the assistant**
@@ -206,7 +206,8 @@ never holds the opinion the work exists to reach.
   material or licensed data among others, does not enter the repository. It
   is recorded by locator, version or shelfmark, and access conditions; what
   is derived from it enters only in a form those conditions allow.
-- **What may leave the repository is {{DISCLOSURE_RULE}}.** Where the
+- **What may leave the repository** is fixed once, by the disclosure rule
+  in the Slots table below. Where the
   sources or the ethics approval bind what may be published about them,
   the binding rule is named once here rather than rediscovered per table:
   the minimum cell size and the dominance rule a statistical agency
@@ -267,10 +268,9 @@ never holds the opinion the work exists to reach.
 
 > **Build lens.** **No prompts are logged.** The prompt log is a research
 > project's record of inquiry; the build of this template is not a research
-> project and keeps none. `VISION_PLAN.md` records what was done at each
-> step, and the version history records what changed. Nothing in this
-> repository is a prompt-log entry, and a project built from it starts its
-> own log at entry 001.
+> project and keeps none. The version history records what was done and
+> what changed, step by step. Nothing in this repository is a prompt-log
+> entry, and a project built from it starts its own log at entry 001.
 
 ---
 
@@ -382,7 +382,6 @@ the project's own subject-matter terms and ships empty.
 > `VISION.md` changes only at the researcher's direction. Everything else,
 > this file included, is current state: corrected in place, with its
 > updated date set. The reason for a correction goes in the commit message.
-> `VISION_PLAN.md` records status once, in its tracker.
 
 ---
 
@@ -406,9 +405,8 @@ the project's own subject-matter terms and ships empty.
   the rest.
 
 > **Build lens.** Two genres in practice: `VISION.md`, changed only at the
-> researcher's direction, and everything else, current state. Until step 9
-> of the plan delivers the round check, the check is the privacy scan; from
-> then on, both.
+> researcher's direction, and everything else, current state. The round
+> check and the privacy scan are both run over the whole tree.
 
 ---
 
@@ -494,9 +492,8 @@ the project's own subject-matter terms and ships empty.
   and the hook configuration together; a project removing it removes all
   three.
 
-> **Build lens.** In force from the start of the build, by hand until step
-> 10 of the plan installs the hook. The plan's tracker is the stage
-> checklist the reminders are read from.
+> **Build lens.** In force, with the hook installed; the reminders are read
+> from `governance/reminders.md` like any project's.
 
 ---
 
@@ -543,7 +540,7 @@ unenforced, and the prompt log records why.
 | 2 | every claim referenced or pointed at its check; registry filled | no research claims; registry ships empty; lineage attributed to `leech_alg` only |
 | 5 | second pass in the instrument or procedure of record; verification status on every claim | self-tests, whole-tree scan, end-to-end tests, adversarial read-only review |
 | 6 | no personal data; restricted sources by locator only; import policy | nothing project-specific from any source; `leech_alg` the only name; local stop-word scanner |
-| 8 | **every prompt logged**, immutably | **no prompt logged**; `VISION_PLAN.md` and the version history are the record |
+| 8 | **every prompt logged**, immutably | **no prompt logged**; the version history is the record |
 | 9 | project glossary; the Ontology's predicates in use | `GLOSSARY.md` for the method's words; the project glossary ships empty |
 | 10 | reads what its task names and what the researcher points at | source projects only when named, main thread only |
 | 11 | the researcher's voice | plain, generic, discipline-neutral |

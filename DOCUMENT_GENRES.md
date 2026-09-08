@@ -294,8 +294,8 @@ must never appear:
 
 **A statement about the subject of the research is content, not
 narrative, whatever words it uses**: a source's revisions, a dataset's
-release vintage, an institution's past, a published correction, an
-instrument's artifact. So is an internal cross-reference (*"established in
+release vintage, an institution's past, a published correction, a
+measurement artefact of an instrument. So is an internal cross-reference (*"established in
 the earlier sections"*), a proper noun (*"the corrected edition"*), the
 dated provenance of a directive (*"recorded <date>, prompt NNN"*), and a
 present-tense description of an operation a program performs.
@@ -428,8 +428,9 @@ the researcher with its output (`MANIFESTO.md` §13).
    written without backticks, or with the extension not among those
    listed, it is not. A project whose loci take that shape says so in its
    glossary and writes them plainly.
-8. **Index.** Every file in a directory that has an indexing `README.md`
-   appears in it.
+8. **Index.** Every file in a directory that has an indexing file appears
+   in it. The indexing file is a `README.md`, except where the
+   configuration names another: the plan folder's is `ROADMAP.md`.
 
 The judgment items above (a sentence whose subject is a change; a section
 off its document's subject; the reason for a correction recorded where it
@@ -439,4 +440,4 @@ belongs) are the assistant's duty.
 
 | Slot | Meaning | Examples |
 |---|---|---|
-| `{{DELIVERABLE}}` | The publishable deliverable: its form, and what is released with a version of it (§2) | an article: its typeset source and rendered copy; an empirical paper: the rendered copy, the estimation code, the cleaned extract or its locator, and the run logs; a critical edition: the edited text, its apparatus, and the transcription files; a brief: the filed document |
+| `{{DELIVERABLE}}` | The publishable deliverable: its form, its title convention, and what is released with a version of it (§2). This file owns the slot; `evidence_and_reasoning/editorial_standards.md` carries a row pointing here | an article: its typeset source and rendered copy; an empirical paper: the rendered copy, the estimation code, the cleaned extract or its locator, and the run logs; a critical edition: the edited text, its apparatus, and the transcription files; a brief: the filed document |

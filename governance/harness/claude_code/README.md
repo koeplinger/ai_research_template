@@ -41,9 +41,10 @@ well as the one that replaces it: the bounce produces the conforming
 follow-up, it does not withhold the first. The session-start brief
 prints; the reminders it cannot compute (a tension row brought and not
 yet entered, a finding proposed and not yet brought) remain the
-assistant's by reading, as `governance/reminders.md` says. While this
-template is itself being built, the log reminder is read under the build
-lens of `MANIFESTO.md` §8 and not acted on.
+assistant's by reading, as `governance/reminders.md` says.
+
+> **Build lens.** The log reminder is read under the build lens of
+> `MANIFESTO.md` §8 and not acted on, since the build keeps no prompt log.
 
 ## Another harness
 

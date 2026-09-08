@@ -1,6 +1,6 @@
 # Ontology: the predicates the artifacts share
 
-*Created 3 September 2026; updated 6 September 2026.*
+*Created 3 September 2026; updated 8 September 2026.*
 
 The artifacts of a project built from this template are one system, not a
 folder of forms, because they share a vocabulary. This file is that
@@ -31,8 +31,7 @@ rulebook's own numbered check rather than repeating or extending it.
 > **Build lens.** The template records no research, so every predicate
 > here is shipped and none is instantiated. The checks and queries below
 > are implemented: `tools/README.md` names the tool that runs each, and
-> the round check runs them together. The build's own state lives in
-> `VISION_PLAN.md`, which is not an ontology artifact.
+> the round check runs them together.
 
 ---
 
@@ -185,7 +184,7 @@ the duty is the assistant's under the consistency sweep
 | `robustness` | a check to a perturbation the claim asserts independence *from* | `Robustness: <name>[, <name>]`, names disjoint from `Mutation:` | `CHECK_METHODOLOGY.md` §5 | ontology 3: the two lists are disjoint. Survival is the intended result here, and a failure is a finding | what does this not depend on? |
 | `verification-status` | a claim to who checked it and how | `Verified-by: researcher \| assistant, <route> \| deferred, <instrument> \| unchecked \| <party>, <route>` | `MANIFESTO.md` §5 | ontology 3 | who actually checked this? |
 | `deferred-to` | a claim to an instrument or party the researcher chose not to check behind | the `deferred` form of `Verified-by:` | `MANIFESTO.md` §5; `VISION.md` | ontology query 3 | what did we take on trust? |
-| `pre-registered` | a check or claim to a protocol fixed before the evidence was consulted | `Pre-registered <D Month YYYY>, <locator>` | `CHECK_METHODOLOGY.md` §5 | ontology 3: the date precedes the earliest record's date, and the locator resolves | was this confirmatory, or exploratory? |
+| `pre-registered` | a check or claim to a protocol fixed before the evidence was consulted | `Pre-registered <D Month YYYY>, <locator>` | `CHECK_METHODOLOGY.md` §2, and the notes folder's index | ontology 3: the date precedes the earliest record's date, and the locator resolves | was this confirmatory, or exploratory? |
 | `performed-by` | a check record, transcription, coding pass, or derived artifact to the party that produced it | `By: <party>` from `{{PARTIES}}` | `MANIFESTO.md` §5 | ontology 3: every name resolves to the roster | whose work is this? |
 
 ### 2.4 Derived material
@@ -223,7 +222,7 @@ the duty is the assistant's under the consistency sweep
 | Predicate | Relates | Written as | Owner | Checked by | Answers |
 |---|---|---|---|---|---|
 | `tier` | a statement to its authority | **derived**, never stored as a field | `PRECEDENCE.md` | not stored, so nothing to check | what governs if these disagree? |
-| `diverges` | a claim to a public-record statement it contradicts | a row in the tension ledger: claim, record, caution, and `Caution: live` or `Caution: closed <date>` | `PRECEDENCE.md` | reading, at sweep item 8; the caution field is read as recorded, not judged | where do we stand against the literature? |
+| `diverges` | a claim to a public-record statement it contradicts | a row in the tension ledger: the claim, the published statement, the caution that survives, and a last column reading `live` or `closed <date>` | `PRECEDENCE.md` | reading, at sweep item 8; the caution field is read as recorded, not judged | where do we stand against the literature? |
 | `context` | prose to borrowed material it carries | an attributing hedge naming the tier | `PRECEDENCE.md` | reading | is this ours or theirs? |
 
 ### 2.8 Carried in prose, not in syntax
@@ -328,7 +327,8 @@ the assistant's under the sweep.
 Every path pattern in this file, in `CHECK_METHODOLOGY.md`
 ("the checker's configured claim pattern"), and in `DOCUMENT_GENRES.md`
 ("the configured path patterns") comes from **one** configuration
-artifact, `tools/artifacts.toml`. It holds one row per artifact kind:
+artifact, `tools/artifacts.toml`. It holds one row per path pattern, and
+a kind may have several:
 
 ```
 [[artifact]]
@@ -361,8 +361,10 @@ are ranked, and the ranking is part of the design.
 `Kind`, `Verdict`, `Plan`, `Verified-by`, and `Backed-by` once the claim
 is registered `VERIFIED` or `RULED_OUT`.
 
-**Mandatory on every check**: `Instrument`, `Mutation`, and `Frame` where
-the check has quantities in a frame.
+**Mandatory on every check**: the fields the check row of
+`tools/artifacts.toml` requires, which ship as `Plan`, `Backs`,
+`Instrument` and `Mutation`, plus `By`; and `Frame` where the check has
+quantities in a frame.
 
 **Written when they apply**, and their absence is not a defect:
 everything else. `Robustness`, `Pre-registered`, `Reserved`, `Original`,

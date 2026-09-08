@@ -101,7 +101,7 @@ the removal is complete.
 |---|---|
 | the Python check suite | `python_project/`'s three artifact rows and three index rows in the configuration, the root README's folder row, `python_project/README.md`'s own removal note, and three tool docstrings (the concordance check, the probe, the run ledger); `{{CHECK_FORM}}` becomes a written procedure alone |
 | the harness wiring | `governance/harness/`, the tracked settings file and its `harness-settings` row in the configuration, its line in `.gitignore`, and `tools/check_status_reply.py`, which nothing else runs; `{{REPLY_HOOK}}` becomes *none, with the form kept by hand* |
-| the privacy scan | its row in the two READMEs; the staged-scan block of the pre-commit hook and the whole commit-message hook that `tools/install_hooks.sh` writes, and the installer's account of both; `MANIFESTO.md` §6 and §13, which name it |
+| the privacy scan | its row in the two READMEs; the staged-scan block of the pre-commit hook and the whole commit-message hook that `tools/install_hooks.sh` writes, and the installer's account of both. `MANIFESTO.md` §6 states the rule it serves in discipline-neutral terms and names no scanner, so nothing there has to change |
 | the tension ledger | `PRECEDENCE.md`'s compliance section, which requires a row; amend it or the rule stands unenforced |
 | the publication gate | nothing: it ships disabled, and `paper/README.md` says a project that publishes otherwise leaves it so |
 | derived material | its two rows and its index row; `source_documents/README.md` names it as the destination |

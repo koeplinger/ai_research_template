@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The genre and ontology linter: every statically decidable check, in one program.
 
-Created 4 September 2026; updated 6 September 2026.
+Created 4 September 2026; updated 8 September 2026.
 
 Reads tools/artifacts.toml, the single source of every path pattern and
 vocabulary (ONTOLOGY.md section 7), walks every tracked or untracked-but-

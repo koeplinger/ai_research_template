@@ -19,8 +19,9 @@ python3 tools/new_project.py --template > answers.toml   # then fill it in
 python3 tools/new_project.py --into ../my-project --answers answers.toml
 ```
 
-Leave out `--answers` and it asks for each value instead. Read steps 1 to
-3 anyway: they say what it is doing and why, and you have to make the same
+Add `--yes` to take the file as it stands; without it the tool asks about
+every value, showing what the file gave, and without `--answers` it asks
+about all of them. Read steps 1 to 3 anyway: they say what it is doing and why, and you have to make the same
 decisions either way. Steps 4 onward are yours.
 
 Read `HOW_IT_FITS_TOGETHER.md` when you want to know *why* the parts are
@@ -41,7 +42,6 @@ belongs to the template's own construction rather than to your project.
 
 | Leave behind | And also |
 |---|---|
-| the build plan, VISION_PLAN.md | the pointer to it in `README.md`, in the *Under construction* section, which goes with it |
 | the worked example, the example folder | its rows in `README.md` and `governance/README.md`, and its row in `tools/artifacts.toml` |
 | `.review/`, interim review records, if present | nothing; add it to `.gitignore` if you keep the folder for your own reviews |
 
@@ -134,10 +134,11 @@ file that owns it.
    grep -rno "{{[A-Z_]*}}" --include=*.md . | sort -u
    ```
 
-   What that list should show when the slots are filled is the Slots
-   table rows and nothing else: a filled row keeps its token, with the
-   value after it. A token anywhere else is a slot still unfilled. The
-   documentation consistency sweep of §9 then reads the sentences.
+   When the slots are filled, that list holds the Slots table rows and
+   nothing else, because a filled row keeps its token with the value
+   after it. A token on any other line is a slot still unfilled. The
+   documentation consistency sweep of §9 then reads the sentences the
+   values landed in.
 
 There are sixteen.
 
@@ -403,9 +404,9 @@ Fix what it reports, or record why you did not. Then commit. The
 pre-commit hook runs the same check, so a clean run here means a clean
 commit.
 
-If you removed the build plan or the worked example without removing the
-pointers to them, the path check reports those pointers, naming the file
-and the line. That is the check working, and §1 says what to strike.
+If you removed the worked example without removing the pointers to it, the
+path check reports those pointers, naming the file and the line. That is
+the check working, and §1 says what to strike.
 
 If you set up a stop-word list under `.privacy/` (a git-ignored list of
 words that must never reach a public repository: collaborator names, an

@@ -1,6 +1,6 @@
 # Reminders: the standing instructions, each named and placed where it fires
 
-*Created 5 September 2026; updated 5 September 2026.*
+*Created 5 September 2026; updated 8 September 2026.*
 
 `MANIFESTO.md` §16 has the assistant say, once in its reply, what the
 stage of work calls for and has not been done. This file names each
@@ -38,10 +38,11 @@ rulebooks', gathered in one place.
 3. The round check is clean and the indexes are in step
    (`tools/check_round.py`).
 4. The pre-registered confirmation and refutation criteria decide the
-   verdict, or the plan closes `ABANDONED` with the outcome as its reason,
-   unless the plan pre-registered what such an outcome closes as; a plan
-   with no hypothesis closes `COMPLETE` on its closure criterion
-   (`evidence_and_reasoning/research_plans/README.md`).
+   verdict, or, where they decide neither way and the plan was executed as
+   designed, it closes `INCONCLUSIVE`, unless the plan pre-registered what
+   such an outcome closes as; a plan whose execution stopped closes
+   `ABANDONED`, and one with no hypothesis closes `COMPLETE` on its closure
+   criterion (`evidence_and_reasoning/research_plans/README.md`).
 5. Every claim the plan owns carries the register the researcher assigned
    (`CHECK_METHODOLOGY.md` §1) and, where `VERIFIED` or `RULED_OUT`, names
    its backing check (`ONTOLOGY.md` §5, check 5); any finding the plan's

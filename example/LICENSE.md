@@ -52,10 +52,14 @@ import is carried under.
 
 ## In a project built from this template
 
-Replace the copyright holder in `LICENSE-CODE` and the recommended citation
-above with the project's own. Keep the split between code and written
-material unless there is a reason to change it, and if there is, record the
-reason here.
+Add the project's own copyright holder to `LICENSE-CODE` beside the
+template's, and add the project's own recommended citation above. **Keep
+the template's citation**: the written material is under CC BY 4.0, which
+requires credit to the original and an indication that changes were made,
+so replacing it rather than adding to it would put the project out of
+compliance with the license it inherits. Keep the split between code and
+written material unless there is a reason to change it, and if there is,
+record the reason here.
 
 ## No warranty
 

@@ -44,6 +44,7 @@ form.
 | [006](006_note_and_review.md) | write the note, take it through the blind referee and the refuter, release it | |
 | [007](007_close_plan_001.md) | close plan 001 and the round; every gate run | corrected by [008](008_project_review.md) |
 | [008](008_project_review.md) | the review of the project as a whole before its first commit; the corrections it directed | |
+| [009](009_incremental_update.md) | two incremental updates the fence allows, after the template changed | |
 
 <!-- Every entry appears here; numbering is checked contiguous and every
      entry indexed (MANIFESTO.md section 13). -->

@@ -36,15 +36,6 @@ is a **slot** you fill rather than a rule you obey.
 | know what a word means here | [GLOSSARY.md](GLOSSARY.md): each word, and what it will be mistaken for |
 | know what it is all for | [VISION.md](VISION.md): the durable statement of intent |
 
-> **Build lens.** The template itself is under construction. Its own
-> step-by-step plan is [VISION_PLAN.md](VISION_PLAN.md), ephemeral and
-> deleted when the build is complete. The methodology requires every
-> project built from this template to keep an immutable log of every
-> prompt; that requirement applies to those projects, not to the
-> construction of the template, and **no prompt log is kept for the
-> build-out**. This block and the plan it names go when a project is
-> instantiated (`GETTING_STARTED.md` §1 and §2).
-
 ## What it provides
 
 Three things meant to be one system, described in

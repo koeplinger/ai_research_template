@@ -1,6 +1,6 @@
 # Research plans
 
-*Created 3 September 2026; updated 6 September 2026.*
+*Created 3 September 2026; updated 8 September 2026.*
 
 Numbered plan files, `NNN_short_name.md`, the number zero-padded to three
 digits with an optional lower-case suffix, never reused, plus the plan
@@ -36,8 +36,10 @@ freezes, with any verdict.
   serves or why none, and pre-registers what counts as confirmation and
   what as refutation before execution begins. Where the pre-registered
   criteria decide neither way when the tasks are done, the plan closes
-  `ABANDONED` with that outcome as its reason, unless its *Confirmation
-  and refutation* section pre-registered what such an outcome closes as.
+  `INCONCLUSIVE`, which is a result and is recorded as one, unless its
+  *Confirmation and refutation* section pre-registered what such an outcome
+  closes as. `ABANDONED` is for execution that stopped
+  (`DOCUMENT_GENRES.md`, *Words used here*).
 - Results live in claims and checks; sketches live in `../notes/` and
   are never cited as results.
 - The index is the one place to see every plan with its status; the

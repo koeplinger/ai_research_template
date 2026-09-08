@@ -16,7 +16,7 @@ Verified-by: unchecked
      Verdict      none while OPEN or SPECULATIVE; otherwise, by kind:
                   formal: proved | disproved
                   computational: reproduced | not reproduced
-                  empirical: compatible | in tension | refuted
+                  empirical: compatible | in tension | refuted | inconclusive
                   inferential: identified as stated | assumption unsupported,
                     and replicated | not replicated (two values, comma-separated)
                   documentary: confirmed | not confirmed

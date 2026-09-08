@@ -2,8 +2,8 @@
 
 A template for AI-assisted research.
 
-This document states what this repository is for, who it serves, what it will
-contain, and how its parts are meant to work together. It is the reference every
+This document states what this repository is for, who it serves, what it
+contains, and how its parts are meant to work together. It is the reference every
 other artifact here answers to. It describes intent and principle; it does not
 schedule work.
 
@@ -170,7 +170,7 @@ inside that structure — not from the structure alone.
 
 ### The repository is the researcher's
 
-Every mechanism here can be modified, replaced, or deleted. A project will develop
+Every mechanism here can be modified, replaced, or deleted. A project develops
 needs this template did not anticipate, and a researcher who adapts the governance
 to their work is using it correctly, not abandoning it.
 

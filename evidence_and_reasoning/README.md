@@ -54,8 +54,9 @@ a claim and its check. A claim needs an owning plan before it exists.
 
 ## Slots
 
-The templates in this directory carry no Slots table of their own; this
-table covers them.
+The templates in the folders below carry no Slots table of their own; this
+table covers them, and the slots it lists are filled where their owners
+define them.
 
 | Slot | Meaning | Examples |
 |---|---|---|
