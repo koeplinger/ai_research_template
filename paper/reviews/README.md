@@ -1,6 +1,6 @@
 # Reviews
 
-*Created 4 September 2026; updated 6 September 2026.*
+*Created 4 September 2026; updated 8 September 2026.*
 
 Review records for the write-ups under `paper/`: dated records of what a
 referee pass found, against the document as it stood. Naming:

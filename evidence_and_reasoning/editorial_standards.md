@@ -1,6 +1,6 @@
 # Editorial standards
 
-*Created 2 September 2026; updated 2 September 2026.*
+*Created 2 September 2026; updated 8 September 2026.*
 
 The five standards, the conventions, and the corollaries below govern every
 prose change to every **durable artifact** (`MANIFESTO.md`, *Words used

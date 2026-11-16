@@ -1,6 +1,6 @@
 # Onboarding: what every session must know before it works
 
-*Created 4 September 2026; updated 4 September 2026.*
+*Created 4 September 2026; updated 8 September 2026.*
 
 This file is read at the start of every assistant session, before any
 substantive action. Reading it, and then the manifesto in full, is the

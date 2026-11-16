@@ -1,6 +1,6 @@
 # Evidence and reasoning
 
-*Created 3 September 2026; updated 3 September 2026.*
+*Created 3 September 2026; updated 8 September 2026.*
 
 The research record: what is claimed, why it is believed, and where every
 cited work lives. Every claim made anywhere in the repository is traceable

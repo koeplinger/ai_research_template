@@ -1,6 +1,6 @@
 # The refuter
 
-*Created 5 September 2026; updated 5 September 2026.*
+*Created 5 September 2026; updated 6 September 2026.*
 
 **Role.** A reader instructed to refute one finding: to show that the
 finding is wrong, or narrower than stated, or already answered by the

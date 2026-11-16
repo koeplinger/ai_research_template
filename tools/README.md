@@ -1,6 +1,6 @@
 # Tools
 
-*Created 4 September 2026; updated 5 September 2026.*
+*Created 4 September 2026; updated 8 September 2026.*
 
 Project scaffolding: the programs that keep the record honest. Nothing
 here is part of the research. Every tool needs nothing beyond the Python

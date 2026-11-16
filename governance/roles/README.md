@@ -1,6 +1,6 @@
 # Opposition roles
 
-*Created 5 September 2026; updated 5 September 2026.*
+*Created 5 September 2026; updated 8 September 2026.*
 
 Structured argument against the researcher's own position, as
 `MANIFESTO.md` §17 and `VISION.md` require: a reader instructed to find

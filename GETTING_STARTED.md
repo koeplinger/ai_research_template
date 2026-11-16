@@ -1,6 +1,6 @@
 # Getting started: from a clone to a first commit
 
-*Created 8 September 2026; updated 8 September 2026.*
+*Created 8 September 2026; updated 16 November 2026.*
 
 This is the walkthrough. It takes a clone of the template and leaves you
 with a project whose first plan is engaged, whose first claim is checked,
@@ -49,6 +49,10 @@ belongs to the template's own construction rather than to your project.
 Removing a folder means removing the pointers to it as well, or the path
 check reports what is gone. That is the check working; §8 says what to
 expect.
+
+Every file you change takes the day of the change as its updated date, in
+its header; a file you leave keeps the template's dates
+(`DOCUMENT_GENRES.md` §3).
 
 | Keep | Why |
 |---|---|

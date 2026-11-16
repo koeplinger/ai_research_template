@@ -1,6 +1,6 @@
 # The falsifiability probe as opposition
 
-*Created 5 September 2026; updated 5 September 2026.*
+*Created 5 September 2026; updated 6 September 2026.*
 
 **Role.** Opposition to one's own checks: a check is shown able to fail
 before it is trusted to pass. The mechanical part is

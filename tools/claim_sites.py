@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The blast radius of a claim (ONTOLOGY.md section 6, question 4): everything citing it by token, everything whose Depends-on names it, and the Reserved cluster if one holds it.
 
-Created 5 September 2026; updated 5 September 2026.
+Created 5 September 2026; updated 8 September 2026.
 
 For [claim NNN] the report lists, by reading fields and tokens only, the
 three things the question names: every artifact whose prose carries the

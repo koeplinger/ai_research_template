@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The instantiation procedure: this template, made into a project (GETTING_STARTED.md, sections 1 to 3).
 
-Created 8 September 2026; updated 8 September 2026.
+Created 8 September 2026; updated 16 November 2026.
 
 What it does, printing each step and what it could not do:
 
@@ -30,7 +30,9 @@ What it does, printing each step and what it could not do:
   8. adds the project's copyright and citation to the licenses and KEEPS
      the template's, which CC BY 4.0 requires of an adaptation;
   9. writes a project front page over the template's README, and stamps
-     every file it changed with the project's start date;
+     every file it changed, and only those, with the day it runs, read
+     from the clock: a file it did not change keeps the template's dates
+     (DOCUMENT_GENRES.md section 3);
  10. installs the git hooks, which are not cloned;
  11. runs the round check in the new tree and prints what it found.
 
@@ -58,6 +60,7 @@ exists and is not empty, is inside the template, or contains it.
 """
 from __future__ import annotations
 
+import datetime
 import re
 import shutil
 import subprocess
@@ -202,6 +205,17 @@ LENS_SECTIONS = [("## Two lenses", "## 1. Role and identity"),
                  ("## Where the two lenses differ", "## Slots")]
 SLOT_ROW = re.compile(r"^\|\s*`\{\{([A-Z_]+)\}\}`\s*\|")
 STAMP = re.compile(r"^(\*Created .+?; updated )(.+?)(\.\*)$", re.M)
+TOML_STAMP = re.compile(r"^(# Created .+?; updated )(.+?)(\.)$", re.M)
+PY_STAMP = re.compile(r"^(Created .+?; updated )(.+?)(\.)$", re.M)
+STAMPS = {".md": STAMP, ".toml": TOML_STAMP, ".py": PY_STAMP}
+MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July",
+               "August", "September", "October", "November", "December"]
+
+
+def today_day() -> str:
+    """Today, read from the clock, in the header's `D Month YYYY` form."""
+    d = datetime.date.today()
+    return f"{d.day} {MONTH_NAMES[d.month - 1]} {d.year}"
 
 
 # ------------------------------------------------------------------ helpers
@@ -600,20 +614,24 @@ def write_project_readme(root: Path, title: str, date: str) -> None:
         PROJECT_README.format(title=title, date=date, root_files="\n".join(rows)), encoding="utf-8")
 
 
-def restamp(root: Path, date: str) -> int:
-    """Step 9.  A file this procedure rewrote is no longer the template's as of
-    the template's date: its updated date is the day the project was made."""
-    if not date:
-        return 0
+def restamp(root: Path, day: str, src: Path) -> int:
+    """Step 9.  A file this procedure changed is no longer the template's: its
+    updated date becomes `day`, the day of the run.  A file it did not
+    change, compared with the template's copy at `src`, keeps the
+    template's dates (DOCUMENT_GENRES.md section 3)."""
     n = 0
-    for p in walk(root, (".md",)):
+    for p in walk(root, tuple(STAMPS)):
         s = read(p)
+        orig = src / p.relative_to(root)
+        if orig.is_file() and read(orig) == s:
+            continue
+        m = STAMPS[p.suffix].search(s)
         # A template's stamp is a placeholder a researcher fills when they
         # copy it; dating half of it would seed every artifact with a
         # half-filled header.
-        if "Created D Month YYYY" in s:
+        if not m or "D Month YYYY" in m.group(0):
             continue
-        out = STAMP.sub(lambda m: m.group(1) + date + m.group(3), s, count=1)
+        out = s[:m.start(2)] + day + s[m.end(2):]
         if out != s:
             p.write_text(out, encoding="utf-8")
             n += 1
@@ -632,7 +650,7 @@ ANSWERS_TEMPLATE = '''# Answers for tools/new_project.py.
 [project]
 holder = ""          # the copyright holder for this project's code
 citation = ""        # one line: author, title, year, and where it lives
-date = ""            # the project's start date, "D Month YYYY"
+date = ""            # the project's start date, "D Month YYYY": its year dates the copyright; files are stamped with the day the procedure runs
 
 [slots]
 {slots}
@@ -728,7 +746,8 @@ def instantiate(src: Path, dst: Path, answers: dict, quiet: bool = False) -> int
     slots, machine, rename, proj = clean["slots"], clean["machine"], clean["rename"], clean["project"]
     date = str(proj.get("date") or "").strip()
     found = re.search(r"\b(\d{4})\b", date)
-    year = found.group(1) if found else "2026"
+    year = found.group(1) if found else str(datetime.date.today().year)
+    day = today_day()
 
     src_r, dst_r = src.resolve(), dst.resolve()
     if src_r == dst_r or src_r in dst_r.parents or dst_r in src_r.parents:
@@ -790,12 +809,12 @@ def instantiate(src: Path, dst: Path, answers: dict, quiet: bool = False) -> int
             p("  8. the licenses: NOT TOUCHED, no holder or citation given")
 
         if slots.get("PROJECT_TITLE"):
-            write_project_readme(dst, slots["PROJECT_TITLE"], date or "D Month YYYY")
+            write_project_readme(dst, slots["PROJECT_TITLE"], day)
             p("  9. wrote the project's front page over the template's README")
         else:
             p("  9. the README: NOT REWRITTEN, no project title given")
-        n = restamp(dst, date)
-        p(f"     stamped {n} file(s) with {date}" if n else "     no file re-stamped, no start date given")
+        n = restamp(dst, day, src)
+        p(f"     stamped the {n} file(s) it changed with {day}, the day of the run; the rest keep the template's dates")
 
         hooks = subprocess.run(["bash", str(dst / "tools" / "install_hooks.sh")],
                                cwd=dst, capture_output=True, text=True)
@@ -902,8 +921,19 @@ def selftest() -> int:
               and "adapted from the template" in read(dst / "LICENSE.md"))
         check("the copyright year is the project's, not this program's",
               "Copyright (c) 2027 A. Researcher" in read(dst / "LICENSE-CODE"))
-        check("a file the procedure rewrote is stamped with the project's date",
-              "; updated 1 January 2027.*" in read(dst / "MANIFESTO.md"))
+        check("a file the procedure rewrote is stamped with the day of the run, not the answers' date",
+              f"; updated {today_day()}.*" in read(dst / "MANIFESTO.md"))
+        cfg_stamp = TOML_STAMP.search(read(dst / "tools" / "artifacts.toml"))
+        check("the configuration, rewritten with the machine halves, is stamped too",
+              bool(cfg_stamp) and cfg_stamp.group(2) == today_day(), cfg_stamp.group(0) if cfg_stamp else "no stamp")
+        unstamped = lambda s: PY_STAMP.sub("", TOML_STAMP.sub("", STAMP.sub("", s)))
+        pairs = [(f, ROOT / f.relative_to(dst)) for f in walk(dst, tuple(STAMPS))
+                 if (ROOT / f.relative_to(dst)).is_file()]
+        kept = [f for f, o in pairs if read(f) == read(o)]
+        moved = [str(f.relative_to(dst)) for f, o in pairs
+                 if read(f) != read(o) and unstamped(read(f)) == unstamped(read(o))]
+        check("a file the procedure did not change keeps the template's dates",
+              bool(kept) and not moved, f"{len(kept)} kept; restamped although unchanged: {moved[:3]}")
         check("the guide's own pages still explain the slots, unsubstituted",
               "{{PERSONA}}" in read(dst / "GETTING_STARTED.md"))
         check("the front page names the template the project is adapted from",
@@ -927,6 +957,21 @@ def selftest() -> int:
         check("the rename reaches an indented mention in a template's legend",
               "Frame:" not in tpl and "Stated-in:" in tpl,
               str([l for l in tpl.split("\n") if "Frame" in l][:2]))
+
+    with tempfile.TemporaryDirectory() as d:
+        a, b = Path(d) / "a", Path(d) / "b"
+        prog = '"""A program.\n\nCreated 1 January 2026; updated 1 January 2026.\n"""\nX = 1\n'
+        tmpl = '"""A template.\n\nCreated D Month YYYY; updated D Month YYYY.\n"""\nX = 1\n'
+        for root, x in ((a, "X = 1"), (b, "X = 2")):
+            (root / "tools").mkdir(parents=True)
+            (root / "tools" / "changed.py").write_text(prog.replace("X = 1", x))
+            (root / "tools" / "same.py").write_text(prog)
+            (root / "tools" / "_template.py").write_text(tmpl.replace("X = 1", x))
+        restamp(b, "2 January 2030", a)
+        check("a program the procedure changed takes the day; one it did not, and a template's placeholder, keep theirs",
+              "updated 2 January 2030." in read(b / "tools" / "changed.py")
+              and "updated 1 January 2026." in read(b / "tools" / "same.py")
+              and "updated D Month YYYY." in read(b / "tools" / "_template.py"))
 
     with tempfile.TemporaryDirectory() as d:
         for bad, why in (({"slots": {"PERSONA": "a | b"}}, "a pipe in a slot value"),

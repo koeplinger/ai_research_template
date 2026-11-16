@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The status-block check: does a reply end in the form MANIFESTO.md section 16 fixes?
 
-Created 5 September 2026; updated 5 September 2026.
+Created 5 September 2026; updated 8 September 2026.
 
 The form is the section's: the block is the run of status lines at the
 end of the reply, trailing whitespace ignored; a status line is one of

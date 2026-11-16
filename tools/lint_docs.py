@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The genre and ontology linter: every statically decidable check, in one program.
 
-Created 4 September 2026; updated 8 September 2026.
+Created 4 September 2026; updated 16 November 2026.
 
 Reads tools/artifacts.toml, the single source of every path pattern and
 vocabulary (ONTOLOGY.md section 7), walks every tracked or untracked-but-
@@ -19,21 +19,26 @@ WHAT EACH TAG IMPLEMENTS
                 item 5 is GENRES-8; item 6, the citation sites, is the
                 sites query of tools/query_ontology.py)
 
-WHAT IS NEVER READ: HTML comments, fenced code, and backtick spans, in every
-file; a program's code, so that only its docstrings and comments are prose;
-a configuration file's values, so that only its comments are prose; the
-verbatim region of a log entry; markdown link targets, for tokens; quoted
-text and block quotes, for the editorial checks; and the italicized examples
-of the two files the narrative rule names, for the narrative check.  Every
-skipped span is blanked, not removed, so line numbers stay true.  A
-template's placeholders (NNN, D Month YYYY, <...>) are admitted where the
-artifact kind is "template".
+WHAT IS NEVER READ, by the prose checks: HTML comments, fenced code, and
+backtick spans, in every file; a program's code, so that only its
+docstrings and comments are prose; a configuration file's values, so that
+only its comments are prose; the verbatim region of a log entry; markdown
+link targets, for tokens; quoted text and block quotes, for the editorial
+checks; and the italicized examples of the two files the narrative rule
+names, for the narrative check.  Every skipped span is blanked, not
+removed, so line numbers stay true.  A template's placeholders (NNN, D
+Month YYYY, <...>) are admitted where the artifact kind is "template".  The
+two history checks, GENRES-2 and GENRES-3, compare a file's whole text
+with its committed version instead.
 
 WHAT IT DOES NOT DECIDE: whether a mutation actually breaks a check (the
 probe, CHECK_METHODOLOGY.md item 3, dynamic half); whether a check record's
 values agree with its program's RESULT line (the concordance tool, item 4);
 which version a changelog's release row belongs to (read, not checked);
-everything the rulebooks assign to reading.
+whether a file last written on a day was changed that day or only
+rewritten, as a stash or an edit to its header rewrites it (GENRES-3;
+DOCUMENT_GENRES.md, What the checker verifies, item 3); everything the
+rulebooks assign to reading.
 
 Usage
     python3 tools/lint_docs.py              check; exit 1 on any finding (--quiet: the summary line only when there is a finding)
@@ -46,6 +51,7 @@ Usage
 from __future__ import annotations
 
 import ast
+import datetime
 import re
 import subprocess
 import sys
@@ -60,6 +66,31 @@ MONTHS = ("January|February|March|April|May|June|July|August|September|"
 DATE = rf"\d{{1,2}} (?:{MONTHS}) \d{{4}}"
 PDATE = r"D Month YYYY"
 ANYDATE = rf"(?:{DATE}|{PDATE})"
+MONTH_NAMES = MONTHS.split("|")
+
+
+def parse_day(s: str) -> datetime.date | None:
+    """A `D Month YYYY` date, or None where the text is not one."""
+    m = re.fullmatch(rf"(\d{{1,2}}) ({MONTHS}) (\d{{4}})", s.strip())
+    if not m:
+        return None
+    try:
+        return datetime.date(int(m.group(3)), MONTH_NAMES.index(m.group(2)) + 1, int(m.group(1)))
+    except ValueError:
+        return None
+
+
+def format_day(d: datetime.date) -> str:
+    return f"{d.day} {MONTH_NAMES[d.month - 1]} {d.year}"
+
+
+def dated(text: str, day: datetime.date | None = None) -> str:
+    """The text with the updated date of its first header stamp set to `day`,
+    today by default: what an edit made on that day writes.  The round
+    check's self-test uses it for every committed file a case changes; the
+    linter's uses it in its GENRES-3 cases."""
+    day = day or datetime.date.today()
+    return re.sub(rf"(Created {DATE}; updated ){DATE}", lambda m: m.group(1) + format_day(day), text, count=1)
 
 STAMP_RE = re.compile(rf"^\*?Created ({ANYDATE}); updated ({ANYDATE})\.?\*?\s*$")
 STAMP_OPENER_RE = re.compile(r"^\*?(Created|Released|Reserved|Pre-registered|superseded by)\b", re.I)
@@ -131,9 +162,10 @@ def report(item: str, path: str, line: int, msg: str, part: str = "") -> None:
     """Every finding passes here, so `skip` in the row for `path` is honored
     by every check in one place.  An item that enforces two separable rules
     passes `part`, and a row may then skip one half by naming `ITEM/part`
-    without silencing the other."""
+    without silencing the other.  A path gone from the tree takes the row
+    its path would match."""
     if _TREE is not None:
-        row = _TREE.rows.get(path)
+        row = _TREE.rows[path] if path in _TREE.rows else classify(_TREE.cfg, path)
         skip = row.get("skip", []) if row else []
         if item in skip or (part and f"{item}/{part}" in skip):
             return
@@ -190,8 +222,8 @@ def load_config(root: Path) -> dict:
 
 def git(root: Path, *args: str) -> str:
     try:
-        return subprocess.run(["git", *args], cwd=root, capture_output=True,
-                              text=True, check=True).stdout
+        return subprocess.run(["git", *args], cwd=root, capture_output=True, text=True,
+                              encoding="utf-8", errors="replace", check=True).stdout
     except (subprocess.CalledProcessError, FileNotFoundError):
         return ""
 
@@ -390,6 +422,14 @@ def stamp_of(header: list[tuple[int, str]]) -> tuple[int, str, str] | None:
     return None
 
 
+def body_of(text: str, header: list[tuple[int, str]]) -> str:
+    """The text without its header lines: what a change to the artifact
+    changes, as against its bookkeeping (DOCUMENT_GENRES.md, What the
+    checker verifies, item 3)."""
+    drop = {ln for ln, _ in header}
+    return "\n".join(l for i, l in enumerate(text.splitlines(), 1) if i not in drop)
+
+
 # ------------------------------------------------------------------ the tree
 
 class Tree:
@@ -424,6 +464,27 @@ class Tree:
             if self.kind(f) == "registry":
                 self.keys |= set(re.findall(r"^### \[([A-Z][A-Za-z0-9]{2,31})\]", self.text[f], re.M))
         self.basenames = {Path(f).name for f in self.files} | {p for f in self.files for p in Path(f).parts[:-1]}
+        self._head_status: dict[str, str] | None = None
+        self._head_paths: set[str] | None = None
+
+    def head_paths(self) -> set[str]:
+        """Every path HEAD holds, read once and only when asked."""
+        if self._head_paths is None:
+            self._head_paths = {p for p in git(self.root, "ls-tree", "-r", "--name-only", "-z", "HEAD").split("\0") if p}
+        return self._head_paths
+
+    def committed_status(self, num: str) -> str | None:
+        """The Status: line of plan `num` as HEAD holds it; None where HEAD
+        holds no plan of that number."""
+        if self._head_status is None:
+            self._head_status = {}
+            for p in sorted(self.head_paths()):
+                row = classify(self.cfg, p)
+                if row and row["kind"] == "plan":
+                    old = git(self.root, "show", f"HEAD:{p}")
+                    hdr = header_block(old, row.get("header", "stamp"))[0]
+                    self._head_status.setdefault(self.num(p), fields_of(hdr).get(F("status"), (0, ""))[1])
+        return self._head_status.get(num)
 
     def kind(self, f: str) -> str:
         return (self.rows[f] or {}).get("kind", "")
@@ -458,20 +519,32 @@ class Tree:
         row = self.rows[f]
         if not row:
             return "unresolved"
+        return self.genre_from(row, self.headers[f][0], self.text[f], self.plan_status.get(f, ""))
+
+    def genre_from(self, row: dict, header: list[tuple[int, str]], text: str, own_status: str = "",
+                   status_of=None) -> str:
+        """The genre an artifact with this row, header, and text derives.
+        own_status is a plan's own Status: line, read from the same text;
+        status_of(num) gives the Status: line of the plan numbered num, or
+        None where there is no such plan, by default as the tree holds it
+        now (committed_status gives it as HEAD holds it)."""
+        if status_of is None:
+            status_of = lambda num: self.plan_status.get(self.plans[num], "") if num in self.plans else None
         g = row["genre"]
         if g in ("exempt", "immutable", "frozen"):
             return g
         if g == "self":
-            return "frozen" if self.plan_status.get(f, "").startswith("CLOSED") else "current-state"
-        pf, st = self.plan_of(f)
-        if pf:
+            return "frozen" if own_status.startswith("CLOSED") else "current-state"
+        pl = fields_of(header).get(F("plan"))
+        st = status_of(pl[1].split(",")[0].strip()) if pl and pl[1] else None
+        if st is not None:
             return "frozen" if st.startswith("CLOSED") else "current-state"
         if g == "dated-record":
             return "frozen"
         if g == "release":
-            if any(s.startswith("Released ") for _, s in self.headers[f][0]):
+            if any(s.startswith("Released ") for _, s in header):
                 return "frozen"
-            if row["kind"] == "changelog" and re.search(r"^\| \(release\) \|", self.text[f], re.M):
+            if row["kind"] == "changelog" and re.search(r"^\| \(release\) \|", text, re.M):
                 return "frozen"
             return "current-state"
         return "current-state"
@@ -509,20 +582,52 @@ def check_genres_2_immutable(t: Tree) -> None:
             report("GENRES-2", f, 1, "committed prompt-log entry modified or deleted")
 
 
-def check_genres_3_frozen(t: Tree) -> None:
+def committed_genre(t: Tree, f: str, row: dict | None = None) -> str:
+    """The genre of f as committed: HEAD's text of f, and the Status: line
+    each plan has at HEAD; "" where HEAD does not hold f."""
+    row = row if row is not None else classify(t.cfg, f)
+    old = git(t.root, "show", f"HEAD:{f}") if row else ""
+    if not old:
+        return ""
+    oh = header_block(old, row.get("header", "stamp"))[0]
+    return t.genre_from(row, oh, old, fields_of(oh).get(F("status"), (0, ""))[1], t.committed_status)
+
+
+def check_genres_3_dates(t: Tree) -> None:
+    """A durable artifact whose text other than its header lines differs from
+    its committed version carries the day of its last write as its updated
+    date (immutable, exempt, and template artifacts aside); a frozen
+    artifact with a header, gone from its committed path, is reported."""
+    if not git(t.root, "rev-parse", "--verify", "HEAD"):
+        return
+    changed = {f for f in git(t.root, "diff", "--name-only", "-z", "HEAD").split("\0") if f}
     for f in t.files:
-        if t.genre(f) != "frozen" or (t.rows[f] or {}).get("header", "stamp") == "none":
+        row = t.rows[f]
+        if (f not in changed or not row or row.get("header", "stamp") == "none" or t.is_template(f)
+                or t.genre(f) in ("immutable", "exempt")):
             continue
         old = git(t.root, "show", f"HEAD:{f}")
-        if not old or old == t.text[f]:
+        if not old:
             continue
-        hk = t.rows[f].get("header", "stamp")
-        oh, ob = header_block(old, hk)
-        nh, nb = t.headers[f]
-        if "\n".join(old.splitlines()[ob - 1:]) != "\n".join(t.text[f].splitlines()[nb - 1:]):
-            so, sn = stamp_of(oh), stamp_of(nh)
-            if so and sn and so[2] == sn[2]:
-                report("GENRES-3", f, sn[0], "frozen body changed but the updated date did not")
+        nh = t.headers[f][0]
+        if body_of(old, header_block(old, row.get("header", "stamp"))[0]) == body_of(t.text[f], nh):
+            continue
+        sn = stamp_of(nh)
+        if not sn:
+            continue
+        day = datetime.date.fromtimestamp((t.root / f).stat().st_mtime)
+        if parse_day(sn[2]) != day:
+            what = "frozen artifact changed" if t.genre(f) == "frozen" else "changed"
+            report("GENRES-3", f, sn[0], f"{what}, last written on {format_day(day)}, but the updated date reads {sn[2]}",
+                   part="dates")
+    gone = git(t.root, "diff", "--no-renames", "--diff-filter=D", "--name-only", "-z", "HEAD")
+    for f in (x for x in gone.split("\0") if x):
+        row = classify(t.cfg, f)
+        if not row or row.get("header", "stamp") == "none" or committed_genre(t, f, row) != "frozen":
+            continue
+        twin = next((g for g in t.files if Path(g).name == Path(f).name and g not in t.head_paths()), None)
+        report("GENRES-3", f, 1, "frozen artifact gone from its committed path, moved or deleted"
+               + (f"; a file of the same name, new since the commit, stands at {twin}" if twin else ""), part="gone")
 
 
 def check_genres_4_resolution(t: Tree) -> None:
@@ -976,7 +1081,7 @@ def check_check_3_mutation(t: Tree) -> None:
         report("CHECK-3", "tools/artifacts.toml", 1, "mutation set unfilled ({{MUTATION_SET}}); name check skipped")
 
 
-CHECKS = [check_genres_1_header, check_genres_2_immutable, check_genres_3_frozen,
+CHECKS = [check_genres_1_header, check_genres_2_immutable, check_genres_3_dates,
           check_genres_4_resolution, check_genres_5_narrative, check_genres_6_ledger,
           check_genres_7_paths, check_genres_8_index, check_edit_1, check_edit_2,
           check_ont_1_fields, check_ont_2_tokens, check_ont_3_required, check_ont_4_depends,
@@ -1134,6 +1239,39 @@ def selftest() -> int:
                   + (f"   (also: {others})" if others and hit else "")
                   + ("" if hit else f"   (got: {[(x[0], x[1], x[3][:40]) for x in found]})"))
 
+    def clean_case(name: str, mutate, before_commit=None) -> None:
+        """A change the rules allow: the tree stays clean under every check."""
+        nonlocal failures
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            files = fixture()
+            if before_commit:
+                before_commit(files)
+            write_all(tmp, files)
+            commit(tmp)
+            mutate(tmp, files)
+            run_checks(tmp)
+            found = list(FINDINGS)
+            failures += 0 if not found else 1
+            print(f"  [{'PASS' if not found else 'FAIL'}] {name}"
+                  + ("" if not found else f": {[(x[0], x[1], x[3][:50]) for x in found]}"))
+
+    def absent_case(name: str, item: str, path: str, needle: str, mutate, cfg=None) -> None:
+        """A change the item must not report at `path`: no finding of the item
+        there carries `needle` ("" for any finding at all)."""
+        nonlocal failures
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            files = fixture()
+            scratch_project(tmp, files, cfg if cfg is not None else cfg_text)
+            commit(tmp)
+            mutate(tmp, files)
+            run_checks(tmp)
+            hits = [x for x in FINDINGS if x[0] == item and x[1] == path and needle in x[3]]
+            failures += 0 if not hits else 1
+            print(f"  [{'PASS' if not hits else 'FAIL'}] {item:9s} not reported: {name}"
+                  + ("" if not hits else f": {[x[3][:70] for x in hits]}"))
+
     with tempfile.TemporaryDirectory() as d:
         tmp = Path(d)
         write_all(tmp, fixture())
@@ -1189,8 +1327,37 @@ def selftest() -> int:
     run_case("a rulebook with no stamp", "GENRES-1", "MANIFESTO.md", "no header stamp", lambda t, f: w(t, "MANIFESTO.md", "# M\n\nRules.\n"))
     run_case("a stamp with trailing text", "GENRES-1", "MANIFESTO.md", "exact form", sub("MANIFESTO.md", STAMP, "*Created 1 January 2026; updated 1 January 2026 (typo).*"))
     run_case("a committed log entry edited", "GENRES-2", "prompt_logs/001_setup.md", "modified", add("prompt_logs/001_setup.md", "\nafterthought\n"))
-    run_case("a frozen claim's body edited, date unmoved", "GENRES-3", C2, "updated date did not", add(C2, "\nMore.\n"))
-    run_case("a frozen review edited, date unmoved", "GENRES-3", "paper/reviews/2026-01-03_r_main.md", "updated date did not", add("paper/reviews/2026-01-03_r_main.md", "\nMore.\n"))
+    run_case("a frozen claim's body edited, date unmoved", "GENRES-3", C2, "but the updated date reads", add(C2, "\nMore.\n"))
+    run_case("a frozen review edited, date unmoved", "GENRES-3", "paper/reviews/2026-01-03_r_main.md", "but the updated date reads", add("paper/reviews/2026-01-03_r_main.md", "\nMore.\n"))
+    run_case("a current-state rulebook edited, date unmoved", "GENRES-3", "MANIFESTO.md", "but the updated date reads", add("MANIFESTO.md", "\nMore.\n"))
+    run_case("a body edited, dated a day other than the edit's", "GENRES-3", "MANIFESTO.md", "updated date reads 2 January 2026",
+             lambda t, f: w(t, "MANIFESTO.md", dated(f["MANIFESTO.md"], datetime.date(2026, 1, 2)) + "\nMore.\n"))
+    run_case("a frozen claim moved with git mv, the new path named", "GENRES-3", C2,
+             "stands at evidence_and_reasoning/claims/old/002_b.md",
+             lambda t, f: ((t / "evidence_and_reasoning/claims/old").mkdir(),
+                           subprocess.run(["git", "mv", C2, "evidence_and_reasoning/claims/old/002_b.md"], cwd=t, capture_output=True)))
+    run_case("a frozen claim deleted", "GENRES-3", C2, "moved or deleted", lambda t, f: (t / C2).unlink())
+    absent_case("a deleted claim is not said to stand where a committed file of its name is",
+                "GENRES-3", C2, "same name", lambda t, f: (t / C2).unlink())
+    run_case("a claim deleted together with its closed plan", "GENRES-3", C2, "moved or deleted",
+             lambda t, f: ((t / C2).unlink(), (t / "evidence_and_reasoning/research_plans/002_b.md").unlink()))
+    absent_case("a current-state rulebook deleted", "GENRES-3", "MANIFESTO.md", "", lambda t, f: (t / "MANIFESTO.md").unlink())
+    absent_case("a claim of an engaged plan deleted", "GENRES-3", C1, "", lambda t, f: (t / C1).unlink())
+    absent_case("a claim deleted in the change that closes its plan, open as committed", "GENRES-3", C1, "",
+                lambda t, f: ((t / C1).unlink(), w(t, "evidence_and_reasoning/research_plans/001_a.md",
+                              dated(f["evidence_and_reasoning/research_plans/001_a.md"]).replace(
+                                  "Status: ENGAGED 1 January 2026", "Status: CLOSED 2 January 2026, verdict COMPLETE"))))
+    absent_case("a row's skip list silences the gone half for a path no longer in the tree", "GENRES-3", C2, "",
+                lambda t, f: (t / C2).unlink(),
+                cfg=cfg_text.replace('glob = "evidence_and_reasoning/claims/[0-9]*.md"\ngenre = "plan-owned"',
+                                     'glob = "evidence_and_reasoning/claims/[0-9]*.md"\ngenre = "plan-owned"\nskip = ["GENRES-3/gone"]'))
+    clean_case("a body edited and dated the day of the edit is clean",
+               lambda t, f: w(t, "MANIFESTO.md", dated(f["MANIFESTO.md"]).replace("Rules.", "Rules, and one more.")))
+    clean_case("a frozen claim corrected on the day its committed date already names is clean",
+               lambda t, f: w(t, C2, f[C2] + "\nMore.\n"), before_commit=lambda f: f.__setitem__(C2, dated(f[C2])))
+    clean_case("a change confined to the header is free", sub(C2, "updated 1 January 2026", "updated 2 January 2026"))
+    clean_case("a configuration re-dated in its comment stamp alone is free",
+               lambda t, f: w(t, "tools/artifacts.toml", dated(cfg_text, datetime.date(2026, 10, 1))))
     run_case("an unmatched path", "GENRES-4", "stray.md", "no row", lambda t, f: w(t, "stray.md", "# s\n"))
     run_case("a Plan: naming no plan", "GENRES-4", C1, "names no plan", sub(C1, "Plan: 001", "Plan: 009"))
     run_case("a plan whose Status: is malformed", "GENRES-4", "evidence_and_reasoning/research_plans/001_a.md", "three forms", sub("evidence_and_reasoning/research_plans/001_a.md", "Status: ENGAGED 1 January 2026", "Status: Engaged"))

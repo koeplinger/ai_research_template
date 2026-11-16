@@ -1,6 +1,6 @@
 # The documentation consistency sweep
 
-*Created 8 September 2026; updated 8 September 2026.*
+*Created 8 September 2026; updated 16 November 2026.*
 
 **Role.** A reader who takes a project's *documentation* as one system and
 reports where it disagrees with itself: the rulebooks, the folder indexes,
@@ -72,10 +72,13 @@ Report, before editing anything:
    rulebook declares deliberate;
 4. every restatement of a rule or a fact that disagrees with the document
    that owns it, naming both;
-5. every file carried over from the template whose header still bears the
-   template's dates, or whose text still describes the template rather
-   than this project (a build-lens block, an unfilled placeholder from a
-   template file, a sentence about the template's own construction);
+5. every file carried over from the template that this project has
+   changed, by its history since the instantiation commit, while its
+   header still bears the template's updated date (a file it has not
+   changed keeps the template's dates, DOCUMENT_GENRES.md section 3), and
+   every file whose text still describes the template rather than this
+   project (a build-lens block, an unfilled placeholder from a template
+   file, a sentence about the template's own construction);
 6. every slot value that does not read as a sentence where it was
    substituted, and every slot filled in two places with different values;
 7. every term this project's documents use in two senses, and every term

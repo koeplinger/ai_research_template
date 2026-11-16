@@ -1,6 +1,6 @@
 # Notes
 
-*Created 3 September 2026; updated 3 September 2026.*
+*Created 3 September 2026; updated 8 September 2026.*
 
 Dated working notes: `YYYY-MM-DD_short_name.md`. A note is a dated record
 of what a sweep, an audit, a reading, a day in the archive, a cleaning or

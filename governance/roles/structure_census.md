@@ -1,6 +1,6 @@
 # The structure census
 
-*Created 5 September 2026; updated 5 September 2026.*
+*Created 5 September 2026; updated 6 September 2026.*
 
 **Role.** A reader who takes the structure lens of `CHECK_METHODOLOGY.md`
 §7 to one section before anyone edits a sentence in it: what the

@@ -1,6 +1,6 @@
 # The blind referee
 
-*Created 5 September 2026; updated 5 September 2026.*
+*Created 5 September 2026; updated 6 September 2026.*
 
 **Role.** A referee who reads the write-up as its intended reader will:
 with the document alone, without the project's claims, checks, or the

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The round check: every gate a round must pass, in one command.
 
-Created 5 September 2026; updated 5 September 2026.
+Created 5 September 2026; updated 16 November 2026.
 
 Run before work is handed back and before changes are reported ready to
 commit (MANIFESTO.md section 13).  Nothing here blocks the researcher: a
@@ -24,8 +24,10 @@ WHAT IT RUNS
            and outside fenced code; and, under the
            last part, a fenced status block of the section-16 form with no
            RUNNING line (prompt_logs/README.md, "The four parts of an
-           entry").  A committed entry is immutable and is completed by a
-           later entry, so it is not re-read here.
+           entry"), its comments unread, so that a label still carrying
+           the artifact template's placeholder is reported as not written.
+           A committed entry is immutable and is completed by a later
+           entry, so it is not re-read here.
   ROUND-3  the build, where [publication] is enabled: every output and the
            build log newer than every source, and the log matching no
            error marker.  "Newer" is by modification time, which a
@@ -157,9 +159,16 @@ def check_round_2_parts(t: lint_docs.Tree) -> None:
                 report("ROUND-2", f, pos[-1], "closing status carries no fenced status block")
             continue
         fence_line = pos[-1] + tail[:m.start()].count("\n") + 1
-        for p in check_status_reply.check(m.group(2)):
+        # No check reads a comment as a status, so the artifact template's
+        # placeholder (`DONE: <!-- what finished -->`) is not one.
+        block = re.sub(r"<!--.*?-->", "", m.group(2), flags=re.S)
+        labels = "|".join(map(re.escape, check_status_reply.LABELS))
+        if re.search(rf"^(?:{labels}):\s*$", block, re.M):
+            report("ROUND-2", f, fence_line, "closing status not written: a label carries no text, or only a comment")
+            continue
+        for p in check_status_reply.check(block):
             report("ROUND-2", f, fence_line, f"closing status block: {p}")
-        if re.search(r"^RUNNING: ", m.group(2), re.M):
+        if re.search(r"^RUNNING: ", block, re.M):
             report("ROUND-2", f, fence_line, "closing status names RUNNING; a round that has closed runs nothing")
 
 
@@ -323,7 +332,9 @@ def selftest() -> int:
                 f"## What was done\n\nSetup.\n\n## Corrections and departures\n\nnone\n\n## Closing status\n\n```\n{closing}\n```\n")
 
     def index_logs(tmp: Path, files: dict, *names: str) -> None:
-        w(tmp, "prompt_logs/README.md", files["prompt_logs/README.md"] + "".join(f"| [{n[:3]}]({n}) |\n" for n in names))
+        # a committed file changed on purpose carries the day of the change (GENRES-3)
+        w(tmp, "prompt_logs/README.md", lint_docs.dated(files["prompt_logs/README.md"])
+          + "".join(f"| [{n[:3]}]({n}) |\n" for n in names))
 
     def second(tmp: Path, files: dict, body: str | None = None, name: str = LOG2) -> None:
         """A fresh, uncommitted, indexed entry: the one ROUND-2 reads."""
@@ -346,9 +357,9 @@ def selftest() -> int:
             # past the configuration's commented example where the two coincide
             assert cfg.count(a) == 1, a
             cfg = cfg.replace(a, b)
-        w(tmp, "tools/artifacts.toml", cfg)
+        w(tmp, "tools/artifacts.toml", lint_docs.dated(cfg))
         w(tmp, "paper/refs.bib", bib)
-        w(tmp, "paper/README.md", files["paper/README.md"] + "| [refs.bib](refs.bib) |\n| [main_v2.md](main_v2.md) |\n")
+        w(tmp, "paper/README.md", lint_docs.dated(files["paper/README.md"]) + "| [refs.bib](refs.bib) |\n| [main_v2.md](main_v2.md) |\n")
         w(tmp, "paper/main_v2.md", f"# Main, second version\n\n{S}\n\nThe write-up [claim 002]. {cite_text}\n")
         w(tmp, "paper/out/main.log", "! Undefined control sequence.\n" if log_error else "Output written on main.pdf.\n")
         (tmp / "paper" / "out" / "main.pdf").write_bytes(b"%PDF-1.4\n")
@@ -402,8 +413,8 @@ def selftest() -> int:
                before_commit=lambda f: f.__setitem__("prompt_logs/001_setup.md", entry(1, "setup", closing="Done: committed as is")))
     clean_case("a skip list on the entry row is honored",
                lambda t, f: (second(t, f, entry(2, "next", closing="Done: x")),
-                             w(t, "tools/artifacts.toml", cfg_text.replace('glob = "prompt_logs/[0-9]*.md"\ngenre = "immutable"',
-                                                                            'glob = "prompt_logs/[0-9]*.md"\ngenre = "immutable"\nskip = ["ROUND-2"]'))))
+                             w(t, "tools/artifacts.toml", lint_docs.dated(cfg_text.replace('glob = "prompt_logs/[0-9]*.md"\ngenre = "immutable"',
+                                                                                           'glob = "prompt_logs/[0-9]*.md"\ngenre = "immutable"\nskip = ["ROUND-2"]')))))
     clean_case("an enabled pipeline with fresh output and a cited, ordered bibliography is clean",
                lambda t, f: enable_publication(t, f))
     run_case("a linter finding passes through under its own tag", "GENRES-1", "MANIFESTO.md", "no header stamp",
@@ -435,6 +446,8 @@ def selftest() -> int:
              lambda t, f: second(t, f, entry(2, "next").replace("```\nDONE: setup\n```\n", "```\nDONE: setup\n")))
     run_case("a closing status of the wrong form", "ROUND-2", LOG2, "not a status line",
              lambda t, f: second(t, f, entry(2, "next", closing="Done: setup")))
+    run_case("a closing status still holding the template's placeholder", "ROUND-2", LOG2, "not written",
+             lambda t, f: second(t, f, entry(2, "next", closing="DONE: <!-- what finished -->")))
     run_case("a closing status with IDLE beside DONE", "ROUND-2", LOG2, "IDLE",
              lambda t, f: second(t, f, entry(2, "next", closing="DONE: setup\nIDLE: waiting")))
     run_case("a closing status naming RUNNING", "ROUND-2", LOG2, "RUNNING",

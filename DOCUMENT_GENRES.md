@@ -1,6 +1,6 @@
 # Document genres
 
-*Created 2 September 2026; updated 6 September 2026.*
+*Created 2 September 2026; updated 16 November 2026.*
 
 Every artifact in a repository built from this template belongs to exactly
 one of three genres, and the genre determines how the artifact may be
@@ -116,7 +116,8 @@ authorization** (`MANIFESTO.md` §12): the assistant brings the finding and
 the proposed wording, and stops. Once authorized, it is corrected as §12
 says: in its running text, the updated date the only change to the header,
 or marked `superseded by <path>`. The version history carries the
-predecessor.
+predecessor. A frozen artifact stays at its path: it is never moved or
+deleted, and one that is replaced is marked `superseded by <path>`.
 
 **The repository is current state in every genre.** Frozen artifacts are
 dated records of what is *true*, not of how the text got there: a frozen
@@ -249,12 +250,20 @@ altitude that owns it, and referred to from below by link.
 **Every durable artifact opens with the same header line**, `Created D
 Month YYYY; updated D Month YYYY`, italicized in a document and in the
 leading comment of a program, so a reader knows how current it is. The
-date is the only thing a current-state artifact says about its own
-history. Non-prose files (data, images, rendered output, transcription
-files) carry no header, and neither does an imported file under
-`inherited/`, which is a verbatim copy; they are dated by the plan that
-owns them or the index that lists them. A tracked path that matches no genre in the
-checker's configuration is reported as unresolved; no default is assumed.
+updated date is the day of the last change to the body (a change confined
+to the header is bookkeeping, §2), read from the local clock, in the
+researcher's time zone, when the edit is made, never assumed or carried
+over from the start of a session, and set in the same edit as the change;
+an edit made after midnight takes the new day. The date is the only thing a
+current-state artifact says about its own history. In a project made from
+the template, a file carried over from it keeps the template's Created
+date, the day the file first existed there, and the template's updated date
+until the project changes the file. Non-prose files (data, images, rendered
+output, transcription files) carry no header, and neither does an imported
+file under `inherited/`, which is a verbatim copy; they are dated by the
+plan that owns them or the index that lists them. A tracked path that
+matches no genre in the checker's configuration is reported as unresolved;
+no default is assumed.
 
 **The version history is the history of these files.** They carry no
 history of their own.
@@ -380,10 +389,21 @@ the researcher with its output (`MANIFESTO.md` §13).
 2. **Immutable.** No committed file under `prompt_logs/`, other than its
    `README.md` and its `_template.md`, differs from its committed version
    or is deleted.
-3. **Frozen.** For a frozen artifact whose body differs from its committed
-   version, the updated date on the header line has changed. A change
-   confined to the header (pointers, dates, `Released`, `Reserved`,
-   `superseded by`) is free.
+3. **Dates and frozen paths.** A durable artifact whose body, its text
+   other than its header lines, a program's code and a configuration's
+   values included, differs from its committed version carries as its
+   updated date the day the file was last written, by the local clock. A
+   change confined to the header (pointers, dates, `Released`, `Reserved`,
+   `superseded by`) is free; a log entry, which item 2 covers, an artifact
+   template, and an artifact not yet committed are outside this half, and
+   an artifact moved in the change counts as not yet committed at its new
+   path. The day is read from the file's modification time, which any later
+   write resets (a stash, or an edit to the header alone), so a file whose
+   body changed on an earlier day may be reported; such a finding is read
+   and left. A frozen artifact that carries a header, frozen as committed
+   and gone from its committed path (moved or deleted), is reported; a
+   headerless one, imported or non-prose, is outside this item. A row may
+   skip either half: `GENRES-3/dates` or `GENRES-3/gone`.
 4. **Genre resolution.** Every tracked path resolves to a genre: the
    configured path patterns assign a default; a `Plan: NNN` header line
    overrides it to current state while that plan's `Status:` is DRAFT or

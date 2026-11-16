@@ -1,6 +1,6 @@
 # Reference registry
 
-*Created 3 September 2026; updated 3 September 2026.*
+*Created 3 September 2026; updated 8 September 2026.*
 
 Every citation anywhere in the repository resolves to an entry here
 (`MANIFESTO.md` §2). A reference list carried verbatim inside material

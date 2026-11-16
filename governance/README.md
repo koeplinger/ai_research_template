@@ -1,6 +1,6 @@
 # Governance: the mechanisms, each with the rule it serves and the moment it fires
 
-*Created 5 September 2026; updated 5 September 2026.*
+*Created 5 September 2026; updated 8 September 2026.*
 
 `VISION.md` promises four kinds of mechanism that keep the discipline
 running when attention lapses: reminders, checks, opposition, and

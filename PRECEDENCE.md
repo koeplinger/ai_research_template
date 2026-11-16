@@ -1,6 +1,6 @@
 # Precedence: what governs when sources disagree
 
-*Created 2 September 2026; updated 3 September 2026.*
+*Created 2 September 2026; updated 8 September 2026.*
 
 A research project that verifies things independently will, sooner or
 later, establish something the published record does not say, or says

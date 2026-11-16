@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The concordance check: a check program's RESULT line against its record (CHECK_METHODOLOGY.md, What is checked mechanically, item 4).
 
-Created 5 September 2026; updated 5 September 2026.
+Created 5 September 2026; updated 8 September 2026.
 
 A check program ends with one line on standard output,
 RESULT: <verdict>; <name>=<value>; ..., and its check record states the

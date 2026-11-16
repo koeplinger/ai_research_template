@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The session brief: the reading order, the plans by status, and the reminders the record can compute, printed at the start of a session and on demand.
 
-Created 5 September 2026; updated 5 September 2026.
+Created 5 September 2026; updated 16 November 2026.
 
 What every session reads first is ONBOARDING.md; this program prints its
 reading order verbatim, then every plan with its Status: line and the
@@ -116,34 +116,24 @@ def ledger_states(t: lint_docs.Tree, f: str) -> list[str]:
 
 
 def gone_frozen(t: lint_docs.Tree, f: str, row: dict) -> bool:
-    """Whether a file gone from the tree was frozen, read from its committed
-    header the way the linter derives a genre (ONTOLOGY.md section 3)."""
-    if row["genre"] in ("frozen", "dated-record", "immutable"):
-        return True
-    old = lint_docs.git(t.root, "show", f"HEAD:{f}")
-    if not old:
-        return False
-    hdr, _ = lint_docs.header_block(old, row.get("header", "stamp"))
-    pl = lint_docs.fields_of(hdr).get(lint_docs.F("plan"))
-    if pl and pl[1]:
-        pf = t.plans.get(pl[1].split(",")[0].strip())
-        return bool(pf) and t.plan_status.get(pf, "").startswith("CLOSED")
-    return row["genre"] == "release" and any(s.startswith("Released ") for _, s in hdr)
+    """Whether a file gone from the tree was frozen as committed: the
+    linter's own derivation, from HEAD's text and the Status: line each
+    plan has at HEAD (lint_docs.committed_genre; ONTOLOGY.md section 3)."""
+    return lint_docs.committed_genre(t, f, row) == "frozen"
 
 
 def body_changed(t: lint_docs.Tree, f: str) -> bool:
-    """Whether a tracked artifact's body differs from its committed version;
-    a file gone from the tree (deleted, or renamed, which reads as a
-    deletion beside an untracked file) counts as changed."""
+    """Whether a tracked artifact's text other than its header lines
+    (lint_docs.body_of, as GENRES-3 reads it) differs from its committed
+    version; a file gone from the tree (deleted, or renamed, which reads as
+    a deletion beside an untracked file) counts as changed."""
     old = lint_docs.git(t.root, "show", f"HEAD:{f}")
     if f not in t.text:
         return bool(old)
     if not old or old == t.text[f]:
         return False
     hk = (t.rows[f] or {}).get("header", "stamp")
-    _, ob = lint_docs.header_block(old, hk)
-    _, nb = lint_docs.header_block(t.text[f], hk)
-    return "\n".join(old.splitlines()[ob - 1:]) != "\n".join(t.text[f].splitlines()[nb - 1:])
+    return lint_docs.body_of(old, lint_docs.header_block(old, hk)[0]) != lint_docs.body_of(t.text[f], t.headers[f][0])
 
 
 def reminders(t: lint_docs.Tree) -> list[str]:

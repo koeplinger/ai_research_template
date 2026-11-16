@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The stop hook for one harness: the reply's final text handed to tools/check_status_reply.py, and a non-conforming reply bounced.
 
-Created 5 September 2026; updated 5 September 2026.
+Created 5 September 2026; updated 8 September 2026.
 
 This is the wiring MANIFESTO.md section 16 calls the reply hook, for a
 command-line harness that runs a command when the assistant stops and

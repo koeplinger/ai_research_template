@@ -1,6 +1,6 @@
 # Prompt logs
 
-*Created 4 September 2026; updated 8 September 2026.*
+*Created 4 September 2026; updated 16 November 2026.*
 
 Every prompt is recorded here, numbered contiguously and zero-padded to
 at least three digits, `NNN_short_description.md`, as the first act of
@@ -30,7 +30,9 @@ for, on an entry still open to editing. The closing status is the
 round's final status block in the form `MANIFESTO.md` §16 fixes, inside
 a fence so that its labels are not read as header fields; it carries no
 `RUNNING` line, since the round has closed. The round check verifies the
-form.
+form, and reads no comment there: a label still carrying the artifact
+template's placeholder is reported as not written, so the round check run
+at a commit made before the round closes shows the entry as open.
 
 A reply that hands work back while a process is still live (a long
 computation, a submitted job, a run in another environment) reports it

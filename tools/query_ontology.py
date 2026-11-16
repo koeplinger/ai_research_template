@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The ontology queries: the questions ONTOLOGY.md section 6 says the record answers from its fields.
 
-Created 5 September 2026; updated 5 September 2026.
+Created 5 September 2026; updated 8 September 2026.
 
 Each query enumerates by reading fields and tokens.  Where a rulebook
 decides, the line is marked FLAG; where only reading can decide, the

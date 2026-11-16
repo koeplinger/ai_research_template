@@ -1,6 +1,6 @@
 # Paper
 
-*Created 4 September 2026; updated 5 September 2026.*
+*Created 4 September 2026; updated 8 September 2026.*
 
 The write-ups: the main write-up in its versions, standalone notes, and
 the reviews of both. `paper/` is the template's name for the

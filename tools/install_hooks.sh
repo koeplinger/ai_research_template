@@ -13,7 +13,7 @@
 # left alone unless --force is given; a hooks directory shared beyond this
 # repository (core.hooksPath) is never written without --force.
 #
-# Created 5 September 2026; updated 5 September 2026.
+# Created 5 September 2026; updated 16 November 2026.
 #
 # Usage
 #   tools/install_hooks.sh              install pre-commit and commit-msg
@@ -144,9 +144,13 @@ selftest() {
   # A token no shipped text carries, so a project's list is never tripped by the tools themselves.
   local word="w$(od -An -N4 -tx1 /dev/urandom | tr -d ' \n')"
 
-  printf '\nA line.\n' >> "$repo/CURRENT_STATE.md"; add_all
-  if commit_in "a clean change"; then echo "  [PASS] a clean commit passes"
-  else echo "  [FAIL] a clean commit was refused:"; sed 's/^/         /' "$tmp/out"; fails=$((fails+1)); fi
+  # A committed file changed on purpose carries the day of the change
+  # (GENRES-3), written with the scratch project's own linter.
+  python3 -c 'import sys, pathlib; sys.path.insert(0, sys.argv[1]); import lint_docs; p = pathlib.Path(sys.argv[2]); p.write_text(lint_docs.dated(p.read_text()) + "\nA line.\n")' \
+    "$repo/tools" "$repo/CURRENT_STATE.md"; add_all
+  if ! commit_in "a clean change"; then echo "  [FAIL] a clean commit was refused:"; sed 's/^/         /' "$tmp/out"; fails=$((fails+1))
+  elif grep -q "the round check reports the findings" "$tmp/out"; then echo "  [FAIL] a clean commit drew findings:"; sed 's/^/         /' "$tmp/out"; fails=$((fails+1))
+  else echo "  [PASS] a clean commit passes, with no finding"; fi
 
   mkdir -p "$repo/.privacy"; printf '%s\n' "$word" > "$repo/.privacy/stopwords.txt"
   printf '\nAn %s.\n' "$word" >> "$repo/CURRENT_STATE.md"; add_all

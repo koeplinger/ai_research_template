@@ -1,6 +1,6 @@
 # The coverage auditor
 
-*Created 5 September 2026; updated 5 September 2026.*
+*Created 5 September 2026; updated 6 September 2026.*
 
 **Role.** A reader who classifies every atomic assertion a check makes
 or its record states, so that a check certifies exactly what it gates and

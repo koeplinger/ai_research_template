@@ -1,6 +1,6 @@
 # Python project
 
-*Created 3 September 2026; updated 3 September 2026.*
+*Created 3 September 2026; updated 8 September 2026.*
 
 The self-contained computational suite: the check programs, any shared
 foundation modules they import, and the tests of those modules. Every

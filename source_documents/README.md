@@ -1,6 +1,6 @@
 # Source documents
 
-*Created 3 September 2026; updated 3 September 2026.*
+*Created 3 September 2026; updated 8 September 2026.*
 
 The sources of record (`PRECEDENCE.md`, tier 2): what a source *actually
 says*, read against the source itself in the form the project designates.
