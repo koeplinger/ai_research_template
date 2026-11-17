@@ -3,7 +3,7 @@
 *Created D Month YYYY; updated D Month YYYY.*
 Plan: <!-- NNN, the plan that owns this material; it freezes when that plan closes -->
 Produced-from: <!-- [ShortKey, locus range], then a comma, then the check, program, or procedure that produced it: [check NNN], python_project/src/name.py, or "by hand, <party>" -->
-By: <!-- researcher | assistant | a party from the roster (ONTOLOGY.md, Slots) -->
+By: <!-- researcher | assistant, then the AI model and its version as the harness reports them, or "not reported" | a party from the roster (ONTOLOGY.md, performed-by; Slots) -->
 Frame: <!-- the conventions this derivation imposed, which every claim leaning on it states: a foliation or pagination scheme; a calendar and where its year begins; a normalization; a coding scheme; an annotation release; delete the line where there are none -->
 
 <!-- HEADER FIELDS. One per line: name, colon, value, nothing after the
@@ -17,7 +17,9 @@ Frame: <!-- the conventions this derivation imposed, which every claim leaning o
                    (ONTOLOGY.md, Slots).
      By            a party from the roster; for material made across
                    several sittings, the party who is answerable for it,
-                   with each sitting under Provenance below.
+                   with each sitting under Provenance below naming its own
+                   party as a By: line writes it, so the assistant with its
+                   AI model.
      Add when it applies:
      Instrument: <name, and version | edition | release>
                    where a program or an apparatus made it, and the

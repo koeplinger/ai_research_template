@@ -1,12 +1,14 @@
 # Reviews
 
-*Created 4 September 2026; updated 8 September 2026.*
+*Created 4 September 2026; updated 17 November 2026.*
 
 Review records for the write-ups under `paper/`: dated records of what a
 referee pass found, against the document as it stood. Naming:
 `YYYY-MM-DD_<reviewer>_<topic>.md`, the reviewer a party from the roster,
 or an outside reader named as the report's conditions allow
-(`referee-2`). An outside report enters as this project's dated record of
+(`referee-2`); where the reviewer is the assistant, its AI model is named
+in the review's identity line, never in the filename. An outside report
+enters as this project's dated record of
 what it found, verbatim only where its conditions permit (`MANIFESTO.md`
 §6). A review is a dated record: its subject is an event, so it is exempt
 from the narrative rule (`DOCUMENT_GENRES.md`, *Dated records*); it is

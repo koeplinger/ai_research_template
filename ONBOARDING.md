@@ -1,6 +1,6 @@
 # Onboarding: what every session must know before it works
 
-*Created 4 September 2026; updated 16 November 2026.*
+*Created 4 September 2026; updated 17 November 2026.*
 
 This file is read at the start of every assistant session, before any
 substantive action. Reading it, and then the manifesto in full, is the
@@ -22,12 +22,25 @@ This file points; the rulebooks govern:
 ## The first minutes
 
     ONBOARDING.md (this file)
-      -> prompt_logs/: open this round's entry from _template.md,
-                       the first act of the round (MANIFESTO.md section 8)
+      -> prompt_logs/: read the latest entry, and the paragraph below if
+                       it is still open; then open this round's entry
+                       from _template.md, the first act of the round
+                       (MANIFESTO.md section 8)
       -> MANIFESTO.md, read in full
       -> CURRENT_STATE.md            the state of the research as a whole
       -> FINDINGS.md                 what the record has established
       -> evidence_and_reasoning/README.md, and its reading order
+
+The latest entry may be a resume point, which says where to start
+(`HOW_IT_FITS_TOGETHER.md`, *Make a durable resume point*). Where it is
+still open, its closing status not written, compare what it records with
+the working tree and with every commit made since its round opened, and
+treat what that round drafted as unverified. Then close it, with a
+closing status saying why, or, if the researcher has committed it, leave
+it for this round's entry to complete (`MANIFESTO.md` §8). A process of
+that round still running passes to this round, whose entry names it and
+whose replies report it; a verification of that round that stopped
+before its end is run again in this round, before anything rests on it.
 
 If a slot's owner row carries neither a value nor the open-by-decision
 marker, or *Standing directions* below lacks the two directions settled at
@@ -90,8 +103,8 @@ meets in its first minutes.
 - **The researcher's words are recorded as theirs, and no further**: a
   reading that goes further is labeled the assistant's, and an
   authorization is never inferred (§2, §10).
-- **A subagent writes no tracked file**; the main thread makes every edit
-  (§14).
+- **A subagent writes nothing into the working tree**; the main thread
+  makes every edit, and checks the tree when subagents return (§14).
 - **Disagreement is said where it is about to be relied on** (§17).
 - **Decisions are put one at a time**, unless the researcher asks for
   several, numbered, in plain words, each with its options and their

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The genre and ontology linter: every statically decidable check, in one program.
 
-Created 4 September 2026; updated 16 November 2026.
+Created 4 September 2026; updated 17 November 2026.
 
 Reads tools/artifacts.toml, the single source of every path pattern and
 vocabulary (ONTOLOGY.md section 7), walks every tracked or untracked-but-
@@ -714,10 +714,13 @@ def check_genres_2_immutable(t: Tree) -> None:
     logdir = t.dir_of_kind("log-entry")
     if not logdir:
         return
-    changed = git(t.root, "diff", "--name-only", "-z", "HEAD", "--", logdir + "/")
+    # A file staged for its first commit is not a committed entry, so
+    # additions are left out; a committed entry moved is reported at the path
+    # it was committed under.
+    changed = git(t.root, "diff", "--name-only", "-z", "--no-renames", "--diff-filter=a", "HEAD", "--", logdir + "/")
     for f in changed.split("\0"):
         if f and Path(f).name not in ("README.md",) and not Path(f).name.startswith("_template"):
-            report("GENRES-2", f, 1, "committed prompt-log entry modified or deleted")
+            report("GENRES-2", f, 1, "committed prompt-log entry modified or deleted: restore its committed version, and put the change in a later entry not yet committed, which points back to it, the log's index pointing from the one entry to the other (MANIFESTO.md section 8)")
 
 
 def committed_genre(t: Tree, f: str, row: dict | None = None) -> str:
@@ -1319,7 +1322,7 @@ def fixture() -> dict[str, str]:
         "paper/reviews/README.md": f"# Rv\n\n{S}\n\n| File |\n|---|\n| [2026-01-03_r_main.md](2026-01-03_r_main.md) |\n",
         "paper/reviews/2026-01-03_r_main.md": f"# Review: main, 3 January 2026\n\n{S}\n\nA referee pass by r of `main_v1.md` at v1; blind: yes.\n",
         "prompt_logs/README.md": f"# Logs\n\n{S}\n\n| Log |\n|---|\n| [001](001_setup.md) |\n",
-        "prompt_logs/001_setup.md": f"# Prompt 001: setup\n\n{S}\n\n--- PROMPT START ---\nset it up — colour it\n--- PROMPT END ---\n\n## What was done\n\nSetup.\n\n## Corrections and departures\n\nnone\n\n## Closing status\n\n```\nDONE: setup\n```\n",
+        "prompt_logs/001_setup.md": f"# Prompt 001: setup\n\n{S}\nBy: assistant, not reported\n\n--- PROMPT START ---\nset it up — colour it\n--- PROMPT END ---\n\n## What was done\n\nSetup.\n\n## Corrections and departures\n\nnone\n\n## Closing status\n\n```\nDONE: setup\n```\n",
         "python_project/README.md": f"# Py\n\n{S}\n\n| File |\n|---|\n| [src/](src/) |\n| [conftest.py](conftest.py) |\n",
         "python_project/conftest.py": '"""Puts src on the path.\n\nCreated 1 January 2026; updated 1 January 2026.\n"""\nimport sys\n',
         "python_project/src/README.md": f"# Src\n\n{S}\n\n| File |\n|---|\n| [check_002_b.py](check_002_b.py) |\n",
@@ -1483,6 +1486,11 @@ def selftest() -> int:
     run_case("a rulebook with no stamp", "GENRES-1", "MANIFESTO.md", "no header stamp", lambda t, f: w(t, "MANIFESTO.md", "# M\n\nRules.\n"))
     run_case("a stamp with trailing text", "GENRES-1", "MANIFESTO.md", "exact form", sub("MANIFESTO.md", STAMP, "*Created 1 January 2026; updated 1 January 2026 (typo).*"))
     run_case("a committed log entry edited", "GENRES-2", "prompt_logs/001_setup.md", "modified", add("prompt_logs/001_setup.md", "\nafterthought\n"))
+    absent_case("a new entry staged for its first commit is not a committed one", "GENRES-2", "prompt_logs/002_next.md", "",
+                lambda t, f: (w(t, "prompt_logs/002_next.md", f["prompt_logs/001_setup.md"].replace("Prompt 001: setup", "Prompt 002: next")),
+                              subprocess.run(["git", "add", "prompt_logs/002_next.md"], cwd=t, capture_output=True)))
+    run_case("a committed log entry moved is reported where it was committed", "GENRES-2", "prompt_logs/001_setup.md", "modified or deleted",
+             lambda t, f: subprocess.run(["git", "mv", "prompt_logs/001_setup.md", "prompt_logs/009_moved.md"], cwd=t, capture_output=True))
     run_case("a frozen claim's body edited, date unmoved", "GENRES-3", C2, "but the updated date reads", add(C2, "\nMore.\n"))
     run_case("a frozen review edited, date unmoved", "GENRES-3", "paper/reviews/2026-01-03_r_main.md", "but the updated date reads", add("paper/reviews/2026-01-03_r_main.md", "\nMore.\n"))
     run_case("a current-state rulebook edited, date unmoved", "GENRES-3", "MANIFESTO.md", "but the updated date reads", add("MANIFESTO.md", "\nMore.\n"))
@@ -1588,6 +1596,17 @@ def selftest() -> int:
     run_case("none named as a party", "ONT-3", C2, "not on the roster: 'none'", roster('["none"]', "none"))
     run_case("none listed beside a name", "ONT-3", "tools/artifacts.toml", "stands alone", roster('["none", "a coauthor"]'))
     absent_case("a roster decided empty is not unfilled", "ONT-3", "tools/artifacts.toml", "unfilled", roster('["none"]', "an outsider"))
+    # The assistant is named with its AI model after a comma (ONTOLOGY.md,
+    # performed-by), as the fixture's log entry is: only the text before the
+    # comma is read against the roster, in a log entry's header as in a
+    # check's.
+    L1 = "prompt_logs/001_setup.md"
+    clean_case("the assistant named with its AI model, in a log entry and a check, is clean under a decided roster",
+               roster('["none"]'),
+               before_commit=lambda f: f.__setitem__(K2, f[K2].replace("Mutation: variant-reading\n",
+                                                                       "Mutation: variant-reading\nBy: assistant, not reported\n", 1)))
+    run_case("a log entry's By: line is read against the roster", "ONT-3", L1, "not on the roster: 'an outsider'",
+             lambda t, f: (roster('["none"]')(t, f), w(t, L1, f[L1].replace("By: assistant, not reported", "By: an outsider", 1))))
 
     # A finding the researcher has ruled to leave, entered in the
     # configuration's [[accepted]] list, and what happens when the entry no

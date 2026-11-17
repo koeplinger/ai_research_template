@@ -1,6 +1,6 @@
 # Document genres
 
-*Created 2 September 2026; updated 16 November 2026.*
+*Created 2 September 2026; updated 17 November 2026.*
 
 Every artifact in a repository built from the template belongs to exactly
 one of three genres, and the genre determines how the artifact may be
@@ -82,12 +82,14 @@ YYYY`; dates in filenames are written `YYYY-MM-DD`.
 
 An entry is **immutable once the researcher has committed it**; its own
 status line does not change this. An entry may be edited only while it is
-uncommitted, in the round that wrote it. An entry committed before its
-round closed is completed by a later entry that points back to it. A
-statement in a committed entry that later turns out wrong is corrected in
-a later entry, never in the old one, and the log's index carries a pointer
-from the wrong entry's row to the entry that corrects it, so a reader who
-finds the one finds the other.
+uncommitted: in the round that wrote it, or to close it when the next
+prompt finds it still open, its closing status not written. An entry
+committed before its round closed is completed by the next round's entry,
+which points back to it (`MANIFESTO.md` §8). A statement in a committed
+entry that later turns out wrong is corrected in a later entry, never in
+the old one. In both cases the log's index carries a pointer from the
+earlier entry's row to the entry that completes or corrects it, so a
+reader who finds the one finds the other.
 
 ---
 

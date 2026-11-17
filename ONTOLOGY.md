@@ -1,6 +1,6 @@
 # Ontology: the predicates the artifacts share
 
-*Created 3 September 2026; updated 16 November 2026.*
+*Created 3 September 2026; updated 17 November 2026.*
 
 The artifacts of a project built from the template are one system, not a
 folder of forms, because they share a vocabulary. This file is that
@@ -190,7 +190,7 @@ the duty is the assistant's under the consistency sweep
 | `verification-status` | a claim to who checked it and how | `Verified-by: researcher \| assistant, <route> \| deferred, <instrument> \| unchecked \| <party>, <route>` | `MANIFESTO.md` §5 | ontology 3 | who actually checked this? |
 | `deferred-to` | a claim to an instrument or party the researcher chose not to check behind | the `deferred` form of `Verified-by:` | `MANIFESTO.md` §5; `VISION.md` | ontology query 3 | what did we take on trust? |
 | `pre-registered` | a check or claim to a protocol fixed before the evidence was consulted | `Pre-registered <D Month YYYY>, <locator>` | `evidence_and_reasoning/notes/README.md`, which defines the protocol note | ontology 3: the date precedes the earliest record's date, and the locator resolves | was this confirmatory, or exploratory? |
-| `performed-by` | a check record, transcription, coding pass, or derived artifact to the party that produced it | `By: researcher \| assistant \| <party from the roster>` (Slots below) | `MANIFESTO.md` §5 | ontology 3: every name resolves to the roster | whose work is this? |
+| `performed-by` | a check record, transcription, coding pass, derived artifact, log entry, or review to the party that produced it, and, where that party is the assistant, to the AI model that did the work | `By: researcher \| assistant, <AI model> \| <party from the roster>` (Slots below), the AI model with its version as the harness reports them, or `not reported`; a review names its reviewer the same way, in its identity line, or names an outside reader as the report's conditions allow (`paper/reviews/README.md`) | `MANIFESTO.md` §5, and §8 for the AI model | ontology 3: the party, the text before any comma, resolves to the roster; reading: whether a log entry carries the line, whether the AI model named is right, and a review's identity line | whose work is this, and which AI model did it? |
 
 ### 2.4 Derived material
 
@@ -370,6 +370,9 @@ is registered `VERIFIED` or `RULED_OUT`.
 `tools/artifacts.toml` requires, which start as `Plan`, `Backs`,
 `Instrument` and `Mutation`, plus `By`; and `Frame` where the check has
 quantities in a frame.
+
+**Mandatory on every log entry**: `By`, naming who did the work and, for
+the assistant, the AI model (`MANIFESTO.md` §8).
 
 **Written when they apply**, and their absence is not a defect:
 everything else. `Robustness`, `Pre-registered`, `Reserved`, `Original`,

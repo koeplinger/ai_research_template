@@ -8,7 +8,7 @@ Instrument: <name, and version | edition | release>
 Frame: <what the quantities are stated in, and what fixes it; delete where there are none>
 Mutation: <name[, name], each a member of the project's mutation set, bound in MUTATIONS below>
 Robustness: <name[, name], disjoint from Mutation, or delete the line>
-By: <party from the roster>
+By: <researcher | assistant, then the AI model and its version as the harness reports them, or not reported | a party from the roster>
 
 WHAT IS CHECKED: <one sentence>.  The full part 1, the construction, and
 the results are in the record, evidence_and_reasoning/checks/NNN_short_name.md;

@@ -1,6 +1,6 @@
 # Getting started: from a clone to a first commit
 
-*Created 8 September 2026; updated 16 November 2026.*
+*Created 8 September 2026; updated 17 November 2026.*
 
 This is the walkthrough. It takes a clone of the template and leaves you
 with a project whose first plan is engaged, whose first claim is checked,
@@ -456,8 +456,8 @@ points here:
    tool could not reach, a file still speaking in the template's voice
    (`governance/roles/documentation_sweep.md`).
 
-Nothing else yet. You commit at the end of each round, from entry 001 on,
-as §8 says.
+Nothing else yet. You commit at the end of each round, once you have
+decided what must never reach the repository, as §8 says.
 
 Every round begins by logging the prompt. Copy the entry template under
 `prompt_logs/` to the next number, `NNN_short_description.md`, the form
@@ -538,9 +538,10 @@ or both.
 
 ## 8. Before each commit
 
-The first commit closes the first round of §4, and every later one closes
-a round too. Before each, run the round check. It runs the linter and its
-own gates together:
+You commit at the end of a round, the first time once you have decided
+what must never reach the repository (`MANIFESTO.md` §8). Before each
+commit, run the round check. It runs the linter and its own gates
+together:
 
 ```bash
 python3 tools/check_round.py
@@ -548,7 +549,9 @@ python3 tools/check_round.py
 
 Fix what it reports, or record why you did not. Then commit. The
 pre-commit hook runs the same check, so a clean run here means a clean
-commit.
+commit. A commit made before a round closes leaves its entry committed
+open, which the round check run at that commit shows as a closing status
+not written; the next round's entry completes it (`MANIFESTO.md` §8).
 
 If you removed the worked example without removing the pointers to it, the
 path check reports those pointers, naming the file and the line. That is

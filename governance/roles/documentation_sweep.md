@@ -1,6 +1,6 @@
 # The documentation consistency sweep
 
-*Created 8 September 2026; updated 16 November 2026.*
+*Created 8 September 2026; updated 17 November 2026.*
 
 **Role.** A reader who takes a project's *documentation* as one system and
 reports where it disagrees with itself: the rulebooks, the folder indexes,
@@ -119,9 +119,10 @@ problem, and the fix, reported before any edit and recorded in the round's
 log entry; each then goes to the refuter, and the outcome is recorded
 beside it. A fix to a current-state document that is neither maintained
 nor one of the four `MANIFESTO.md` §12 names may be applied; every other
-fix is brought with its wording (`CHECK_METHODOLOGY.md` §7). What is
-brought is numbered once, in the round's log entry or, where the list is
-long, in a dated working note the entry points to
+fix is brought with its wording (`CHECK_METHODOLOGY.md` §7). Every edit,
+applied or brought, is listed as `MANIFESTO.md` §14 sets out for a sweep.
+What is brought is numbered once, in the round's log entry or, where the
+list is long, in a dated working note the entry points to
 (`evidence_and_reasoning/notes/README.md`), and is put to the researcher
 one decision at a time and ruled by number (`MANIFESTO.md` §16, *Putting a
 decision*); a finding that runs against a ruling is recorded as such, with

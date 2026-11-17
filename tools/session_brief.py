@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The session brief: the reading order, the plans by status, and the reminders the record can compute, printed at the start of a session and on demand.
 
-Created 5 September 2026; updated 16 November 2026.
+Created 5 September 2026; updated 17 November 2026.
 
 What every session reads first is ONBOARDING.md; this program prints its
 reading order verbatim, then every plan with its Status: line and the
@@ -9,8 +9,8 @@ count of those ENGAGED, then the standing reminders of MANIFESTO.md
 section 16 that the record itself can compute (governance/reminders.md
 names them and says what each does not decide):
 
-  log-the-prompt-first      no entry of this round is open under the log
-                            (section 8): the latest entry is committed
+  log-the-prompt-first      the log holds no uncommitted entry, so this
+                            round's is not yet written (section 8)
   more-than-one-plan-engaged  the plan index shows more than one ENGAGED
                             plan (research_plans/README.md)
   plan-closure-checklist    an ENGAGED plan whose execution ledger has
@@ -169,15 +169,15 @@ def reminders(t: lint_docs.Tree) -> list[str]:
     entries = sorted(f for f in t.files if t.kind(f) == "log-entry")
     if logdir:
         if lint_docs.git(t.root, "rev-parse", "--verify", "HEAD"):
-            # an entry is open while untracked or staged new; a committed entry edited is the linter's GENRES-2
+            # an entry untracked or staged new is taken for this round's; a committed entry edited is the linter's GENRES-2
             staged = lint_docs.git(t.root, "diff", "--name-only", "-z", "--diff-filter=A", "HEAD", "--", logdir + "/")
             new = lint_docs.git(t.root, "ls-files", "--others", "--exclude-standard", "-z", "--", logdir + "/")
-            open_entries = [f for f in (staged + new).split("\0") if f and t.kind(f) == "log-entry"]
+            uncommitted = [f for f in (staged + new).split("\0") if f and t.kind(f) == "log-entry"]
         else:
-            open_entries = entries
-        if not open_entries:
+            uncommitted = entries
+        if not uncommitted:
             latest = Path(entries[-1]).name if entries else None
-            out.append("REMINDER  log-the-prompt-first: no entry of this round is open under " + logdir + "/"
+            out.append("REMINDER  log-the-prompt-first: no entry of this round is written yet under " + logdir + "/"
                        + (f"; the latest, {latest}, is committed" if latest else "; the log is empty, so this round's entry is 001")
                        + " (MANIFESTO.md section 8: the entry is the first act of the round)")
     engaged = [n for n, f in sorted(t.plans.items()) if (t.plan_status.get(f) or "").startswith("ENGAGED")]
@@ -258,7 +258,7 @@ def selftest() -> int:
         r = "\n".join(brief(t))
         case("the reading order is the onboarding file's indented block, and nothing after it", "    ONBOARDING.md\n      -> MANIFESTO.md" in r and "not this" not in r, r)
         case("plans are listed by status with the count engaged", "Plans (1 engaged):" in r and "plan 001  ENGAGED 1 January 2026" in r and "plan 002  CLOSED" in r, r)
-        case("with the log committed, the round's entry is not yet open", "log-the-prompt-first" in r and "001_setup.md, is committed" in r, r)
+        case("with the log committed, the round's entry is not yet written", "log-the-prompt-first" in r and "001_setup.md, is committed" in r, r)
         case("one engaged plan raises no multiple-engagement reminder", "more-than-one-plan-engaged" not in r, r)
         case("a plan with an unstarted task is not ready to close", "plan-closure-checklist" not in r, r)
         w(tmp, "prompt_logs/002_next.md", f"# Prompt 002: next\n\n{S}\n\n--- PROMPT START ---\nx\n--- PROMPT END ---\n\n## What was done\n\n## Corrections and departures\n\n## Closing status\n\n```\nDONE: x\n```\n")
@@ -271,7 +271,7 @@ def selftest() -> int:
         (tmp / "prompt_logs" / "002_next.md").unlink()
         w(tmp, "prompt_logs/001_setup.md", files["prompt_logs/001_setup.md"] + "\nedited after commit\n")
         t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
-        case("a committed entry edited is the linter's, not an open entry", "log-the-prompt-first" in "\n".join(reminders(t)))
+        case("a committed entry edited is the linter's, not an uncommitted entry", "log-the-prompt-first" in "\n".join(reminders(t)))
         w(tmp, "prompt_logs/001_setup.md", files["prompt_logs/001_setup.md"])
         w(tmp, "ONBOARDING.md", f"# On\n\n{S}\n\n## The First Minutes, in short\n\n\tONBOARDING.md\n\n\t  -> MANIFESTO.md\nprose after\n\n    not this either\n")
         t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
@@ -357,10 +357,11 @@ def selftest() -> int:
     with tempfile.TemporaryDirectory() as d:
         tmp = Path(d)
         lint_docs.scratch_project(tmp, lint_docs.fixture(), lint_docs.scratch_config())
-        subprocess.run(["git", "init", "-q"], cwd=tmp, capture_output=True)
+        for args in (["init", "-q"], ["add", "-A"]):
+            subprocess.run(["git", *args], cwd=tmp, capture_output=True)
         t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
         r = "\n".join(reminders(t))
-        case("a repository with no commit yet treats every entry as open and raises no log reminder", "log-the-prompt-first" not in r and "sweep-after-correction" not in r, r)
+        case("a repository with no commit yet, its files staged, treats every entry as uncommitted and raises no log reminder", "log-the-prompt-first" not in r and "sweep-after-correction" not in r, r)
     print(f"\n  VERDICT: {'every case decided as expected' if not failures else f'{failures} failure(s)'}")
     return 1 if failures else 0
 

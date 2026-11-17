@@ -1,6 +1,6 @@
 # How it fits together
 
-*Created 8 September 2026; updated 16 November 2026.*
+*Created 8 September 2026; updated 17 November 2026.*
 
 `GETTING_STARTED.md` gets a project moving. This file says what the parts
 are for, how they make one system rather than a folder of forms, and what
@@ -119,9 +119,12 @@ it.
 5. **The round check runs** before work is handed back, and again on
    commit.
 
-A round with a process still running does not close: the reply reports it
-as running, and the round closes when the process is done. A round
-committed before it closed is completed by a later entry that points back.
+A round with a process still running does not close with that reply: the
+reply reports it as running, and the round closes when the process is
+done, or at the next prompt if that comes first, the process then passing
+to the next round. An entry committed before its round closed is
+completed by the next round's entry, which points back (`MANIFESTO.md`
+§8).
 
 **Nothing is edited backwards.** A mistake is corrected forward: the
 current-state document is corrected in place, the frozen one is corrected
@@ -153,16 +156,19 @@ way each time, and so that a reader of the log can see which one was made.
 | **Make the strongest case against this conclusion.** | When you are about to rely on something and nothing has argued with it | That case, labeled as that case. `MANIFESTO.md` §17 |
 | **Walk me through the plan-closure checklist.** | When an engaged plan's tasks are all done | The checklist item by item against the record, and the verdict the pre-registered criteria give. `governance/reminders.md` |
 | **What does this claim rest on, and what of it is unverified?** | Before relying on a claim, and before revisiting one | The dependency tree with each member's register, weaker members flagged. `tools/query_ontology.py` |
+| **Make a durable resume point.** | Before a planned stop: the end of a sitting, or a usage limit about to be reached in the middle of work | A round of its own, logged like any other, whose entry records the last commit, by its identifier, and what is uncommitted; what is drafted and not yet verified; where intermediate material is kept, a place you have named outside version control that a restart does not clear, never a temporary directory alone, and described without anything you have decided must never reach the repository; the exact steps to resume, citing each plan's execution status rather than restating it; and what waits on you. The next session starts from it (*Picking the work back up*, below) |
 
 Four rules about all of them. **Every finding goes to a refuter before it
 is acted on**, including the findings of a sweep you asked for yourself.
-**A sweep reports before it edits**: the findings and the files it would
-touch, then your direction. **A role is played by a reader with no
-access to the first pass's reasoning**: for an assistant, a fresh session
-or a subagent given the prompt and nothing else, or else a human. A role
-played by the session that did the work is not opposition, and a subagent
-playing one writes no tracked file: it returns its output, and the main
-thread records it where the role says. And **your rulings are the main
+**A sweep reports before it edits**: the findings, the files it would
+touch, and the edits, listed as `MANIFESTO.md` §14 sets out, then your
+direction. **A role is played by a reader with no access to the first
+pass's reasoning**: for an assistant, a fresh session or a subagent given
+the prompt and nothing else beyond the standing directions its task rests
+on, or else a human. A role played by the session that did the work is
+not opposition, and a subagent playing one writes nothing into the
+working tree: it returns its output, and the main thread records it
+where the role says. And **your rulings are the main
 thread's to apply**: an opposition role, the refuter and the blind
 referee among them, is not given them, so that it stays blind, and the
 main thread compares each finding it returns with your rulings before
@@ -177,9 +183,12 @@ ruling's prompt, and not proposed
 **Picking the work back up**, at the start of every session. Run
 `python3 tools/session_brief.py`: it prints the reading order, every plan
 with its status and the count engaged, and the reminders the record can
-compute. Then open the round's log entry, which is the first act of the
-round. Where the harness can run a command at session start, it prints
-this for you.
+compute; where the harness can run a command at session start, it prints
+this for you. Then read the latest log entry: a resume point says where
+to start, and an entry still open is closed first or, if it is
+committed, left for this round's entry to complete (`ONBOARDING.md`,
+*The first minutes*; `MANIFESTO.md` §8). Then open the round's log entry,
+which is the first act of the round.
 
 **Starting.** Setup, then the round that states the question (the
 research statement and the keystone), then the documentation consistency

@@ -1,6 +1,6 @@
 # Manifesto: operating rules for AI assistance
 
-*Created 2 September 2026; updated 16 November 2026.*
+*Created 2 September 2026; updated 17 November 2026.*
 
 This document defines the operating rules for an AI assistant working in
 this research repository. The rules are **binding on the assistant**
@@ -280,18 +280,36 @@ never holds the opinion the work exists to reach.
   contiguously and zero-padded to at least three digits
   (`001_short_description.md`, `002_...`), as the first act of the round
   it opens. Rounds are sequential: a round closes before the next is
-  logged.
-- An entry records the date; the prompt verbatim and unedited, except that
+  logged. Setup at a prompt in the template's clone, before the project
+  exists, cannot be logged as it goes: its whole exchange is recorded as
+  the project's entry 001, written before the first commit
+  (`GETTING_STARTED.md` §4).
+- An entry records the date; who did the work and, for the assistant, the
+  AI model that did it; the prompt verbatim and unedited, except that
   material §6 keeps out of the repository is replaced by a locator and a
-  note that it was removed before logging; what was done in response; the
-  reason for any correction or departure from the rules made in the round;
-  and the round's closing status.
+  note that it was removed before logging, and what the researcher has
+  decided must never reach the repository is replaced by that note alone;
+  what was done in response; the reason for any correction or departure
+  from the rules made in the round; and the round's closing status. The
+  researcher makes that decision before the first commit, and may add to
+  it at any time. The AI model is named as the harness reports it, or
+  recorded as not reported, and is never inferred; a change of AI model
+  within the round is recorded with what was done.
 - An entry is completed before the researcher commits it, and the
   researcher commits at round boundaries. Once committed it is immutable
-  (§12; `DOCUMENT_GENRES.md`). An entry committed before its round closed
-  is completed by a later entry that points back to it, never by editing;
-  a statement in a committed entry that turns out wrong is corrected the
-  same way, and the log's index points from the one entry to the other.
+  (§12; `DOCUMENT_GENRES.md`) and is never touched again: what completes
+  or corrects it goes in a later entry that points back to it, and the
+  log's index points from the one entry to the other.
+- A prompt may arrive while the previous round's entry is still open, its
+  closing status not written: after an interruption, after a commit made
+  mid-round, or while a process of that round still runs. That round
+  closes there. If its entry is uncommitted, the assistant closes it
+  before logging the prompt, with a closing status saying why; if the
+  researcher has committed it, the next round's entry is the one that
+  completes it. A process still running passes to the next round, whose
+  replies report it. Before each edit to an entry, the assistant checks
+  that the entry is still uncommitted, since the researcher may commit at
+  any moment.
 - The log is the record of what was asked and decided; the version history
   is the record of what changed and when. Neither is edited after the fact.
 
@@ -446,18 +464,48 @@ the project's own subject-matter terms and starts empty.
 
 ## 14. Subagents
 
-- A subagent writes no tracked file. It may read, search, compute, run
-  programs, and report; it returns its results to the main thread. Every
-  edit to a document is made by the main thread, which carries the
-  conversation and the researcher's standing instructions, and is shown to
-  the researcher.
+- A subagent writes nothing into the working tree, itself or through a
+  program it runs, and removes nothing from it; a cache that git ignores
+  is the one exception. It may read, search, compute, run programs, and
+  report; it returns its results to the main thread. Every edit to a
+  document is made by the main thread, which carries the conversation and
+  the researcher's standing directions, and is shown to the researcher.
 - A subagent's leverage is in finding, not in writing: a parallel fleet
   given one bad instruction produces many bad edits at once, and the cost
   of reviewing them lands on the researcher.
-- A subagent is bound by §10.
+- A subagent is bound by §10, and the main thread gives it the standing
+  directions its task rests on.
+- Before starting more than three subagents for one task, the main thread
+  says how many and for what. Where the harness reports how much of the
+  usage budget remains, the main thread also estimates the share they
+  will take; where the harness does not, the main thread says the share
+  is not known. The subagents start only at the researcher's word where
+  the budget or the machine may not carry them.
+- Before subagents start, the main thread notes the state of the working
+  tree: every file changed or untracked, and what each holds. When they
+  return, it compares the tree with the note and reports, by path, every
+  difference it did not make itself. It undoes a difference only where it
+  knows a subagent made it and nothing of the main thread's or the
+  researcher's would be lost; any other difference waits for the
+  researcher.
+- A computation a subagent runs is sized to the machine, counting
+  everything that runs beside it, and runs under a memory and a time
+  limit where the operating system or the harness offers them.
+- A run or a subagent that stopped before its end, at a limit of memory,
+  time, or usage, or by an error or an interruption, did not finish. What
+  it returned, or its silence, decides nothing: it is never read as a
+  verdict, as finding nothing, or as an empty list. Its task is reported
+  as not done, and is then given again, or done by the main thread and
+  recorded as the main thread's own.
 - A sweep, a task that would touch many documents at once, reports before
-  the main thread edits anything: findings first, the list of files second,
-  the edits third.
+  the main thread edits anything: findings first, the list of files
+  second, the edits third. The edits are listed one by one, each with its
+  file, the text it replaces, and the new text; the text replaced is
+  quoted exactly and occurs once in the file, or is marked where every
+  occurrence changes, and an insertion gives instead the text it follows.
+  Before the round is handed back, every edit the researcher held back is
+  struck from the list, the edits as made are compared with what remains,
+  and every difference is reported.
 
 > **Build lens.** Subagents read only inside this repository, and only the
 > paths their task names. The source projects are never given to a

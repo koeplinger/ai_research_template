@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The round check: every gate a round must pass, in one command.
 
-Created 5 September 2026; updated 16 November 2026.
+Created 5 September 2026; updated 17 November 2026.
 
 Run before work is handed back and before changes are reported ready to
 commit (MANIFESTO.md section 13).  Nothing here blocks the researcher: a
@@ -17,17 +17,17 @@ WHAT IT RUNS
   ROUND-1  the log's numbering: contiguous from 001, zero-padded to at
            least three digits, no number twice, every name of the form
            NNN_short_description.md (MANIFESTO.md section 8)
-  ROUND-2  the parts of an entry the researcher may still edit, that is,
-           one not yet committed or differing from its committed version:
-           the parts [log] names, each once and in order, searched after
-           the verbatim region, which ends at the first closing delimiter,
-           and outside fenced code; and, under the
-           last part, a fenced status block of the section-16 form with no
-           RUNNING line (prompt_logs/README.md, "The four parts of an
-           entry"), its comments unread, so that a label still carrying
-           the artifact template's placeholder is reported as not written.
-           A committed entry is immutable and is completed by a later
-           entry, so it is not re-read here.
+  ROUND-2  the parts of an entry not yet committed, untracked or staged
+           new: the parts [log] names, each once and in order, searched
+           after the verbatim region, which ends at the first closing
+           delimiter, and outside fenced code; and, under the last part, a
+           fenced status block of the section-16 form with no RUNNING line
+           (prompt_logs/README.md, "The four parts of an entry"), its
+           comments unread, so that a label still carrying the artifact
+           template's placeholder is reported as not written.  A committed
+           entry is immutable and is completed or corrected by a later
+           entry, so it is not read here, changed or not: a change to it
+           is GENRES-2's, whose remedy is to restore it.
   ROUND-3  the build, where [publication] is enabled: every output and the
            build log newer than every source, and the log matching no
            error marker.  "Newer" is by modification time, which a
@@ -109,16 +109,18 @@ def check_round_1_numbering(t: lint_docs.Tree) -> None:
             report("ROUND-1", log_index(t), 1, f"entry {n:03d} missing: numbering is not contiguous")
 
 
-def editable_entries(t: lint_docs.Tree) -> set[str]:
-    """Entries the researcher may still edit: untracked, or differing from HEAD."""
+def uncommitted_entries(t: lint_docs.Tree) -> set[str]:
+    """Entries not yet committed: untracked, or staged new, the set the
+    session brief counts as uncommitted.  A committed entry changed since
+    its commit is GENRES-2's, and is not read here."""
     d = t.dir_of_kind("log-entry")
     if not d:
         return set()
     if not lint_docs.git(t.root, "rev-parse", "--verify", "HEAD"):
         return set(log_entries(t))
-    changed = lint_docs.git(t.root, "diff", "--name-only", "-z", "HEAD", "--", d + "/")
+    staged = lint_docs.git(t.root, "diff", "--name-only", "-z", "--diff-filter=A", "HEAD", "--", d + "/")
     new = lint_docs.git(t.root, "ls-files", "--others", "--exclude-standard", "-z", "--", d + "/")
-    return {f for f in (changed + new).split("\0") if f}
+    return {f for f in (staged + new).split("\0") if f}
 
 
 def check_round_2_parts(t: lint_docs.Tree) -> None:
@@ -126,9 +128,9 @@ def check_round_2_parts(t: lint_docs.Tree) -> None:
     if len(parts) < 3:
         report("ROUND-2", "tools/artifacts.toml", 1, "[log] parts needs the two delimiters and at least one further part")
         return
-    editable = editable_entries(t)
+    uncommitted = uncommitted_entries(t)
     for f in log_entries(t):
-        if f not in editable:
+        if f not in uncommitted:
             continue
         lines = t.text[f].splitlines()
         pos: list[int] = []
@@ -337,7 +339,7 @@ def selftest() -> int:
         (tmp / rel).write_text(body)
 
     def entry(n: int, name: str, closing: str = "DONE: setup", prompt: str = "x") -> str:
-        return (f"# Prompt {n:03d}: {name}\n\n{S}\n\n--- PROMPT START ---\n{prompt}\n--- PROMPT END ---\n\n"
+        return (f"# Prompt {n:03d}: {name}\n\n{S}\nBy: assistant, not reported\n\n--- PROMPT START ---\n{prompt}\n--- PROMPT END ---\n\n"
                 f"## What was done\n\nSetup.\n\n## Corrections and departures\n\nnone\n\n## Closing status\n\n```\n{closing}\n```\n")
 
     def index_logs(tmp: Path, files: dict, *names: str) -> None:
@@ -412,6 +414,24 @@ def selftest() -> int:
             print(f"  [{'PASS' if not found else 'FAIL'}] {name}"
                   + ("" if not found else f": {[(x[0], x[1], x[3][:50]) for x in found]}"))
 
+    def alone_case(name: str, item: str, path: str, mutate, before_commit=None) -> None:
+        """A change that draws findings of `item` at `path` and nothing else."""
+        nonlocal failures
+        covered.add(item)
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            files = lint_docs.fixture()
+            if before_commit:
+                before_commit(files)
+            lint_docs.scratch_project(tmp, files, cfg_text)
+            lint_docs.scratch_commit(tmp)
+            mutate(tmp, files)
+            _, found = run_round(tmp)
+            ok = bool(found) and all(x[0] == item and x[1] == path for x in found)
+            failures += 0 if ok else 1
+            print(f"  [{'PASS' if ok else 'FAIL'}] {item:9s} {name}"
+                  + ("" if ok else f"   (got: {[(x[0], x[1], x[3][:50]) for x in found]})"))
+
     clean_case("the unplanted tree is clean under every enabled gate", lambda t, f: None)
     clean_case("a second, uncommitted, indexed entry keeps the tree clean", lambda t, f: second(t, f))
     clean_case("a prompt that quotes a part heading is not read",
@@ -430,6 +450,9 @@ def selftest() -> int:
              lambda t, f: w(t, "MANIFESTO.md", "# M\n\nRules.\n"))
     run_case("a committed entry edited is the linter's finding", "GENRES-2", "prompt_logs/001_setup.md", "modified",
              lambda t, f: w(t, "prompt_logs/001_setup.md", f["prompt_logs/001_setup.md"] + "\nafterthought\n"))
+    alone_case("a committed open entry edited is GENRES-2's alone, its closing status not re-read", "GENRES-2", "prompt_logs/001_setup.md",
+               lambda t, f: w(t, "prompt_logs/001_setup.md", f["prompt_logs/001_setup.md"] + "\nafterthought\n"),
+               before_commit=lambda f: f.__setitem__("prompt_logs/001_setup.md", entry(1, "setup", closing="DONE: <!-- what finished -->")))
     run_case("a gap in the numbering", "ROUND-1", "prompt_logs/README.md", "not contiguous",
              lambda t, f: second(t, f, entry(3, "later"), "prompt_logs/003_later.md"))
     run_case("a number used twice", "ROUND-1", "prompt_logs/001_zz_other.md", "used twice",
