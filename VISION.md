@@ -2,7 +2,7 @@
 
 A template for AI-assisted research.
 
-This document states what this repository is for, who it serves, what it
+This document states what the template is for, who it serves, what it
 contains, and how its parts are meant to work together. It is the reference every
 other artifact here answers to. It describes intent and principle; it does not
 schedule work.
@@ -51,15 +51,15 @@ slower rate of claim production. Specific ways this shows up:
 - **Retrofitted narrative.** The write-up presents a clean line of reasoning that
   nobody actually walked.
 
-Researchers have asked the author for the methodology he uses to avoid this. This
-repository is that methodology, made free and open so it can be used, criticized,
+Researchers have asked the author for the methodology he uses to avoid this. The
+template is that methodology, made free and open so it can be used, criticized,
 and forked without permission.
 
 ---
 
 ## Scope
 
-This template is for researchers who are honest.
+The template is for researchers who are honest.
 
 That is a real precondition, not a courtesy. The template makes integrity cheap and
 drift visible. It cannot detect a researcher who decides to deceive themselves or
@@ -162,7 +162,7 @@ A researcher clones the repository, sets up their project quickly, receives clea
 guidance on how to begin, and continues to receive it as the project proceeds.
 
 Given honesty on the researcher's side, the mechanisms hold the work to a standard
-worth publishing. That is the bet this template makes, and it should be read
+worth publishing. That is the bet the template makes, and it should be read
 precisely: the template cannot make results correct. It makes provenance
 recoverable, claims explicit, verification status visible, disagreement recorded,
 and revisions traceable. Robustness follows from a researcher working honestly
@@ -171,7 +171,7 @@ inside that structure — not from the structure alone.
 ### The repository is the researcher's
 
 Every mechanism here can be modified, replaced, or deleted. A project develops
-needs this template did not anticipate, and a researcher who adapts the governance
+needs the template did not anticipate, and a researcher who adapts the governance
 to their work is using it correctly, not abandoning it.
 
 What the template asks in return is that departures be **deliberate and legible**.
@@ -191,7 +191,7 @@ those two visible.
 - It does not replace peer review, domain expertise, or the researcher's judgment.
 - It does not endorse or require any particular AI assistant, model, or vendor.
 - It is not a guarantee. **There is no warranty and no promise of fitness for any
-  purpose.** A researcher using this template is responsible for their results.
+  purpose.** A researcher using the template is responsible for their results.
 
 ---
 
@@ -212,7 +212,7 @@ modification, and redistribution.
 
 ## What success looks like
 
-- A researcher clones this, and is doing real work the same day.
+- A researcher clones the template, and is doing real work the same day.
 - A year later, someone else opens that repository and can tell what was claimed,
   what was checked, what changed, and why — without asking anyone.
 - A researcher can state plainly which parts of their work they verified themselves

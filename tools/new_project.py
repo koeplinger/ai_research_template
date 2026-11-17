@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The instantiation procedure: this template, made into a project (GETTING_STARTED.md, sections 1 to 3).
 
-Created 8 September 2026; updated 16 November 2026.
+Created 8 September 2026; updated 17 November 2026.
 
 What it does, printing each step and what it could not do:
 
@@ -787,7 +787,7 @@ ROOT_FILE_NOTES = {
     "ONBOARDING.md": "what every session reads before it works",
     "CURRENT_STATE.md": "where the project stands",
     "FINDINGS.md": "what the record has established",
-    "VISION.md": "the statement of intent the rulebooks cite",
+    "VISION.md": "the template's statement of intent, which the rulebooks cite",
     "LICENSE.md": "the license for written material, and the citations",
     "LICENSE-CODE": "the license for code",
 }
