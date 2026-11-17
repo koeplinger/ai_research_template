@@ -1,6 +1,6 @@
 # Evidence and reasoning
 
-*Created 3 September 2026; updated 8 September 2026.*
+*Created 3 September 2026; updated 16 November 2026.*
 
 The research record: what is claimed, why it is believed, and where every
 cited work lives. Every claim made anywhere in the repository is traceable
@@ -48,15 +48,15 @@ a claim and its check. A claim needs an owning plan before it exists.
   folder's `README.md` and `_template.md` fall outside them.
 - A check and its program share a number: `checks/NNN_*.md` records what
   `python_project/src/check_NNN_*.py` does, or is itself the written
-  procedure. These are the defaults `tools/artifacts.toml` ships with.
+  procedure. These are the defaults `tools/artifacts.toml` starts with.
 - Every file here carries the standard header stamp, and every claim,
   check, and plan carries the field lines `ONTOLOGY.md` §1 fixes.
 
 ## Slots
 
-The templates in the folders below carry no Slots table of their own; this
-table covers them, and the slots it lists are filled where their owners
-define them.
+The artifact templates in the folders below carry no slot of their own:
+where one needs a slot's value, it points to the Slots table of the file
+that owns the slot. This table holds the one slot this file owns.
 
 | Slot | Meaning | Examples |
 |---|---|---|

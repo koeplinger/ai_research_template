@@ -1018,7 +1018,16 @@ def check_ont_2_tokens(t: Tree) -> None:
 
 
 def check_ont_3_required(t: Tree) -> None:
-    parties = set(t.cfg.get("parties", {}).get("names", []))
+    # The roster beyond the researcher and the assistant.  An empty list is
+    # unfilled, and the party check is skipped; ["none"] records by decision
+    # that there is no one beyond them, and the check runs, so that any other
+    # name, "none" included, is reported.
+    names = list(t.cfg.get("parties", {}).get("names", []) or [])
+    decided = bool(names)
+    parties = set(names) - {"none"}
+    if "none" in names and len(names) > 1:
+        report("ONT-3", "tools/artifacts.toml", 1, '[parties] names lists "none" beside other names; "none" stands '
+               "alone, recording that no one beyond the researcher and the assistant appears")
     saw_party, warned_party = False, False
     for f, row in t.rows.items():
         if not row or t.is_template(f) or row.get("header", "stamp") == "none":
@@ -1041,7 +1050,7 @@ def check_ont_3_required(t: Tree) -> None:
                 if v in ("researcher", "assistant", "deferred", "unchecked"):
                     continue
                 saw_party = True
-                if parties and v not in parties:
+                if decided and v not in parties:
                     report("ONT-3", f, fl[name][0], f"{name} names a party not on the roster: {v!r}")
         if row["kind"] == "registry":
             reg = t.cfg["registry"]
@@ -1062,7 +1071,7 @@ def check_ont_3_required(t: Tree) -> None:
                 for name in need:
                     if not re.search(rf"^- {re.escape(name)}:", body, re.M):
                         report("ONT-3", f, t.text[f][:m.start()].count("\n") + 1, f"entry [{key}] lacks the bullet {name}")
-    if saw_party and not parties and not warned_party:
+    if saw_party and not decided and not warned_party:
         report("ONT-3", "tools/artifacts.toml", 1, "roster unfilled ({{PARTIES}}); party check skipped")
 
 
@@ -1565,6 +1574,20 @@ def selftest() -> int:
     run_case("the mutation set left unfilled", "CHECK-3", "tools/artifacts.toml", "unfilled", lambda t, f: w(t, "tools/artifacts.toml", cfg_text.replace('mutations = ["variant-reading"]', "mutations = []")))
     run_case("the dash convention left unfilled", "EDIT-1", "tools/artifacts.toml", "unfilled", lambda t, f: w(t, "tools/artifacts.toml", cfg_text.replace('dashes = "no-em-dash"', 'dashes = ""')))
     run_case("a party off the roster, roster unfilled", "ONT-3", "tools/artifacts.toml", "roster unfilled", sub(C2, "Verified-by: researcher", "Verified-by: an outsider"))
+    # [parties] names = ["none"] decides that no one beyond the researcher and
+    # the assistant appears: the check runs, and "none" is not a party.
+    assert cfg_text.count("names = []") == 1
+
+    def roster(names: str, party: str | None = None):
+        def go(t, f):
+            w(t, "tools/artifacts.toml", dated(cfg_text.replace("names = []", f"names = {names}")))
+            if party:
+                w(t, C2, f[C2].replace("Verified-by: researcher", f"Verified-by: {party}"))
+        return go
+    run_case("a party off a roster decided empty", "ONT-3", C2, "not on the roster: 'an outsider'", roster('["none"]', "an outsider"))
+    run_case("none named as a party", "ONT-3", C2, "not on the roster: 'none'", roster('["none"]', "none"))
+    run_case("none listed beside a name", "ONT-3", "tools/artifacts.toml", "stands alone", roster('["none", "a coauthor"]'))
+    absent_case("a roster decided empty is not unfilled", "ONT-3", "tools/artifacts.toml", "unfilled", roster('["none"]', "an outsider"))
 
     # A finding the researcher has ruled to leave, entered in the
     # configuration's [[accepted]] list, and what happens when the entry no

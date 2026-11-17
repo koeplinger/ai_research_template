@@ -97,8 +97,8 @@ a commit can still be forced with the reason recorded.
   the same way each time by a standing role with a fixed prompt:
   `governance/roles/`. An assistant is agreeable by default, and a process
   that never contradicts you is not supporting you.
-- **Support** is the templates, the indexes, and the worked example, so
-  that the right thing to do is also the easy thing.
+- **Support** is the artifact templates, the indexes, and the worked
+  example, so that the right thing to do is also the easy thing.
 
 ---
 
@@ -140,9 +140,9 @@ way each time, and so that a reader of the log can see which one was made.
 
 | Prompt | When | What comes back |
 |---|---|---|
-| **Make a documentation consistency sweep.** | First of all after instantiation, once the slots are filled; after a batch of edits to the rulebooks, indexes, templates, or configuration; after amending a rule or removing a mechanism; before a release and before the project closes; and whenever a pointer sent a reader to a document that did not say what it promised, which is the sign that it is overdue | Every pointer that does not resolve or misdescribes its target, every index out of step, every state recorded twice, every rule restated wrongly, every file still speaking in the template's voice, every slot value that does not read where it was substituted or was filled twice differently, every term used in two senses or missing from the project glossary, and every standing direction given in a prompt and written down in neither of its homes. `governance/roles/documentation_sweep.md` carries the prompt in full, with an item the project fills with its own |
+| **Make a documentation consistency sweep.** | After the round that states a new project's question (`GETTING_STARTED.md` §4); after a batch of edits to the rulebooks, indexes, artifact templates, or configuration; after amending a rule or removing a mechanism; before a release and before the project closes; and whenever a pointer sent a reader to a document that did not say what it promised, which is the sign that it is overdue | Every pointer that does not resolve or misdescribes its target, every index out of step, every state recorded twice, every rule restated wrongly, every file still speaking in the template's voice, every slot value that does not read where it was substituted or was filled twice differently, every term used in two senses or missing from the project glossary, and every standing direction given in a prompt and written down in neither of its homes. `governance/roles/documentation_sweep.md` carries the prompt in full, with an item the project fills with its own |
 | **Make a consistency sweep of the record.** | After every correction batch, at your direction | The same defect class over the claims, checks, and ledgers instead of the documentation: a fact established in one place and restated wrongly in another. `CHECK_METHODOLOGY.md` §7 |
-| **Refute this finding.** | On every finding of any sweep or review, and on every gap the coverage auditor reports, before it is acted on | Stands, refuted with the reason, or narrowed to what survives. `governance/roles/refuter.md`. This is the one that keeps a review honest: in the reviews of this template's own construction, roughly half of what a first reader reported did not survive a second |
+| **Refute this finding.** | On every finding of any sweep or review, and on every gap the coverage auditor reports, before it is acted on | Stands, refuted with the reason, or narrowed to what survives. `governance/roles/refuter.md`. This is the one that keeps a review honest: in the reviews of the template's own construction, roughly half of what a first reader reported did not survive a second |
 | **Referee this draft blind.** | Before a version of a write-up freezes | A structure lens, what the referee could re-derive from the page alone, findings ranked, and what the released document rests on. `governance/roles/blind_referee.md` |
 | **Audit this check's coverage.** | Before a check backs an established claim | Every atomic assertion classified: gated, printed only, not computed, mismatched, attested. `governance/roles/coverage_auditor.md` |
 | **Probe this check.** | When a check is written, and before it is relied on | The matrix: each named fault applied, and whether the check noticed. `governance/roles/falsifiability_probe.md`, and `tools/falsifiability_probe.py` for a program |
@@ -181,11 +181,10 @@ compute. Then open the round's log entry, which is the first act of the
 round. Where the harness can run a command at session start, it prints
 this for you.
 
-**Starting.** `tools/new_project.py` makes the project from the template
-and asks for the sixteen slots; then the research statement and the
-keystone. Then the
-documentation consistency sweep, which catches what instantiation left
-behind. Nothing else yet.
+**Starting.** Setup, then the round that states the question (the
+research statement and the keystone), then the documentation consistency
+sweep, which catches what setup left behind. Nothing else yet.
+`GETTING_STARTED.md` §4 gives the order and what each round records.
 
 **Opening a line of work.** A plan, drafted and then engaged by you. Its
 criteria are fixed before the evidence is seen, which is the whole point;
@@ -203,8 +202,11 @@ survives. `PRECEDENCE.md` says what governs what.
 against the pre-registered criteria, then your `CLOSED` line. The plan and
 everything it owns freeze.
 
-**Opening a write-up.** One living copy of the main write-up at a time, in
-the form `{{DELIVERABLE}}` names. Everything it asserts is already in the
+**Opening a write-up.** First the slots that waited for it, where setup
+left them open by decision: `{{DELIVERABLE}}` with its machine half, the
+write-up's pronoun, and its voice (`GETTING_STARTED.md` §3). Then one
+living copy of the main write-up at a time, in the form
+`{{DELIVERABLE}}` names. Everything it asserts is already in the
 record, with its register; the draft says what to read off the evidence
 and cites the claim rather than restating its backing. The prose standards
 apply to every unfrozen draft under the write-up folder, and the linter

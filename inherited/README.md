@@ -1,15 +1,15 @@
 # Inherited material
 
-*Created 4 September 2026; updated 4 September 2026.*
+*Created 4 September 2026; updated 16 November 2026.*
 
 Material from another repository, a private collection, or unpublished
 work enters this project only at the researcher's explicit direction and
 under this policy (`MANIFESTO.md` §6): an import is a **frozen copy at its
 original date, verbatim, with attribution**, listed once in the ledger
 below, and **re-verified here by the discipline's own standard before
-anything builds on it** (`MANIFESTO.md` §5). The *Inherited material*
-section of `LICENSE.md` points to this ledger and names the license each
-import is carried under. An imported file carries no header stamp of its
+anything builds on it** (`MANIFESTO.md` §5). Each import keeps the terms
+its row here records, and `LICENSE.md`, *Material under its own terms*,
+relicenses none of it. An imported file carries no header stamp of its
 own: it is dated by its row here. Where access conditions keep the
 material out of the repository, it is imported by locator only
 (`MANIFESTO.md` §6).

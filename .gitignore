@@ -1,4 +1,5 @@
-# Local-only privacy enforcement: stop-word list and scanner. Never tracked.
+# Local-only privacy enforcement: the stop-word list tools/privacy_scan.py
+# reads, and anything kept beside it. Never tracked.
 .privacy/
 
 # The per-user settings file of the harness the template was built with

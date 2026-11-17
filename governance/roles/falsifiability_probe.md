@@ -1,6 +1,6 @@
 # The falsifiability probe as opposition
 
-*Created 5 September 2026; updated 6 September 2026.*
+*Created 5 September 2026; updated 16 November 2026.*
 
 **Role.** Opposition to one's own checks: a check is shown able to fail
 before it is trusted to pass. The mechanical part is
@@ -17,7 +17,7 @@ plan closes on it (`CHECK_METHODOLOGY.md` §5, *Show every assertion
 falsifiable*).
 
 **Reads.** The check, its record, the claim it backs, and the project's
-mutation set (`{{MUTATION_SET}}`, `CHECK_METHODOLOGY.md`, *Slots*).
+mutation set (`CHECK_METHODOLOGY.md`, *Slots*).
 
 **Prompt.**
 

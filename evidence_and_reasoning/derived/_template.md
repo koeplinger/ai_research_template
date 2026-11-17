@@ -3,7 +3,7 @@
 *Created D Month YYYY; updated D Month YYYY.*
 Plan: <!-- NNN, the plan that owns this material; it freezes when that plan closes -->
 Produced-from: <!-- [ShortKey, locus range], then a comma, then the check, program, or procedure that produced it: [check NNN], python_project/src/name.py, or "by hand, <party>" -->
-By: <!-- who produced it, from the roster {{PARTIES}} -->
+By: <!-- researcher | assistant | a party from the roster (ONTOLOGY.md, Slots) -->
 Frame: <!-- the conventions this derivation imposed, which every claim leaning on it states: a foliation or pagination scheme; a calendar and where its year begins; a normalization; a coding scheme; an annotation release; delete the line where there are none -->
 
 <!-- HEADER FIELDS. One per line: name, colon, value, nothing after the
@@ -13,7 +13,8 @@ Frame: <!-- the conventions this derivation imposed, which every claim leaning o
                    live while the plan is open, frozen when it closes.
      Produced-from the source and what made it (ONTOLOGY.md section 2). The
                    source token resolves to a registry entry; the locus
-                   range is given in the units of {{CITATION_LOCUS}}.
+                   range is given in the units the project fixes
+                   (ONTOLOGY.md, Slots).
      By            a party from the roster; for material made across
                    several sittings, the party who is answerable for it,
                    with each sitting under Provenance below.

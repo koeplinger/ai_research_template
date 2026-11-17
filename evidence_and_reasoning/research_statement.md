@@ -1,6 +1,6 @@
 # Research statement
 
-*Created 3 September 2026; updated 3 September 2026.*
+*Created 3 September 2026; updated 16 November 2026.*
 
 <!-- Maintained: changed only on a significant deviation of the question,
      not on every finding (DOCUMENT_GENRES.md). States the question as it
@@ -10,7 +10,7 @@
 
 ## The question
 
-{{PROJECT_TITLE}} asks: <!-- one paragraph. The question precisely enough
+*{{PROJECT_TITLE}}* asks: <!-- one paragraph. The question precisely enough
 that a reader knows what would answer it and what would not. Name the
 object of study by its canonical identity: a source by its shelfmark, a
 dataset by its release, a paper by its registered key. -->

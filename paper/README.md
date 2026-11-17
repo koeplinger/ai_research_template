@@ -1,6 +1,6 @@
 # Paper
 
-*Created 4 September 2026; updated 8 September 2026.*
+*Created 4 September 2026; updated 16 November 2026.*
 
 The write-ups: the main write-up in its versions, standalone notes, and
 the reviews of both. `paper/` is the template's name for the
@@ -41,7 +41,7 @@ table.
   the bibliography** from the `[publication]` table of
   `tools/artifacts.toml`, which names the build command, its sources,
   outputs, and log, and the bibliography with its citation patterns; it
-  ships disabled. A project that publishes otherwise leaves it disabled,
+  starts disabled. A project that publishes otherwise leaves it disabled,
   and this bullet says so.
 
 ## Releasing a version

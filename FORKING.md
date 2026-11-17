@@ -2,8 +2,8 @@
 
 *Created 8 September 2026; updated 16 November 2026.*
 
-Once you clone this template, every rule in it is yours to change. A
-project will develop needs the template did not anticipate, and a
+Every rule in this repository is yours to change. A project will develop
+needs the template did not anticipate, and a
 researcher who adapts the governance to their work is using it correctly,
 not abandoning it (`VISION.md`, *The repository is the researcher's*).
 
@@ -28,8 +28,12 @@ Four kinds, in rising order of what they cost.
 Anything in a Slots table: the persona, the deliverable, the mutation set,
 the spelling, the parties. Changing one is ordinary work. Edit it where
 its owner defines it, edit the machine half in `tools/artifacts.toml`
-where it has one, and record the change in the round's log entry. Nothing
-else is owed.
+where it has one, replace the old value in every current-state sentence
+that carries it (`GETTING_STARTED.md` §3), and record the change in the
+round's log entry; frozen and immutable artifacts keep the wording they
+were written with. A change of spelling variant also converts the words
+of the prose that the spelling check reads, and the round check names
+each one. Nothing else is owed.
 
 ### 2. A name
 
@@ -55,9 +59,9 @@ What the amendment owes:
 
 1. **Say what the rule was for.** Most rules here are one half of a pair.
    Before changing one, find the other half: the tool that enforces it,
-   the template that pre-prints it, the index that lists it, the reminder
-   that fires on it. `HOW_IT_FITS_TOGETHER.md`, *Where a rule lives*, and
-   `governance/README.md` map them.
+   the artifact template that pre-prints it, the index that lists it, the
+   reminder that fires on it. `HOW_IT_FITS_TOGETHER.md`, *Where a rule
+   lives*, and `governance/README.md` map them.
 2. **Change the halves together**, in one round.
 3. **Make the documentation consistency sweep afterwards**
    (`governance/roles/documentation_sweep.md`). Amending a rule in one
@@ -102,9 +106,9 @@ the removal is complete.
 | the Python check suite | `python_project/`'s three artifact rows and three index rows in the configuration, the root README's folder row, `python_project/README.md`'s own removal note, and three tool docstrings (the concordance check, the probe, the run ledger); `{{CHECK_FORM}}` becomes a written procedure alone |
 | the harness wiring | `governance/harness/`, the tracked settings file and its `harness-settings` row in the configuration, its line in `.gitignore`, and the `{{REPLY_HOOK}}` slot, which becomes *none, with the form kept by hand*. **Keep `tools/check_status_reply.py`**: the round check imports it, so ROUND-2 goes with it |
 | the status block (`MANIFESTO.md` §16) | the reply hook and its `{{REPLY_HOOK}}` slot, not the session-start wiring; the checker, `tools/check_status_reply.py`; and the log's closing status, which ROUND-2 of `tools/check_round.py` reads with the checker under the last of `[log] parts` in the configuration. Either keep the closing status, and the checker for the round check alone, or remove the closing status together from `tools/check_round.py`, `[log] parts`, `prompt_logs/_template.md`, `prompt_logs/README.md`, `MANIFESTO.md` §8, and the round's definition in its *Words used throughout* |
-| the privacy scan | its row in the two READMEs; the staged-scan block of the pre-commit hook and the whole commit-message hook that `tools/install_hooks.sh` writes, and the installer's account of both. `MANIFESTO.md` §6 states the rule it serves in discipline-neutral terms and names no scanner, so nothing there has to change |
+| the privacy scan | its row in the two READMEs; the staged-scan block of the pre-commit hook and the whole commit-message hook that `tools/install_hooks.sh` writes, and the installer's account of both. `GETTING_STARTED.md`'s *Arm the privacy scan* paragraph in §1, the item pointing to it in the list that ends §1, the privacy clause of §4's first item, and the pointer in §8; and the comment on `.privacy/` in `.gitignore`. `MANIFESTO.md` §6 states the rule it serves in discipline-neutral terms and names no scanner, so nothing there has to change |
 | the tension ledger | `PRECEDENCE.md`'s compliance section, which requires a row; amend it or the rule stands unenforced |
-| the publication gate | nothing: it ships disabled, and `paper/README.md` says a project that publishes otherwise leaves it so |
+| the publication gate | nothing while it is disabled, as it starts, and `paper/README.md` says a project that publishes otherwise leaves it so; once enabled, `enabled = false` in the `[publication]` table, and that README's account of the gate |
 | derived material | its two rows and its index row; `source_documents/README.md` names it as the destination |
 | a standing role | its file, its row in `governance/roles/README.md`, and any reminder that proposes it |
 
@@ -132,10 +136,11 @@ Adding is cheaper than removing and owes less: a folder needs an
 `_template.md` if things in it recur. A new header field needs a row in
 `ONTOLOGY.md`'s catalogue naming what it relates, its surface syntax, the
 rulebook that owns it, the check that enforces it, and the question it
-answers; the field is then added to the template that ships it, and to
-`[fields] names` and `[fields.roles]` in the configuration. `ONTOLOGY.md` §8 says a
-predicate no template pre-prints is not shipped, which is a good rule to
-keep: a field nobody is prompted to fill is a field nobody fills.
+answers; the field is then added to the artifact template that will
+pre-print it, and to `[fields] names` and `[fields.roles]` in the
+configuration. `ONTOLOGY.md` §8 says a header field no artifact template
+pre-prints is not in the ontology, which is a good rule to keep: a field
+nobody is prompted to fill is a field nobody fills.
 
 ---
 
@@ -156,5 +161,5 @@ The rest is scaffolding, and scaffolding is meant to be reshaped.
 
 ## Slots
 
-None. This file is about changing the template and is the same in every
-project.
+None. This file is about changing this method's rules and mechanisms,
+and is the same in every project.

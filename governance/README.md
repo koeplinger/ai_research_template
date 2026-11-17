@@ -1,6 +1,6 @@
 # Governance: the mechanisms, each with the rule it serves and the moment it fires
 
-*Created 5 September 2026; updated 8 September 2026.*
+*Created 5 September 2026; updated 16 November 2026.*
 
 `VISION.md` promises four kinds of mechanism that keep the discipline
 running when attention lapses: reminders, checks, opposition, and
@@ -22,7 +22,7 @@ serves and the moment it fires.
 | Mechanism | Rule | Fires | Output | Does not decide |
 |---|---|---|---|---|
 | the session brief, `tools/session_brief.py` | `MANIFESTO.md` §16; `ONBOARDING.md` | at session start, through the harness wiring, and on demand | the reading order, the plans by status, the reminders the record can compute | anything: it prints |
-| the documentation consistency sweep, [roles/documentation_sweep.md](roles/documentation_sweep.md) | `CHECK_METHODOLOGY.md` §7, which sweeps the record; this sweeps the documentation | after a batch of edits to the rulebooks, indexes, templates, or configuration; first of all after instantiation | the disagreements between documents, each with its two homes | which of two disagreeing statements yields: the researcher's |
+| the documentation consistency sweep, [roles/documentation_sweep.md](roles/documentation_sweep.md) | `CHECK_METHODOLOGY.md` §7, which sweeps the record; this sweeps the documentation | after a batch of edits to the rulebooks, indexes, artifact templates, or configuration; after the round that states a new project's question (`GETTING_STARTED.md` §4) | the disagreements between documents, each with its two homes | which of two disagreeing statements yields: the researcher's |
 | the standing reminders, [reminders.md](reminders.md) | §16, and the section each names | at the stage of work each names | one sentence in the reply, once | the action: taken only with direction |
 
 ## Checks
@@ -54,12 +54,12 @@ serves and the moment it fires.
 
 | Mechanism | Rule | Fires | Output | Does not decide |
 |---|---|---|---|---|
-| the templates, one per artifact kind, with their guidance in comments | `ONTOLOGY.md` §8: every predicate names the template that ships its field | when an artifact is started | a form whose mandatory fields are pre-printed | the values |
+| the artifact templates, one per kind, with their guidance in comments | `ONTOLOGY.md` §8: every predicate written as a header field, a stamp, or a registry bullet names the artifact template that pre-prints it, save the two stamps an event writes | when an artifact is started | a form whose mandatory fields are pre-printed | the values |
 | the folder indexes, every `README.md` | `DOCUMENT_GENRES.md` item 8 | when a file is added | the map of the folder, checked | what a file is for |
 | the configuration, `tools/artifacts.toml` | `ONTOLOGY.md` §7 | when a project files its artifacts elsewhere | one edit that every tool follows | the filing convention |
-| the instantiation procedure, `tools/new_project.py` | `VISION.md`, *Expectation*: the researcher sets up quickly; `GETTING_STARTED.md` §1 to §3 | once, when a project is made from the template | a project with its slots filled, the build's own files and pointers gone, the licenses and the hooks in place, and the round check run in the new tree | every value in it: each is asked for, or read from an answers file |
+| the instantiation procedure, `tools/new_project.py` | `VISION.md`, *Expectation*: the researcher sets up quickly; `GETTING_STARTED.md` §1 to §3 | once, when a project is made from the template | a project with the slots it was given filled, the build's own files and the pointers to them gone, the shipped prose in its spelling variant, the licenses and the hooks in place, a dated note of what it did and what it left, and the round check run in the new tree | every value in it: each is asked for, or read from an answers file |
 | the hook installer, `tools/install_hooks.sh` | `MANIFESTO.md` §13 and §6 | once per clone | the git hooks | whether to install strict |
-| the harness wirings, [harness/](harness/) | `MANIFESTO.md` §16, `{{REPLY_HOOK}}` | after each reply; at session start | the tools run at those moments | which harness: the researcher's |
+| the harness wirings, [harness/](harness/) | `MANIFESTO.md` §16 and its reply-hook slot | after each reply; at session start | the tools run at those moments | which harness: the researcher's |
 | the guide: [GETTING_STARTED.md](../GETTING_STARTED.md), [HOW_IT_FITS_TOGETHER.md](../HOW_IT_FITS_TOGETHER.md), [FORKING.md](../FORKING.md) | `VISION.md`, *Expectation*: clear guidance on how to begin, and as the project proceeds | when a project is instantiated; at each stage, by the list of prompts the second names | the walkthrough, the system with the round as its unit of time, the prompts to make and when, and how to change a mechanism legibly | any of it: the repository is the researcher's (`FORKING.md`) |
 | the worked example, [example/](../example/) | `VISION.md`, *Support*: the researcher's first model of a round | when the researcher starts, and whenever a form is in doubt | a complete small project, every gate passing, fenced as its README says | anything of the researcher's own: it is a model, never ground truth |
 

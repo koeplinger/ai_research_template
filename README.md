@@ -1,6 +1,6 @@
 # A research template for AI-assisted work
 
-*Created 2 September 2026; updated 8 September 2026.*
+*Created 2 September 2026; updated 16 November 2026.*
 
 A repository structure, a shared vocabulary, and a set of advisory checks
 for research done with an AI assistant. It is a *template*: you clone it,
@@ -30,7 +30,8 @@ is a **slot** you fill rather than a rule you obey.
 **Today this template is armed for one AI assistant: Anthropic's Claude,
 in its command-line harness.** Nothing in the methodology depends on that,
 and no rule names a vendor; but the *wiring* does, and the wiring is
-installed and running from the moment you instantiate a project.
+installed from the moment you instantiate a project, and running once the
+harness trusts the project's folder.
 
 Concretely, what ships and is armed: a settings file at the repository
 root that the harness reads, a hook that checks the form of every reply
@@ -45,9 +46,9 @@ plans, the roles and the tools are all harness-free, and they run on their
 own. What you do is fill the reply-hook slot with your own wiring or with
 *none, with the form kept by hand*, and add or remove a folder under
 `governance/harness/` by the recipe there. Be aware that the instantiation
-procedure does not yet ask which harness you want: it copies the shipped
-one, so a project on another assistant removes it afterwards rather than
-declining it up front.
+procedure records your answer to its reply-hook question but copies the
+shipped wiring whatever the answer, so a project on another assistant
+removes it afterwards rather than declining it up front.
 
 **Vendor independence is intended, and is scheduled rather than promised.**
 [TODO.md](TODO.md) holds that work and what each part of it touches, with
@@ -90,7 +91,7 @@ Three things meant to be one system, described in
 
 | File | What it is |
 |---|---|
-| [GETTING_STARTED.md](GETTING_STARTED.md) | The walkthrough: clone, slots, first round, first plan, first check, first commit |
+| [GETTING_STARTED.md](GETTING_STARTED.md) | The walkthrough: clone, slots, the first rounds, first plan, first check, and the round check before each commit |
 | [HOW_IT_FITS_TOGETHER.md](HOW_IT_FITS_TOGETHER.md) | The system as one thing, the round as the unit of time, and the prompts to make |
 | [FORKING.md](FORKING.md) | How to change or remove a mechanism deliberately and legibly |
 | [TODO.md](TODO.md) | What this template does not have yet, and what each item would touch |

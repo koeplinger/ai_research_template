@@ -1,12 +1,15 @@
 # Reference registry
 
-*Created 3 September 2026; updated 8 September 2026.*
+*Created 3 September 2026; updated 16 November 2026.*
 
 Every citation anywhere in the repository resolves to an entry here
 (`MANIFESTO.md` §2). A reference list carried verbatim inside material
 imported under `inherited/`, or inside a review by an outside reader,
 belongs to its original author and is not registered unless the project
-cites the work itself. The registry is self-contained: every work relied
+cites the work itself. A search record, the note of what a search
+returned, lists its hits by author, title, and identifier rather than by
+key, and a hit is registered once the work is relied on. The registry is
+self-contained: every work relied
 on is registered here in full, so that this repository is readable and
 auditable on its own.
 
@@ -30,16 +33,17 @@ one work and is never reused. The convention is author, year, and a short
 title word run together; a project may fix another, once, here.
 
 Cite a place in the work as `[ShortKey, locus]`, the locus in the units
-the project fixes in `{{CITATION_LOCUS}}` (`ONTOLOGY.md`, Slots), for
-example `[Key, p. 12]`, `[Key, section 3.2]`, `[Key, f. 12r]`, `[Key,
-table 2]`, `[Key, wave 3, variable q17]`.
+the project fixes (`ONTOLOGY.md`, Slots). Fields write a locus
+differently, for example `[Key, p. 12]`, `[Key, f. 12r]`, `[Key, table
+2]`, or `[Key, wave 3, variable q17]`.
 
 ## Entry format
 
 An entry's fields are bullets, `- Field: value`, inside its `### [Key]`
 block; they are not header lines (`ONTOLOGY.md` §1.4). The required
-fields are `{{REFERENCE_FIELDS}}`, filled once in `ONTOLOGY.md` (Slots);
-the template shows the default set.
+fields are the project's reference fields, filled once in `ONTOLOGY.md`
+(Slots) and enforced from `[registry] required` in `tools/artifacts.toml`;
+the file template shows the default set.
 
 ```
 ### [ShortKey]
@@ -48,19 +52,28 @@ the template shows the default set.
 - Title:             as the work or its catalogue gives it
 - Where:             venue, series, or repository and collection
 - Year:              of the version consulted, or the range the discipline assigns
-- Identifier:        DOI, shelfmark, release and version, or URL with the date retrieved
+- Identifier:        DOI, shelfmark, release and version, or URL with the date
+                     retrieved; then, where an outside body issued it and it
+                     was resolved there, resolved <where>, D Month YYYY
 - Keywords:          for finding it across files
 - Kind:              (optional) the sort of work this entry is, where the
                      project's registry holds several and each needs its
                      own fields; the required bullets are then this kind's
                      as well, configured under [registry.by_kind]
 - Standing:          searched <where>, D Month YYYY; none found | found, see Disputed
+                     | not searched, D Month YYYY; <why>
 - Disputed:          <what>, [ShortKey of the source]        (only where a dispute exists)
 - Witness of:        [ShortKey]                              (only where this is one record of a work)
 - Notes:
 ```
 
-**Standing and Disputed.** What they record is `MANIFESTO.md` §3.
+**Identifier, Standing, and Disputed.** What they record is `MANIFESTO.md`
+§3. The assistant resolves an identifier where it was issued, and searches
+a work's standing, only under the researcher's standing direction, since
+both read the public record; a resolution or a search the researcher makes
+is recorded in the same form. Where neither was made, the identifier
+carries no *resolved* ending, and the standing reads *not searched*, with
+the date and the reason.
 
 **Witness of.** A manuscript, an edition, a facsimile, a dataset release,
 or a vintage that is one record of a work registered under another key

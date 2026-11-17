@@ -101,9 +101,9 @@ derived = ["Genre", "Tier", "Live", "Frozen"]
 # has taken one of these words renames it in this table alone, and the checks
 # follow (GLOSSARY.md, "Renaming a word this template uses").  Rename before
 # any artifact carries the field: the log is immutable and a frozen artifact
-# keeps its wording, so the cost rises with every round.  The templates under
-# evidence_and_reasoning/ and python_project/src/ are edited to match by
-# hand; they are prose, and tools/new_project.py does the mechanical part.
+# keeps its wording, so the cost rises with every round.  The artifact
+# templates under evidence_and_reasoning/ and python_project/src/ are
+# edited to match by hand, since they are prose.
 #   register: how far a statement may be trusted   (Trust, Warrant, Grade)
 #   instrument: the tool or procedure of record    (Instrument-of-record)
 #   mutation: the planted alteration a check must fail under  (Planted-fault)
@@ -150,6 +150,10 @@ internal-consistency = ["consistent", "inconsistent"]
 # {{PARTIES}}: the roster By: and Verified-by: may name, beyond the
 # researcher and the assistant.  Empty means unfilled; the roster check is
 # skipped and reported once, when a By: line exists to apply it to.
+# ["none"] records by decision that there is no one beyond them: the check
+# runs, and any other name, "none" included, is reported.  Unlike "none"
+# for the spelling and the dashes, which turns a check off, this "none"
+# turns it on.
 names = []
 
 [log]

@@ -2,7 +2,7 @@
 
 *Created 3 September 2026; updated 16 November 2026.*
 
-The artifacts of a project built from this template are one system, not a
+The artifacts of a project built from the template are one system, not a
 folder of forms, because they share a vocabulary. This file is that
 vocabulary. It defines the **predicates** in which claims, sources,
 evidence, plans, and provenance are related, and for each one it says the
@@ -19,9 +19,14 @@ A predicate that cannot be pointed at in a file is not in this ontology.
 There is no separate database: the predicates live in the artifacts, as
 header lines, stamps, citation tokens, and governed files, and the tools
 read them there. That survives an inattentive researcher only if the
-templates pre-print the fields, so that filling in the form *is* writing
-the predicate. **Every predicate here must have a template that ships it**
-(§8); one that does not is not shipped.
+forms pre-print them, so that filling in the form *is* writing the
+predicate. **Every predicate written as a header field, a stamp, or a
+registry bullet must have an artifact template that pre-prints it** (§8),
+save the two stamps an event writes, `Released` and `superseded by`,
+which are written at the release or the replacement that makes them true;
+a ledger or index row is pre-printed by the commented row of its own file,
+and a derived predicate (§3) or a prose relation (§2.8) is written nowhere
+by design.
 
 This file **owns the surface syntax** and **the catalogue**. It does not
 restate the rules that govern each predicate: those live in the rulebook
@@ -96,7 +101,7 @@ nothing by design.
 | Token | Grammar | Resolves to |
 |---|---|---|
 | `[ShortKey]` | `[A-Z][A-Za-z0-9]{2,31}` | an entry in the reference registry |
-| `[ShortKey, locus]` | the above, comma, a locus from {{CITATION_LOCUS}} | that work at a stated place |
+| `[ShortKey, locus]` | the above, comma, a locus in the units the project fixes (Slots below) | that work at a stated place |
 | `[claim NNN]` | `NNN` is `[0-9]{3}[a-z]?` | the claim of that number, under the configured claim pattern |
 | `[check NNN]` | the same | the check of that number, under the configured check pattern |
 | `[finding F###]` | an opaque key, assigned once and never reused | that row of `FINDINGS.md` |
@@ -148,11 +153,11 @@ the duty is the assistant's under the consistency sweep
 |---|---|---|---|---|---|
 | `cites` | any artifact to a work | `[ShortKey]` | `MANIFESTO.md` §2 | ontology 2 | what does this rest on outside the project? |
 | `cites-at` | a claim or check to the exact place in a work | `[ShortKey, locus]` | `MANIFESTO.md` §2 | ontology 2; an `ATTESTED` claim citing without a locus is reported | where exactly does the source say it? |
-| `registered` | a work to its registry entry | an entry at the registry path | `MANIFESTO.md` §2 | ontology 3, against `{{REFERENCE_FIELDS}}` | is every work we lean on written down? |
+| `registered` | a work to its registry entry | an entry at the registry path | `MANIFESTO.md` §2 | ontology 3, against `[registry] required` | is every work we lean on written down? |
 | `held` | a source of record to its local copy | a row in the source index naming the file | `MANIFESTO.md` §6 | `DOCUMENT_GENRES.md` checker 7 | do we have it, or only its locator? |
 | `consulted-at` | a source of record to its locator, where access conditions keep it out of the repository | the same row, giving shelfmark, release, or version, and access conditions | `MANIFESTO.md` §6 | ontology 3: the row has one of `held` or `consulted-at` | how would a second reader reach it? |
 | `witness-of` | one record of a work to the work: a manuscript, edition, facsimile, release, or vintage | `Witness of: [ShortKey]` in the registry entry | `MANIFESTO.md` §2 | ontology 2 | which of these are the same work? |
-| `standing-disputed` | a work to a dispute about its authorship, dating, authenticity, priority, replication, or currency, or to the search that found none | `Disputed: <what>, <source>` in the registry entry; `Standing: searched <where>, <date>; none found`, or `...; found, see Disputed` | `MANIFESTO.md` §3 | reading | is this source contested, and was that checked? |
+| `standing-disputed` | a work to a dispute about its authorship, dating, authenticity, priority, replication, or currency, or to the search that found none, or to the reason no search was made | `Disputed: <what>, <source>` in the registry entry; `Standing: searched <where>, <date>; none found`, or `...; found, see Disputed`, or `Standing: not searched, <date>; <why>` | `MANIFESTO.md` §3 | reading | is this source contested, and was that checked? |
 
 ### 2.2 Claims
 
@@ -180,12 +185,12 @@ the duty is the assistant's under the consistency sweep
 | `refutes` | a check to a claim it shows not to hold | `Verdict:` with the failing word of that kind's vocabulary | `CHECK_METHODOLOGY.md` §2 | reading: a failing verdict does not entail `RULED_OUT`, and the register is the researcher's (`CHECK_METHODOLOGY.md` §1) | what did we rule out? |
 | `records` | a check record to one execution of a check | a dated record naming the check and the party | `CHECK_METHODOLOGY.md` §8 | `CHECK_METHODOLOGY.md` mechanical 4 | when was this last actually run? |
 | `instrument-of-record` | a check to the instrument or procedure it used | `Instrument: <name>, <version, edition, shelfmark, or release>` | `CHECK_METHODOLOGY.md` §3 | ontology 3 | what would a second reader return to? |
-| `mutation` | a check to an alteration of something the claim depends on | `Mutation: <name>[, <name>]`, each a key into the project's `{{MUTATION_SET}}` | `CHECK_METHODOLOGY.md` §5 | `CHECK_METHODOLOGY.md` mechanical 3, which splits by check form | would this check notice a change? |
+| `mutation` | a check to an alteration of something the claim depends on | `Mutation: <name>[, <name>]`, each a key into the project's mutation set (`CHECK_METHODOLOGY.md`, Slots; `[vocab] mutations`) | `CHECK_METHODOLOGY.md` §5 | `CHECK_METHODOLOGY.md` mechanical 3, which splits by check form | would this check notice a change? |
 | `robustness` | a check to a perturbation the claim asserts independence *from* | `Robustness: <name>[, <name>]`, names disjoint from `Mutation:` | `CHECK_METHODOLOGY.md` §5 | ontology 3: the two lists are disjoint. Survival is the intended result here, and a failure is a finding | what does this not depend on? |
 | `verification-status` | a claim to who checked it and how | `Verified-by: researcher \| assistant, <route> \| deferred, <instrument> \| unchecked \| <party>, <route>` | `MANIFESTO.md` §5 | ontology 3 | who actually checked this? |
 | `deferred-to` | a claim to an instrument or party the researcher chose not to check behind | the `deferred` form of `Verified-by:` | `MANIFESTO.md` §5; `VISION.md` | ontology query 3 | what did we take on trust? |
 | `pre-registered` | a check or claim to a protocol fixed before the evidence was consulted | `Pre-registered <D Month YYYY>, <locator>` | `evidence_and_reasoning/notes/README.md`, which defines the protocol note | ontology 3: the date precedes the earliest record's date, and the locator resolves | was this confirmatory, or exploratory? |
-| `performed-by` | a check record, transcription, coding pass, or derived artifact to the party that produced it | `By: <party>` from `{{PARTIES}}` | `MANIFESTO.md` §5 | ontology 3: every name resolves to the roster | whose work is this? |
+| `performed-by` | a check record, transcription, coding pass, or derived artifact to the party that produced it | `By: researcher \| assistant \| <party from the roster>` (Slots below) | `MANIFESTO.md` §5 | ontology 3: every name resolves to the roster | whose work is this? |
 
 ### 2.4 Derived material
 
@@ -362,7 +367,7 @@ are ranked, and the ranking is part of the design.
 is registered `VERIFIED` or `RULED_OUT`.
 
 **Mandatory on every check**: the fields the check row of
-`tools/artifacts.toml` requires, which ship as `Plan`, `Backs`,
+`tools/artifacts.toml` requires, which start as `Plan`, `Backs`,
 `Instrument` and `Mutation`, plus `By`; and `Frame` where the check has
 quantities in a frame.
 
@@ -371,11 +376,14 @@ everything else. `Robustness`, `Pre-registered`, `Reserved`, `Original`,
 `Serves`, `Witness of`, `Disputed`, and the prose relations of §2.8 are
 written where they are true and omitted where they are not.
 
-**Every predicate names the template that ships its field.** The artifact
-templates pre-print the mandatory fields with their vocabularies in a
-comment, so that a researcher who never reads this file still writes the
-predicates by filling in the form. A predicate with no template home is
-not shipped.
+**Every predicate written as a header field, a stamp, or a registry
+bullet names the artifact template that pre-prints it**, save `Released`
+and `superseded by`, which the release or the replacement writes. The
+artifact templates pre-print the mandatory fields with their vocabularies
+in a comment, so that a researcher who never reads this file still writes
+the predicates by filling in the form; a ledger or index row is
+pre-printed by the commented row of its own file. A field-borne predicate
+with no artifact template to pre-print it is not in this ontology.
 
 ## 9. Adding a predicate
 
@@ -386,8 +394,9 @@ predicate that answers no question is a field that will go stale, and a
 stale field is worse than none, because a reader trusts it.
 
 Add the row with its Answers cell, the syntax to §1 if it is a new form,
-the check to §5 or the reason it is *reading*, the field to the template
-that ships it, and, in `tools/artifacts.toml`, the name to `[fields] names`,
+the check to §5 or the reason it is *reading*, the field to the artifact
+template that will pre-print it, and, in `tools/artifacts.toml`, the name
+to `[fields] names`,
 the role to `[fields.roles]` so a project can rename it, and the
 required-field entry to the artifact row that must carry it.
 
@@ -398,13 +407,12 @@ catalogue follows.
 
 ## Slots
 
-Three slots are this file's. The mutation set, the check form, and the
-instrument of record appear above but belong to `CHECK_METHODOLOGY.md`,
-and the deliverable to `DOCUMENT_GENRES.md`; a project fills each once,
-where its owner defines it.
+Three slots are this file's. The mutation set and the instrument of
+record, which the catalogue above names, are `CHECK_METHODOLOGY.md`'s; a
+project fills each slot once, where its owner defines it.
 
 | Slot | Meaning | Examples |
 |---|---|---|
-| `{{PARTIES}}` | The roster of people and agents whose work the record attributes, for `By:` and `Verified-by:` | the researcher, the assistant; a named co-author, a doctoral assistant transcribing in the archive; a research assistant coding occupations, a replication partner |
+| `{{PARTIES}}` | The roster of people and agents whose work the record attributes, for `By:` and `Verified-by:`: the researcher and the assistant always, and those this value names besides them; *none* where there is no one else | *none*; a named co-author, a doctoral assistant transcribing in the archive; a research assistant coding occupations, a replication partner |
 | `{{REFERENCE_FIELDS}}` | The fields a registry entry must carry, per the discipline's citation convention | author, title, venue, year, DOI; repository, collection, shelfmark, folio range, access conditions; producer, series, wave, release, documentation |
 | `{{CITATION_LOCUS}}` | The units a `[ShortKey, locus]` may name | section, equation, page; folio, recto or verso, line; table, column, specification; wave, variable, value label |

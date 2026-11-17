@@ -44,7 +44,7 @@ where a reader who meets an unfamiliar word should look first.
 | **residue** | what a rebuild left behind in a live draft: a reference to something no longer there | a chemical residue; an amino-acid residue |
 | **authority** | which statement of this repository governs when two disagree (`PRECEDENCE.md`) | a cited case or statute, and the hierarchy of legal sources. `PRECEDENCE.md` orders this project's own statements, and says nothing about any discipline's order of sources |
 | **the public record**, also *the published literature* | what is published outside this repository: articles, editions, reference works, published estimates (`PRECEDENCE.md`, tier 4). It names tier 4, heads a column of the tension ledger, and names that ledger's file | the public record in the *legal* sense, which is the court record and the reporters; those are sources of record here, at tier 2, and a divergence from one is an ordinary tension row |
-| **standing** | of a registry entry: what searching for later or contrary material found, and when | *locus standi*, the right to bring a claim |
+| **standing** | of a registry entry: what searching for later or contrary material found, and when; or that no search was made, and why | *locus standi*, the right to bring a claim |
 | **plan** | the unit of work: an aspect isolated, with criteria fixed before execution | a project plan or a schedule |
 | **round** | the unit of time: one prompt, the work it asks for, and the entry that logs it | a round of funding; a review round |
 | **ruling** | the researcher's decision on a matter put to them, recorded in the researcher's words in the log entry of the round that gave it; a ruled matter is not raised again without evidence the ruling did not have (`MANIFESTO.md` §16) | a court's or a regulator's ruling, which binds parties; a *standing direction*, which governs later rounds |
@@ -55,6 +55,7 @@ where a reader who meets an unfamiliar word should look first.
 | **harness** | the program that runs the assistant and can run a command before or after each reply | a test harness in the general sense |
 | **hook** | a command the harness runs at a named moment, such as after each reply | a hook in a web framework; a hook in fishing or writing |
 | **subagent** | a reader given one task and no access to this conversation's reasoning | an agent in the economic sense |
+| **template** | the methodology template: the repository a project is made from, whose rulebooks, guide, tools, and artifact templates the project keeps as its own; a sentence that still describes it rather than the project speaks in *the template's voice* (`governance/roles/documentation_sweep.md`, item 5) | an *artifact template*, a file whose name begins with `_template`, copied to start one artifact of its kind and named with that kind where both could be meant (the entry template, the plan template, the check-program template); a template in the software sense |
 | **build lens** | a passage of these rulebooks addressed to the template's own construction, stripped when a project is instantiated | a lens in optics; a build in the software sense |
 | **assertion** | one independently falsifiable statement inside a claim; what a check gates, one at a time | an assertion in the programming sense, which is one way to write one |
 | **check record** | the dated entry recording one execution of a check: the date, who ran it, the verdict, and the second pass | the check itself, which is the investigation; a record in the archival sense |
@@ -124,8 +125,9 @@ Three kinds of name, with three costs:
    `Frame:`, and the rest). Configured: `tools/artifacts.toml` carries a
    `[fields.roles]` table mapping each role to the name this project
    writes, and every tool reads the name from there. Change it there,
-   change the templates under `evidence_and_reasoning/` and
-   `python_project/src/` to match, and the checks follow. Do this before any artifact carries the field. A
+   change the artifact templates under `evidence_and_reasoning/` and
+   `python_project/src/` to match, and the checks follow. Do this before
+   any artifact carries the field. A
    registry bullet, `Standing:` among them, is not a header field: it is
    renamed in `[registry] required` and in the registry's own template.
 
@@ -138,7 +140,8 @@ Three kinds of name, with three costs:
 A fourth kind of name is **fixed**: the symbols the tools resolve inside a
 check program, `construct`, `sanity`, `verify`, `MUTATIONS`, `BASIS`,
 `RESULT`. A project may not rename them without editing the tools that
-call them, and the shipped program template names them at every use so a
+call them, and the check-program template,
+`python_project/src/_template_check.py`, names them at every use so a
 reader meets the contract rather than the word. Where one collides with
 the discipline (a *construct* is an engineered DNA), the check's own
 docstring says in one line what the function builds, and the collision

@@ -4,8 +4,8 @@
 
 **Role.** A reader who takes a project's *documentation* as one system and
 reports where it disagrees with itself: the rulebooks, the folder indexes,
-the templates, the configuration, the status files, and the glossary, read
-together rather than one at a time.
+the artifact templates, the configuration, the status files, and the
+glossary, read together rather than one at a time.
 
 It is not the consistency sweep of `CHECK_METHODOLOGY.md` §7, which reads
 the *record* (the claims, the checks, the ledgers) after a correction
@@ -23,10 +23,10 @@ construction.
 
 **Fires.**
 
-- as the first prompt after a project is instantiated and its slots are
-  filled, when every copied file still speaks in the template's voice;
-- after a batch of edits to the rulebooks, the indexes, the templates, or
-  the configuration;
+- after the round that states a new project's question
+  (`GETTING_STARTED.md` §4), the first of the project's sweeps;
+- after a batch of edits to the rulebooks, the indexes, the artifact
+  templates, or the configuration;
 - before a release, and before a project closes;
 - whenever a reader was sent to a document that did not say what its
   pointer promised, which is the sign that the sweep is overdue.
@@ -56,7 +56,8 @@ Then read, in full and as one system:
     evidence_and_reasoning/editorial_standards.md;
   the session file ONBOARDING.md;
   every README.md and every ROADMAP.md;
-  every file whose name begins with an underscore (the templates);
+  every file whose name begins with an underscore (the artifact
+    templates);
   the configuration tools/artifacts.toml and the harness settings;
   the status files CURRENT_STATE.md, FINDINGS.md,
     evidence_and_reasoning/research_statement.md, problem_statement.md,
@@ -84,8 +85,11 @@ Report, before editing anything:
    header still bears the template's updated date (a file it has not
    changed keeps the template's dates, DOCUMENT_GENRES.md section 3), and
    every file whose text still describes the template rather than this
-   project (a build-lens block, an unfilled placeholder from a template
-   file, a sentence about the template's own construction);
+   project (a build-lens block; a slot's token outside the Slots tables,
+   unless the slot's owner row records it as open by decision, and other
+   than a slot's name in a comment of tools/artifacts.toml; an artifact
+   template's placeholder left in an instance; a sentence about the
+   template's own construction);
 6. every slot value that does not read as a sentence where it was
    substituted, and every slot filled in two places with different values;
 7. every term this project's documents use in two senses, and every term
@@ -95,7 +99,8 @@ Report, before editing anything:
 8. every direction in those prompts that governs later rounds and is
    written in neither of its homes, the file that owns its subject or
    ONBOARDING.md, Standing directions (MANIFESTO.md, opening, on standing
-   directions); every line under Standing directions without its prompt;
+   directions); every line under Standing directions without its prompt
+   or the "by hand" mark;
    and every standing direction in words its prompt does not bear out;
 9. [this project's own documentation items, listed here]
 

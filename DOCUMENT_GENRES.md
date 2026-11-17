@@ -2,7 +2,7 @@
 
 *Created 2 September 2026; updated 16 November 2026.*
 
-Every artifact in a repository built from this template belongs to exactly
+Every artifact in a repository built from the template belongs to exactly
 one of three genres, and the genre determines how the artifact may be
 changed. This is the rule that keeps documentation from becoming a change
 log of itself, where it is followed. The genre checker, `tools/lint_docs.py`,
@@ -97,7 +97,7 @@ finds the one finds the other.
 
 | Artifact | Frozen when |
 |---|---|
-| a released version of the main write-up, together with what is released with it, {{DELIVERABLE}} | released by the researcher: a `Released <date>` header line on the version, and a row in the changelog; a first version has no changelog, and its stamp alone releases it |
+| a released version of the main write-up, together with what is released with it (the deliverable, Slots below) | released by the researcher: a `Released <date>` header line on the version, and a row in the changelog; a first version has no changelog, and its stamp alone releases it |
 | a standalone note or write-up under `paper/` not owned by an open plan | on release, the same way |
 | a review under `paper/reviews/` not owned by an open plan | when the round that acts on it closes: a review is written across that round, and freezes with its last column filled |
 | a version changelog under `paper/` | on release of the later version |
@@ -354,7 +354,7 @@ the reader the plan is done.
 
 ## Indexes and cross-references are kept on purpose
 
-A project built from this template keeps indexes, ledgers, and
+A project built from the template keeps indexes, ledgers, and
 cross-references that point at information held elsewhere. That is not
 redundancy to be eliminated. It serves two readers at once: a human, who
 needs the material to be navigable, and an assistant, for which a good

@@ -1,6 +1,6 @@
 # Source documents
 
-*Created 3 September 2026; updated 8 September 2026.*
+*Created 3 September 2026; updated 16 November 2026.*
 
 The sources of record (`PRECEDENCE.md`, tier 2): what a source *actually
 says*, read against the source itself in the form the project designates.
@@ -44,4 +44,6 @@ never neither (`ONTOLOGY.md` §2.1, `held` and `consulted-at`).
   row names it as such and names what the second reader returns to
   instead: the original at its shelfmark, or the extract re-cut from the
   release at its identifier. The return has to be possible for somebody
-  else, and saying whose copy was read is part of saying how.
+  else, and saying whose copy was read is part of saying how. The working
+  copy itself, which the repository may not hold, is git-ignored or kept
+  outside the tree.

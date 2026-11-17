@@ -2,7 +2,7 @@
 
 *Created 2 September 2026; updated 16 November 2026.*
 
-This file defines the unit of verification in a repository built from this
+This file defines the unit of verification in a repository built from the
 template: the **check**. It owns four things the other rulebooks point to:
 the **register** vocabulary, in which every claim's trust level is stated;
 the **instrument or procedure of record**; the discipline that makes a
@@ -13,8 +13,8 @@ treats a **written check procedure** as a check in every rule below.
 A check is one self-contained investigation of one claim, question, or
 construction. It carries no status of its own: it is live while the plan
 that owns it is open, and frozen once that plan closes
-(`DOCUMENT_GENRES.md`). Its form is {{CHECK_FORM}}: a program, a written
-check procedure, or both. Nothing below assumes the form.
+(`DOCUMENT_GENRES.md`). Nothing below assumes its form, which this
+project fixes once in the Slots table below: {{CHECK_FORM}}.
 
 > **Build lens.** The template makes no research claims and runs no
 > checks. The registers, the rules, and the sweep are shipped, not
@@ -63,8 +63,8 @@ Beyond the words `MANIFESTO.md` and `DOCUMENT_GENRES.md` define:
   `## Executions`, and a check executed more than once has more than one.
 - A **mutation** is a named alteration to something an assertion claims to
   depend on, made to confirm that the check notices. The project's
-  alterations are {{MUTATION_SET}}, each with a short name the header
-  carries and a gloss saying what it alters.
+  alterations, each with a short name the header carries and a gloss
+  saying what it alters, are its mutation set: {{MUTATION_SET}}.
 - The **docket** of a plan is its list of items deferred to its closure.
 
 ## Header lines
@@ -80,7 +80,8 @@ Plan: 003, task 2           the owning plan (DOCUMENT_GENRES.md)
 ```
 
 A check's header adds `Mutation: <name>`, naming one or more members of
-{{MUTATION_SET}}. A claim inside a standing reservation (§6) also carries
+the mutation set (Slots below) by the short names `[vocab] mutations`
+lists. A claim inside a standing reservation (§6) also carries
 `Reserved <D Month YYYY>, plan NNN`: a comma after the date and never a
 colon, so the line is a stamp and not a change narrative
 (`DOCUMENT_GENRES.md`).
@@ -164,9 +165,9 @@ check gates it.
 
 ## 3. The instrument or procedure of record
 
-The instrument or procedure of record for this project is
-{{VERIFICATION_TOOL}}, the thing a second reader returns to in order to
-repeat a verification (`MANIFESTO.md` §5). It is identified by whatever
+The instrument or procedure of record for this project, the thing a
+second reader returns to in order to repeat a verification (`MANIFESTO.md`
+§5), is {{VERIFICATION_TOOL}}. It is identified by whatever
 makes that return possible: for software, the version and the pinned
 environment; for a source, the edition or shelfmark and the form consulted
 (original, facsimile, microfilm, digital surrogate); for a dataset, the
@@ -229,7 +230,7 @@ way a check can pass while testing nothing.
 - **Show every assertion falsifiable.** Alter something the assertion
   claims to *depend on*, and confirm the check reaches a failing verdict.
   An assertion that cannot fail is not an assertion. Each check names its
-  mutations in its header, from {{MUTATION_SET}}; a check that survives
+  mutations in its header, from the mutation set; a check that survives
   the mutations it names is gated on nothing. For a check that executes,
   the alteration is applied to a scratch copy and the check re-run; for a
   written check procedure, the alteration is planted in the transcription,
@@ -367,10 +368,11 @@ applied; every other fix is brought with its proposed wording, and the
 assistant stops.
 
 **This sweep reads the record.** Its counterpart over the *documentation*,
-which asks whether the rulebooks, the indexes, the templates, and the
-configuration still agree with each other, is a standing prompt of its own:
-`governance/roles/documentation_sweep.md`, made after a batch of edits to
-them and first of all when a project has just been instantiated. Neither
+which asks whether the rulebooks, the indexes, the artifact templates, and
+the configuration still agree with each other, is a standing prompt of its
+own: `governance/roles/documentation_sweep.md`, made after a batch of edits
+to them, and after the round that states a new project's question
+(`GETTING_STARTED.md` §4). Neither
 replaces the other, and a project holding a third thing its own field calls
 a sweep names all three rather than writing bare *the sweep* (`GLOSSARY.md`).
 
@@ -453,7 +455,8 @@ The tools check the following and report what they find (`MANIFESTO.md`
    assertion has a syntactically constant condition. Such an assertion
    passes whatever the work does.
 3. **Mutation coverage.** Every check carries a `Mutation:` line naming
-   members of {{MUTATION_SET}}. For a check that executes, the probe
+   members of the mutation set, as `[vocab] mutations` in
+   `tools/artifacts.toml` lists them. For a check that executes, the probe
    applies exactly the mutations that check names to a scratch copy,
    re-runs it, and reports it if it still passes. For a written check
    procedure the probe reports only an absent or unrecognized `Mutation:`

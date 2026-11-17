@@ -1,9 +1,9 @@
 # Harness wirings
 
-*Created 5 September 2026; updated 8 September 2026.*
+*Created 5 September 2026; updated 16 November 2026.*
 
 One folder per harness, each holding the commands that make that
-harness run the template's tools at the moments the manifesto names:
+harness run this repository's tools at the moments the manifesto names:
 after each reply (the reply hook of `MANIFESTO.md` §16) and at session
 start (`ONBOARDING.md`). The tools themselves know no harness; a wiring
 is a thin adapter from what the harness provides (a transcript, a hook
@@ -12,14 +12,14 @@ standard input, a repository root).
 
 | Folder | Harness |
 |---|---|
-| [claude_code/](claude_code/) | the command-line harness this template was built with; its settings file is `.claude/settings.json` at the repository root |
+| [claude_code/](claude_code/) | the command-line harness this repository is wired for; its settings file is `.claude/settings.json` at the repository root |
 
 The template endorses no harness (`VISION.md`, *Non-goals and limits*).
 One wiring ships because one had to, and it is Anthropic's Claude in its
 command-line harness; the rest of this file is what a second costs. The
-instantiation procedure does not yet ask which harness a project wants, so
-a project on another one removes the shipped wiring rather than declining
-it.
+template's instantiation procedure records the answer to its reply-hook
+question but copies this wiring whatever the answer, so a project on
+another harness removes it afterwards, by the recipe below.
 
 ## Adding a wiring, and removing one
 

@@ -1,6 +1,6 @@
 # The blind referee
 
-*Created 5 September 2026; updated 6 September 2026.*
+*Created 5 September 2026; updated 16 November 2026.*
 
 **Role.** A referee who reads the write-up as its intended reader will:
 with the document alone, without the project's claims, checks, or the
@@ -11,11 +11,11 @@ the referee does not have; that is the point.
 `paper/README.md`, *Releasing a version*, step 1).
 
 **Reads.** The write-up at the version or commit named, and nothing
-else (`paper/reviews/README.md`); where what is released with it
-(`{{DELIVERABLE}}`) is to be read too, its paths are given in the
-prompt's slot, and nothing under `evidence_and_reasoning/` ever is. For
-an assistant that means a fresh session or a subagent given the file and
-nothing else.
+else (`paper/reviews/README.md`); where what is released with it (as
+the deliverable names it, `DOCUMENT_GENRES.md`, *Slots*) is to be read
+too, its paths are given in the prompt's bracketed placeholder, and
+nothing under `evidence_and_reasoning/` ever is. For an assistant that
+means a fresh session or a subagent given the file and nothing else.
 
 **Prompt.**
 

@@ -25,7 +25,7 @@ Verified-by: unchecked
      Plan         the owning plan under research_plans/, task optional. A
                   claim needs one; open a plan first.
      Verified-by  researcher | assistant, <route> | deferred, <instrument> |
-                  unchecked | <party from the roster {{PARTIES}}, ONTOLOGY.md
+                  unchecked | <party from the roster, ONTOLOGY.md
                   Slots>, <route>
      Add these lines when they apply, and not before:
      Backed-by: [check NNN]      once a check exists; mandatory once the
@@ -44,9 +44,8 @@ Verified-by: unchecked
 
 <!-- The statement, precisely, with its scope. Every input classified in
      the text as derived, imposed, or conjectured (CHECK_METHODOLOGY.md
-     section 4). Cite sources by [ShortKey, locus], the locus a page,
-     section, folio, table, or variable as the project fixes in
-     {{CITATION_LOCUS}} (ONTOLOGY.md, Slots); cite claims by [claim NNN].
+     section 4). Cite sources by [ShortKey, locus], the locus in the units
+     the project fixes (ONTOLOGY.md, Slots); cite claims by [claim NNN].
      Split any sentence that would carry two registers. -->
 
 ## What is not claimed

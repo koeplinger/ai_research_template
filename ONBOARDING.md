@@ -14,7 +14,10 @@ This file points; the rulebooks govern:
 
 > **Build lens.** No session works on a research project here; this file
 > ships as the template's onboarding and is filled by the project. The
-> build's own onboarding is `MANIFESTO.md` with its build-lens blocks.
+> build's own onboarding is `MANIFESTO.md` with its build-lens blocks. A
+> prompt asking to make a project from this clone is setup at a prompt:
+> its record is entry 001 of the new project (`GETTING_STARTED.md` §4),
+> and nothing is logged here.
 
 ## The first minutes
 
@@ -26,19 +29,18 @@ This file points; the rulebooks govern:
       -> FINDINGS.md                 what the record has established
       -> evidence_and_reasoning/README.md, and its reading order
 
-If the slots are still unfilled, the round is **setup**, and
-`GETTING_STARTED.md` walks it through. In short, its work is:
-fill each slot where its owner defines it, stopping at every one for the
-researcher's value, the Slots table at the end of each rulebook naming
-what the slot means and giving examples from several disciplines; rename
-any field name the project's own discipline has taken, in
-`tools/artifacts.toml` under `[fields.roles]`, before any artifact carries
-it (`GLOSSARY.md`, *Renaming a word this template uses*); write the
-research statement and the keystone; and close by making the
-documentation consistency sweep
-(`governance/roles/documentation_sweep.md`), which is what catches a slot
-value that does not read in its sentence and a file still speaking in the
-template's voice.
+If a slot's owner row carries neither a value nor the open-by-decision
+marker, or *Standing directions* below lacks the two directions settled at
+setup, the round is **setup**, and `GETTING_STARTED.md` walks it through:
+the questions of its §3, put to the researcher one at a time, each answer
+written where the slot's owner defines it; the setup decisions that are
+not slots, listed at the end of its §1; and any field name the project's
+own discipline has taken, renamed in `tools/artifacts.toml` under
+`[fields.roles]` before any artifact carries it (`GLOSSARY.md`, *Renaming
+a word this template uses*). Setup proposes no plan, and of the write-up
+puts only its three slots' questions, each of which may wait
+(`GETTING_STARTED.md` §3), never what it will say. The rounds after
+setup, and their order, are `GETTING_STARTED.md` §4.
 
 ## Precedence
 
@@ -102,12 +104,17 @@ meets in its first minutes.
 ## Standing directions
 
 <!-- The researcher's standing directions, one line each with the prompt
-     that gave it, in the researcher's words, quoted where they fit
-     (MANIFESTO.md section 2), so a session knows them without re-deriving
-     them. Do
-     not copy slot values here: the instrument of record and the mutation
-     set are CHECK_METHODOLOGY.md's Slots, the parties and the citation
-     locus are ONTOLOGY.md's, spelling and pronoun are
+     that gave it, or "by hand" where the researcher wrote it outside a
+     round and its commit is the provenance, in the researcher's words,
+     quoted where they fit (MANIFESTO.md section 2), so a session knows
+     them without re-deriving them. Two are settled at setup: whether the assistant may search the
+     public record for the standing of a work it registers (MANIFESTO.md
+     section 3), and what identity, if any, the assistant and its
+     subagents may give an outside service that asks for one, recorded by
+     what it is and never by the address itself (MANIFESTO.md section 6).
+     Do not copy slot values here: the instrument of record and the
+     mutation set are CHECK_METHODOLOGY.md's Slots, the parties and the
+     citation locus are ONTOLOGY.md's, spelling and pronoun are
      editorial_standards.md's Conventions. -->
 
 ## Slots

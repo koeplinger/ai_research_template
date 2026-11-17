@@ -17,7 +17,7 @@ main thread compares what it returns with them before bringing it
 | Role | Fires | Reads | Returns |
 |---|---|---|---|
 | [refuter.md](refuter.md) | on every sweep or review finding | the finding, the passage, and what it cites | stands, refuted with the reason, or narrowed |
-| [documentation_sweep.md](documentation_sweep.md) | after a batch of edits to the rulebooks, indexes, templates, or configuration; first of all after instantiation | the project's documentation, as one system, and the log's prompts since the last documentation sweep | the disagreements, each with its two homes |
+| [documentation_sweep.md](documentation_sweep.md) | after a batch of edits to the rulebooks, indexes, artifact templates, or configuration; after the round that states a new project's question (`GETTING_STARTED.md` §4) | the project's documentation, as one system, and the log's prompts since the last documentation sweep | the disagreements, each with its two homes |
 | [blind_referee.md](blind_referee.md) | before a version freezes | the write-up alone | a review record |
 | [structure_census.md](structure_census.md) | at the head of a review, and before a review patches a section | the section and the sections it refers to | the census table |
 | [deletion_ledger.md](deletion_ledger.md) | on every rebuild | the section before and after, and the census where one was | the two ledgers and the net word delta |

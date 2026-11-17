@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The falsifiability probe: every check program re-run under each mutation it names, in a scratch copy of the tree (CHECK_METHODOLOGY.md, What is checked mechanically, item 3, the half that executes).
 
-Created 5 September 2026; updated 8 September 2026.
+Created 5 September 2026; updated 16 November 2026.
 
 For a check that executes, the probe applies exactly the mutations the
 check names to a scratch copy and re-runs it, reporting it under CHECK-3
@@ -196,9 +196,9 @@ def probe(t: lint_docs.Tree, timeout: float, only: str | None = None) -> tuple[l
                 if code != 0:
                     detail = msg[7:] if msg.startswith("PROBE: ") else (msg if code is None else f"exited {code}")
                     if code == NO_HOOK and msg.startswith("PROBE: no "):
-                        lint_docs.report("CHECK-3", prog, 1, f"cannot be probed: {detail} (the template's form)")
+                        lint_docs.report("CHECK-3", prog, 1, f"cannot be probed: {detail} (the check-program template's form)")
                     else:
-                        lint_docs.report("CHECK-3", prog, 1, f"cannot be probed: its verdict is not reached by calling main() as the template's form does ({detail})")
+                        lint_docs.report("CHECK-3", prog, 1, f"cannot be probed: its verdict is not reached by calling main() as the check-program template's form does ({detail})")
                     matrix.append(f"  [check {num}]  direct: passes  wrapped: FAILS ({detail})  " + "  ".join(f"{n}: not probed" for n in names))
                     continue
                 cells = []
@@ -209,7 +209,7 @@ def probe(t: lint_docs.Tree, timeout: float, only: str | None = None) -> tuple[l
                     if word == "SURVIVES":
                         lint_docs.report("CHECK-3", prog, mline, f"survives the mutation {n!r} it names: a mutation a check survives is a defect (section 5)")
                     elif word == "NOT PROBED":
-                        lint_docs.report("CHECK-3", prog, 1, f"cannot be probed: {detail} (the template's form)")
+                        lint_docs.report("CHECK-3", prog, 1, f"cannot be probed: {detail} (the check-program template's form)")
                         cells += [f"{m}: not probed" for m in names[k + 1:]]
                         break
                 matrix.append(f"  [check {num}]  direct: passes  wrapped: passes  " + "  ".join(cells))

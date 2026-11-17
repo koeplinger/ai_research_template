@@ -62,9 +62,9 @@ The project's choices, recorded once and used throughout.
 |---|---|
 | Language and spelling | {{SPELLING}}. Quoted titles and verbatim quotations keep their source spelling. |
 | Dashes | {{DASH_CONVENTION}}. |
-| The paper's agent | {{PAPER_PRONOUN}}, used consistently. It performs the paper's acts (*we fix*, *this article argues*, *I measure*), not bare imperatives and not agentless passives where the paper is the agent. |
-| Adequate references | {{REFERENCE_ADEQUACY}}: which kind of reference (`MANIFESTO.md` §2) is adequate for which kind of claim. |
-| The deliverable | {{DELIVERABLE}}: the form of the write-up, including what its venue expects of a title, and what is released with it. |
+| The paper's agent | {{PAPER_PRONOUN}}. The paper's acts (the acts its argument performs, such as fixing a notation or measuring a quantity) take this agent throughout: never a bare imperative, and never an agentless passive where the paper is the agent. |
+| Adequate references | {{REFERENCE_ADEQUACY}} (`MANIFESTO.md` §2). |
+| The deliverable | {{DELIVERABLE}} (`DOCUMENT_GENRES.md`, Slots). |
 | Names | The project's standard name for a thing, chosen once and used throughout. Where the source's own term is itself the object of study, or where its equivalence to a modern name is a claim the project has not established, the source's term is the standard name and the modern gloss is an annotation. Either way the mapping, or the fact that none is asserted, is recorded in the glossary. Frozen artifacts keep their own wording. |
 
 ## Corollaries
@@ -208,10 +208,11 @@ Conventions.
 
 ### Voice
 
-{{VOICE}}: the project's voice is read off the researcher's own prior
-writing where it exists, and otherwise chosen and stated by the
-researcher; it is recorded here as a list of rules a proposed sentence can
-be tested against. Whatever the rules are, they serve four goals, and a
+The project's voice is read off the researcher's own prior writing where
+it exists, and otherwise chosen and stated by the researcher, as a list of
+rules a proposed sentence can be tested against. The voice row of the
+Slots table below records it, as rules that fit one line or by naming a
+record kept in this section. Whatever the rules are, they serve four goals, and a
 recorded voice is checked against them:
 
 1. **The reader can redo everything the access conditions allow**
@@ -228,8 +229,10 @@ recorded voice is checked against them:
    off it.
 
 An example voice record, as a model of the form; the illustrations pair a
-mathematical sentence with a historical one. Replace the record with your
-own:
+mathematical sentence with a historical one. Where the voice row names a
+record of the project's own, that record stands here in place of this one;
+where the row keeps this one, it stands as it is; where the row carries
+the rules itself, this example is deleted:
 
 - **Name the object in the subject position.** "Complex numbers are a
   two-dimensional algebra over the reals." "The 1832 board of health was a
@@ -270,13 +273,13 @@ in the list of accepted findings in `tools/artifacts.toml` (`MANIFESTO.md`
 §16, *A ruled matter stays ruled*).
 
 1. On every durable artifact: the dash convention, as the character rule
-   {{DASH_CONVENTION}} names; the spelling variant, by a word list of the
-   common variants for {{SPELLING}}, skipping quoted text.
+   `[editorial] dashes` names; the spelling variant, by the word list
+   `[editorial] spelling` selects, skipping quoted text.
 2. On every unfrozen artifact under `paper/`: the phrases the project
    lists in `tools/artifacts.toml` under `[editorial] paper_phrases`,
    matched case-insensitively as whole phrases, skipping quoted text; and
    body headings that begin with an article or end in a question mark.
-   The list ships as *without loss of generality*, *clearly*, *it is easy
+   The list starts as *without loss of generality*, *clearly*, *it is easy
    to see*, *it follows immediately*, *as is well known*, *it is well
    established that*, *scholars agree*, *robust to*, *remarkable*,
    *striking*, *beautiful*, *the point at issue*. It is the project's to

@@ -12,9 +12,9 @@
 - Title: <!-- as the work or its catalogue gives it -->
 - Where: <!-- venue, series, or repository and collection -->
 - Year: <!-- of the version consulted; a range where the discipline assigns one -->
-- Identifier: <!-- DOI | archival shelfmark | dataset release and version | URL, with the date retrieved | none; see witnesses -->
+- Identifier: <!-- DOI | archival shelfmark | dataset release and version | URL, with the date retrieved | none; see witnesses; where an outside body issued it and it was resolved there, end with: resolved <where: the DOI resolver, the archive's catalogue, the producer's release page>, D Month YYYY -->
 - Keywords: <!-- for finding it across files -->
-- Standing: <!-- searched <where: the publisher's corrections page, a retraction database, the archive's catalogue note, the producer's release notes>, D Month YYYY; none found | found, see Disputed -->
+- Standing: <!-- searched <where: the publisher's corrections page, a retraction database, the archive's catalogue note, the producer's release notes>, D Month YYYY; none found | found, see Disputed | not searched, D Month YYYY; <why: no direction to search the public record; made for this project, with no standing to search> -->
 - Notes: <!-- optional: relevance to this project; the form consulted -->
 <!-- - Disputed: <what: authorship, dating, authenticity, priority, replication, a published correction, or a superseding release>, [ShortKey of the source]     add only where a dispute exists -->
 <!-- - Witness of: [ShortKey]     add only where this is one record of a work registered under another key -->

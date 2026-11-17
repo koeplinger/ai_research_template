@@ -1,13 +1,15 @@
 # Notes
 
-*Created 3 September 2026; updated 8 September 2026.*
+*Created 3 September 2026; updated 16 November 2026.*
 
 Dated working notes: `YYYY-MM-DD_short_name.md`. A note is a dated record
-of what a sweep, an audit, a reading, a day in the archive, a cleaning or
-run, or a line of reasoning found on that day. Its subject is an event,
-so it is exempt from the narrative rule and frozen on writing, or with the
-plan that owns it (`DOCUMENT_GENRES.md`, *Dated records*). Copy
-[`_template.md`](_template.md) to start one.
+of what a sweep, an audit, a search, a reading, a day in the archive, a
+cleaning or run, or a line of reasoning found on that day. A note's
+subject is an event, so it is exempt from the narrative rule and frozen on
+writing, or with the plan that owns it (`DOCUMENT_GENRES.md`, *Dated
+records*). Copy [`_template.md`](_template.md) to start one. The record of
+a search is a *search record*, and its hits are listed as
+`evidence_and_reasoning/references/README.md` says.
 
 ## Two kinds
 

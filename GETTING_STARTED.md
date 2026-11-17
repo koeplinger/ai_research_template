@@ -7,31 +7,64 @@ with a project whose first plan is engaged, whose first claim is checked,
 and whose first commit is clean. It assumes nothing about your field and
 no prior knowledge of where the template came from.
 
-**Steps 1 to 3 have a tool.** `tools/new_project.py` does them: it copies
-the template, removes what belongs to the template's own construction and
-the pointers to it, strips the build lens, asks you for each of the
-sixteen slots, writes both halves of every value, renames any field your
-discipline has taken, adds your licenses beside the template's, writes a
-front page, installs the hooks, and runs the round check in the new tree.
+Two words before you start. A **round** is one prompt, the work done in
+response to it, and the log entry that records it; a **slot** is a value
+your project fills once, written `{{LIKE_THIS}}`, whose *owner row* is its
+line in the Slots table of the file that owns it. Everything else you
+meet is in `GLOSSARY.md`.
+
+**Steps 1 to 3 have a tool.** `tools/new_project.py` does what can be
+done mechanically: it copies the files the template's repository tracks,
+removes what belongs to the template's own construction and the pointers
+to it, strips the build lens, converts the shipped prose to your spelling
+variant, asks you each slot's question of §3 and writes each answer where
+its owner defines it, writes the values the tools read, renames any field
+your discipline has taken, adds your copyright holder and citation beside
+the template's, installs the hooks, writes a front page, records in a
+dated working note what it did and what it left to you, and runs the
+round check in the new tree. Keep the answers file outside both trees:
 
 ```bash
-python3 tools/new_project.py --template > answers.toml   # then fill it in
-python3 tools/new_project.py --into ../my-project --answers answers.toml
+python3 tools/new_project.py --template > ../answers.toml   # then fill it in
+python3 tools/new_project.py --into ../my-project --answers ../answers.toml
 ```
 
 Add `--yes` to take the file as it stands; without it the tool asks about
 every value, showing what the file gave, and without `--answers` it asks
-about all of them. Read steps 1 to 3 anyway: they say what it is doing and why, and you have to make the same
-decisions either way. Steps 4 onward are yours.
+about all of them.
+
+**Setup at a prompt, as one pass.** An assistant asked to make the
+project cannot answer the tool's questions for you, so it puts them to you
+first and runs the tool once:
+
+1. it puts the questions of §3 one at a time, each with the assistant's
+   recommendation after the options where it has one, labeled as its own
+   (`MANIFESTO.md` §16, *Putting a decision*); with them, the values the
+   tools read, worked out from your answers and shown to you (§3, *The
+   machine half*); and then the setup decisions that are not slots,
+   listed at the end of §1, the privacy list first;
+2. you name the new project's folder, and where the answers file goes,
+   outside both trees;
+3. it writes your answers there: both halves of each slot, the copyright
+   holder, citation and start date under `[project]`, and any rename under
+   `[rename]`, leaving blank whichever of the three slots you leave to
+   wait; and it runs the tool with `--answers` and `--yes`;
+4. in the new project, before anything is committed, it writes your
+   privacy list to `.privacy/stopwords.txt`, where there is one; the two
+   standing directions under `ONBOARDING.md`, *Standing directions*; and
+   the fields a kind of work needs of its own under `[registry.by_kind]` in
+   `tools/artifacts.toml`, where you named any. Where you chose to drop the
+   shipped Python check suite, it removes it as `python_project/README.md`
+   says. It then writes entry 001, the record of the setup, as §4 says,
+   recording there a privacy list of none, and marks whichever of the
+   three slots you left to wait in its owner row (§3).
+
+Read §1 to §3 anyway: they say what the tool does and why, and the
+decisions are the same either way. §4 onward is yours.
 
 Read `HOW_IT_FITS_TOGETHER.md` when you want to know *why* the parts are
 shaped as they are. Read this file to get moving. The whole of it is one
-sitting, and the first round is the longest part.
-
-Two words before you start. A **round** is one prompt, the work done in
-response to it, and the log entry that records it; a **slot** is a value
-your project fills once, written `{{LIKE_THIS}}`. Everything else you
-meet is in `GLOSSARY.md`.
+sitting, and the round that states the question is the longest part.
 
 ---
 
@@ -56,22 +89,29 @@ its header; a file you leave keeps the template's dates
 
 | Keep | Why |
 |---|---|
-| every rulebook, index, and template | they are the project |
+| every rulebook, index, and artifact template | they are the project |
 | `VISION.md` | the rulebooks cite it, and it states what the method is for |
 | `tools/`, `governance/` | the checks and the standing roles |
 | `LICENSE.md`, `LICENSE-CODE` | with your own copyright added, below |
 
 **The harness.** What you have just copied includes one wiring, for
-Anthropic's Claude in its command-line harness, and step 1's hook install
-arms it. If that is your assistant, there is nothing to do. If it is not,
-`governance/harness/README.md`, *Adding a wiring, and removing one*, is
-the recipe, and `{{REPLY_HOOK}}` in §3 is where you record what you did.
-Nothing else in the template is vendor-specific, and the tools know no
-harness.
+Anthropic's Claude in its command-line harness: its tracked settings file,
+`.claude/settings.json`, runs the session brief as each session starts and
+the status-block check after each reply, once the harness trusts this
+folder. The harness asks that once for each folder, the template's and the
+project's alike. Answering is a choice about what may run on your
+computer, made in the harness when a session first opens in the folder;
+it is not a decision of the method, and it sets no slot. The assistant
+mentions it, and nothing is committed on its answer. If you decline, nothing runs, and the form of each reply's
+status block is kept by hand (`governance/harness/claude_code/README.md`).
+If that harness is not your assistant's, `governance/harness/README.md`,
+*Adding a wiring, and removing one*, is the recipe, and `{{REPLY_HOOK}}`
+in §3 is where you record what you did. Nothing else in the template is
+vendor-specific, and the tools know no harness.
 
 **The licenses.** Add your own copyright holder to `LICENSE-CODE` beside
-the template's, and add your project's own recommended citation to
-`LICENSE.md`. **Keep the template's citation** as the work yours is
+the template's, dated by the year your project starts, and add your
+project's own recommended citation to `LICENSE.md`. **Keep the template's citation** as the work yours is
 adapted from: the written material is under CC BY 4.0, which requires
 attribution to the original, so replacing that citation rather than adding
 to it would put the project out of compliance with the license it inherits.
@@ -85,6 +125,35 @@ bash tools/install_hooks.sh
 That puts the round check on pre-commit, advisory: it reports and lets the
 commit through. `--strict` makes it refuse instead, which you can change
 at any time.
+
+**Arm the privacy scan.** Decide, before the first commit, what must never
+reach this repository, and write it to `.privacy/stopwords.txt`, one entry
+per line; the folder is git-ignored, and once the list exists the hooks
+scan every commit against it (`tools/privacy_scan.py` gives the form).
+Typical entries: a local path prefix; the name of a private project, a
+dataset the work draws on, or a collaborator who is not to be named; an
+address the assistant may give an outside service. A party the record
+credits by name is not an entry, since `MANIFESTO.md` §6 allows that name.
+*None* is a valid answer. The list is not cloned, any more than the hooks
+are, so every clone arms it again.
+
+**The setup decisions that are not slots**, settled in setup (§4), each
+where it is stated; the privacy list comes first, before the first
+commit:
+
+- the privacy scan's list, or none (*Arm the privacy scan*, above);
+- whether the assistant may look up each work it adds to the reference
+  registry outside this repository, resolving its identifier where it was
+  issued and searching for later corrections or disputes, and what
+  identity, if any, it and its subagents may give an outside service that
+  asks for one: two standing directions, written under `ONBOARDING.md`,
+  *Standing directions*; without the first, the assistant does neither
+  (`MANIFESTO.md` §3 and §6);
+- this project's copyright holder and citation, and the start date whose
+  year dates the copyright (*The licenses*, above);
+- any header field to rename because your discipline has taken its name
+  (§3, *While you are in there*);
+- whether the shipped Python check suite stays (§2).
 
 ---
 
@@ -106,9 +175,10 @@ changes.
 **Rewrite the root `README.md` as your project's front page.** As shipped
 it describes the template, which is not what a reader of your repository
 is looking for. Keep its shape and replace its content: your project's
-title, a paragraph on the question, where to start reading
-(`CURRENT_STATE.md`, `FINDINGS.md`, then the record), the licenses, and a
-line saying the project is built from this template with a pointer to it.
+title, a paragraph on the question (written in the round that states it,
+§4), where to start reading (`CURRENT_STATE.md`, `FINDINGS.md`, then the
+record), the licenses, and a line saying the project is built from the
+methodology template, with a pointer to it.
 
 If your project will not use the shipped Python check suite, this is also
 the moment to decide that; `python_project/README.md` says what removing
@@ -136,43 +206,73 @@ file that owns it.
    Deciding it once is what *the file that owns it* protects: a slot with
    two homes is a slot with two values.
 
-2. **Replace the token with the value everywhere else it appears**, in
-   whatever file, so the sentence reads. Several slots are quoted in
-   files that do not own them, and those are prose, not second
-   definitions. A long value pasted into a sentence usually will not
-   read: put a short handle in the sentence and let the Slots table carry
-   the full value.
+2. **Replace the token with the value everywhere else it appears**, so
+   the sentence reads, except where a token is the slot's name or quotes
+   it: the guide's pages (this file, `HOW_IT_FITS_TOGETHER.md`, and
+   `FORKING.md`) and `GLOSSARY.md`, which are about slots rather than
+   carrying them; the comments of `tools/artifacts.toml` and program
+   source, which name a slot on purpose; and the log under `prompt_logs/`,
+   whose committed entries keep what they recorded. Several slots
+   are quoted in files that do not own them, and those are prose, not
+   second definitions. A long value pasted into a sentence usually will
+   not read: put a short handle in the sentence and let the Slots table
+   carry the full value.
 
    ```bash
-   grep -rno "{{[A-Z_]*}}" --include=*.md . | sort -u
+   grep -rno "{{[A-Z_]*}}" --include=*.md --exclude=GETTING_STARTED.md \
+     --exclude=HOW_IT_FITS_TOGETHER.md --exclude=FORKING.md \
+     --exclude=GLOSSARY.md --exclude-dir=prompt_logs . | sort -u
    ```
 
    When the slots are filled, that list holds the Slots table rows and
    nothing else, because a filled row keeps its token with the value
-   after it. A token on any other line is a slot still unfilled. The
-   documentation consistency sweep of §9 then reads the sentences the
-   values landed in.
+   after it. A token on any other line is a slot still unfilled, or one
+   its owner row records as open by decision. The documentation
+   consistency sweep of §4 then reads the sentences the values landed in.
 
-There are sixteen.
+**A slot that waits for its stage.** Three slots, and only these three,
+depend on a write-up and may stay open, by decision, until one is opened:
+`{{DELIVERABLE}}` with its machine half, `{{PAPER_PRONOUN}}`, and
+`{{VOICE}}`. The decision is yours, recorded in the owner row in place of
+the value, with the prompt that gave it, or *by hand* where you write it
+yourself outside a round and its commit is the provenance, and the stage
+that ends it:
 
-| Slot | Owner | What it decides |
+   ```
+   open     | `{{VOICE}}`: open by decision (prompt 001); filled when a write-up is opened | The recorded voice rules for unfrozen drafts | ... |
+   ```
+
+The marker is written in the owner row itself, never given to the tool
+as an answer. Any other slot left blank keeps the project in setup
+(`ONBOARDING.md`). Until
+the stage the marker names, the slot's tokens stay in the prose, and the
+grep above lists them; at that stage the slot is filled by the same two
+moves.
+
+There are sixteen; three of them may wait. Each row's question is the one
+the assistant puts at setup, in plain words, adding its recommendation
+after the options where it has one (`MANIFESTO.md` §16, *Putting a
+decision*). An answer is a phrase that completes its owner's sentence, as
+the examples below are, with no closing period.
+
+| Slot | Owner | Asked in plain words |
 |---|---|---|
-| `{{PROJECT_TITLE}}` | `evidence_and_reasoning/README.md` | the project's name, as the statements use it |
-| `{{PERSONA}}` | `MANIFESTO.md` | the domain expert the assistant works as |
-| `{{VERIFICATION_TOOL}}` | `CHECK_METHODOLOGY.md` | the instrument or procedure of record a second reader returns to |
-| `{{CHECK_FORM}}` | `CHECK_METHODOLOGY.md` | what a check is here: a program, a written procedure, or both |
-| `{{MUTATION_SET}}` | `CHECK_METHODOLOGY.md` | the named faults a check must fail under |
-| `{{PARTIES}}` | `ONTOLOGY.md` | who may appear on a `By:` or `Verified-by:` line |
-| `{{CITATION_LOCUS}}` | `ONTOLOGY.md` | the units a citation may name a place by |
-| `{{REFERENCE_FIELDS}}` | `ONTOLOGY.md` | the bullets every registry entry carries |
-| `{{REFERENCE_ADEQUACY}}` | `evidence_and_reasoning/editorial_standards.md` | which kind of reference is adequate for which kind of claim |
-| `{{DELIVERABLE}}` | `DOCUMENT_GENRES.md` | the publishable form, and what is released with a version |
-| `{{SPELLING}}` | `evidence_and_reasoning/editorial_standards.md` | the spelling variant |
-| `{{DASH_CONVENTION}}` | `evidence_and_reasoning/editorial_standards.md` | how asides and ranges are punctuated |
-| `{{PAPER_PRONOUN}}` | `evidence_and_reasoning/editorial_standards.md` | the write-up's agent |
-| `{{VOICE}}` | `evidence_and_reasoning/editorial_standards.md` | the recorded voice rules a proposed sentence is tested against |
-| `{{REPLY_HOOK}}` | `MANIFESTO.md` | where and how the status-block check runs after each reply |
-| `{{DISCLOSURE_RULE}}` | `MANIFESTO.md` | what may leave the repository, where the sources or an approval bind it |
+| `{{PROJECT_TITLE}}` | `evidence_and_reasoning/README.md` | What is the project called? A short descriptive name: it opens the research statement's question and heads the front page. |
+| `{{PERSONA}}` | `MANIFESTO.md` | What kind of expert should the assistant work as? A field and, where it helps, a specialty; the assistant takes that role in every session. |
+| `{{VERIFICATION_TOOL}}` | `CHECK_METHODOLOGY.md` | What does a second person return to when repeating a verification? The software, data, source, or written procedure, named precisely enough (a version, a release, an archive reference, the form consulted) that they reach the same thing. |
+| `{{CHECK_FORM}}` | `CHECK_METHODOLOGY.md` | A check is one self-contained investigation of one claim. Is a check here a program that prints its result, a written procedure a person follows and records, or both, chosen claim by claim? |
+| `{{MUTATION_SET}}` | `CHECK_METHODOLOGY.md` | Which deliberate faults will you plant in what your claims depend on, to show that each check can fail? Give each a short name and say what it alters; a change a claim should survive belongs to a robustness check instead. |
+| `{{PARTIES}}` | `ONTOLOGY.md` | Besides you and the assistant, who will the record credit by name for producing or checking a piece of work? Name each person, group, or service, or answer none; the tools report any name not on the list. |
+| `{{CITATION_LOCUS}}` | `ONTOLOGY.md` | When a citation points to a place inside a work, in what units is that place given? Every unit your sources need, such as page and section, folio and line, table and column, or paragraph number. |
+| `{{REFERENCE_FIELDS}}` | `ONTOLOGY.md` | Which details must every entry in the project's list of references carry, and does a kind of work need more of its own? Seven are required until you change them: authors, title, where published or held, year, identifier, keywords, and standing (what a search for later corrections or disputes found, or why none was made). |
+| `{{REFERENCE_ADEQUACY}}` | `evidence_and_reasoning/editorial_standards.md` | Which kind of reference is good enough to back which kind of claim? Pairs such as a peer-reviewed article for a specialist claim, or an archival document by its reference for what that document says. |
+| `{{DELIVERABLE}}` | `DOCUMENT_GENRES.md` | What will the project publish? Its form, what its venue expects of a title, and what goes out with each released version besides the text, such as data, code, or transcriptions. It may wait until a write-up is opened. |
+| `{{SPELLING}}` | `evidence_and_reasoning/editorial_standards.md` | In which language and spelling variant is the project's prose written: US English, UK English, or another language, for which no word list is checked? US English is checked from the start until you change it. |
+| `{{DASH_CONVENTION}}` | `evidence_and_reasoning/editorial_standards.md` | How does the prose punctuate an aside inside a sentence, and a range such as 10 to 20? Asides take no em-dashes, spaced or unspaced em-dashes, or spaced en-dashes; ranges take an en-dash or the word to. The tools report every em-dash until you change the rule or turn the check off. |
+| `{{PAPER_PRONOUN}}` | `evidence_and_reasoning/editorial_standards.md` | In the write-up, who performs its acts: we (even for one author), I, or the document itself (this article argues)? One choice, used throughout. It may wait until a write-up is opened. |
+| `{{VOICE}}` | `evidence_and_reasoning/editorial_standards.md` | What style rules will drafts of the write-up be tested against? Rules read off your earlier writing, a house or journal style you name, or the example voice record in editorial_standards.md, kept as it stands. It may wait until a write-up is opened. |
+| `{{REPLY_HOOK}}` | `MANIFESTO.md` | Every reply of the assistant ends in status lines saying whether to wait, answer, or walk away. Where and how does the program that runs the assistant check them after each reply: the wiring this repository carries, one you add, or none, with the form kept by hand? |
+| `{{DISCLOSURE_RULE}}` | `MANIFESTO.md` | Do your sources' terms, an agreement, or an ethics approval limit what the project may publish or share, such as a minimum count per table cell, the scope of consent, or an embargo? State the rule, or answer none beyond the general privacy rules. |
 
 Where two Slots tables carry the same slot, the Owner column above is the
 authority; the other table's row is a pointer to it.
@@ -188,7 +288,7 @@ only in the prose is not in force:
 | `{{DASH_CONVENTION}}` | `[editorial] dashes` | `"no-em-dash"`: likewise enforced |
 | `{{REFERENCE_FIELDS}}` | `[registry] required`, and `[registry.by_kind]` | the seven defaults, **required of every entry** until you change them |
 | `{{MUTATION_SET}}` | `[vocab] mutations` | empty: the name check is skipped, and says so |
-| `{{PARTIES}}` | `[parties] names` | empty: the roster check is skipped, and says so |
+| `{{PARTIES}}` | `[parties] names` | empty: the roster check is skipped, and says so; `["none"]` records by decision that no one beyond you and the assistant appears, and the check runs |
 | `{{DELIVERABLE}}` | `[publication]` | disabled: the build and bibliography gates do not run |
 
 The distinction matters. An empty value means the check is skipped and
@@ -214,11 +314,11 @@ a historian of medicine, an empirical microeconomist, a molecular
 biologist, a scholar of contract law, and a machine-learning researcher.
 
 **`{{PROJECT_TITLE}}`**
-- Fever admissions and the house surgeon's diagnoses at a London fever hospital, 1848 to 1866
-- Minimum-wage spillovers in the hourly wage distribution, 2010 to 2019
-- Transcriptional consequences of one gene's knockdown in a colorectal cell line
-- Assumption of responsibility as a remoteness test in the English and Commonwealth courts
-- Sharpness-aware minimization against stochastic gradient descent across seeds
+- Fever admissions at a London fever hospital, 1848 to 1866
+- Minimum-wage spillovers in hourly wages, 2010 to 2019
+- One gene's knockdown in a colorectal cell line
+- Assumption of responsibility as a test of remoteness
+- Sharpness-aware minimization across seeds
 
 **`{{PERSONA}}`**
 - historian of medicine working from archival institutional records
@@ -249,11 +349,11 @@ biologist, a scholar of contract law, and a machine-learning researcher.
 - shuffle the training labels; evaluate on the training split; set the learning rate to zero; drop the seed set to one
 
 **`{{PARTIES}}`**
-- the researcher; the assistant; a paid transcriber; the holding repository's archivist, where a reading came by correspondence
-- the researcher; the assistant; a coauthor; a research assistant; an independent replicator; the data provider's output-control officer
-- the researcher; the assistant; the bench collaborator who runs replicates; the sequencing facility; the coauthor who re-analyzes from raw reads
-- the researcher; the assistant; a named colleague who reads each authority blind at the pinpoint; the journal's cite-checker
-- the researcher; the assistant; one named coauthor who runs the baselines
+- a paid transcriber; the holding repository's archivist, where a reading came by correspondence
+- a coauthor; a research assistant; an independent replicator; the data provider's output-control officer
+- the bench collaborator who runs replicates; the sequencing facility; the coauthor who re-analyzes from raw reads
+- a named colleague who reads each authority blind at the pinpoint; the journal's cite-checker
+- none
 
 **`{{CITATION_LOCUS}}`**
 - folio with recto or verso and entry number; case number and date; date and correspondents, for a letter; page, for print
@@ -284,7 +384,7 @@ biologist, a scholar of contract law, and a machine-learning researcher.
 - a conference paper with an appendix of experiments, released with the code at a tag, the configurations, and the per-seed metrics
 
 **`{{SPELLING}}`**
-- UK English, the *-ise* ending; quotations keep the source's spelling (`uk`)
+- UK English, the *-ise* ending (`uk`)
 - US English (`us`)
 - US English (`us`)
 - UK English with legal spellings kept: *judgment*; *licence* the noun, *license* the verb (`uk`)
@@ -301,7 +401,7 @@ biologist, a scholar of contract law, and a machine-learning researcher.
 - I, for a single-authored article
 - we, also for a single author
 - we
-- I, with *this article* as the agent of the article's own acts
+- the article itself (*this article argues*), with no first person
 - we, also for a single author
 
 **`{{VOICE}}`**
@@ -311,12 +411,12 @@ biologist, a scholar of contract law, and a machine-learning researcher.
 - the proposition in the text and the authority in the footnote; *held* only of the ratio, *said* of dictum
 - every result is a mean and a spread over a stated number of seeds; *significantly* only with the test named
 
-**`{{REPLY_HOOK}}`**
-- the harness wiring the template ships, named by its folder under `governance/harness/` and by the settings file that folder's README points at. Four of the five fill it the same way, since one wiring ships; a project on another harness fills it with its own, or with *none, with the form kept by hand*
-- as shipped
-- as shipped
-- none, where the work is done in a harness that cannot run a command after a reply, with the form kept by hand and that said here
-- as shipped
+**`{{REPLY_HOOK}}`**, which four of the five fill the same way, since one wiring comes with the template; a project on another harness fills it with its own
+- the wiring this repository carries, `governance/harness/claude_code/`, run from `.claude/settings.json`
+- the wiring this repository carries, `governance/harness/claude_code/`, run from `.claude/settings.json`
+- the wiring this repository carries, `governance/harness/claude_code/`, run from `.claude/settings.json`
+- none: the work is done in a harness that cannot run a command after a reply, so the form is kept by hand
+- the wiring this repository carries, `governance/harness/claude_code/`, run from `.claude/settings.json`
 
 **`{{DISCLOSURE_RULE}}`**
 - the access conditions recorded for each source; nothing quoted beyond what its terms permit
@@ -327,15 +427,46 @@ biologist, a scholar of contract law, and a machine-learning researcher.
 
 ---
 
-## 4. The first round: state the question
+## 4. The first rounds: set up, then state the question
 
-Every round begins by logging the prompt. Copy the entry
-template under `prompt_logs/` to `001_short_description.md`, the form the
-round check reads, paste the prompt verbatim, and only then do the work. That order is the rule, and it is the
-first thing the session brief will remind you about.
+The first rounds come in this order, and every other statement of it
+points here:
 
-The first round's work is the two documents that say what the project is
-for:
+1. **Setup**, wherever something is left to decide at a prompt, the two
+   standing directions of §1 included: the questions of §3 and the setup
+   decisions that are not slots (§1), put to you one at a time, the
+   privacy list first where it is still open, so that it exists before the
+   first commit. Unless you ask for them together (`MANIFESTO.md` §16),
+   each answer is its own round, and in the new project each prompt opens
+   its own entry, like any other. Setup at a prompt in the template's
+   clone, before the project exists, is recorded instead as entry 001,
+   written in the new tree after the run and before the first commit:
+   every prompt of the exchange verbatim, each answer quoted as your
+   ruling, and a pointer to the setup note the tool wrote, with nothing the
+   privacy list holds. Under *Corrections and departures*, it says that
+   the one entry records the whole exchange and follows the run it
+   records, because the log, like the project, did not exist before the
+   run.
+2. **The question**: the round after setup's last entry, or entry 001
+   where setup was not a round. It writes the two documents below, and
+   the front page's paragraph on the question (§2).
+3. **The documentation consistency sweep**, made with the prompt *Make a
+   documentation consistency sweep*. It catches what setup left behind: a
+   slot value that does not read where it was substituted, a pointer the
+   tool could not reach, a file still speaking in the template's voice
+   (`governance/roles/documentation_sweep.md`).
+
+Nothing else yet. You commit at the end of each round, from entry 001 on,
+as §8 says.
+
+Every round begins by logging the prompt. Copy the entry template under
+`prompt_logs/` to the next number, `NNN_short_description.md`, the form
+the round check reads, add its row to `prompt_logs/README.md`, paste the
+prompt verbatim, and only then do the work. That order is the rule, setup
+at a prompt in the template's clone aside (item 1), and it is the first
+thing the session brief will remind you about.
+
+The two documents that say what the project is for:
 
 - `evidence_and_reasoning/research_statement.md`: the question as posed,
   and what would count as answering it.
@@ -405,9 +536,11 @@ or both.
 
 ---
 
-## 8. Before the first commit
+## 8. Before each commit
 
-Run the round check. It runs the linter and its own gates together:
+The first commit closes the first round of §4, and every later one closes
+a round too. Before each, run the round check. It runs the linter and its
+own gates together:
 
 ```bash
 python3 tools/check_round.py
@@ -421,13 +554,11 @@ If you removed the worked example without removing the pointers to it, the
 path check reports those pointers, naming the file and the line. That is
 the check working, and §1 says what to strike.
 
-If you set up a stop-word list under `.privacy/` (a git-ignored list of
-words that must never reach a public repository: collaborator names, an
-embargoed topic, an unreleased dataset), `tools/privacy_scan.py` runs
-beside it. It is the one mechanism that refuses by default: the hooks call
-it only where such a list exists, and `--no-verify` overrides it, with the
-reason in the commit message. A strict install makes the round check
-refuse too.
+Where §1's privacy list exists, `tools/privacy_scan.py` runs beside the
+round check at every commit. It is the one mechanism that refuses by
+default: the hooks call it only where the list exists, and `--no-verify`
+overrides it, with the reason in the commit message. A strict install
+makes the round check refuse too.
 
 ---
 
@@ -435,11 +566,8 @@ refuse too.
 
 You have a project. What to do at each stage from here is
 `HOW_IT_FITS_TOGETHER.md`, which also lists **the prompts this methodology
-suggests** and when to make each. The first one to make, now that the
-slots are filled and every copied file still speaks in the template's
-voice, is:
-
-> Make a documentation consistency sweep.
+suggests** and when to make each. The first of them, the documentation
+consistency sweep, closes the first rounds (§4).
 
 ---
 
@@ -478,9 +606,9 @@ once you clone them; `FORKING.md` says how to change one legibly, so that
 a later reader can see what you did and why. A rule you route around
 silently is worse than one you delete on purpose.
 
-**How much of this do I have to do on day one?** The slots, the research
-statement, and the keystone. Everything else arrives when the work needs
-it: a plan when you are ready to execute, a check when there is something
+**How much of this do I have to do on day one?** The slots that do not
+wait for a write-up (§3), and the rounds §4 lists. Everything else
+arrives when the work needs it: a plan when you are ready to execute, a check when there is something
 to verify, the tension ledger when something you find disagrees with what
 is published.
 

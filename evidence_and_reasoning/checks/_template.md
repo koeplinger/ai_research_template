@@ -4,9 +4,9 @@
 Plan: NNN, task M
 Backs: [claim NNN]
 Instrument: <!-- name, and version | edition | shelfmark | release; for a source, the form consulted (original, facsimile, microfilm, digital surrogate) -->
-Mutation: <!-- name[, name], each a member of {{MUTATION_SET}} (CHECK_METHODOLOGY.md, Slots) -->
+Mutation: <!-- name[, name], each a short name from the mutation set (CHECK_METHODOLOGY.md, Slots; [vocab] mutations) -->
 Frame: <!-- what the quantities are stated in, and what fixes it; delete the line where there are none -->
-By: <!-- who produced this record, from {{PARTIES}} (ONTOLOGY.md, Slots); for a written procedure, who wrote it, and each execution names its own party -->
+By: <!-- who produced this record: researcher | assistant | a party from the roster (ONTOLOGY.md, Slots); for a written procedure, who wrote it, and each execution names its own party -->
 
 <!-- HEADER FIELDS. Delete these comments in the instance.
      Backs       the claim this check backs; it names this check in its own

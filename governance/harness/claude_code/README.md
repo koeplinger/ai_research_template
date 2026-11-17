@@ -1,8 +1,8 @@
 # Harness wiring: Claude Code
 
-*Created 5 September 2026; updated 8 September 2026.*
+*Created 5 September 2026; updated 16 November 2026.*
 
-The wiring for one command-line harness, the one this template was built
+The wiring for one command-line harness, the one the template was built
 with. It is the wiring a project records in the reply-hook slot
 (`MANIFESTO.md` §16), and the session-start presentation of the reading
 order, for which `ONBOARDING.md` defines no slot; nothing else. The rules
@@ -14,8 +14,9 @@ harness runs the tools.
 | [stop_hook.py](stop_hook.py) | When the assistant stops, reads the reply's final text from the session transcript and hands it to `tools/check_status_reply.py`; a non-conforming status block is bounced back to the assistant with the reasons (exit 2), a conforming one passes. It bounces nothing twice; a transcript it cannot read, and a stop with no text after the last prompt or tool result (the harness may fire the hook before the final text is written), are not reasons to bounce, and it says so. `--selftest` runs it on synthetic transcripts. |
 
 The settings file the harness reads is [`.claude/settings.json`](../../../.claude/settings.json)
-at the repository root, tracked so that a clone has the hooks without a
-step. It names two hooks:
+at the repository root, tracked so that a clone has the hooks without an
+install step; they run once the harness trusts the folder (below). It
+names two hooks:
 
 - **SessionStart** runs `tools/session_brief.py`, whose output the
   harness adds to the session's context: the reading order, the plans by

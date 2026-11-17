@@ -19,8 +19,11 @@ Plan: <!-- NNN, task M; or delete the line where no plan owns this note, as for 
 
 <!-- The record of the day: findings, derivations, readings. Cite sources
      by [ShortKey, locus], claims by [claim NNN], checks by [check NNN].
-     A working note marks speculation as speculation; an analytical note
-     carries the second pass. For a pre-registration protocol this section
+     A search record lists its hits by author, title, and identifier, not
+     by key, with any bracketed word of the catalogue's, such as [Online],
+     in backticks (ONTOLOGY.md section 1.3); a hit is registered once the
+     work is relied on (evidence_and_reasoning/references/README.md). A working note marks speculation as
+     speculation; an analytical note carries the second pass. For a pre-registration protocol this section
      is "What is fixed": sample, specification, outcome, decision rule,
      stopping rule, as they will be run; nothing is found yet, and the
      section is not edited after the evidence is consulted. -->
