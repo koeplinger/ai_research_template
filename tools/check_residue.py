@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The residue check: what a rebuild or a correction batch leaves behind in a live draft, listed for the reading that closes the round.
 
-Created 5 September 2026; updated 5 September 2026.
+Created 5 September 2026; updated 16 November 2026.
 
 No rulebook lists these as checked mechanically.  CHECK_METHODOLOGY.md
 section 7 makes a rebuild's duties reading ("a rebuild round therefore
@@ -25,8 +25,10 @@ draft in these forms has nothing for it to read.  It honors a row's
   RESIDUE-4  phantoms: a bare numeric citation, or a "Section N", "Table
              N", "Figure N", or "Equation (N)" beyond what the draft has,
              read outside citation tokens, links, and quotations
-  RESIDUE-5  echoes: a sentence of eight words or more that appears twice,
-             in one paragraph, one draft, or across the live drafts
+  RESIDUE-5  echoes: a sentence with eight words or more outside its
+             quotations that appears twice, in one paragraph, one draft, or
+             across the live drafts; a markdown draft's block quotes are not
+             read, since a passage quoted twice is not an echo
   RESIDUE-6  structure: a heading level that skips, a heading title that
              repeats (reported at the repeat), an explicit heading number
              out of sequence
@@ -44,6 +46,11 @@ fences, and backtick spans blank); a LaTeX source (.tex) named by the
 comments blank, every source the globs match, since a typeset file
 carries no header from which live or frozen could be derived.  The
 Ontology's citation tokens are the linter's and are not read here.
+
+A candidate the researcher has ruled to leave, entered in the
+configuration's [[accepted]] list, is left out and counted; an entry of a
+RESIDUE tag that matches nothing is listed (MANIFESTO.md section 16, "A
+ruled matter stays ruled").
 
 Usage
     python3 tools/check_residue.py             every live draft
@@ -102,10 +109,11 @@ def drafts_of(t: lint_docs.Tree) -> list[Draft]:
     return out
 
 
-def paragraphs(d: Draft) -> list[tuple[int, list[str]]]:
-    """(first line, the lines) of each non-empty paragraph."""
+def paragraphs(d: Draft, lines: list[str] | None = None) -> list[tuple[int, list[str]]]:
+    """(first line, the lines) of each non-empty paragraph, of the draft's
+    lines or of the view of them given."""
     out, start, buf = [], None, []
-    for i, line in enumerate(d.lines + [""], 1):
+    for i, line in enumerate((d.lines if lines is None else lines) + [""], 1):
         if line.strip():
             if start is None:
                 start = i
@@ -220,11 +228,19 @@ def check_phantoms(d: Draft) -> None:
                 lint_docs.report("RESIDUE-4", d.path, i, f"{m.group(0).strip()!r} names more than the draft has ({have[m.group(1)]} {m.group(1).lower()}(s) counted); a candidate for reading")
 
 
+QUOTE = re.compile(r'"[^"]*"|“[^”]*”')
+
+
 def sentences(d: Draft) -> list[tuple[int, str]]:
-    """(line, sentence) for every sentence of eight words or more, the
-    line the one holding the sentence's first word."""
+    """(line, sentence) for every sentence with eight words or more outside
+    its quotations, the line the one holding the sentence's first word.  A
+    markdown draft's block quotes are not read, and its quotations, within
+    a paragraph and across its lines, are not counted toward the eight: a
+    passage quoted twice is a quotation, not an echo.  A sentence is split
+    and compared on its full text, quotations included."""
     out = []
-    for start, ls in paragraphs(d):
+    view = [("" if re.match(r"^ {0,3}>", l) else l) for l in d.lines] if d.kind == "md" else None
+    for start, ls in paragraphs(d, view):
         if re.match(r"^\s*(#|\||\\|\[\^)", ls[0]):
             continue
         offsets, pos = [], 0
@@ -233,10 +249,14 @@ def sentences(d: Draft) -> list[tuple[int, str]]:
             pos += len(l) + 1
         joined = ABBREV.sub(lambda m: m.group(0).replace(".", "\0"), "\n".join(ls))
         joined = re.sub(r"(\d)\.(\d)", "\\1\0\\2", joined)
+        outside = QUOTE.sub(lambda m: re.sub(r"[^\n]", " ", m.group(0)), joined) if d.kind == "md" else joined
         for m in re.finditer(r"[^.!?]*[.!?]", joined):
-            s = " ".join(m.group(0).replace("\0", ".").split())
-            if len(s.split()) >= MIN_WORDS:
-                first = m.start() + len(m.group(0)) - len(m.group(0).lstrip())
+            # A quotation's closing mark after its period opens the next
+            # match; it belongs to the sentence before.
+            g = m.group(0)
+            first = m.start() + len(g) - len(g.lstrip(" \t\n\"\u201d)"))
+            s = " ".join(joined[first:m.end()].replace("\0", ".").split())
+            if len(s.split()) >= MIN_WORDS and len(outside[first:m.end()].split()) >= MIN_WORDS:
                 line = max(ln for off, ln in offsets if off <= first)
                 out.append((line, s))
     return out
@@ -334,7 +354,11 @@ def check_ledgers(t: lint_docs.Tree) -> None:
                 lint_docs.report("RESIDUE-7", f, text[:d.start()].count("\n") + 1, f"stated net word delta {d.group(1)}; counting body words of the prose view, headings and tables aside, {new} has {actual:+d} against {old}")
 
 
+ITEMS = [f"RESIDUE-{i}" for i in range(1, 8)]
+
+
 def residue(t: lint_docs.Tree) -> int:
+    lint_docs.honor(ITEMS)
     drafts = drafts_of(t)
     for d in drafts:
         check_seams(d)
@@ -343,6 +367,7 @@ def residue(t: lint_docs.Tree) -> int:
     check_references(drafts)
     check_echoes(drafts)
     check_ledgers(t)
+    lint_docs.report_stale(ITEMS)
     return len(drafts)
 
 
@@ -356,7 +381,7 @@ def run(root: Path) -> int:
     for item, path, line, msg in sorted(lint_docs.FINDINGS):
         print(f"{item:9s} {path}:{line}: {msg}")
     k = len(lint_docs.FINDINGS)
-    print(f"\nresidue: {n} live draft(s) read, {k} candidate(s) for the reader")
+    print(f"\nresidue: {n} live draft(s) read, {k} candidate(s) for the reader{lint_docs.accepted_note(ITEMS)}")
     return 1 if k else 0
 
 
@@ -420,6 +445,25 @@ def selftest() -> int:
     f = run_on(lambda files: (files.__setitem__("paper/note_v1.md", f"# Note\n\n{S}\n\n{LONG}\n"), files.__setitem__("paper/README.md", files["paper/README.md"] + "| [note_v1.md](note_v1.md) |\n")))
     case("an echo across two live drafts is listed with the twin's line", any(x[0] == "RESIDUE-5" and "main_v2.md:7" in x[3] for x in f), str(f))
     case("two sentences sharing a tail after an abbreviation are not echoes", not any(x[0] == "RESIDUE-5" for x in run_on(add(V2, "\nSmith et al. show that the count is one for every cohort studied. Jones et al. show that the count is one for every cohort studied here.\n"))))
+    QUOTED = '"The method fails whenever the sample is smaller than ten cases."'
+    case("a passage quoted twice is a quotation, not an echo",
+         not any(x[0] == "RESIDUE-5" for x in run_on(add(V2, f"\nThe first source says so. {QUOTED} That is its claim.\n\nThe second source agrees. {QUOTED} It cites the first.\n"))))
+    case("a block quote repeated is a quotation, not an echo",
+         not any(x[0] == "RESIDUE-5" for x in run_on(add(V2, "\n> The method fails whenever the sample is smaller than ten cases.\n\nAnd again.\n\n> The method fails whenever the sample is smaller than ten cases.\n"))))
+    accepted = ('\n[[accepted]]\ntag = "RESIDUE-5"\npath = "paper/main_v2.md"\ntext = "The write-up [claim 002], with a sentence"\n'
+                'ruling = "prompt_logs/001_setup.md"\n')
+    f = run_on(add(V2, f"\n{LONG}\n"), cfg=lint_docs.scratch_config() + accepted)
+    case("an echo accepted at the researcher's ruling is left out and counted", not f and lint_docs.accepted_count(ITEMS) == 1, str(f))
+    f = run_on(lambda files: None, cfg=lint_docs.scratch_config() + accepted)
+    case("an accepted echo that matches nothing is listed as stale",
+         any(x[0] == "RESIDUE-5" and x[1] == "tools/artifacts.toml" and "now matches nothing" in x[3] for x in f), str(f))
+    case("a quotation wrapped across lines and repeated is not an echo",
+         not any(x[0] == "RESIDUE-5" for x in run_on(add(V2, '\nThe first source says so. "The method fails whenever the sample\nis smaller than ten cases." That is its claim.\n\nThe second source agrees. "The method fails whenever the sample is\nsmaller than ten cases." It cites the first.\n'))))
+    case("two sentences that differ only inside their quotations are not echoes",
+         not any(x[0] == "RESIDUE-5" for x in run_on(add(V2, '\nThe referee wrote "the first lemma fails" and we accept that reading of the second lemma here.\n\nThe referee wrote "the bound is loose" and we accept that reading of the second lemma here.\n'))))
+    f = run_on(add(V2, f'\nAs one source put it, "we agree." {LONG}\n'))
+    case("a period inside a closing quotation still ends the sentence, and the echo after it is listed",
+         any(x[0] == "RESIDUE-5" and x[1] == V2 and x[3].startswith("sentence also at paper/main_v2.md:7: 'The write-up") for x in f), str(f))
     planted("a heading level that skips", "RESIDUE-6", V2, "level skips", add(V2, "\n##### Deep\n\nText.\n"))
     planted("a heading title that repeats, at the repeat", "RESIDUE-6", V2, "title repeats", add(V2, "\n## Answer\n\nAgain.\n"), line=17)
     planted("a heading number out of sequence", "RESIDUE-6", V2, "number 3 follows 1", add(V2, "\n## 1. First\n\nA.\n\n## 3. Third\n\nB.\n"))
@@ -459,6 +503,7 @@ def selftest() -> int:
     case("a LaTeX source: a section number beyond the count", any(x[0] == "RESIDUE-4" and "'Section 4' names more" in x[3] for x in f), str(f))
     case("a LaTeX source: a comment, trailing or whole-line, is not read", not any("sec:comment" in x[3] for x in f), str(f))
     case("a LaTeX source: a seam", any(x[0] == "RESIDUE-1" and x[1] == "paper/main.tex" and "middle of a sentence" in x[3] for x in f), str(f))
+    case("the linter knows every RESIDUE tag as one the list covers", set(ITEMS) <= set(lint_docs.OTHER_TAGS))
     for i in [i for i in ITEMS if i not in covered]:
         failures += 1
         print(f"  [FAIL] {i:9s} exercised by no case")

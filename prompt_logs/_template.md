@@ -20,7 +20,9 @@
 <!-- The round's work, by artifact: what was created, what was changed,
      what was brought to the researcher and left for authorization. Cite
      claims, checks, and plans by token; name the authorizing prompt of
-     any change to a frozen artifact (MANIFESTO.md section 12). -->
+     any change to a frozen artifact (MANIFESTO.md section 12). A ruling
+     reported here is quoted from the prompt, never paraphrased, since
+     the entry becomes immutable (MANIFESTO.md section 2). -->
 
 ## Corrections and departures
 

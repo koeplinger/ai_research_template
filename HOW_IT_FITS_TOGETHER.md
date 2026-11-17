@@ -1,6 +1,6 @@
 # How it fits together
 
-*Created 8 September 2026; updated 8 September 2026.*
+*Created 8 September 2026; updated 16 November 2026.*
 
 `GETTING_STARTED.md` gets a project moving. This file says what the parts
 are for, how they make one system rather than a folder of forms, and what
@@ -140,7 +140,7 @@ way each time, and so that a reader of the log can see which one was made.
 
 | Prompt | When | What comes back |
 |---|---|---|
-| **Make a documentation consistency sweep.** | First of all after instantiation, once the slots are filled; after a batch of edits to the rulebooks, indexes, templates, or configuration; after amending a rule or removing a mechanism; before a release and before the project closes; and whenever a pointer sent a reader to a document that did not say what it promised, which is the sign that it is overdue | Every pointer that does not resolve or misdescribes its target, every index out of step, every state recorded twice, every rule restated wrongly, every file still speaking in the template's voice, every slot value that does not read where it was substituted or was filled twice differently, and every term used in two senses or missing from the project glossary. `governance/roles/documentation_sweep.md` carries the prompt in full, with an item the project fills with its own |
+| **Make a documentation consistency sweep.** | First of all after instantiation, once the slots are filled; after a batch of edits to the rulebooks, indexes, templates, or configuration; after amending a rule or removing a mechanism; before a release and before the project closes; and whenever a pointer sent a reader to a document that did not say what it promised, which is the sign that it is overdue | Every pointer that does not resolve or misdescribes its target, every index out of step, every state recorded twice, every rule restated wrongly, every file still speaking in the template's voice, every slot value that does not read where it was substituted or was filled twice differently, every term used in two senses or missing from the project glossary, and every standing direction given in a prompt and written down in neither of its homes. `governance/roles/documentation_sweep.md` carries the prompt in full, with an item the project fills with its own |
 | **Make a consistency sweep of the record.** | After every correction batch, at your direction | The same defect class over the claims, checks, and ledgers instead of the documentation: a fact established in one place and restated wrongly in another. `CHECK_METHODOLOGY.md` §7 |
 | **Refute this finding.** | On every finding of any sweep or review, and on every gap the coverage auditor reports, before it is acted on | Stands, refuted with the reason, or narrowed to what survives. `governance/roles/refuter.md`. This is the one that keeps a review honest: in the reviews of this template's own construction, roughly half of what a first reader reported did not survive a second |
 | **Referee this draft blind.** | Before a version of a write-up freezes | A structure lens, what the referee could re-derive from the page alone, findings ranked, and what the released document rests on. `governance/roles/blind_referee.md` |
@@ -154,15 +154,21 @@ way each time, and so that a reader of the log can see which one was made.
 | **Walk me through the plan-closure checklist.** | When an engaged plan's tasks are all done | The checklist item by item against the record, and the verdict the pre-registered criteria give. `governance/reminders.md` |
 | **What does this claim rest on, and what of it is unverified?** | Before relying on a claim, and before revisiting one | The dependency tree with each member's register, weaker members flagged. `tools/query_ontology.py` |
 
-Three rules about all of them. **Every finding goes to a refuter before it
+Four rules about all of them. **Every finding goes to a refuter before it
 is acted on**, including the findings of a sweep you asked for yourself.
 **A sweep reports before it edits**: the findings and the files it would
-touch, then your direction. And **a role is played by a reader with no
+touch, then your direction. **A role is played by a reader with no
 access to the first pass's reasoning**: for an assistant, a fresh session
 or a subagent given the prompt and nothing else, or else a human. A role
 played by the session that did the work is not opposition, and a subagent
 playing one writes no tracked file: it returns its output, and the main
-thread records it where the role says.
+thread records it where the role says. And **your rulings are the main
+thread's to apply**: an opposition role, the refuter and the blind
+referee among them, is not given them, so that it stays blind, and the
+main thread compares each finding it returns with your rulings before
+bringing it; one that runs against a ruling is reported as such, with the
+ruling's prompt, and not proposed
+(`MANIFESTO.md` §16, *A ruled matter stays ruled*).
 
 ---
 

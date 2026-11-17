@@ -28,7 +28,7 @@ A referee pass by <!-- reviewer: a party from the roster, or an outside reader a
 
 | # | Where | Finding | Fix proposed | Refuted? | Outcome |
 |---|---|---|---|---|---|
-| 1 | | | | <!-- stands / refuted, why / narrowed, the finding as it survives --> | <!-- applied, see changelog / brought to the researcher, prompt NNN --> |
+| 1 | | | | <!-- stands / refuted, why / narrowed, the finding as it survives --> | <!-- applied, see changelog / brought to the researcher, prompt NNN / runs against a ruling, prompt NNN; not proposed --> |
 
 ## What the released document rests on
 

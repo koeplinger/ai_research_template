@@ -1,6 +1,6 @@
 # Editorial standards
 
-*Created 2 September 2026; updated 8 September 2026.*
+*Created 2 September 2026; updated 16 November 2026.*
 
 The five standards, the conventions, and the corollaries below govern every
 prose change to every **durable artifact** (`MANIFESTO.md`, *Words used
@@ -265,7 +265,9 @@ own:
 
 The genre checker (`tools/lint_docs.py`) checks the following and reports
 what it finds (`MANIFESTO.md` §13); everything else in this file is the
-assistant's duty.
+assistant's duty. A finding the researcher has ruled to leave is entered
+in the list of accepted findings in `tools/artifacts.toml` (`MANIFESTO.md`
+§16, *A ruled matter stays ruled*).
 
 1. On every durable artifact: the dash convention, as the character rule
    {{DASH_CONVENTION}} names; the spelling variant, by a word list of the

@@ -31,6 +31,18 @@ Month YYYY, <...>) are admitted where the artifact kind is "template".  The
 two history checks, GENRES-2 and GENRES-3, compare a file's whole text
 with its committed version instead.
 
+FINDINGS ACCEPTED AT THE RESEARCHER'S RULING: an [[accepted]] entry of the
+configuration names a tag, the file a finding names, the first words of
+the passage beginning on the line the finding names, and the log entry
+recording the ruling (MANIFESTO.md section 16, "A ruled matter stays
+ruled").  It accepts every finding of its tag on that line, left out and
+counted in the summary; only a change to the words it quotes brings a
+finding back.  An entry that matches nothing, lacks a part, cites no log
+entry, or names a tag the list does not cover is reported at its line of
+the configuration.  The linter covers its own tags, the static half of
+CHECK-3 included and not the probe's; the round check, the residue check,
+and the session brief cover theirs.
+
 WHAT IT DOES NOT DECIDE: whether a mutation actually breaks a check (the
 probe, CHECK_METHODOLOGY.md item 3, dynamic half); whether a check record's
 values agree with its program's RESULT line (the concordance tool, item 4);
@@ -150,26 +162,152 @@ _TREE: "Tree | None" = None
 
 
 def use(tree: "Tree") -> "Tree":
-    """Install `tree` as the tree report() consults for skip lists, and
-    start a fresh findings list; every tool that reports calls this."""
+    """Install `tree` as the tree report() consults for skip lists and the
+    accepted findings, and start a fresh findings list; every tool that
+    reports calls this."""
     global _TREE
     _TREE = tree
     FINDINGS.clear()
+    load_accepted(tree)
     return tree
 
 
 def report(item: str, path: str, line: int, msg: str, part: str = "") -> None:
-    """Every finding passes here, so `skip` in the row for `path` is honored
-    by every check in one place.  An item that enforces two separable rules
-    passes `part`, and a row may then skip one half by naming `ITEM/part`
-    without silencing the other.  A path gone from the tree takes the row
-    its path would match."""
+    """Every finding passes here, so `skip` in the row for `path` and the
+    findings accepted at the researcher's ruling are honored by every check
+    in one place.  An item that enforces two separable rules passes `part`,
+    and a row may then skip one half by naming `ITEM/part` without
+    silencing the other.  A path gone from the tree takes the row its path
+    would match."""
     if _TREE is not None:
         row = _TREE.rows[path] if path in _TREE.rows else classify(_TREE.cfg, path)
         skip = row.get("skip", []) if row else []
         if item in skip or (part and f"{item}/{part}" in skip):
             return
+        if accepts(item, path, line):
+            return
     FINDINGS.append((item, path, line, msg))
+
+
+# ------------------------------------------------------------------ rulings
+
+# The findings accepted at the researcher's ruling, the [[accepted]] entries
+# of the configuration (MANIFESTO.md section 16, "A ruled matter stays
+# ruled").  Each names a tag, the file a finding names, the first words of
+# the passage at the line it names, and the log entry that records the
+# ruling.  A finding it matches is left out and counted; an entry that
+# matches nothing, is malformed, or cites no log entry is reported, so a
+# changed passage brings its finding back.
+CONFIG = "tools/artifacts.toml"
+ACCEPTED: list[dict] = []
+# The tags whose findings the running tool reports and accepts; each tool
+# names its own (honor), so an entry is matched, counted, and found stale
+# by the one tool that reports its tag.  The session brief matches its
+# reminder, findings-gate, itself.
+HONORED: set[str] = set()
+OTHER_TAGS = ([f"ROUND-{i}" for i in range(1, 5)]          # tools/check_round.py
+              + [f"RESIDUE-{i}" for i in range(1, 8)]      # tools/check_residue.py
+              + ["findings-gate"])                         # tools/session_brief.py
+
+
+def honor(items) -> None:
+    HONORED.update(items)
+
+
+def load_accepted(t: "Tree") -> None:
+    ACCEPTED.clear()
+    HONORED.clear()
+    try:
+        heads = [i for i, l in enumerate((t.root / CONFIG).read_text(encoding="utf-8").splitlines(), 1)
+                 if re.match(r"^\s*\[\[\s*accepted\s*\]\]", l)]
+    except OSError:
+        heads = []
+    entries = t.cfg.get("accepted", [])
+    if not isinstance(entries, list):
+        ACCEPTED.append({"line": heads[0] if heads else 1, "hits": 0,
+                         "problem": "accepted findings are written as [[accepted]] tables; it accepts nothing"})
+        return
+    for k, e in enumerate(entries):
+        e = dict(e) if isinstance(e, dict) else {}
+        missing = [x for x in ("tag", "path", "text", "ruling") if not isinstance(e.get(x), str) or not e[x].strip()]
+        if missing:
+            problem = "an accepted finding lacking " + ", ".join(missing) + "; it accepts nothing"
+        elif e["ruling"] not in t.files or t.kind(e["ruling"]) != "log-entry":
+            problem = f"an accepted finding citing {e['ruling']} as its ruling, which is not a log entry; it accepts nothing"
+        else:
+            problem = ""
+        # Each entry's own heading line, where the headings can be paired
+        # with the entries; otherwise the first of them.
+        line = heads[k] if len(heads) == len(entries) else (heads[0] if heads else 1)
+        ACCEPTED.append({**e, "line": line, "hits": 0, "problem": problem})
+
+
+def passage_at(path: str, line: int, want: str) -> bool:
+    """Whether `want` begins on `line` of `path`: it is sought in that line
+    and the two after it, every run of white space read as one space, so
+    that a passage wrapped across lines still matches, but it must start on
+    the line named."""
+    text = _TREE.text.get(path) if _TREE is not None else None
+    want = " ".join(want.split())
+    if not text or not want or line < 1:
+        return False
+    ls = text.splitlines()
+    if line > len(ls):
+        return False
+    head = " ".join(ls[line - 1].split())
+    near = " ".join(" ".join(ls[line - 1:line + 2]).split())
+    at = near.find(want)
+    return 0 <= at < len(head)
+
+
+def accepts(item: str, path: str, line: int) -> bool:
+    if item not in HONORED:
+        return False
+    for e in ACCEPTED:
+        if not e["problem"] and e["tag"] == item and e["path"] == path and passage_at(path, line, e["text"]):
+            e["hits"] += 1
+            return True
+    return False
+
+
+def accepted_count(items) -> int:
+    return sum(e["hits"] for e in ACCEPTED if e.get("tag") in items)
+
+
+def stale(items) -> list[tuple[dict, str]]:
+    """Every entry of `items` that is malformed or matched nothing in this
+    run, with what is wrong with it."""
+    out = []
+    for e in ACCEPTED:
+        if e.get("tag") not in items:
+            continue
+        if e["problem"]:
+            out.append((e, e["problem"]))
+        elif not e["hits"]:
+            out.append((e, f"an accepted finding at {e['path']}, ruled in {e['ruling']}, now matches nothing: the passage "
+                           "changed or the finding is gone, so remove the entry, or bring the passage to the researcher again"))
+    return out
+
+
+def report_stale(items) -> None:
+    """Report stale(items); the tool that reports those tags calls it after
+    its checks."""
+    for e, msg in stale(items):
+        report(e["tag"], CONFIG, e["line"], msg)
+
+
+def report_unread() -> None:
+    """Report every entry whose tag no tool reports, which would otherwise
+    accept nothing and never be found stale."""
+    for e in ACCEPTED:
+        if not e.get("tag") or not isinstance(e.get("tag"), str):
+            report("(no tag)", CONFIG, e["line"], e["problem"])
+        elif e["tag"] not in ITEMS + OTHER_TAGS:
+            report(e["tag"], CONFIG, e["line"],
+                   "an accepted finding naming a tag the list does not cover (it covers the linter's GENRES, EDIT, ONT, "
+                   "and CHECK-1 to CHECK-3, the static half of CHECK-3 only, since a finding of the probe or the "
+                   "concordance check cannot be accepted; the round check's ROUND; the residue check's RESIDUE; and "
+                   "the session brief's findings-gate); it accepts nothing")
 
 
 # ------------------------------------------------------------------ config
@@ -1092,9 +1230,18 @@ ITEMS = ["GENRES-1", "GENRES-2", "GENRES-3", "GENRES-4", "GENRES-5", "GENRES-6",
 
 def run_checks(root: Path) -> Tree:
     t = use(Tree(root, load_config(root)))
+    honor(ITEMS)
     for c in CHECKS:
         c(t)
+    report_stale(ITEMS)
+    report_unread()
     return t
+
+
+def accepted_note(items) -> str:
+    """The summary's count of findings left out at the researcher's ruling."""
+    a = accepted_count(items)
+    return f", {a} accepted at the researcher's ruling and left out" if a else ""
 
 
 def run(root: Path, quiet: bool = False) -> int:
@@ -1103,7 +1250,7 @@ def run(root: Path, quiet: bool = False) -> int:
         print(f"{item:9s} {path}:{line}: {msg}")
     n = len(FINDINGS)
     if not quiet or n:
-        print(f"\n{len(t.files)} files, {n} finding(s)")
+        print(f"\n{len(t.files)} files, {n} finding(s){accepted_note(ITEMS)}")
     return 1 if n else 0
 
 
@@ -1418,6 +1565,68 @@ def selftest() -> int:
     run_case("the mutation set left unfilled", "CHECK-3", "tools/artifacts.toml", "unfilled", lambda t, f: w(t, "tools/artifacts.toml", cfg_text.replace('mutations = ["variant-reading"]', "mutations = []")))
     run_case("the dash convention left unfilled", "EDIT-1", "tools/artifacts.toml", "unfilled", lambda t, f: w(t, "tools/artifacts.toml", cfg_text.replace('dashes = "no-em-dash"', 'dashes = ""')))
     run_case("a party off the roster, roster unfilled", "ONT-3", "tools/artifacts.toml", "roster unfilled", sub(C2, "Verified-by: researcher", "Verified-by: an outsider"))
+
+    # A finding the researcher has ruled to leave, entered in the
+    # configuration's [[accepted]] list, and what happens when the entry no
+    # longer fits (MANIFESTO.md section 16, "A ruled matter stays ruled").
+    def entry(tag="GENRES-5", text="This section previously read", ruling="prompt_logs/001_setup.md"):
+        return f'\n[[accepted]]\ntag = "{tag}"\npath = "MANIFESTO.md"\ntext = "{text}"\nruling = "{ruling}"\n'
+
+    def narrated(line="This section previously read otherwise."):
+        return lambda t, f: w(t, "MANIFESTO.md", dated(f["MANIFESTO.md"]) + f"\n{line}\n")
+
+    def accepted_case(name: str, cfg_extra: str, mutate, want: list, count: int) -> None:
+        """Every finding in `want` (item, path, needle) and no other, with
+        `count` findings accepted."""
+        nonlocal failures
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            files = fixture()
+            scratch_project(tmp, files, cfg_text + cfg_extra)
+            commit(tmp)
+            mutate(tmp, files)
+            run_checks(tmp)
+            ok = (len(FINDINGS) == len(want) and accepted_count(ITEMS) == count
+                  and all(any(x[0] == i and x[1] == p and n in x[3] for x in FINDINGS) for i, p, n in want))
+            failures += 0 if ok else 1
+            print(f"  [{'PASS' if ok else 'FAIL'}] {name}"
+                  + ("" if ok else f": {[(x[0], x[1], x[3][:60]) for x in FINDINGS]}, {accepted_count(ITEMS)} accepted"))
+
+    N5 = ("GENRES-5", "MANIFESTO.md", "previously")
+    accepted_case("a finding accepted at the researcher's ruling is left out and counted", entry(), narrated(), [], 1)
+    accepted_case("an accepted passage wrapped across lines still matches", entry(text="This section previously read otherwise"),
+                  narrated("This section previously read\notherwise."), [], 1)
+    accepted_case("an accepted passage that changed brings its finding back, and the entry is reported stale", entry(),
+                  narrated("This clause previously read otherwise."), [N5, ("GENRES-5", CONFIG, "now matches nothing")], 0)
+    accepted_case("an entry whose ruling is not a log entry accepts nothing and is reported", entry(ruling="MANIFESTO.md"),
+                  narrated(), [N5, ("GENRES-5", CONFIG, "not a log entry")], 0)
+    accepted_case("an entry lacking its passage accepts nothing and is reported", entry(text=""),
+                  narrated(), [N5, ("GENRES-5", CONFIG, "lacking text")], 0)
+    accepted_case("an entry naming a tag the list does not cover is reported", entry(tag="GENRES-55"),
+                  narrated(), [N5, ("GENRES-55", CONFIG, "does not cover")], 0)
+    accepted_case("an entry of the round check's tag is the round check's to find stale, not the linter's",
+                  entry(tag="ROUND-2"), lambda t, f: None, [], 0)
+    accepted_case("a finding of the same tag on the line above an accepted passage is still reported",
+                  entry(), narrated("It previously said more.\nThis section previously read otherwise."),
+                  [("GENRES-5", "MANIFESTO.md", "previously")], 1)
+    accepted_case("an entry lacking its tag is reported as lacking it", entry(tag=""),
+                  narrated(), [N5, ("(no tag)", CONFIG, "lacking tag")], 0)
+    accepted_case("a single [accepted] table, one bracket pair, is reported as such",
+                  '\n[accepted]\ntag = "GENRES-5"\npath = "MANIFESTO.md"\ntext = "This section previously read"\n'
+                  'ruling = "prompt_logs/001_setup.md"\n', narrated(), [N5, ("(no tag)", CONFIG, "[[accepted]] tables")], 0)
+    with tempfile.TemporaryDirectory() as d:
+        tmp = Path(d)
+        files = fixture()
+        cfg2 = cfg_text + entry().replace("[[accepted]]", "[[ accepted ]]") + entry(text="Nothing of the kind")
+        scratch_project(tmp, files, cfg2)
+        commit(tmp)
+        narrated()(tmp, files)
+        run_checks(tmp)
+        want = len(cfg2.splitlines()) - 4
+        ok = [(x[0], x[2]) for x in FINDINGS if x[1] == CONFIG] == [("GENRES-5", want)]
+        failures += 0 if ok else 1
+        print(f"  [{'PASS' if ok else 'FAIL'}] a stale entry is reported at its own heading, spaced or not"
+              + ("" if ok else f": {[(x[0], x[1], x[2], x[3][:40]) for x in FINDINGS]}, expected line {want}"))
 
     missing = [i for i in ITEMS if i not in covered]
     for i in missing:

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The ontology queries: the questions ONTOLOGY.md section 6 says the record answers from its fields.
 
-Created 5 September 2026; updated 8 September 2026.
+Created 5 September 2026; updated 16 November 2026.
 
 Each query enumerates by reading fields and tokens.  Where a rulebook
 decides, the line is marked FLAG; where only reading can decide, the
@@ -187,7 +187,7 @@ def literature(t: lint_docs.Tree) -> list[str]:
             out.append(f"      {label}: {cell or '(empty)'}")
         if len(cells) < len(labels):
             out.append(f"      (the row has {len(cells)} cells; the header has {len(labels)})")
-    out.append("  (no row: the ledger is empty)" if not rows else "  Whether a caution is still live is reading (PRECEDENCE.md; sweep item 8).")
+    out.append("  (no row: the ledger is empty)" if not rows else "  Whether a caution is still live is reading (PRECEDENCE.md; CHECK_METHODOLOGY.md section 7, item 8).")
     return out
 
 

@@ -380,7 +380,11 @@ already tracked elsewhere, and it must not add content of the wrong genre.
 The complete list of what `tools/lint_docs.py` checks for this file, each
 stated so that it can be implemented; the editorial checks are listed in
 `evidence_and_reasoning/editorial_standards.md`. A finding is reported to
-the researcher with its output (`MANIFESTO.md` §13).
+the researcher with its output (`MANIFESTO.md` §13). One the researcher
+has ruled to leave is entered, with the log entry of the ruling, in the
+list of accepted findings in `tools/artifacts.toml`, and is left out
+while the words the entry quotes stand (`MANIFESTO.md` §16, *A ruled
+matter stays ruled*).
 
 1. **Header.** Every durable artifact, by the configured path patterns and
    excluding non-prose files, opens with a line matching `Created D Month
@@ -432,8 +436,9 @@ the researcher with its output (`MANIFESTO.md` §13).
    returned, a holding stated to be current at a date. **A hit on
    subject-matter prose is brought, not rewritten**: the check is
    advisory, the sentence is content, and the round's log entry records
-   that it was read and left. A project whose subject matter collides with
-   the list persistently silences that half alone,
+   that it was read and left; once the researcher has ruled to leave it,
+   it is entered in the list of accepted findings. A project whose subject
+   matter collides with the list persistently silences that half alone,
    `skip = ["GENRES-5/narrative"]` on the kind's row in
    `tools/artifacts.toml` with the reason beside it, and keeps the stamp
    half; the reverse skip is `GENRES-5/stamp`.

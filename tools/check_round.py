@@ -43,6 +43,12 @@ WHAT IT RUNS
            alphabetically within a glob, comments included, keys compared
            as written.
 
+A finding the researcher has ruled to leave, entered in the configuration's
+[[accepted]] list, is left out and counted, the linter's and the round's
+alike; an entry of a ROUND tag that matches nothing is reported here, as
+the linter reports its own (MANIFESTO.md section 16, "A ruled matter
+stays ruled").
+
 Usage
     python3 tools/check_round.py               exit 1 on any finding, 2 if misconfigured
     python3 tools/check_round.py --selftest    plant each defect in a scratch project
@@ -281,8 +287,10 @@ ITEMS = ["ROUND-1", "ROUND-2", "ROUND-3", "ROUND-4"]
 
 def run_round(root: Path) -> tuple[lint_docs.Tree, list[tuple[str, str, int, str]]]:
     t = lint_docs.run_checks(root)
+    lint_docs.honor(ITEMS)
     for c in CHECKS:
         c(t)
+    lint_docs.report_stale(ITEMS)
     return t, list(lint_docs.FINDINGS)
 
 
@@ -296,7 +304,8 @@ def run(root: Path) -> int:
         print(f"{item:9s} {path}:{line}: {msg}")
     n = len(found)
     pub = "enabled" if t.cfg.get("publication", {}).get("enabled") else "disabled"
-    print(f"\nround check: {n} finding(s) over {len(t.files)} files; publication gates {pub}")
+    note = lint_docs.accepted_note(lint_docs.ITEMS + ITEMS)
+    print(f"\nround check: {n} finding(s) over {len(t.files)} files{note}; publication gates {pub}")
     return 1 if n else 0
 
 
@@ -482,6 +491,22 @@ def selftest() -> int:
              lambda t, f: enable_publication(t, f, extra=(("cite = '\\[([A-Z][A-Za-z0-9]{2,31})(?:, [^\\]]*)?\\]'", "cite = '\\[[A-Z][A-Za-z0-9]{2,31}\\]'"),)))
     run_case("an unusable entry pattern", "ROUND-4", "tools/artifacts.toml", "unusable",
              lambda t, f: enable_publication(t, f, extra=(("\nentry = '^@\\w+\\{([^,\\s]+),'", "\nentry = '('"),)))
+
+    # A round finding the researcher has ruled to leave (MANIFESTO.md
+    # section 16): an uncited entry kept in the bibliography on purpose.
+    def accept(tmp: Path, tag: str, path: str, text: str) -> None:
+        cfg = (tmp / "tools" / "artifacts.toml").read_text()
+        w(tmp, "tools/artifacts.toml", cfg + f'\n[[accepted]]\ntag = "{tag}"\npath = "{path}"\ntext = "{text}"\n'
+                                             'ruling = "prompt_logs/001_setup.md"\n')
+    clean_case("a round finding accepted at the researcher's ruling is left out",
+               lambda t, f: (enable_publication(t, f, bib="@misc{Key1,\n@misc{Key2,\n@misc{Key3,\n"),
+                             accept(t, "ROUND-4", "paper/refs.bib", "@misc{Key3,")))
+    run_case("an accepted round finding that matches nothing is reported stale", "ROUND-4", "tools/artifacts.toml", "now matches nothing",
+             lambda t, f: (enable_publication(t, f), accept(t, "ROUND-4", "paper/refs.bib", "@misc{Key3,")))
+
+    ok = set(ITEMS) <= set(lint_docs.OTHER_TAGS)
+    failures += 0 if ok else 1
+    print(f"  [{'PASS' if ok else 'FAIL'}] the linter knows every ROUND tag as one the list covers")
 
     for i in [i for i in ITEMS if i not in covered]:
         failures += 1

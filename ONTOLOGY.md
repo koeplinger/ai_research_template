@@ -222,7 +222,7 @@ the duty is the assistant's under the consistency sweep
 | Predicate | Relates | Written as | Owner | Checked by | Answers |
 |---|---|---|---|---|---|
 | `tier` | a statement to its authority | **derived**, never stored as a field | `PRECEDENCE.md` | not stored, so nothing to check | what governs if these disagree? |
-| `diverges` | a claim to a public-record statement it contradicts | a row in the tension ledger: the claim, the published statement, the caution that survives, and a last column reading `live` or `closed <date>` | `PRECEDENCE.md` | reading, at sweep item 8; the caution field is read as recorded, not judged | where do we stand against the literature? |
+| `diverges` | a claim to a public-record statement it contradicts | a row in the tension ledger: the claim, the published statement, the caution that survives, and a last column reading `live` or `closed <date>` | `PRECEDENCE.md` | reading, at item 8 of the consistency sweep of the record (`CHECK_METHODOLOGY.md` §7); the caution field is read as recorded, not judged | where do we stand against the literature? |
 | `context` | prose to borrowed material it carries | an attributing hedge naming the tier | `PRECEDENCE.md` | reading | is this ours or theirs? |
 
 ### 2.8 Carried in prose, not in syntax

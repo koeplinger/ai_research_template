@@ -1,6 +1,6 @@
 # Check methodology
 
-*Created 2 September 2026; updated 8 September 2026.*
+*Created 2 September 2026; updated 16 November 2026.*
 
 This file defines the unit of verification in a repository built from this
 template: the **check**. It owns four things the other rulebooks point to:
@@ -358,10 +358,13 @@ What a sweep covers, at minimum:
 
 **Every finding is then handed to a reader instructed to refute it**
 (`MANIFESTO.md` §17). The sweep then reports its findings and the files it
-would touch before editing anything (`MANIFESTO.md` §14). A fix to a
-current-state artifact that is neither maintained nor one of the four
-`MANIFESTO.md` §12 names may be applied; every other fix is brought with
-its proposed wording, and the assistant stops.
+would touch before editing anything (`MANIFESTO.md` §14). A finding that
+runs against a ruling of the researcher's is reported as such, with the
+ruling's prompt, and not proposed (`MANIFESTO.md` §16, *A ruled matter
+stays ruled*). Of the rest, a fix to a current-state artifact that is
+neither maintained nor one of the four `MANIFESTO.md` §12 names may be
+applied; every other fix is brought with its proposed wording, and the
+assistant stops.
 
 **This sweep reads the record.** Its counterpart over the *documentation*,
 which asks whether the rulebooks, the indexes, the templates, and the

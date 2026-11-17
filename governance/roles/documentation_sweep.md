@@ -31,9 +31,13 @@ construction.
 - whenever a reader was sent to a document that did not say what its
   pointer promised, which is the sign that the sweep is overdue.
 
-**Reads.** Every document named in the prompt's list, in full; the output
-of the mechanical checks for the same tree, taken as given. It reads no
-part of the record except an index, to see that the index is complete.
+**Reads.** Every document named in the prompt's list, in full, the status
+files among them read as documents; the output of the mechanical checks
+for the same tree, taken as given; and the prompts of the log entries
+since the last documentation sweep, for the directions in them that govern
+later rounds. Of the rest of the record it reads only an index, to see that
+the index is complete, and the log, to look for the researcher's ruling on
+a finding before the finding is applied or brought.
 
 **Prompt.**
 
@@ -59,8 +63,11 @@ Then read, in full and as one system:
     research_result.md, public_record_tensions.md;
   the glossary evidence_and_reasoning/terminology.md;
   the source index and the reference registry, as documents.
-Do not read the claims, the checks, the plans, the notes, the reviews, or
-the log, except to check that an index lists what is there.
+Read also the prompts of the log entries since the last documentation
+sweep the log records. Do not read the claims, the checks, the plans, the
+notes, the reviews, or the rest of the log, except to check that an index
+lists what is there, and to look for the researcher's ruling on a finding
+before applying or bringing it.
 
 Report, before editing anything:
 
@@ -85,11 +92,21 @@ Report, before editing anything:
    of this project's own subject matter that the glossary does not define;
    the method's own vocabulary is defined in GLOSSARY.md and is not the
    project glossary's to carry;
-8. [this project's own documentation items, listed here]
+8. every direction in those prompts that governs later rounds and is
+   written in neither of its homes, the file that owns its subject or
+   ONBOARDING.md, Standing directions (MANIFESTO.md, opening, on standing
+   directions); every line under Standing directions without its prompt;
+   and every standing direction in words its prompt does not bear out;
+9. [this project's own documentation items, listed here]
 
 Hand each finding to a reader instructed to refute it (the refuter,
-governance/roles/refuter.md). Apply what survives where the rules allow;
-bring the rest to the researcher with the proposed wording, and stop.
+governance/roles/refuter.md). Before applying or bringing what survives,
+look for the researcher's ruling on each finding, in ONBOARDING.md,
+Standing directions, and in the log (MANIFESTO.md section 16): a finding
+that runs against a ruling is reported as such, with the ruling's prompt,
+and not proposed. Apply the rest where the rules allow; bring what remains
+to the researcher as numbered decisions, each with its proposed wording,
+and stop.
 ```
 
 **Output.** The findings, ranked, each with the file, the line, the
@@ -97,9 +114,15 @@ problem, and the fix, reported before any edit and recorded in the round's
 log entry; each then goes to the refuter, and the outcome is recorded
 beside it. A fix to a current-state document that is neither maintained
 nor one of the four `MANIFESTO.md` §12 names may be applied; every other
-fix is brought with its wording (`CHECK_METHODOLOGY.md` §7).
+fix is brought with its wording (`CHECK_METHODOLOGY.md` §7). What is
+brought is numbered once, in the round's log entry or, where the list is
+long, in a dated working note the entry points to
+(`evidence_and_reasoning/notes/README.md`), and is put to the researcher
+one decision at a time and ruled by number (`MANIFESTO.md` §16, *Putting a
+decision*); a finding that runs against a ruling is recorded as such, with
+the ruling's prompt.
 
-**Item 8 is the project's own.** Every discipline's documentation carries
+**Item 9 is the project's own.** Every discipline's documentation carries
 facts that drift in ways this list cannot anticipate, and a project writes
 them into the prompt once and keeps them:
 

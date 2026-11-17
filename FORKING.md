@@ -1,6 +1,6 @@
 # Forking: the repository is yours
 
-*Created 8 September 2026; updated 8 September 2026.*
+*Created 8 September 2026; updated 16 November 2026.*
 
 Once you clone this template, every rule in it is yours to change. A
 project will develop needs the template did not anticipate, and a
@@ -101,6 +101,7 @@ the removal is complete.
 |---|---|
 | the Python check suite | `python_project/`'s three artifact rows and three index rows in the configuration, the root README's folder row, `python_project/README.md`'s own removal note, and three tool docstrings (the concordance check, the probe, the run ledger); `{{CHECK_FORM}}` becomes a written procedure alone |
 | the harness wiring | `governance/harness/`, the tracked settings file and its `harness-settings` row in the configuration, its line in `.gitignore`, and the `{{REPLY_HOOK}}` slot, which becomes *none, with the form kept by hand*. **Keep `tools/check_status_reply.py`**: the round check imports it, so ROUND-2 goes with it |
+| the status block (`MANIFESTO.md` §16) | the reply hook and its `{{REPLY_HOOK}}` slot, not the session-start wiring; the checker, `tools/check_status_reply.py`; and the log's closing status, which ROUND-2 of `tools/check_round.py` reads with the checker under the last of `[log] parts` in the configuration. Either keep the closing status, and the checker for the round check alone, or remove the closing status together from `tools/check_round.py`, `[log] parts`, `prompt_logs/_template.md`, `prompt_logs/README.md`, `MANIFESTO.md` §8, and the round's definition in its *Words used throughout* |
 | the privacy scan | its row in the two READMEs; the staged-scan block of the pre-commit hook and the whole commit-message hook that `tools/install_hooks.sh` writes, and the installer's account of both. `MANIFESTO.md` §6 states the rule it serves in discipline-neutral terms and names no scanner, so nothing there has to change |
 | the tension ledger | `PRECEDENCE.md`'s compliance section, which requires a row; amend it or the rule stands unenforced |
 | the publication gate | nothing: it ships disabled, and `paper/README.md` says a project that publishes otherwise leaves it so |

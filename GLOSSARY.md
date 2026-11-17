@@ -1,6 +1,6 @@
 # Glossary: the words this template uses in its own sense
 
-*Created 8 September 2026; updated 8 September 2026.*
+*Created 8 September 2026; updated 16 November 2026.*
 
 This file defines the method's own vocabulary. It exists because a
 methodology that means to serve every discipline has to name its parts,
@@ -47,6 +47,8 @@ where a reader who meets an unfamiliar word should look first.
 | **standing** | of a registry entry: what searching for later or contrary material found, and when | *locus standi*, the right to bring a claim |
 | **plan** | the unit of work: an aspect isolated, with criteria fixed before execution | a project plan or a schedule |
 | **round** | the unit of time: one prompt, the work it asks for, and the entry that logs it | a round of funding; a review round |
+| **ruling** | the researcher's decision on a matter put to them, recorded in the researcher's words in the log entry of the round that gave it; a ruled matter is not raised again without evidence the ruling did not have (`MANIFESTO.md` §16) | a court's or a regulator's ruling, which binds parties; a *standing direction*, which governs later rounds |
+| **standing direction** | a direction from the researcher that governs later rounds, written down in the round it is given and in the researcher's words: in the file that owns its subject where it sets a value or amends a rule, and otherwise, with the prompt that gave it, in `ONBOARDING.md`, *Standing directions* (`MANIFESTO.md`, opening, on standing directions) | a reminder, which `governance/reminders.md` calls a standing instruction and which is the method's, not the researcher's; a memory or preference held on the assistant's side, which carries at most a pointer here; a standing order in the parliamentary or the banking sense |
 | **slot** | a value a project fills once, written `{{LIKE_THIS}}` and listed in a Slots table | a time slot; a slot in a schema |
 | **altitude** | the level of detail a statement belongs at, so that a summary does not carry a body's precision | flight altitude; nothing else here |
 | **keystone** | the project's thesis, in `evidence_and_reasoning/problem_statement.md`: what the rest is built to bear on | a keystone species |
@@ -68,7 +70,8 @@ where a reader who meets an unfamiliar word should look first.
 | **seam** | of a rebuilt draft: a section with nothing under it before the next | a seam in the geological or textile sense |
 | **dangling**, **orphaned** | of a reference: pointing at what is not there, and pointed at by nothing | dangling in the grammatical sense |
 | **phantom** | a bare numeric citation or a "Section N" pointer that resolves to nothing | anything in the perceptual sense |
-| **echo** | a sentence of eight words or more appearing twice in a draft | an echo in acoustics |
+| **echo** | a sentence with eight words or more outside its quotations, appearing twice in a draft or across the live drafts | an echo in acoustics |
+| **accepted finding** | a finding of a check, or a findings-gate reminder, that the researcher has ruled to leave, entered in the `[[accepted]]` list of `tools/artifacts.toml` with the log entry of the ruling, so the tools stop raising it (`MANIFESTO.md` §16) | a finding entered in `FINDINGS.md`; a claim accepted as established |
 
 ## Words this template borrows from one discipline
 

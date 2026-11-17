@@ -21,9 +21,17 @@ names them and says what each does not decide):
                             (CHECK_METHODOLOGY.md section 7)
   findings-gate             a claim registered VERIFIED or RULED_OUT that
                             no row of the findings file cites: bring the
-                            finding and its wording (section 12)
+                            finding and its wording (section 12); a claim
+                            the researcher has ruled is not a finding,
+                            entered in the configuration's [[accepted]]
+                            list with its title line, is left out and
+                            counted, and an entry matching no claim the
+                            gate names is reported
   verification-not-recorded  a claim registered beyond OPEN or SPECULATIVE
                             whose Verified-by is unchecked
+
+A claim is named by its token and its title, the subject its first
+heading gives (section 16, "Putting a decision").
 
 Advisory: it prints, and decides nothing.  A harness that can run a
 command at session start runs this one; the wiring is recorded under
@@ -136,6 +144,25 @@ def body_changed(t: lint_docs.Tree, f: str) -> bool:
     return lint_docs.body_of(old, lint_docs.header_block(old, hk)[0]) != lint_docs.body_of(t.text[f], t.headers[f][0])
 
 
+def titled(t: lint_docs.Tree, n: str) -> str:
+    """A claim's token with its subject, the title its first heading gives."""
+    f = t.claims.get(n)
+    m = re.match(r"#[^\n:]*:[ \t]*([^\n]*)", lint_docs.strip_unread(t.text.get(f, ""))) if f else None
+    title = m.group(1).strip() if m else ""
+    return f"[claim {n}] ({title})" if title else f"[claim {n}]"
+
+
+def declined(t: lint_docs.Tree, n: str) -> bool:
+    """Whether an [[accepted]] entry of the findings gate names claim n: its
+    file, and the first words of its title line (lint_docs.load_accepted)."""
+    f = t.claims[n]
+    for e in lint_docs.ACCEPTED:
+        if not e["problem"] and e.get("tag") == "findings-gate" and e.get("path") == f and lint_docs.passage_at(f, 1, e["text"]):
+            e["hits"] += 1
+            return True
+    return False
+
+
 def reminders(t: lint_docs.Tree) -> list[str]:
     out = []
     logdir = t.dir_of_kind("log-entry")
@@ -178,14 +205,21 @@ def reminders(t: lint_docs.Tree) -> list[str]:
     fnd = t.first_of_kind("findings")
     cited = set(lint_docs.TOKEN_CLAIM.findall(lint_docs.LINK_RE.sub(" ", t.prose(fnd)))) if fnd else set()
     established = [n for n, f in sorted(t.claims.items()) if fields(t, f).get(lint_docs.F("register"), (0, ""))[1] in ("VERIFIED", "RULED_OUT") and n not in cited]
-    if established:
-        out.append("REMINDER  findings-gate: established and cited by no findings row: " + ", ".join(f"[claim {n}]" for n in established)
+    left = [n for n in established if declined(t, n)]
+    gate = [n for n in established if n not in left]
+    if gate:
+        out.append("REMINDER  findings-gate: established and cited by no findings row: " + ", ".join(titled(t, n) for n in gate)
                    + " (MANIFESTO.md section 12: bring the finding and its wording, and stop)")
+    if left:
+        out.append(f"  ({len(left)} established claim(s) left out of the findings gate, declined at the researcher's ruling: "
+                   + ", ".join(titled(t, n) for n in left) + ")")
+    for e, msg in lint_docs.stale(["findings-gate"]):
+        out.append(f"REMINDER  findings-gate: {msg} ({lint_docs.CONFIG}:{e['line']})")
     unchecked = [n for n, f in sorted(t.claims.items())
                  if fields(t, f).get(lint_docs.F("register"), (0, ""))[1] not in ("OPEN", "SPECULATIVE", "")
                  and fields(t, f).get(lint_docs.F("verified-by"), (0, ""))[1].split(",")[0].strip() == "unchecked"]
     if unchecked:
-        out.append("REMINDER  verification-not-recorded: registered beyond OPEN yet Verified-by unchecked: " + ", ".join(f"[claim {n}]" for n in unchecked)
+        out.append("REMINDER  verification-not-recorded: registered beyond OPEN yet Verified-by unchecked: " + ", ".join(titled(t, n) for n in unchecked)
                    + " (MANIFESTO.md section 5)")
     return out or ["  (no reminder the record can compute; the rest are the assistant's by reading)"]
 
@@ -284,6 +318,26 @@ def selftest() -> int:
         t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
         r = "\n".join(reminders(t))
         case("an established claim no findings row cites is the findings gate", "findings-gate: established and cited by no findings row: [claim 002]" in r, r)
+        case("a reminder names each claim with its title", "[claim 002] (b)" in r, r)
+        c2_text = (tmp / "evidence_and_reasoning/claims/002_b.md").read_text()
+        w(tmp, "evidence_and_reasoning/claims/002_b.md", c2_text.replace("# Claim 002: b", "# Claim 002: <!-- title -->", 1))
+        t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
+        case("a claim whose title is still a placeholder is named by its token alone", titled(t, "002") == "[claim 002]", titled(t, "002"))
+        w(tmp, "evidence_and_reasoning/claims/002_b.md", c2_text)
+        cfg0 = (tmp / "tools" / "artifacts.toml").read_text()
+        gate = ('\n[[accepted]]\ntag = "findings-gate"\npath = "evidence_and_reasoning/claims/002_b.md"\ntext = "Claim 002: b"\n'
+                'ruling = "prompt_logs/001_setup.md"\n')
+        w(tmp, "tools/artifacts.toml", cfg0 + gate)
+        t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
+        r = "\n".join(reminders(t))
+        case("a finding declined at the researcher's ruling leaves the gate, and is counted",
+             "findings-gate: established" not in r and "1 established claim(s) left out of the findings gate" in r and "now matches nothing" not in r, r)
+        w(tmp, "tools/artifacts.toml", cfg0 + gate.replace("002_b.md", "001_a.md").replace("Claim 002: b", "Claim 001: a"))
+        t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
+        r = "\n".join(reminders(t))
+        case("an entry naming a claim the gate does not name is reported stale, and the gate stands",
+             "findings-gate: established and cited by no findings row: [claim 002]" in r and "now matches nothing" in r, r)
+        w(tmp, "tools/artifacts.toml", cfg0)
         w(tmp, c2, files[c2].replace("Verified-by: researcher", "Verified-by: unchecked"))
         t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
         r = "\n".join(reminders(t))

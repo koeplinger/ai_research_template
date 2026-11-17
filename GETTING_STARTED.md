@@ -468,6 +468,10 @@ prose about your material usually means the sentence is doing two jobs.
 Second, if it really is a collision, the configuration has an escape
 hatch: `skip` on the artifact row in `tools/artifacts.toml`, with the
 reason written beside it. An unexplained skip is worse than the finding.
+For one passage you have ruled to leave, the list of accepted findings in
+the same file is narrower: it names the passage and the log entry of your
+ruling, and the finding returns if the passage changes (`MANIFESTO.md`
+§16, *A ruled matter stays ruled*).
 
 **What if I disagree with a rule?** Change it. The rulebooks are yours
 once you clone them; `FORKING.md` says how to change one legibly, so that

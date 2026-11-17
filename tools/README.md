@@ -1,6 +1,6 @@
 # Tools
 
-*Created 4 September 2026; updated 8 September 2026.*
+*Created 4 September 2026; updated 16 November 2026.*
 
 Project scaffolding: the programs that keep the record honest. Nothing
 here is part of the research. Every tool needs nothing beyond the Python
@@ -14,9 +14,21 @@ install, which refuses a commit, since a leak into the history is hard
 to undo; the researcher overrides it with `--no-verify` and says why in
 the commit message.
 
+A finding the researcher has seen and ruled to leave is entered in the
+list of accepted findings in `artifacts.toml`, each entry naming the tag,
+the file, the first words of the passage, and the log entry of the ruling
+(`MANIFESTO.md` §16, *A ruled matter stays ruled*). The linter, the round
+check, the residue check, and the session brief's findings gate leave out
+every finding of that tag on the line where the passage begins, and count
+it; a change to the quoted words brings the finding back, and an entry
+that no longer matches, or cannot match, is reported. The probe's and the
+concordance check's findings are not accepted through the list. A row's
+`skip`, which silences a check for a whole kind of file, is the wider
+tool.
+
 | File | Purpose |
 |---|---|
-| [artifacts.toml](artifacts.toml) | The single source of every path pattern, artifact kind, genre default, required field, and closed vocabulary the tools read (`ONTOLOGY.md` §7), and of the publication pipeline's settings. A project that files its artifacts elsewhere edits this one file. |
+| [artifacts.toml](artifacts.toml) | The single source of every path pattern, artifact kind, genre default, required field, and closed vocabulary the tools read (`ONTOLOGY.md` §7), of the publication pipeline's settings, and of the findings accepted at the researcher's ruling. A project that files its artifacts elsewhere edits this one file. |
 | [lint_docs.py](lint_docs.py) | The genre and ontology linter: every statically decidable item of `DOCUMENT_GENRES.md` *What the checker verifies*, `editorial_standards.md` *What is checked mechanically*, `ONTOLOGY.md` §5, and items 1, 2, and the static half of 3 (the `Mutation:` line present, its names in the set and bound in `MUTATIONS`) of `CHECK_METHODOLOGY.md` *What is checked mechanically*, each finding tagged with its item; its docstring says what it does not decide. `--list` prints the kind, the default genre, and the derived genre of every file; `--selftest` builds a scratch project under git and plants each defect. |
 | [check_round.py](check_round.py) | The round check (`MANIFESTO.md` §13): the linter, the log's numbering and the parts of every entry still open to editing, and, where the publication pipeline is enabled, the build and the bibliography, in one command. `--scratch DIR` writes the clean scratch project for exercising the hooks. |
 | [check_status_reply.py](check_status_reply.py) | The status-block check (`MANIFESTO.md` §16): whether a reply ends in the block's exact form. Harness-free; the wiring that runs it after each reply is `{{REPLY_HOOK}}`. |

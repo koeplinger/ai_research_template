@@ -8,7 +8,7 @@
 # folder by the KIND of the row that names them, never by a second copy
 # of the path.  Current state; indexed in tools/README.md.
 #
-# Created 4 September 2026; updated 8 September 2026.
+# Created 4 September 2026; updated 16 November 2026.
 #
 # Rows are matched top to bottom and the FIRST matching glob wins, so a
 # specific row (a template, an index) stands above the general row for
@@ -41,7 +41,9 @@
 #       phrase list, which in some subject matter matches ordinary
 #       sentences about the thing studied rather than about the document,
 #       while "GENRES-5/stamp" keeps watching for a stamp that opens a
-#       change narrative; the reverse skip is the other way round.
+#       change narrative; the reverse skip is the other way round.  For
+#       one finding the researcher has ruled to leave, the [[accepted]]
+#       list below is the narrower tool.
 
 [template]
 python = "3.11"
@@ -66,7 +68,8 @@ dashes = "no-em-dash"
 # another's precise sentence: "robust to <perturbation>" is the honest
 # result of a robustness check, and "scholars agree" with the works cited
 # beside it is a literature review doing its job.  An empty list turns the
-# check off; removing the key leaves the shipped list in force.
+# check off; removing the key leaves the shipped list in force.  One hit
+# the researcher has ruled to leave goes in the [[accepted]] list below.
 paper_phrases = ["without loss of generality", "clearly", "it is easy to see",
                  "it follows immediately", "as is well known", "it is well established that",
                  "scholars agree", "robust to", "remarkable", "striking", "beautiful",
@@ -198,6 +201,34 @@ cite = ""           # a regular expression whose first group is the keys at a ci
 # bibliography = "paper/references.bib"
 # entry = '^@\w+\{([^,\s]+),'
 # cite = '\\cite[a-z]*\*?(?:\[[^\]]*\])*\{([^}]*)\}'
+
+# ---------------------------------------------------------------- rulings
+# Findings accepted at the researcher's ruling (MANIFESTO.md section 16,
+# "A ruled matter stays ruled").  A finding the researcher has seen and
+# ruled to leave, such as a phrase that is a sentence about the subject
+# matter, a sentence repeated on purpose, or a claim declined as a
+# finding, is entered here in the round whose log entry records the
+# ruling, so that the tools stop raising it.  Each entry names:
+#   tag     the finding's tag, or findings-gate for the session brief's
+#           reminder; the linter, the round check, and the residue check
+#           read their own tags; a finding of the probe or the concordance
+#           check cannot be accepted
+#   path    the file the finding names
+#   text    the first words of the passage beginning on the line the
+#           finding names, as they stand there, quoted through the words
+#           the finding is about; for the findings gate, the claim's title
+#           line
+#   ruling  the log entry that records the ruling
+# An entry accepts every finding of its tag on that line, left out of the
+# report and counted; a change to the words it quotes brings the finding
+# back.  An entry that matches nothing, lacks a part, cites no log entry,
+# or names a tag the list does not cover is reported.  The assistant adds
+# an entry only at the researcher's ruling.
+# [[accepted]]
+# tag = "RESIDUE-5"
+# path = "paper/main_v2.md"
+# text = "The estimate holds in every region"
+# ruling = "prompt_logs/014_read_the_draft.md"
 
 # ---------------------------------------------------------------- artifacts
 

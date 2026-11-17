@@ -1,6 +1,6 @@
 # Onboarding: what every session must know before it works
 
-*Created 4 September 2026; updated 8 September 2026.*
+*Created 4 September 2026; updated 16 November 2026.*
 
 This file is read at the start of every assistant session, before any
 substantive action. Reading it, and then the manifesto in full, is the
@@ -68,6 +68,9 @@ meets in its first minutes.
 
 - **Every prompt is logged** (`prompt_logs/`, immutable once committed;
   numbering contiguous).
+- **A direction that governs later rounds is written down in the round it
+  is given**: in the file that owns its subject, or under *Standing
+  directions* below (`MANIFESTO.md`, opening, on standing directions).
 - **Unsure means stop** (`MANIFESTO.md` §4).
 - **Every non-trivial answer gets a second pass** by an independent route
   before it is presented (§5).
@@ -82,16 +85,26 @@ meets in its first minutes.
   finding and the proposed wording, and stop.
 - **Read what the task names**, and outside the repository only what the
   researcher points at (§10).
+- **The researcher's words are recorded as theirs, and no further**: a
+  reading that goes further is labeled the assistant's, and an
+  authorization is never inferred (§2, §10).
 - **A subagent writes no tracked file**; the main thread makes every edit
   (§14).
 - **Disagreement is said where it is about to be relied on** (§17).
+- **Decisions are put one at a time**, unless the researcher asks for
+  several, numbered, in plain words, each with its options and their
+  consequences (§16).
+- **A ruled matter stays ruled**: look for the ruling before asking or
+  proposing anything (§16).
 - **Every reply ends in a status block** (§16), and before handing work
   back the round check is run: `tools/check_round.py`.
 
 ## Standing directions
 
 <!-- The researcher's standing directions, one line each with the prompt
-     that set it, so a session knows them without re-deriving them. Do
+     that gave it, in the researcher's words, quoted where they fit
+     (MANIFESTO.md section 2), so a session knows them without re-deriving
+     them. Do
      not copy slot values here: the instrument of record and the mutation
      set are CHECK_METHODOLOGY.md's Slots, the parties and the citation
      locus are ONTOLOGY.md's, spelling and pronoun are
