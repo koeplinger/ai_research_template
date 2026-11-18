@@ -666,11 +666,13 @@ class Tree:
         row = self.rows[f]
         if not row:
             return "unresolved"
-        return self.genre_from(row, self.headers[f][0], self.text[f], self.plan_status.get(f, ""))
+        return self.genre_from(row, self.headers[f][0], self.text[f], self.plan_status.get(f, ""), path=f)
 
     def genre_from(self, row: dict, header: list[tuple[int, str]], text: str, own_status: str = "",
-                   status_of=None) -> str:
+                   status_of=None, path: str = "") -> str:
         """The genre an artifact with this row, header, and text derives.
+        path, where given, tells a released version of the versioned
+        write-up (named _vN) apart from a standalone note on its row.
         own_status is a plan's own Status: line, read from the same text;
         status_of(num) gives the Status: line of the plan numbered num, or
         None where there is no such plan, by default as the tree holds it
@@ -682,6 +684,11 @@ class Tree:
             return g
         if g == "self":
             return "frozen" if own_status.startswith("CLOSED") else "current-state"
+        # A released version of the versioned write-up is never corrected,
+        # whatever the status of a plan that owns it (MANIFESTO.md section 12).
+        if (g == "release" and row.get("kind") == "version" and re.search(r"_v\d+\.[^.]+$", Path(path).name)
+                and any(s.startswith("Released ") for _, s in header)):
+            return "frozen"
         pl = fields_of(header).get(F("plan"))
         st = status_of(pl[1].split(",")[0].strip()) if pl and pl[1] else None
         if st is not None:
@@ -725,11 +732,18 @@ def check_genres_2_immutable(t: Tree) -> None:
         return
     # A file staged for its first commit is not a committed entry, so
     # additions are left out; a committed entry moved is reported at the path
-    # it was committed under.
+    # it was committed under.  An attachment, a file kept as received under
+    # the log, is told apart by its row, since its remedy differs: it is
+    # restored as received, and never corrected.
     changed = git(t.root, "diff", "--name-only", "-z", "--no-renames", "--diff-filter=a", "HEAD", "--", logdir + "/")
     for f in changed.split("\0"):
         if f and Path(f).name not in ("README.md",) and not Path(f).name.startswith("_template"):
-            report("GENRES-2", f, 1, "committed prompt-log entry modified or deleted: restore its committed version, and put the change in a later entry not yet committed, which points back to it, the log's index pointing from the one entry to the other (MANIFESTO.md section 8)")
+            if (classify(t.cfg, f) or {}).get("kind") == "attachment":
+                report("GENRES-2", f, 1, "committed attachment modified or deleted: restore it as received; an attachment "
+                       "is never corrected, and what the project says about it goes in a later entry or in the artifact "
+                       "that acts on it (prompt_logs/attachments/README.md)")
+            else:
+                report("GENRES-2", f, 1, "committed prompt-log entry modified or deleted: restore its committed version, and put the change in a later entry not yet committed, which points back to it, the log's index pointing from the one entry to the other (MANIFESTO.md section 8)")
 
 
 def committed_genre(t: Tree, f: str, row: dict | None = None) -> str:
@@ -740,7 +754,7 @@ def committed_genre(t: Tree, f: str, row: dict | None = None) -> str:
     if not old:
         return ""
     oh = header_block(old, row.get("header", "stamp"))[0]
-    return t.genre_from(row, oh, old, fields_of(oh).get(F("status"), (0, ""))[1], t.committed_status)
+    return t.genre_from(row, oh, old, fields_of(oh).get(F("status"), (0, ""))[1], t.committed_status, path=f)
 
 
 def check_genres_3_dates(t: Tree) -> None:
@@ -1509,6 +1523,46 @@ def selftest() -> int:
                               subprocess.run(["git", "add", "prompt_logs/002_next.md"], cwd=t, capture_output=True)))
     run_case("a committed log entry moved is reported where it was committed", "GENRES-2", "prompt_logs/001_setup.md", "modified or deleted",
              lambda t, f: subprocess.run(["git", "mv", "prompt_logs/001_setup.md", "prompt_logs/009_moved.md"], cwd=t, capture_output=True))
+
+    # A file kept as received under the log (prompt_logs/attachments/README.md):
+    # binary, headerless, indexed, and committed, it is clean as it stands; a
+    # change to it, or its deletion, is an attachment's finding, never an
+    # entry's; and a file there whose name does not begin with a number
+    # matches no row.
+    ATT = "prompt_logs/attachments/001_marked.pdf"
+
+    def attached(tmp: Path, files: dict) -> None:
+        w(tmp, "prompt_logs/attachments/README.md", f"# Attachments\n\n{STAMP}\n\n| File | Received in |\n|---|---|\n"
+                                                     "| [001_marked.pdf](001_marked.pdf) | [001](../001_setup.md) |\n")
+        (tmp / ATT).write_bytes(b"%PDF-1.7\n\xff\xfe\x00 two marks\n")
+        for args in (["add", "-A"], ["-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "attachment"]):
+            subprocess.run(["git", *args], cwd=tmp, capture_output=True)
+
+    clean_case("an attachment kept as received, binary and headerless, is clean", attached)
+    run_case("a committed attachment changed is reported as an attachment", "GENRES-2", ATT, "committed attachment",
+             lambda t, f: (attached(t, f), (t / ATT).write_bytes(b"%PDF-1.7\n\xff\xfe\x00 one mark\n")))
+    absent_case("a committed attachment changed is not reported as a log entry", "GENRES-2", ATT, "prompt-log entry",
+                lambda t, f: (attached(t, f), (t / ATT).write_bytes(b"%PDF-1.7\n\xff\xfe\x00 one mark\n")))
+    run_case("a committed attachment deleted is reported", "GENRES-2", ATT, "committed attachment",
+             lambda t, f: (attached(t, f), (t / ATT).unlink()))
+    run_case("a file among the attachments whose name does not begin with a number matches no row", "GENRES-4",
+             "prompt_logs/attachments/marked.pdf", "no row", lambda t, f: w(t, "prompt_logs/attachments/marked.pdf", "x\n"))
+
+    # A released version of the versioned write-up that an open plan owns is
+    # frozen all the same (MANIFESTO.md section 12), so its deletion is
+    # reported; a released standalone note an open plan owns still follows
+    # its plan.
+    def owned_release(tmp: Path, rel: str, body: str) -> None:
+        w(tmp, rel, body)
+        for args in (["add", "-A"], ["-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "plan-owned release"]):
+            subprocess.run(["git", *args], cwd=tmp, capture_output=True)
+    V1, NOTE = "paper/main_v1.md", "paper/2026-01-05_note.md"
+    run_case("a released version an open plan owns is frozen all the same", "GENRES-3", V1, "gone",
+             lambda t, f: (owned_release(t, V1, f[V1].replace("Released 3 January 2026", "Plan: 001, task 1\nReleased 3 January 2026")),
+                           (t / V1).unlink()))
+    absent_case("a released note an open plan owns still follows its plan", "GENRES-3", NOTE, "gone",
+                lambda t, f: (owned_release(t, NOTE, f"# Note\n\n{STAMP}\nPlan: 001, task 1\nReleased 5 January 2026\n\nA note.\n"),
+                              (t / NOTE).unlink()))
     run_case("a frozen claim's body edited, date unmoved", "GENRES-3", C2, "but the updated date reads", add(C2, "\nMore.\n"))
     run_case("a frozen review edited, date unmoved", "GENRES-3", "paper/reviews/2026-01-03_r_main.md", "but the updated date reads", add("paper/reviews/2026-01-03_r_main.md", "\nMore.\n"))
     run_case("a current-state rulebook edited, date unmoved", "GENRES-3", "MANIFESTO.md", "but the updated date reads", add("MANIFESTO.md", "\nMore.\n"))

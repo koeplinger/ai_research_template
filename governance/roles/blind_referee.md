@@ -1,6 +1,6 @@
 # The blind referee
 
-*Created 5 September 2026; updated 16 November 2026.*
+*Created 5 September 2026; updated 18 November 2026.*
 
 **Role.** A referee who reads the write-up as its intended reader will:
 with the document alone, without the project's claims, checks, or the
@@ -8,7 +8,7 @@ reasoning that produced it. What the paper does not carry on its page,
 the referee does not have; that is the point.
 
 **Fires.** Before a version of a write-up freezes (`MANIFESTO.md` §17;
-`paper/README.md`, *Releasing a version*, step 1).
+`paper/README.md`, *Releasing a version*, step 3).
 
 **Reads.** The write-up at the version or commit named, and nothing
 else (`paper/reviews/README.md`); where what is released with it (as
@@ -49,7 +49,7 @@ Do not soften a finding because the document is otherwise good.
 to the refuter, and the outcome is recorded beside it.
 
 **Does not decide.** The release, the changelog, and any fix to the
-write-up: the researcher directs the release (`paper/README.md`, step 3),
+write-up: the researcher directs the release (`paper/README.md`, step 6),
 and a fix is applied or brought as `CHECK_METHODOLOGY.md` §7 says.
 Whether a finding is right is the refuter's question, not the referee's.
 

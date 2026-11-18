@@ -1,6 +1,6 @@
 # Manifesto: operating rules for AI assistance
 
-*Created 2 September 2026; updated 17 November 2026.*
+*Created 2 September 2026; updated 18 November 2026.*
 
 This document defines the operating rules for an AI assistant working in
 this research repository. The rules are **binding on the assistant**
@@ -405,14 +405,32 @@ the project's own subject-matter terms and starts empty.
 - A frozen artifact is corrected only with the researcher's authorization.
   The assistant brings the finding and the proposed wording, and stops. It
   does not fix errors in frozen artifacts on its own initiative, however
-  clear the error: the researcher sees them first.
+  clear the error: the researcher sees each one first.
+- A released version of a versioned write-up is the exception: it is
+  never corrected, by anyone, in any form it is released in (its source,
+  a typeset or rendered copy, a filed document), whether or not it has
+  left the repository. It is succeeded instead, and what a later reading
+  asks of it goes into the next version (`DOCUMENT_GENRES.md`, *Versioned
+  write-ups*). What else is released with it, its data, code, tests, or
+  transcriptions among them, is corrected as its own genre allows, unless
+  the researcher directs for a release that some or all of what it
+  carries is never corrected either.
+- The researcher asks for the trivial corrections of frozen artifacts to
+  be put together, a request that stands for every round (§16, *Putting a
+  decision*). The assistant brings those a round finds as one numbered
+  list, each item with its finding and its proposed wording, and the
+  researcher approves or declines each by its number, in one answer. The
+  assistant lists what it takes to be trivial; the researcher's answer
+  decides what is.
 - Every durable artifact carries the same header, its created date with
   an updated date (`Created <date>; updated <date>`), and the genres differ
-  only in how a correction is made. A frozen artifact is corrected in its running
-  text, made to say the right thing where it says it, and only the updated
-  date changes: a date and nothing else, never an account of the change;
-  the version history carries the predecessor. It may instead be marked
-  superseded, with a `superseded by <path>` line in its header. A
+  only in how a correction is made. A frozen artifact is corrected in its
+  running text, made to say the right thing where it says it, and only the
+  updated date changes: a date and nothing else, never an account of the
+  change; the version history carries the predecessor. It may instead be
+  superseded, with the researcher's authorization, by an artifact at a new
+  path: it keeps its text, and the `superseded by <path>` line its header
+  then takes is bookkeeping, not a correction (`DOCUMENT_GENRES.md` §2). A
   current-state artifact is corrected in place, without an account of the
   change in the artifact itself: it describes what is, and the version
   history carries its earlier text; its updated date changes too, so a

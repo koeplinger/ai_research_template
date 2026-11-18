@@ -1,6 +1,6 @@
 # The documentation consistency sweep
 
-*Created 8 September 2026; updated 17 November 2026.*
+*Created 8 September 2026; updated 18 November 2026.*
 
 **Role.** A reader who takes a project's *documentation* as one system and
 reports where it disagrees with itself: the rulebooks, the folder indexes,
@@ -27,7 +27,12 @@ construction.
   (`GETTING_STARTED.md` §4), the first of the project's sweeps;
 - after a batch of edits to the rulebooks, the indexes, the artifact
   templates, or the configuration;
-- before a release, and before a project closes;
+- after a rule is amended, or a mechanism removed or replaced
+  (`FORKING.md`);
+- before a release, as the first step of `paper/README.md`,
+  *Releasing a version*, and after it, as its last step, over what was
+  changed since the last documentation sweep (*Reads*, below);
+- before a project closes;
 - whenever a reader was sent to a document that did not say what its
   pointer promised, which is the sign that the sweep is overdue.
 
@@ -35,9 +40,15 @@ construction.
 files among them read as documents; the output of the mechanical checks
 for the same tree, taken as given; and the prompts of the log entries
 since the last documentation sweep, for the directions in them that govern
-later rounds. Of the rest of the record it reads only an index, to see that
-the index is complete, and the log, to look for the researcher's ruling on
-a finding before the finding is applied or brought.
+later rounds. After a release it reads, of that list, only the documents
+changed since the last documentation sweep, every other document that
+states the same status, count, or pointer as one of them, or counts what
+one of them lists, and beside them the release's `Released` and
+`superseded by` stamps and its changelog row. Of
+the rest of the record it reads only an index, to see that the index is
+complete; what a document counts, to count it again; and the log, to look
+for the researcher's ruling on a finding before the finding is applied or
+brought.
 
 **Prompt.**
 
@@ -50,7 +61,11 @@ First run tools/check_round.py and take its findings as given, so the
 reading does not repeat what the tools already know.
 
 Then read, in full and as one system:
-[the list below, edited to this project's files]
+[the list below, edited to this project's files | after a release, of
+the list below only the documents changed since the last documentation
+sweep, every other document that states the same status, count, or
+pointer as one of them, or counts what one of them lists, and beside them
+the release's stamps and its changelog row]
   the rulebooks: MANIFESTO.md, DOCUMENT_GENRES.md, CHECK_METHODOLOGY.md,
     PRECEDENCE.md, ONTOLOGY.md, GLOSSARY.md,
     evidence_and_reasoning/editorial_standards.md;
@@ -67,8 +82,8 @@ Then read, in full and as one system:
 Read also the prompts of the log entries since the last documentation
 sweep the log records. Do not read the claims, the checks, the plans, the
 notes, the reviews, or the rest of the log, except to check that an index
-lists what is there, and to look for the researcher's ruling on a finding
-before applying or bringing it.
+lists what is there, to count again what a document counts, and to look
+for the researcher's ruling on a finding before applying or bringing it.
 
 Report, before editing anything:
 
@@ -102,7 +117,15 @@ Report, before editing anything:
    directions); every line under Standing directions without its prompt
    or the "by hand" mark;
    and every standing direction in words its prompt does not bear out;
-9. [this project's own documentation items, listed here]
+9. every count a document states, in figures or in words, that a fresh
+   count does not bear out, each counted again from the thing it counts,
+   by a command wherever one can count it and never from another
+   document that states it, with the command named in the finding; the
+   counts that CURRENT_STATE.md, FINDINGS.md, and
+   evidence_and_reasoning/research_result.md state are left to the
+   consistency sweep of the record (CHECK_METHODOLOGY.md section 7,
+   item 3);
+10. [this project's own documentation items, listed here]
 
 Hand each finding to a reader instructed to refute it (the refuter,
 governance/roles/refuter.md). Before applying or bringing what survives,
@@ -124,11 +147,11 @@ applied or brought, is listed as `MANIFESTO.md` §14 sets out for a sweep.
 What is brought is numbered once, in the round's log entry or, where the
 list is long, in a dated working note the entry points to
 (`evidence_and_reasoning/notes/README.md`), and is put to the researcher
-one decision at a time and ruled by number (`MANIFESTO.md` §16, *Putting a
-decision*); a finding that runs against a ruling is recorded as such, with
-the ruling's prompt.
+and ruled by number as `MANIFESTO.md` §16, *Putting a decision*, says; a
+finding that runs against a ruling is recorded as such, with the ruling's
+prompt.
 
-**Item 9 is the project's own.** Every discipline's documentation carries
+**Item 10 is the project's own.** Every discipline's documentation carries
 facts that drift in ways this list cannot anticipate, and a project writes
 them into the prompt once and keeps them:
 

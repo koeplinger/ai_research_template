@@ -249,8 +249,8 @@ a second ledger, and a second ledger drifts (`DOCUMENT_GENRES.md`).
 
 | Derived | From |
 |---|---|
-| `genre(artifact)` | the configured path patterns (§7), overridden by `owned-by` and the owning plan's `status` |
-| `live` / `frozen` | `owned-by` and `status` |
+| `genre(artifact)` | the configured path patterns (§7), overridden by `owned-by` and the owning plan's `status`, save on a released version of a versioned write-up, which `released` freezes whatever that status |
+| `live` / `frozen` | `owned-by` and `status`, and for a version of a versioned write-up, `released` |
 | `tier(statement)` | `register` where the statement is a claim; otherwise from how it is carried, by citation for tier 3 and by hedge for tier 4 (`PRECEDENCE.md`) |
 | `gated(assertion)` | the existence of a check that `gates` it |
 

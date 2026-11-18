@@ -28,6 +28,9 @@ htmlcov/
 Thumbs.db
 
 # LaTeX build scratch (a compiled PDF is committed once it exists; scratch is not)
+# A log released with a version, such as the log of a final run, is not
+# scratch: a line of its own at the end of this file re-includes its path
+# (paper/README.md, Releasing a version, step 7).
 *.aux
 *.log
 *.out
@@ -42,3 +45,11 @@ Thumbs.db
 *.nav
 *.snm
 *.vrb
+
+# Everything in the attachments folder stays visible to git whatever its
+# extension, so that a file kept as received is committed and one named
+# out of form is reported (prompt_logs/attachments/README.md); only the
+# files an operating system writes there by itself stay ignored.
+!prompt_logs/attachments/*
+prompt_logs/attachments/.DS_Store
+prompt_logs/attachments/Thumbs.db

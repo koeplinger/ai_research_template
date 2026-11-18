@@ -8,7 +8,7 @@
 # folder by the KIND of the row that names them, never by a second copy
 # of the path.  Current state; indexed in tools/README.md.
 #
-# Created 4 September 2026; updated 16 November 2026.
+# Created 4 September 2026; updated 18 November 2026.
 #
 # Rows are matched top to bottom and the FIRST matching glob wins, so a
 # specific row (a template, an index) stands above the general row for
@@ -25,11 +25,13 @@
 #   dated-record   frozen on writing, or with the plan its Plan: line
 #                  names; exempt from the narrative and path checks
 #   release        live until its Released stamp (a version) or its
-#                  (release) row (a changelog); a Plan: line overrides
+#                  (release) row (a changelog); a Plan: line overrides,
+#                  save on a version named _vN once it is released
 #   exempt         no header, no genre check: non-prose, imported, or the
 #                  statement of intent
 # A Plan: header line overrides any default but immutable, self, and
-# exempt: live while that plan is DRAFT or ENGAGED, frozen when CLOSED.
+# exempt, and a released version named _vN: live while that plan is
+# DRAFT or ENGAGED, frozen when CLOSED.
 # header: stamp (a markdown artifact) | docstring (a program) |
 #         comment (a configuration file or a shell script: its comment lines
 #         are its prose) | none
@@ -482,6 +484,18 @@ glob = "prompt_logs/[0-9]*.md"
 genre = "immutable"
 
 [[artifact]]
+kind = "attachment"
+glob = "prompt_logs/attachments/[0-9]*"
+genre = "immutable"
+header = "none"
+# What a round received and keeps as received, named after the entry that
+# received it (prompt_logs/attachments/README.md): no header, since it is
+# kept as received, and never edited once committed, which GENRES-2
+# reports.  The numbered form leaves the folder's README.md to the index
+# row; a file there whose name does not begin with a number matches no
+# row and is reported.
+
+[[artifact]]
 kind = "check-program"
 glob = "python_project/src/check_[0-9]*.py"
 genre = "plan-owned"
@@ -592,6 +606,9 @@ lists = "paper/reviews/*"
 [[index]]
 readme = "prompt_logs/README.md"
 lists = "prompt_logs/*"
+[[index]]
+readme = "prompt_logs/attachments/README.md"
+lists = "prompt_logs/attachments/*"
 [[index]]
 readme = "python_project/README.md"
 lists = "python_project/*"

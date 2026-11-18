@@ -1,6 +1,6 @@
 # Opposition roles
 
-*Created 5 September 2026; updated 17 November 2026.*
+*Created 5 September 2026; updated 18 November 2026.*
 
 Structured argument against the researcher's own position, as
 `MANIFESTO.md` §17 and `VISION.md` require: a reader instructed to find
@@ -20,7 +20,7 @@ matter stays ruled*).
 | Role | Fires | Reads | Returns |
 |---|---|---|---|
 | [refuter.md](refuter.md) | on every sweep or review finding | the finding, or several resting on the same passages; the passages; and what they cite | stands, refuted with the reason, or narrowed, for each finding |
-| [documentation_sweep.md](documentation_sweep.md) | after a batch of edits to the rulebooks, indexes, artifact templates, or configuration; after the round that states a new project's question (`GETTING_STARTED.md` §4) | the project's documentation, as one system, and the log's prompts since the last documentation sweep | the disagreements, each with its two homes |
+| [documentation_sweep.md](documentation_sweep.md) | at the moments its *Fires* list names | the project's documentation, as one system, and the log's prompts since the last documentation sweep | the disagreements, each with its two homes |
 | [blind_referee.md](blind_referee.md) | before a version freezes | the write-up alone | a review record |
 | [structure_census.md](structure_census.md) | at the head of a review, and before a review patches a section | the section and the sections it refers to | the census table |
 | [deletion_ledger.md](deletion_ledger.md) | on every rebuild | the section before and after, and the census where one was | the two ledgers and the net word delta |

@@ -1,6 +1,6 @@
 # Onboarding: what every session must know before it works
 
-*Created 4 September 2026; updated 17 November 2026.*
+*Created 4 September 2026; updated 18 November 2026.*
 
 This file is read at the start of every assistant session, before any
 substantive action. Reading it, and then the manifesto in full, is the
@@ -97,7 +97,9 @@ meets in its first minutes.
   researcher's authorization**: `FINDINGS.md`, the keystone, the research
   statement, and the manifesto (§12).
 - **A frozen artifact is corrected only with authorization**: bring the
-  finding and the proposed wording, and stop.
+  finding and the proposed wording, and stop; bring the trivial
+  corrections a round finds together, as one numbered list; a released
+  version of a versioned write-up is never corrected (§12).
 - **Read what the task names**, and outside the repository only what the
   researcher points at (§10).
 - **The researcher's words are recorded as theirs, and no further**: a

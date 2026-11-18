@@ -1,6 +1,6 @@
 # Check methodology
 
-*Created 2 September 2026; updated 17 November 2026.*
+*Created 2 September 2026; updated 18 November 2026.*
 
 This file defines the unit of verification in a repository built from the
 template: the **check**. It owns four things the other rulebooks point to:
@@ -323,7 +323,10 @@ Everything else a sweep finds is repaired as usual.
 
 **A consistency sweep closes every correction batch.** The assistant
 proposes it when a batch has been applied and runs it at the researcher's
-direction (`MANIFESTO.md` §16).
+direction (`MANIFESTO.md` §16). Its recount of the top-level documents,
+item 3, is also made at the first step of a release, and again at its
+last step, of each of those documents the release wrote into
+(`paper/README.md`, *Releasing a version*).
 
 The sweep exists because of a defect class no check can see on its own:
 **prose in one document restating a fact established in another.** A
@@ -346,11 +349,16 @@ What a sweep covers, at minimum:
 4. **The plans and the plan index**
    (`evidence_and_reasoning/research_plans/ROADMAP.md`), including that
    every open plan's execution ledger lists every unstarted task.
-5. **The dated records** for *accuracy*, never for voice: a note that
-   records a finding later contradicted, or a correction the note proposed
-   that a later round adopted.
-6. **The write-ups against each other**: any fact stated in two of them
-   must be stated compatibly.
+5. **The dated records** for *accuracy*, never for voice: for a note or a
+   review that records a finding a later round contradicted, or a
+   correction it proposed that a later round adopted, a later record says
+   so (a later note or review, or that round's log entry), and the
+   sweep's own log entry says so where none does. The earlier record is
+   never rewritten for it: it says what was found on its day.
+6. **The write-ups against each other**: any fact stated in two of
+   them must be stated compatibly. A released version, and the changelog
+   that froze with it, is never brought into line with a later version
+   (`DOCUMENT_GENRES.md`, *Versioned write-ups*).
 7. **The checks against their records and claims.**
 8. **The tension ledger against the claims and the references**
    (`PRECEDENCE.md`): every divergence has a row, every row's caution is
@@ -371,9 +379,8 @@ assistant stops.
 **This sweep reads the record.** Its counterpart over the *documentation*,
 which asks whether the rulebooks, the indexes, the artifact templates, and
 the configuration still agree with each other, is a standing prompt of its
-own: `governance/roles/documentation_sweep.md`, made after a batch of edits
-to them, and after the round that states a new project's question
-(`GETTING_STARTED.md` §4). Neither
+own: `governance/roles/documentation_sweep.md`, made at the moments its
+*Fires* list names. Neither
 replaces the other, and a project holding a third thing its own field calls
 a sweep names all three rather than writing bare *the sweep* (`GLOSSARY.md`).
 

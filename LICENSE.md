@@ -1,6 +1,6 @@
 # Licensing
 
-*Created 2 September 2026; updated 16 November 2026.*
+*Created 2 September 2026; updated 18 November 2026.*
 
 This repository combines written material and executable code. Different
 licenses apply to the two.
@@ -15,9 +15,9 @@ log under `prompt_logs/`, and any figures, is licensed under the
   **Creative Commons Attribution 4.0 International License (CC BY 4.0)**,
 
 except the held sources under `source_documents/`, the imports under
-`inherited/`, and what the project quotes or derives from them, which keep
-their own terms as far as those terms reach (*Material under its own
-terms*, below).
+`inherited/`, the attachments under `prompt_logs/attachments/`, and what
+the project quotes or derives from them, which keep their own terms as far
+as those terms reach (*Material under its own terms*, below).
 
 You are free to share and adapt this material for any purpose, including
 commercially, provided you give appropriate credit and indicate if changes
@@ -36,9 +36,10 @@ Recommended citation for the template:
 Everything that executes, including but not limited to every program under
 `tools/`, every check program and test, every script, hook, and
 configuration file, is licensed under the **MIT License**, except the held
-sources under `source_documents/`, the imports under `inherited/`, and what
-the project quotes or derives from them, which keep their own terms as far
-as those terms reach. The full text is in [LICENSE-CODE](LICENSE-CODE).
+sources under `source_documents/`, the imports under `inherited/`, the
+attachments under `prompt_logs/attachments/`, and what the project quotes
+or derives from them, which keep their own terms as far as those terms
+reach. The full text is in [LICENSE-CODE](LICENSE-CODE).
 
 ## Why two licenses
 
@@ -57,8 +58,10 @@ and nothing in this file relicenses it: each source held under
 `source_documents/README.md` records; each artifact imported under
 `inherited/`, with the attribution, original date, and terms its row in the
 ledger of `inherited/README.md` records, under the import policy stated
-there; and what the project quotes or derives from either, as far as those
-terms reach.
+there; each attachment kept under `prompt_logs/attachments/`, with the
+terms its row in `prompt_logs/attachments/README.md` records; and what
+the project quotes or derives from any of them, as far as those terms
+reach.
 
 ## In a project built from the template
 

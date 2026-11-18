@@ -1,6 +1,6 @@
 # Getting started: from a clone to a first commit
 
-*Created 8 September 2026; updated 17 November 2026.*
+*Created 8 September 2026; updated 18 November 2026.*
 
 This is the walkthrough. It takes a clone of the template and leaves you
 with a project whose first plan is engaged, whose first claim is checked,
@@ -266,7 +266,7 @@ the examples below are, with no closing period.
 | `{{CITATION_LOCUS}}` | `ONTOLOGY.md` | When a citation points to a place inside a work, in what units is that place given? Every unit your sources need, such as page and section, folio and line, table and column, or paragraph number. |
 | `{{REFERENCE_FIELDS}}` | `ONTOLOGY.md` | Which details must every entry in the project's list of references carry, and does a kind of work need more of its own? Seven are required until you change them: authors, title, where published or held, year, identifier, keywords, and standing (what a search for later corrections or disputes found, or why none was made). |
 | `{{REFERENCE_ADEQUACY}}` | `evidence_and_reasoning/editorial_standards.md` | Which kind of reference is good enough to back which kind of claim? Pairs such as a peer-reviewed article for a specialist claim, or an archival document by its reference for what that document says. |
-| `{{DELIVERABLE}}` | `DOCUMENT_GENRES.md` | What will the project publish? Its form, what its venue expects of a title, and what goes out with each released version besides the text, such as data, code, or transcriptions. It may wait until a write-up is opened. |
+| `{{DELIVERABLE}}` | `DOCUMENT_GENRES.md` | What will the project publish? Its form, what its venue expects of a title, how a version shows on its page which version it is and whether it is released, and what goes out with each released version besides the text, such as data, code, or transcriptions. It may wait until a write-up is opened. |
 | `{{SPELLING}}` | `evidence_and_reasoning/editorial_standards.md` | In which language and spelling variant is the project's prose written: US English, UK English, or another language, for which no word list is checked? US English is checked from the start until you change it. |
 | `{{DASH_CONVENTION}}` | `evidence_and_reasoning/editorial_standards.md` | How does the prose punctuate an aside inside a sentence, and a range such as 10 to 20? Asides take no em-dashes, spaced or unspaced em-dashes, or spaced en-dashes; ranges take an en-dash or the word to. The tools report every em-dash until you change the rule or turn the check off. |
 | `{{PAPER_PRONOUN}}` | `evidence_and_reasoning/editorial_standards.md` | In the write-up, who performs its acts: we (even for one author), I, or the document itself (this article argues)? One choice, used throughout. It may wait until a write-up is opened. |

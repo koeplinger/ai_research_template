@@ -1,6 +1,6 @@
 # Governance: the mechanisms, each with the rule it serves and the moment it fires
 
-*Created 5 September 2026; updated 17 November 2026.*
+*Created 5 September 2026; updated 18 November 2026.*
 
 `VISION.md` promises four kinds of mechanism that keep the discipline
 running when attention lapses: reminders, checks, opposition, and
@@ -22,7 +22,7 @@ serves and the moment it fires.
 | Mechanism | Rule | Fires | Output | Does not decide |
 |---|---|---|---|---|
 | the session brief, `tools/session_brief.py` | `MANIFESTO.md` §16; `ONBOARDING.md` | at session start, through the harness wiring, and on demand | the reading order, the plans by status, the reminders the record can compute | anything: it prints |
-| the documentation consistency sweep, [roles/documentation_sweep.md](roles/documentation_sweep.md) | `CHECK_METHODOLOGY.md` §7, which sweeps the record; this sweeps the documentation | after a batch of edits to the rulebooks, indexes, artifact templates, or configuration; after the round that states a new project's question (`GETTING_STARTED.md` §4) | the disagreements between documents, each with its two homes | which of two disagreeing statements yields: the researcher's |
+| the documentation consistency sweep, [roles/documentation_sweep.md](roles/documentation_sweep.md) | `CHECK_METHODOLOGY.md` §7, which sweeps the record; this sweeps the documentation | at the moments its *Fires* list names | the disagreements between documents, each with its two homes | which of two disagreeing statements yields: the researcher's |
 | the standing reminders, [reminders.md](reminders.md) | §16, and the section each names | at the stage of work each names | one sentence in the reply, once | the action: taken only with direction |
 
 ## Checks

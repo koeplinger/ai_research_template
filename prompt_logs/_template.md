@@ -11,7 +11,13 @@ By: <!-- who did the work: assistant, then a comma and the AI model with its ver
 
 --- PROMPT START ---
 <!-- The prompt verbatim and unedited; this region is skipped by the
-     editorial checks. An attachment is recorded by locator, not copied.
+     editorial checks. Beside the prompt's own words, which stay verbatim
+     but for the two replacements below, an attachment is named where the
+     prompt carries it: by its locator where a second reader can reach it elsewhere,
+     never by a local path; otherwise it is kept as received, where
+     MANIFESTO.md section 6 permits, and named by its path, NNN being
+     this entry's number (prompt_logs/attachments/README.md):
+     [attached: prompt_logs/attachments/NNN_short_name.<ext>]
      Where MANIFESTO.md section 6 keeps material out of the repository,
      replace it with:
      [removed before logging: <what, in a form the access conditions

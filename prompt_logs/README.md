@@ -17,8 +17,10 @@ version history is the record of what changed and when. Copy
 An entry is edited only while it is uncommitted; once committed, a
 completion or a correction goes in a later entry, and the last column
 below points from the earlier entry to it (`DOCUMENT_GENRES.md` §1). This
-README and the template are the folder's two current-state files; every
-numbered entry is immutable.
+README and the template are the folder's two current-state files, beside
+[`attachments/README.md`](attachments/README.md), the index of what the
+rounds received; every numbered entry is immutable, and so is every
+attachment.
 
 ## The four parts of an entry
 
@@ -85,3 +87,4 @@ a round falsely or to leave one unlogged.
 | File | |
 |---|---|
 | [_template.md](_template.md) | the entry template; not an entry, not numbered; current state |
+| [attachments/](attachments/) | what the rounds received and keep as received, each named after the entry that received it; not entries; immutable, with an index of their own |

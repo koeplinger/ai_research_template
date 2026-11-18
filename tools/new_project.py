@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The instantiation procedure: this template, made into a project (GETTING_STARTED.md, sections 1 to 3).
 
-Created 8 September 2026; updated 17 November 2026.
+Created 8 September 2026; updated 18 November 2026.
 
 What it does, printing each step and what it could not do:
 
@@ -121,7 +121,7 @@ SLOTS: list[tuple[str, str, str]] = [
     ("REFERENCE_ADEQUACY", "evidence_and_reasoning/editorial_standards.md",
      "Which kind of reference is good enough to back which kind of claim? Pairs such as a peer-reviewed article for a specialist claim, or an archival document by its reference for what that document says."),
     ("DELIVERABLE", "DOCUMENT_GENRES.md",
-     "What will the project publish? Its form, what its venue expects of a title, and what goes out with each released version besides the text, such as data, code, or transcriptions. It may wait until a write-up is opened."),
+     "What will the project publish? Its form, what its venue expects of a title, how a version shows on its page which version it is and whether it is released, and what goes out with each released version besides the text, such as data, code, or transcriptions. It may wait until a write-up is opened."),
     ("SPELLING", "evidence_and_reasoning/editorial_standards.md",
      "In which language and spelling variant is the project's prose written: US English, UK English, or another language, for which no word list is checked? US English is checked from the start until you change it."),
     ("DASH_CONVENTION", "evidence_and_reasoning/editorial_standards.md",
@@ -667,6 +667,7 @@ template's, and add the project's own recommended citation above.
 # The clause both grants of LICENSE.md carry, word for word, and the front
 # page repeats (the self-test compares them).
 OWN_TERMS = ("except the held sources under `source_documents/`, the imports under `inherited/`, "
+             "the attachments under `prompt_logs/attachments/`, "
              "and what the project quotes or derives from them, which keep their own terms as far "
              "as those terms reach")
 

@@ -1,6 +1,6 @@
 # Document genres
 
-*Created 2 September 2026; updated 17 November 2026.*
+*Created 2 September 2026; updated 18 November 2026.*
 
 Every artifact in a repository built from the template belongs to exactly
 one of three genres, and the genre determines how the artifact may be
@@ -79,6 +79,7 @@ YYYY`; dates in filenames are written `YYYY-MM-DD`.
 | Artifact | |
 |---|---|
 | the entries under `prompt_logs/` | every prompt, in order, with what was done in response; the folder's `README.md` and `_template.md` are current state |
+| the attachments under `prompt_logs/attachments/` | what a round received and keeps as received, never corrected (`prompt_logs/attachments/README.md`); that folder's `README.md` is current state |
 
 An entry is **immutable once the researcher has committed it**; its own
 status line does not change this. An entry may be edited only while it is
@@ -114,12 +115,11 @@ deliverable's form: an article, an edition, a working paper with its
 replication package, a brief.
 
 **A frozen artifact is corrected only with the researcher's
-authorization** (`MANIFESTO.md` §12): the assistant brings the finding and
-the proposed wording, and stops. Once authorized, it is corrected as §12
-says: in its running text, the updated date the only change to the header,
-or marked `superseded by <path>`. The version history carries the
-predecessor. A frozen artifact stays at its path: it is never moved or
-deleted, and one that is replaced is marked `superseded by <path>`.
+authorization**, and a released version of a versioned write-up is never
+corrected (*Versioned write-ups*, below); `MANIFESTO.md` §12 says how a
+correction is brought and made. A frozen artifact stays at its path: it is
+never moved or deleted, and one that is replaced is marked
+`superseded by <path>`.
 
 **The repository is current state in every genre.** Frozen artifacts are
 dated records of what is *true*, not of how the text got there: a frozen
@@ -144,12 +144,17 @@ correction, and takes the updated date.
 
 ### Versioned write-ups
 
-The main write-up has one living copy at a time. A released version is by
-default succeeded rather than corrected: a correction the researcher
-authorizes goes into the next version, and the released version is marked
-`superseded by <path>` when that version releases. It carries the standard
-header like every artifact. Changes between versions go in a changelog,
-which is a living document until its version releases.
+The main write-up has one living copy at a time. A released version is
+succeeded by the next (`MANIFESTO.md` §12), and is marked
+`superseded by <path>` when that version releases. Each version carries
+the standard header like every artifact. Changes between versions go in a
+changelog, which is a living document until its version releases. A
+changelog from vN to vM records what changed between those two versions,
+with its ledgers, and nothing found after vM releases: a correction found
+then goes into the next changelog, with the version that makes it. A review, a note, a changelog
+row, or any other record that names a place in a version of a versioned
+write-up uses that version's numbering, and says which version wherever the record does
+not make it evident.
 
 ### Maintained artifacts under `paper/`
 
@@ -176,7 +181,10 @@ reader time and invites them to mistake a superseded statement for a live
 one. So while the plan is open, **a correction is made by making the
 document say the right thing**: no dated addendum, no narration of its
 earlier text. The history lives in the prompt log and the version history.
-On closure the frozen rules above apply in full.
+On closure the frozen rules above apply in full. A released version of a
+versioned write-up is never corrected, even while a plan that owns it is
+open, and neither is anything released with it that the researcher has
+directed is never corrected (`MANIFESTO.md` §12).
 
 ### A standing reservation
 
@@ -262,8 +270,10 @@ the template, a file carried over from it keeps the template's Created
 date, the day the file first existed there, and the template's updated date
 until the project changes the file. Non-prose files (data, images, rendered
 output, transcription files) carry no header, and neither does an imported
-file under `inherited/`, which is a verbatim copy; they are dated by the
-plan that owns them or the index that lists them. A tracked path that
+file under `inherited/`, which is a verbatim copy, or an attachment under
+`prompt_logs/attachments/`, which is kept as received; they are dated by
+the plan that owns them or the index that lists them, and an attachment
+by the entry that received it. A tracked path that
 matches no genre in the checker's configuration is reported as unresolved;
 no default is assumed.
 
@@ -392,9 +402,9 @@ matter stays ruled*).
    excluding non-prose files, opens with a line matching `Created D Month
    YYYY; updated D Month YYYY`, and nothing but a closing period and the
    closing emphasis mark follows the second date on that line.
-2. **Immutable.** No committed file under `prompt_logs/`, other than its
-   `README.md` and its `_template.md`, differs from its committed version
-   or is deleted.
+2. **Immutable.** No committed file under `prompt_logs/`, an attachment
+   included, other than its `README.md` indexes and its `_template.md`,
+   differs from its committed version or is deleted.
 3. **Dates and frozen paths.** A durable artifact whose body, its text
    other than its header lines, a program's code and a configuration's
    values included, differs from its committed version carries as its
@@ -413,8 +423,10 @@ matter stays ruled*).
 4. **Genre resolution.** Every tracked path resolves to a genre: the
    configured path patterns assign a default; a `Plan: NNN` header line
    overrides it to current state while that plan's `Status:` is DRAFT or
-   ENGAGED and to frozen when it is CLOSED; a path resolving to nothing is
-   reported.
+   ENGAGED and to frozen when it is CLOSED, save on a released version of
+   a versioned write-up (a file whose name ends in `_vN` before its
+   extension and which carries its `Released` stamp), which is frozen
+   whatever that status; a path resolving to nothing is reported.
 5. **Narrative.** On current-state paths, outside the two dated-record
    patterns and outside any `## Execution status` or `## Executions`
    section, the following
@@ -467,4 +479,4 @@ belongs) are the assistant's duty.
 
 | Slot | Meaning | Examples |
 |---|---|---|
-| `{{DELIVERABLE}}` | The publishable deliverable: its form, its title convention, and what is released with a version of it (§2). This file owns the slot; `evidence_and_reasoning/editorial_standards.md` carries a row pointing here | an article: its typeset source and rendered copy; an empirical paper: the rendered copy, the estimation code, the cleaned extract or its locator, and the run logs; a critical edition: the edited text, its apparatus, and the transcription files; a brief: the filed document |
+| `{{DELIVERABLE}}` | The publishable deliverable: its form, its title convention, how a version marks itself on the page, and what is released with a version of it (§2). This file owns the slot; `evidence_and_reasoning/editorial_standards.md` carries a row pointing here | an article: its typeset source and rendered copy, its version and date under the title, and a draft marker on the title page until the release; an empirical paper: the rendered copy, the estimation code, the cleaned extract or its locator, and the run logs; a critical edition: the edited text, its apparatus, and the transcription files, with the edition statement on the title page; a brief: the filed document |

@@ -1,6 +1,6 @@
 # How it fits together
 
-*Created 8 September 2026; updated 17 November 2026.*
+*Created 8 September 2026; updated 18 November 2026.*
 
 `GETTING_STARTED.md` gets a project moving. This file says what the parts
 are for, how they make one system rather than a folder of forms, and what
@@ -129,8 +129,10 @@ completed by the next round's entry, which points back (`MANIFESTO.md`
 **Nothing is edited backwards.** A mistake is corrected forward: the
 current-state document is corrected in place, the frozen one is corrected
 in its running text with your authorization, and the reason lives in the
-round's log entry. The immutable record is where a reader goes to see what
-was believed and done at each step.
+round's log entry. A released version of a versioned write-up is frozen
+but never corrected, even with your authorization: it is succeeded by the
+next (*Releasing a version*, below). The immutable record is where a
+reader goes to see what was believed and done at each step.
 
 ---
 
@@ -143,7 +145,7 @@ way each time, and so that a reader of the log can see which one was made.
 
 | Prompt | When | What comes back |
 |---|---|---|
-| **Make a documentation consistency sweep.** | After the round that states a new project's question (`GETTING_STARTED.md` §4); after a batch of edits to the rulebooks, indexes, artifact templates, or configuration; after amending a rule or removing a mechanism; before a release and before the project closes; and whenever a pointer sent a reader to a document that did not say what it promised, which is the sign that it is overdue | Every pointer that does not resolve or misdescribes its target, every index out of step, every state recorded twice, every rule restated wrongly, every file still speaking in the template's voice, every slot value that does not read where it was substituted or was filled twice differently, every term used in two senses or missing from the project glossary, and every standing direction given in a prompt and written down in neither of its homes. `governance/roles/documentation_sweep.md` carries the prompt in full, with an item the project fills with its own |
+| **Make a documentation consistency sweep.** | After the round that states a new project's question (`GETTING_STARTED.md` §4); after a batch of edits to the rulebooks, indexes, artifact templates, or configuration; after amending a rule or removing or replacing a mechanism; before a release, and again after it, over what was changed since the last documentation sweep; before the project closes; and whenever a pointer sent a reader to a document that did not say what it promised, which is the sign that it is overdue | Every pointer that does not resolve or misdescribes its target, every index out of step, every state recorded twice, every rule restated wrongly, every file still speaking in the template's voice, every slot value that does not read where it was substituted or was filled twice differently, every term used in two senses or missing from the project glossary, every standing direction given in a prompt and written down in neither of its homes, and every count that a fresh count of the thing it counts does not bear out. `governance/roles/documentation_sweep.md` carries the prompt in full, with an item the project fills with its own |
 | **Make a consistency sweep of the record.** | After every correction batch, at your direction | The same defect class over the claims, checks, and ledgers instead of the documentation: a fact established in one place and restated wrongly in another. `CHECK_METHODOLOGY.md` §7 |
 | **Refute this finding.** | On every finding of any sweep or review, and on every gap the coverage auditor reports, before it is acted on | Stands, refuted with the reason, or narrowed to what survives. `governance/roles/refuter.md`. This is the one that keeps a review honest: in the reviews of the template's own construction, roughly half of what a first reader reported did not survive a second |
 | **Referee this draft blind.** | Before a version of a write-up freezes | A structure lens, what the referee could re-derive from the page alone, findings ranked, and what the released document rests on. `governance/roles/blind_referee.md` |
@@ -221,13 +223,16 @@ and cites the claim rather than restating its backing. The prose standards
 apply to every unfrozen draft under the write-up folder, and the linter
 checks the part of them it can see.
 
-**Before a version releases.** The documentation consistency sweep, then
-the blind referee, every finding refuted or not, the fixes applied where
-the rules allow and brought where they do not, then your `Released` stamp
-and the changelog row that goes with it. A released version freezes and is
-succeeded rather than corrected: what a later reading asks for goes into
-the next version, and the released one is marked superseded when that
-version releases.
+**Releasing a version.** The documentation consistency sweep, then the
+blind referee, every finding refuted or not, the fixes applied where the
+rules allow and brought where they do not, then your `Released` stamp and
+the changelog row that goes with it, and last the documentation
+consistency sweep again, over what was changed since the last
+documentation sweep (`paper/README.md`, *Releasing a version*, gives
+every step). A released
+version freezes and is succeeded rather than corrected: what a later
+reading asks for goes into the next version, and the released one is
+marked superseded when that version releases.
 
 **After any batch of corrections.** The matching sweep: the record's, or
 the documentation's, or both.

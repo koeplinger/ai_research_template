@@ -1,6 +1,6 @@
 # Glossary: the words this template uses in its own sense
 
-*Created 8 September 2026; updated 16 November 2026.*
+*Created 8 September 2026; updated 18 November 2026.*
 
 This file defines the method's own vocabulary. It exists because a
 methodology that means to serve every discipline has to name its parts,
@@ -72,6 +72,7 @@ where a reader who meets an unfamiliar word should look first.
 | **dangling**, **orphaned** | of a reference: pointing at what is not there, and pointed at by nothing | dangling in the grammatical sense |
 | **phantom** | a bare numeric citation or a "Section N" pointer that resolves to nothing | anything in the perceptual sense |
 | **echo** | a sentence with eight words or more outside its quotations, appearing twice in a draft or across the live drafts | an echo in acoustics |
+| **mark**, **markup** | a mark is one annotation a reader made on a copy of a write-up: a comment, a highlight, a strike-through, a margin note; a copy's markup is all of its marks, each accounted for in a markup ledger (`paper/_template_changelog.md`) | a grade; a trademark; a label or a sign in the everyday sense, as in a version marked `superseded by <path>` or one that marks itself on the page as a draft, or a quotation mark; markup in the sense of a markup language or of text formatting, as in the status block's rule against markup around a label (`MANIFESTO.md` §16) |
 | **accepted finding** | a finding of a check, or a findings-gate reminder, that the researcher has ruled to leave, entered in the `[[accepted]]` list of `tools/artifacts.toml` with the log entry of the ruling, so the tools stop raising it (`MANIFESTO.md` §16) | a finding entered in `FINDINGS.md`; a claim accepted as established |
 
 ## Words this template borrows from one discipline
