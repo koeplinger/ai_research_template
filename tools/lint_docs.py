@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The genre and ontology linter: every statically decidable check, in one program.
 
-Created 4 September 2026; updated 17 November 2026.
+Created 4 September 2026; updated 18 November 2026.
 
 Reads tools/artifacts.toml, the single source of every path pattern and
 vocabulary (ONTOLOGY.md section 7), walks every tracked or untracked-but-
@@ -541,6 +541,15 @@ def header_block(text: str, header_kind: str) -> tuple[list[tuple[int, str]], in
     return out, (out[-1][0] + 1 if out else 1)
 
 
+def read_value(value: str) -> str:
+    """A field's value as ONT-3 reads it, for emptiness and for the party, and
+    as the round check reads a log entry's By: line: its comments unread, so
+    that an artifact template's placeholder left in place reads as nothing.  A
+    comment opened in the value and closed on a later line, past the header
+    line the value comes from, runs to the end of the value."""
+    return re.sub(r"<!--.*?(?:-->|\Z)", "", value, flags=re.S).strip()
+
+
 def fields_of(header: list[tuple[int, str]]) -> dict[str, tuple[int, str]]:
     out: dict[str, tuple[int, str]] = {}
     for ln, s in header:
@@ -1039,8 +1048,14 @@ def check_ont_3_required(t: Tree) -> None:
         for name in row.get("required", []):
             if name not in fl:
                 report("ONT-3", f, 1, f"required field missing: {name}")
-        for name in sorted(set(row.get("required", [])) | {F(r) for r in ("register", "kind", "verdict", "status", "serves", "prerequisites", "backs", "mutation")}):
-            if name in fl and not fl[name][1]:
+        # A By: line, where written, is filled (ONTOLOGY.md section 8), save a
+        # log entry's, which is the round check's while the entry is not yet
+        # committed (ROUND-2) and is never touched after.
+        filled = {F(r) for r in ("register", "kind", "verdict", "status", "serves", "prerequisites", "backs", "mutation")}
+        if row["kind"] != "log-entry":
+            filled.add(F("by"))
+        for name in sorted(set(row.get("required", [])) | filled):
+            if name in fl and not read_value(fl[name][1]):
                 report("ONT-3", f, fl[name][0], f"field present but empty: {name}")
         if row["kind"] in ("check", "check-program"):
             mut = {x.strip() for x in fl.get(F("mutation"), (0, ""))[1].split(",") if x.strip()}
@@ -1048,13 +1063,16 @@ def check_ont_3_required(t: Tree) -> None:
             if mut & rob:
                 report("ONT-3", f, fl[F("mutation")][0], f"{F('mutation')} and {F('robustness')} share names: {sorted(mut & rob)}")
         for name in (F("by"), F("verified-by")):
-            if name in fl and fl[name][1]:
-                v = fl[name][1].split(",")[0].strip()
-                if v in ("researcher", "assistant", "deferred", "unchecked"):
-                    continue
-                saw_party = True
-                if decided and v not in parties:
-                    report("ONT-3", f, fl[name][0], f"{name} names a party not on the roster: {v!r}")
+            # The party is the text before any comma, comments unread: a value
+            # that is only the template's comment names no party; it is
+            # reported as empty above, and on a log entry not yet committed by
+            # the round check (ROUND-2).
+            v = read_value(fl[name][1]).split(",")[0].strip() if name in fl else ""
+            if not v or v in ("researcher", "assistant", "deferred", "unchecked"):
+                continue
+            saw_party = True
+            if decided and v not in parties:
+                report("ONT-3", f, fl[name][0], f"{name} names a party not on the roster: {v!r}")
         if row["kind"] == "registry":
             reg = t.cfg["registry"]
             per_kind = reg.get("by_kind") or {}
@@ -1548,6 +1566,13 @@ def selftest() -> int:
     run_case("a prerequisite naming no plan", "ONT-2", "evidence_and_reasoning/research_plans/002_b.md", "Prerequisites names no plan", sub("evidence_and_reasoning/research_plans/002_b.md", "Prerequisites: 001", "Prerequisites: 009"))
     run_case("a missing required field", "ONT-3", C1, "required field missing", sub(C1, "Verified-by: unchecked\n", ""))
     run_case("an empty field", "ONT-3", C1, "present but empty", sub(C1, "Verified-by: unchecked", "Verified-by:"))
+    run_case("a field holding only the artifact template's comment is empty", "ONT-3", C1, "present but empty",
+             sub(C1, "Verified-by: unchecked", "Verified-by: <!-- unchecked, or the check that backs it -->"))
+    run_case("a check's By: line still holding the template's comment is empty", "ONT-3", "evidence_and_reasoning/checks/001_a.md",
+             "present but empty: By", sub("evidence_and_reasoning/checks/001_a.md", "Mutation: variant-reading\n",
+                                          "Mutation: variant-reading\nBy: <!-- who produced this record: researcher | assistant, then the AI model -->\n"))
+    run_case("a comment running past its header line is still a comment", "ONT-3", C1, "present but empty",
+             sub(C1, "Verified-by: unchecked", "Verified-by: <!-- unchecked, or the\n     check that backs it -->"))
     run_case("a registry entry lacking a bullet", "ONT-3", "evidence_and_reasoning/references/topic.md", "lacks the bullet", sub("evidence_and_reasoning/references/topic.md", "- Standing: searched x, 1 January 2026; none found\n", ""))
     # A registry that declares entry kinds enforces each kind's own bullets
     # rather than their intersection.
@@ -1607,6 +1632,9 @@ def selftest() -> int:
                                                                        "Mutation: variant-reading\nBy: assistant, not reported\n", 1)))
     run_case("a log entry's By: line is read against the roster", "ONT-3", L1, "not on the roster: 'an outsider'",
              lambda t, f: (roster('["none"]')(t, f), w(t, L1, f[L1].replace("By: assistant, not reported", "By: an outsider", 1))))
+    absent_case("a By: line still holding the template's comment is not read as a party", "ONT-3", L1, "not on the roster",
+                lambda t, f: (roster('["none"]')(t, f), w(t, L1, f[L1].replace("By: assistant, not reported",
+                                                                          "By: <!-- who did the work: assistant, then the AI model -->", 1))))
 
     # A finding the researcher has ruled to leave, entered in the
     # configuration's [[accepted]] list, and what happens when the entry no

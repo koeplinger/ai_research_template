@@ -1,6 +1,6 @@
 # Tools
 
-*Created 4 September 2026; updated 17 November 2026.*
+*Created 4 September 2026; updated 18 November 2026.*
 
 Project scaffolding: the programs that keep the record honest. Nothing
 here is part of the research. Every tool needs nothing beyond the Python
@@ -30,7 +30,7 @@ tool.
 |---|---|
 | [artifacts.toml](artifacts.toml) | The single source of every path pattern, artifact kind, genre default, required field, and closed vocabulary the tools read (`ONTOLOGY.md` §7), of the publication pipeline's settings, and of the findings accepted at the researcher's ruling. A project that files its artifacts elsewhere edits this one file. |
 | [lint_docs.py](lint_docs.py) | The genre and ontology linter: every statically decidable item of `DOCUMENT_GENRES.md` *What the checker verifies*, `editorial_standards.md` *What is checked mechanically*, `ONTOLOGY.md` §5, and items 1, 2, and the static half of 3 (the `Mutation:` line present, its names in the set and bound in `MUTATIONS`) of `CHECK_METHODOLOGY.md` *What is checked mechanically*, each finding tagged with its item; its docstring says what it does not decide. `--list` prints the kind, the default genre, and the derived genre of every file; `--selftest` builds a scratch project under git and plants each defect. |
-| [check_round.py](check_round.py) | The round check (`MANIFESTO.md` §13): the linter, the log's numbering and the parts of every entry not yet committed, and, where the publication pipeline is enabled, the build and the bibliography, in one command. `--scratch DIR` writes the clean scratch project for exercising the hooks. |
+| [check_round.py](check_round.py) | The round check (`MANIFESTO.md` §13): the linter, the log's numbering, the parts and the `By:` line of every entry not yet committed, and, where the publication pipeline is enabled, the build and the bibliography, in one command. `--scratch DIR` writes the clean scratch project for exercising the hooks. |
 | [check_status_reply.py](check_status_reply.py) | The status-block check (`MANIFESTO.md` §16): whether a reply ends in the block's exact form. Harness-free; the wiring that runs it after each reply is the one the reply-hook slot of `MANIFESTO.md` names. |
 | [new_project.py](new_project.py) | The instantiation procedure (`GETTING_STARTED.md` §1 to §3): copies the files the template's repository tracks, leaves behind the build's own files and the pointers to them, strips the build lens, converts the shipped prose to the project's spelling variant, fills the slots it is given and the values the tools read, renames any field the project's discipline has taken, adds the project's copyright holder and citation beside the template's, installs the hooks, always writes a project front page, records in a dated working note what it did and what it left, and runs the round check in the new tree. Asks each slot's question of `GETTING_STARTED.md` §3, or reads the answers from a file kept outside both trees; `--template` writes a blank one. `--selftest` instantiates into scratch directories, with full answers and with none, and requires the round check there to be clean. |
 | [privacy_scan.py](privacy_scan.py) | The privacy scan, opt-in: a stop-word list at `.privacy/stopwords.txt`, git-ignored, applied to every file, path, and commit message; run beside the round check, never inside it. |

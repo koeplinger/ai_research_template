@@ -1,6 +1,6 @@
 # Prompt logs
 
-*Created 4 September 2026; updated 17 November 2026.*
+*Created 4 September 2026; updated 18 November 2026.*
 
 Every prompt is recorded here, numbered contiguously and zero-padded to
 at least three digits, `NNN_short_description.md`, as the first act of
@@ -29,8 +29,12 @@ that it was removed before logging, and what the researcher has decided
 must never reach the repository is replaced by that note alone
 (`MANIFESTO.md` §8); what was done in response; the reason for any
 correction or departure from the rules made in the round; and the round's
-closing status block. These are the parts the round check looks for, on
-an entry not yet committed. The closing status is the round's final
+closing status block. These are the parts the round check looks for,
+together with the `By:` line under the stamp, on an entry not yet
+committed. The round check reads no comment in the `By:` line: a line
+still holding the artifact template's placeholder, or naming the
+assistant with nothing after the comma, is reported as not written. The
+closing status is the round's final
 status block in the form `MANIFESTO.md` §16 fixes,
 or, for a round the next prompt closed, a block of that form saying why
 (below). It stands inside a fence so that its labels are not read as

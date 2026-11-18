@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The round check: every gate a round must pass, in one command.
 
-Created 5 September 2026; updated 17 November 2026.
+Created 5 September 2026; updated 18 November 2026.
 
 Run before work is handed back and before changes are reported ready to
 commit (MANIFESTO.md section 13).  Nothing here blocks the researcher: a
@@ -17,17 +17,19 @@ WHAT IT RUNS
   ROUND-1  the log's numbering: contiguous from 001, zero-padded to at
            least three digits, no number twice, every name of the form
            NNN_short_description.md (MANIFESTO.md section 8)
-  ROUND-2  the parts of an entry not yet committed, untracked or staged
-           new: the parts [log] names, each once and in order, searched
+  ROUND-2  an entry not yet committed, untracked or staged new: the
+           parts [log] names, each once and in order, searched
            after the verbatim region, which ends at the first closing
            delimiter, and outside fenced code; and, under the last part, a
            fenced status block of the section-16 form with no RUNNING line
            (prompt_logs/README.md, "The four parts of an entry"), its
            comments unread, so that a label still carrying the artifact
-           template's placeholder is reported as not written.  A committed
-           entry is immutable and is completed or corrected by a later
-           entry, so it is not read here, changed or not: a change to it
-           is GENRES-2's, whose remedy is to restore it.
+           template's placeholder is reported as not written; and the
+           header's By: line, its comment unread the same way: the party
+           and, for the assistant, the AI model (MANIFESTO.md section 8).
+           A committed entry is immutable and is completed or corrected by
+           a later entry, so it is not read here, changed or not: a change
+           to it is GENRES-2's, whose remedy is to restore it.
   ROUND-3  the build, where [publication] is enabled: every output and the
            build log newer than every source, and the log matching no
            error marker.  "Newer" is by modification time, which a
@@ -133,6 +135,18 @@ def check_round_2_parts(t: lint_docs.Tree) -> None:
         if f not in uncommitted:
             continue
         lines = t.text[f].splitlines()
+        # The header's By: line: the party and, for the assistant, the AI
+        # model as the harness reports it, or "not reported" (MANIFESTO.md
+        # section 8).  Its comment is unread, as the closing status's is, so
+        # the artifact template's placeholder is reported as not written.
+        by = lint_docs.fields_of(t.headers.get(f, ([], 1))[0]).get(lint_docs.F("by"))
+        if not by:
+            report("ROUND-2", f, 1, f"no {lint_docs.F('by')}: line under the stamp naming who did the work")
+        else:
+            party, _, model = lint_docs.read_value(by[1]).partition(",")
+            if not party.strip() or (party.strip() == "assistant" and not model.strip()):
+                report("ROUND-2", f, by[0], f"{lint_docs.F('by')}: not written: the party, and for the "
+                       "assistant the AI model as the harness reports it, or not reported")
         pos: list[int] = []
         # the two delimiters, anywhere; the verbatim region between them is read by no check
         for p in parts[:2]:
@@ -480,6 +494,16 @@ def selftest() -> int:
              lambda t, f: second(t, f, entry(2, "next", closing="Done: setup")))
     run_case("a closing status still holding the template's placeholder", "ROUND-2", LOG2, "not written",
              lambda t, f: second(t, f, entry(2, "next", closing="DONE: <!-- what finished -->")))
+    run_case("an uncommitted entry with no By: line", "ROUND-2", LOG2, "no By: line",
+             lambda t, f: second(t, f, entry(2, "next").replace("By: assistant, not reported\n", "")))
+    run_case("an uncommitted entry naming the assistant with only a comment after the comma", "ROUND-2", LOG2, "not written: the party",
+             lambda t, f: second(t, f, entry(2, "next").replace("By: assistant, not reported", "By: assistant, <!-- the AI model -->")))
+    run_case("an uncommitted entry whose By: line is still the template's placeholder", "ROUND-2", LOG2, "not written: the party",
+             lambda t, f: second(t, f, entry(2, "next").replace("By: assistant, not reported",
+                                                                "By: <!-- who did the work: assistant, then a comma and the AI model -->")))
+    run_case("an uncommitted entry whose By: comment runs past its line", "ROUND-2", LOG2, "not written: the party",
+             lambda t, f: second(t, f, entry(2, "next").replace("By: assistant, not reported",
+                                                                "By: <!-- who did the work: assistant,\n     then the AI model -->")))
     run_case("a closing status with IDLE beside DONE", "ROUND-2", LOG2, "IDLE",
              lambda t, f: second(t, f, entry(2, "next", closing="DONE: setup\nIDLE: waiting")))
     run_case("a closing status naming RUNNING", "ROUND-2", LOG2, "RUNNING",
