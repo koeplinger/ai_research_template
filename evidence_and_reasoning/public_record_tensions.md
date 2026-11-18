@@ -1,13 +1,15 @@
 # The tension ledger
 
-*Created 3 September 2026; updated 3 September 2026.*
+*Created 3 September 2026; updated 18 November 2026.*
 
 <!-- Maintained (DOCUMENT_GENRES.md). One row per divergence, added as
      PRECEDENCE.md, How to add a row, says, at the researcher's
      direction; the assistant brings the proposed row in the same round
-     as the work that creates or discovers it, and a row brought and not
-     yet entered is a standing reminder (MANIFESTO.md section 16). Rows
-     are never deleted. Write [claim NNN] and [Key, locus] as plain
+     as the work that creates or discovers it, save one found outside a
+     fixed list being finished, which is kept and listed when the list
+     is handed back (PRECEDENCE.md, Compliance), and a row brought and
+     not yet entered is a standing reminder (MANIFESTO.md section 16).
+     Rows are never deleted. Write [claim NNN] and [Key, locus] as plain
      tokens, not markdown links: a linked token is skipped by the
      resolver (ONTOLOGY.md section 1.3). -->
 

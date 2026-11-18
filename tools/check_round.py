@@ -36,8 +36,9 @@ WHAT IT RUNS
            checkout does not preserve: the gate is meaningful on a tree
            where the build has run since the sources last changed, and a
            git-ignored log is absent on a fresh clone until then.  The
-           build is the researcher's to run; the finding names the
-           command.
+           check never runs the build; the finding names the command,
+           which the main thread may run within a round (paper/README.md,
+           Conventions).
   ROUND-4  the bibliography, where [publication] names one: every entry
            cited, no citation of an entry the bibliography lacks, no entry
            defined twice, and the entries in the order of their first

@@ -26,7 +26,9 @@ Prerequisites: <!-- plans by number, a claim as [claim NNN], or: none -->
      explicitly not in this aspect. When another plan is ENGAGED at the
      same time, name it in the first sentence. If this plan exists to
      correct frozen artifacts rather than to settle an aspect, say so
-     (MANIFESTO.md section 12). -->
+     (MANIFESTO.md section 12); if it exists to finish a fixed list and
+     look for nothing new, say that (HOW_IT_FITS_TOGETHER.md, Finishing
+     a version or a plan). -->
 
 ## Hypothesis
 

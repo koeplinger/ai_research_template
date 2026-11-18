@@ -68,7 +68,10 @@ inflated past its wording. The assistant applies the trump rule on its
 own only for a claim whose register the researcher has assigned;
 otherwise it states the claim with its verification status, proposes the
 ledger row, and stops. Every divergence is brought as a tension-ledger
-row in the same round, and the row enters at the researcher's direction.
+row in the same round, save one found outside a fixed list being
+finished, which is kept and listed when the list is handed back
+(`PRECEDENCE.md`, *Compliance*); the row enters at the researcher's
+direction.
 
 ## The keystone
 

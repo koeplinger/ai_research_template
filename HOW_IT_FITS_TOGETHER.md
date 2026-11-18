@@ -131,8 +131,8 @@ current-state document is corrected in place, the frozen one is corrected
 in its running text with your authorization, and the reason lives in the
 round's log entry. A released version of a versioned write-up is frozen
 but never corrected, even with your authorization: it is succeeded by the
-next (*Releasing a version*, below). The immutable record is where a
-reader goes to see what was believed and done at each step.
+next (`paper/README.md`, *Releasing a version*). The immutable record is
+where a reader goes to see what was believed and done at each step.
 
 ---
 
@@ -156,6 +156,7 @@ way each time, and so that a reader of the log can see which one was made.
 | **Read the whole file for what the rebuild left.** | On every rebuild, after the deletion ledger, before the round closes | Seams, dangling and orphaned references, phantoms, echoes, and a live changelog's ledgers against the draft, as candidates for your reading. `tools/check_residue.py`; a section-level comparison cannot see them, which is why the round ends with a reading of the whole file (`CHECK_METHODOLOGY.md` §7) |
 | **Give me the deletion ledger for this rebuild.** | On every rebuild of a section, as against a correction | Every cut sentence classified, the net word delta, and every sentence added. `governance/roles/deletion_ledger.md` |
 | **Make the strongest case against this conclusion.** | When you are about to rely on something and nothing has argued with it | That case, labeled as that case. `MANIFESTO.md` §17 |
+| **Finish this list, and look for nothing new.** | When what remains of a version or a plan is a list you have fixed; and whenever each round brings you new decisions instead of fewer, which is the sign that it is due | The list finished and nothing else, handed back once, in one reply, with everything noticed outside it listed and not put to you as a decision; a false statement in the text being finished and the trivial corrections of frozen artifacts still come in the round that finds them, and a release still runs each of its steps (*Finishing a version or a plan*, below) |
 | **Walk me through the plan-closure checklist.** | When an engaged plan's tasks are all done | The checklist item by item against the record, and the verdict the pre-registered criteria give. `governance/reminders.md` |
 | **What does this claim rest on, and what of it is unverified?** | Before relying on a claim, and before revisiting one | The dependency tree with each member's register, weaker members flagged. `tools/query_ontology.py` |
 | **Make a durable resume point.** | Before a planned stop: the end of a sitting, or a usage limit about to be reached in the middle of work | A round of its own, logged like any other, whose entry records the last commit, by its identifier, and what is uncommitted; what is drafted and not yet verified; where intermediate material is kept, a place you have named outside version control that a restart does not clear, never a temporary directory alone, and described without anything you have decided must never reach the repository; the exact steps to resume, citing each plan's execution status rather than restating it; and what waits on you. The next session starts from it (*Picking the work back up*, below) |
@@ -207,7 +208,9 @@ yours. Probe every check before you lean on it.
 
 **When something disagrees with what is published.** A row in the tension
 ledger, in the same round as the work that found it, with the caution that
-survives. `PRECEDENCE.md` says what governs what.
+survives; while a list is being finished, a divergence found outside it is
+kept and listed when the list is handed back. `PRECEDENCE.md` says what
+governs what.
 
 **When the tasks are done.** The closure checklist, then the verdict
 against the pre-registered criteria, then your `CLOSED` line. The plan and
@@ -218,10 +221,18 @@ left them open by decision: `{{DELIVERABLE}}` with its machine half, the
 write-up's pronoun, and its voice (`GETTING_STARTED.md` §3). Then one
 living copy of the main write-up at a time, in the form
 `{{DELIVERABLE}}` names. Everything it asserts is already in the
-record, with its register; the draft says what to read off the evidence
-and cites the claim rather than restating its backing. The prose standards
-apply to every unfrozen draft under the write-up folder, and the linter
-checks the part of them it can see.
+record, with its register; the draft shows the evidence and says what to
+read off it. Its links to the claims are kept where no form it is released
+in carries them: in the version changelog's *Backed by* column, which
+names the claim behind each change (`paper/_template_changelog.md`) and
+which the linter and `tools/claim_sites.py` read; and in comments of a
+built source that is not itself released, where no tool resolves them.
+A first version, or a note, has no changelog: it keeps such links only in
+a source of that kind, and where it has none, its claims are reached
+through the record, from `FINDINGS.md` and
+`evidence_and_reasoning/research_result.md`. The prose standards apply to
+every unfrozen draft under the write-up folder, and the linter checks the
+part of them it can see.
 
 **Releasing a version.** The documentation consistency sweep, then the
 blind referee, every finding refuted or not, the fixes applied where the
@@ -234,8 +245,48 @@ version freezes and is succeeded rather than corrected: what a later
 reading asks for goes into the next version, and the released one is
 marked superseded when that version releases.
 
+**Finishing a version or a plan.** When what remains is a list you have
+fixed, *Finish this list, and look for nothing new* turns the work from
+looking for more to finishing that list. The list is either the tasks of
+a plan with no hypothesis, whose aspect says it exists to finish them and
+whose *Out of scope* is everything else, or a list you give in a prompt
+for a plan already engaged. Either way, the direction holds until what it
+finishes is released or closed, or until you lift it. A list given in a
+prompt, where the direction outlasts that round, is a standing direction
+(`MANIFESTO.md`, opening, says where it is written), and its line is
+removed in the round the direction ends.
+
+While it holds, an edit uses the terms the text being finished already
+uses, and coins none the list does not ask for. Whatever is noticed
+outside the list, a divergence from the public record included, is kept,
+in the plan's docket where the list is a plan's tasks and otherwise in the
+round's log entry, and is not acted on. Two things are still brought, in
+the reply of the round that finds them: a false statement in the text
+being finished, once, with its evidence (`MANIFESTO.md` §17); and the
+trivial corrections of frozen artifacts, as the one numbered list
+`MANIFESTO.md` §12 describes. The sweep that closes the list's edits
+covers their propagation alone (`CHECK_METHODOLOGY.md` §7), and the
+reminders that propose more looking are held (`governance/reminders.md`).
+
+The list is handed back once, in one reply, after each edited paragraph
+has been read in place as a first-time reader reads it
+(`evidence_and_reasoning/editorial_standards.md`, *How to apply*): every
+edit, each with its file, the text it replaces, and the new text
+(`MANIFESTO.md` §14), with those outside the text being finished proposed
+rather than made; everything noticed outside the list, listed once and not
+put as a decision; and the reminders held. What the reply proposes is made
+at your direction, in one round. If you lift the direction before the list
+is handed back, the reply of the round you lift it in still lists
+everything noticed outside the list, not put as a decision, and the
+reminders held. A release still runs each of its steps
+(*Releasing a version*, above): the blind referee reads the version before
+it freezes, and what it finds outside the list is left for the next
+version, as its review records; a false statement in the version is still
+brought once, as above.
+
 **After any batch of corrections.** The matching sweep: the record's, or
-the documentation's, or both.
+the documentation's, or both; while a list is being finished, the
+propagation of its edits alone (*Finishing a version or a plan*, above).
 
 **When the project ends.** The documentation consistency sweep a last
 time, then a closing note at the root, named CLOSING_NOTE.md, saying why

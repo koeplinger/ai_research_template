@@ -25,12 +25,15 @@ before any sentence-level finding. Every finding is then handed to a
 reader instructed to refute it (`MANIFESTO.md` §17); a fix to a
 current-state target that is neither maintained nor one of the four
 `MANIFESTO.md` §12 names may be applied, and every other fix is brought
-with its proposed wording (`CHECK_METHODOLOGY.md` §7). The ledgers of a
-rebuild live in the version changelog, or in the review itself where the
-version is the first and has no changelog; the review points at them. A
-reader's marked-up copy is accounted for in a markup ledger
-(`paper/_template_changelog.md`), kept in the changelog of the version its
-marks go into, or in a review of that version where it is the first.
+with its proposed wording (`CHECK_METHODOLOGY.md` §7). While a direction
+to finish a list holds, a finding outside the list is left for the next
+version, a false statement in the version aside (`paper/README.md`,
+step 4). The ledgers of a rebuild live in the version changelog, or in
+the review itself where the version is the first and has no changelog;
+the review points at them. A reader's marked-up copy is accounted for in
+a markup ledger (`paper/_template_changelog.md`), kept in the changelog
+of the version its marks go into, or in a review of that version where
+it is the first.
 
 A **blind referee** review is taken before a version freezes
 (`MANIFESTO.md` §17): a reader with no access to the first pass's

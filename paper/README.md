@@ -50,6 +50,11 @@ table.
   outputs, and log, and the bibliography with its citation patterns; it
   starts disabled. A project that publishes otherwise leaves it disabled,
   and this bullet says so.
+- **The main thread may run the build command within a round**, except to
+  produce what a version is released with, and a subagent may not, since
+  the build writes into the working tree (`MANIFESTO.md` §14). What the
+  build writes is left uncommitted for the researcher (`MANIFESTO.md`
+  §15).
 
 ## Releasing a version
 
@@ -68,7 +73,11 @@ table.
 4. Every finding refuted or not, and every mark of each marked-up copy a
    reader returned accounted for in its markup ledger
    (`_template_changelog.md`); the fixes applied where the rules allow,
-   brought to the researcher where they do not.
+   brought to the researcher where they do not. While a direction to
+   finish a list holds, a finding outside the list is left for the next
+   version, except a false statement in the version, which is brought to
+   the researcher once (`HOW_IT_FITS_TOGETHER.md`, *Finishing a version or
+   a plan*).
 5. Every figure, table, and printed value the version releases, in it or
    with it, read against the disclosure rule (`MANIFESTO.md` §6), with the
    approval that rule requires, where it requires one.

@@ -1,6 +1,6 @@
 # Precedence: what governs when sources disagree
 
-*Created 2 September 2026; updated 8 September 2026.*
+*Created 2 September 2026; updated 18 November 2026.*
 
 A research project that verifies things independently will, sooner or
 later, establish something the published record does not say, or says
@@ -137,12 +137,17 @@ erased by the result.
   any work that creates or discovers a divergence, and whenever registered
   material conflicts with a claim of this project; the row enters at the
   researcher's direction. A divergence brought and not yet entered is a
-  standing reminder (`MANIFESTO.md` §16).
+  standing reminder (`MANIFESTO.md` §16). While the researcher has asked
+  for a fixed list to be finished and nothing new looked for, a divergence
+  found outside the list is kept and listed when the list is handed back
+  (`HOW_IT_FITS_TOGETHER.md`, *Finishing a version or a plan*).
 - **Session onboarding** loads this rule into every assistant session at
   its start.
 - **Writing discipline.** A `VERIFIED` or `RULED_OUT` claim is stated as
-  what it is, with its claim citation, and is not softened merely because
-  the public record has not caught up. A `DERIVED` claim is stated at its
+  what it is, with its claim citation, or in a write-up with its evidence
+  on the page (`evidence_and_reasoning/editorial_standards.md`,
+  *Writing for publication*), and is not softened merely because the
+  public record has not caught up. A `DERIVED` claim is stated at its
   register, with its route. The scope, the uncertainty, and the statement
   of what is not claimed are part of the claim and are never a hedge. The
   inverse hedge is mandatory: public-record material used in prose carries

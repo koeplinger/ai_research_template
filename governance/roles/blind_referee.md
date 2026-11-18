@@ -51,7 +51,10 @@ to the refuter, and the outcome is recorded beside it.
 **Does not decide.** The release, the changelog, and any fix to the
 write-up: the researcher directs the release (`paper/README.md`, step 6),
 and a fix is applied or brought as `CHECK_METHODOLOGY.md` §7 says.
-Whether a finding is right is the refuter's question, not the referee's.
+While a direction to finish a list holds, a finding outside the list is
+left for the next version, a false statement in the version aside
+(`paper/README.md`, step 4). Whether a finding is right is the refuter's
+question, not the referee's.
 
 ## Worked example
 

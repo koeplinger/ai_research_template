@@ -365,6 +365,11 @@ What a sweep covers, at minimum:
    still live, and no public-record statement stands in prose without the
    hedge its tier requires.
 
+While the researcher has asked for a fixed list to be finished and nothing
+new looked for, the sweep that closes a batch of that list's edits covers
+propagation alone (item 1), for each fact those edits changed
+(`HOW_IT_FITS_TOGETHER.md`, *Finishing a version or a plan*).
+
 **Every finding is then handed to a reader instructed to refute it**
 (`MANIFESTO.md` §17). The sweep then reports its findings, the files it
 would touch, and its edits, listed as `MANIFESTO.md` §14 sets out, before
@@ -408,7 +413,9 @@ hold.
   count: a cross-reference whose target lay inside the replaced range, a
   sentence's antecedent, a phrase that reads as a citation and resolves to
   nothing. A rebuild round therefore ends with a reading of the whole
-  file.
+  file. The rebuilt section is also read as its intended reader would
+  read it (`evidence_and_reasoning/editorial_standards.md`,
+  *How to apply*).
 
 ---
 

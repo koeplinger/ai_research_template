@@ -26,6 +26,14 @@ advisory: it says, it records nothing, and it acts only with direction.
 | **documentation-sweep-owed** | the work reaches a moment `governance/roles/documentation_sweep.md` names under *Fires*, and the documentation sweep owed there has not been made | a proposal to make the documentation consistency sweep, with the prompt | reading | whether to make it: the researcher's |
 | **adversarial-review-owed** | a claim is about to be relied on and has had no structured adversarial review (§17) | a proposal to run the refuter or the referee (`governance/roles/`) | reading | whether to run it: the researcher's |
 
+While the researcher has asked for a fixed list to be finished and nothing
+new looked for, the reminders that propose more looking are held, and
+listed when the list is handed back: **documentation-sweep-owed**,
+**adversarial-review-owed**, and **sweep-after-correction** beyond the
+propagation of the list's own edits (`HOW_IT_FITS_TOGETHER.md`,
+*Finishing a version or a plan*). The session brief, which cannot tell
+that a list is being finished, still prints what it computes.
+
 ## The plan-closure checklist
 
 Printed by name when a plan is ready to close; the items are the
@@ -50,7 +58,9 @@ rulebooks', gathered in one place.
    declined at the researcher's direction (`MANIFESTO.md` §12: what counts
    as a finding is the researcher's).
 6. The docket is resolved in the closing round (`CHECK_METHODOLOGY.md`
-   §6).
+   §6), except what a plan that exists to finish a fixed list keeps there
+   from outside the list, which is left open: not acted on, and not put as
+   a decision (`HOW_IT_FITS_TOGETHER.md`, *Finishing a version or a plan*).
 7. Everything the plan owns is in its final wording, since it freezes on
    closure (`DOCUMENT_GENRES.md`, *Artifacts of an open plan*).
 8. The researcher writes the `CLOSED` line, or directs it, and the

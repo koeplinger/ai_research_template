@@ -184,10 +184,11 @@ required = ["Authors", "Title", "Where", "Year", "Identifier", "Keywords", "Stan
 # (tools/check_round.py, ROUND-3 and ROUND-4), as paper/README.md,
 # Conventions, says.  Disabled in the template.  A project that builds its
 # deliverable fills this in; a project that publishes otherwise leaves it
-# disabled.  The build itself is the researcher's to run: the check never
-# runs it, it names the command.  Freshness is by modification time, which
-# a checkout does not preserve: build once after a clone or a branch switch
-# before the gate is meaningful.
+# disabled.  The check never runs the build: it names the command, which
+# the main thread may run within a round (paper/README.md, Conventions).
+# Freshness is by modification time, which a checkout does not preserve:
+# build once after a clone or a branch switch before the gate is
+# meaningful.
 enabled = false
 build = ""          # the command that builds the deliverable, named in a finding
 sources = []        # globs of what the build reads, in reading order: first-citation order follows it, alphabetically within a glob

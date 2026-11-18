@@ -1,6 +1,6 @@
 # Editorial standards
 
-*Created 2 September 2026; updated 16 November 2026.*
+*Created 2 September 2026; updated 18 November 2026.*
 
 The five standards, the conventions, and the corollaries below govern every
 prose change to every **durable artifact** (`MANIFESTO.md`, *Words used
@@ -14,7 +14,12 @@ committed entry is immutable (`MANIFESTO.md` §8).
 The intended reader of any of these artifacts is an expert in the field,
 or a future investigator, human or assistant, who must reconstruct what
 was done and why. Their time is to be respected: every sentence earns its
-place, and the logic is followable on a first reading.
+place, and the logic is followable on a first reading. Where a human
+reader and an assistant reader would want different text, write for the
+human. A pointer, such as a path, a section number, or a table number,
+therefore accompanies prose that names what it points to, and never
+replaces it: *as the table of counts shows (Table 2)*, not
+*as Table 2 shows*.
 
 The examples in this file are written with *we* and in English; read them
 with the project's own conventions.
@@ -93,8 +98,9 @@ The project's choices, recorded once and used throughout.
   known*, *it is well established that*, *scholars agree*, *the sources
   are silent*. Where a choice of frame, sample, edition, or labeling really
   is immaterial, say which relabeling or which argument carries the one
-  case to the other and cite the check that verifies it; where it has not
-  been verified, say that instead.
+  case to the other and cite the check that verifies it (a write-up leaves
+  that citation to the record); where it has not been verified, say that
+  instead.
 - **Use the project's standard names**, per the Conventions.
 
 ## Writing for publication
@@ -146,6 +152,27 @@ in the Slots table below.
   in the claims.
 - **No advocacy.** Not *remarkable*, not *striking*, not *beautiful*, not
   *the point at issue*. The reader decides what is remarkable.
+- **One hedge, not two.** *May*, not *may perhaps*; *suggests*, not
+  *seems to suggest*. A doubled hedge reads as a doubt the author is
+  embarrassed by. A claim's bound is not a hedge, and borrowed material
+  keeps its attribution as its one hedge (`PRECEDENCE.md`, *Compliance*).
+- **A term used once is not coined.** Say the thing itself, and keep a
+  name for what the reader meets again.
+- **What the reader treats as standard is cited, not re-derived.** A
+  standard result, method, or definition enters with its reference
+  (`MANIFESTO.md` §2); a derivation the project made to check it stays
+  under `evidence_and_reasoning/`.
+
+The record's numbers and names stay out of a released write-up. Outside
+its header lines, no form the write-up is released in carries the number
+of a claim, a check, or a plan; the key of a finding or a tension; a
+trust level by its register name (`CHECK_METHODOLOGY.md` §1); a check by
+the name the record gives it; or a term coined for the record's
+bookkeeping. The draft's links to the claims are kept off the page, in
+the version changelog and in comments of a source that is not itself
+released, or else left to the record (`HOW_IT_FITS_TOGETHER.md`,
+*Opening a write-up*). Citations follow the venue's convention, with a
+locus or version qualifier only where that convention asks for one.
 
 ### Flow of an argument
 
@@ -175,7 +202,8 @@ follows that relation from beginning to end.
   appending is what compounds. And a cross-reference earns its place only
   where a reader must actually look something up: a fact established a
   paragraph earlier is not re-cited, and a reference must name something
-  the target actually says.
+  the target actually says. Showing a short display again where it is
+  used, rather than referring to it, is a matter for the project's voice.
 - **The summary inherits.** A results summary repeats claims the body
   establishes. Cutting a claim from the body cuts it from the summary in
   the same round, or the summary asserts what the paper no longer shows.
@@ -191,8 +219,7 @@ Conventions.
   *one may then ask*. An agentless motive is a motive with nobody behind
   it.
 - **Say the want once, and flatly.** *We would want X* rather than *we
-  hope X might one day*. A doubled hedge reads as a wish the author is
-  embarrassed by.
+  hope X might one day*.
 - **Concede in the flow.** Where a point is granted before it is
   qualified, the concession sits inside the sentence after its object:
   *the date is secure, yes, but the attribution rests on the editor's
@@ -203,8 +230,9 @@ Conventions.
   length is arguing rather than concluding; each paragraph ends on a
   sentence of one clause.
 - **The register** (the statement's trust level, `CHECK_METHODOLOGY.md`)
-  **is declared once**, at the head of the section. Individual paragraphs
-  do not re-announce that they are speculation.
+  **is declared once**, at the head of the section, and in the reader's
+  words: *what follows is our reading, which we do not test here*.
+  Individual paragraphs do not re-announce that they are speculation.
 
 ### Voice
 
@@ -295,6 +323,13 @@ Check every prose change against the five standards, the conventions, and
 the corollaries; and every change to an unfrozen `paper/` artifact against
 *Writing for publication*, including its *Voice*, as well.
 
+A new section, or one a round rebuilds rather than corrects, is then read
+once from start to finish, as its intended reader would read it, before
+work is handed back. It is read in the form that reader will have: the
+build output where the build has run since the section last changed, and
+otherwise the source (`paper/README.md`, *Conventions*, says who may run
+the build).
+
 A practical test for standard 2: read the paragraph as a first-time reader
 and, at each sentence, ask: *do I have every term used here, and is this
 sentence still on the topic the paragraph announced?* If the answer is no,
@@ -302,7 +337,9 @@ the logical order is wrong, or a side topic has intruded.
 
 A practical test for standard 5: for each sentence, ask what would change
 for the reader if it were deleted. A sentence whose deletion costs the
-reader nothing checkable is vague; cut it or make it concrete.
+reader nothing checkable is vague; cut it or make it concrete. One such
+sentence is *there is a further point to make here*: it announces a point
+and makes none.
 
 ## Slots
 
