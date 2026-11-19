@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The session brief: the reading order, the plans by status, and the reminders the record can compute, printed at the start of a session and on demand.
 
-Created 5 September 2026; updated 17 November 2026.
+Created 5 September 2026; updated 19 November 2026.
 
 What every session reads first is ONBOARDING.md; this program prints its
 reading order verbatim, then every plan with its Status: line and the
@@ -91,7 +91,7 @@ def reading_order(t: lint_docs.Tree) -> list[str]:
 def plans(t: lint_docs.Tree) -> tuple[list[str], int]:
     out, engaged = [], 0
     for n, f in sorted(t.plans.items()):
-        st = t.plan_status.get(f) or "(no Status)"
+        st = t.plan_status.get(f) or f"(no {lint_docs.F('status')})"
         engaged += st.startswith("ENGAGED")
         out.append(f"  plan {n}  {st}")
     return out or ["  (no plan)"], engaged
@@ -219,7 +219,7 @@ def reminders(t: lint_docs.Tree) -> list[str]:
                  if fields(t, f).get(lint_docs.F("register"), (0, ""))[1] not in ("OPEN", "SPECULATIVE", "")
                  and fields(t, f).get(lint_docs.F("verified-by"), (0, ""))[1].split(",")[0].strip() == "unchecked"]
     if unchecked:
-        out.append("REMINDER  verification-not-recorded: registered beyond OPEN yet Verified-by unchecked: " + ", ".join(titled(t, n) for n in unchecked)
+        out.append(f"REMINDER  verification-not-recorded: registered beyond OPEN yet {lint_docs.F('verified-by')} unchecked: " + ", ".join(titled(t, n) for n in unchecked)
                    + " (MANIFESTO.md section 5)")
     return out or ["  (no reminder the record can compute; the rest are the assistant's by reading)"]
 

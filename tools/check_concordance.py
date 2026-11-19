@@ -141,7 +141,7 @@ def concordance(t: lint_docs.Tree, timeout: float, only: str | None = None) -> t
         for cn in lint_docs.TOKEN_CLAIM.findall(lint_docs.fields_of(t.headers[prog][0]).get(lint_docs.F("backs"), (0, ""))[1]):
             cf = t.claims.get(cn)
             cv = lint_docs.fields_of(t.headers[cf][0]).get(lint_docs.F("verdict"), (0, "?"))[1] if cf else "(no such claim)"
-            notes.append(f"NOTE      {prog}: verdict printed {verdict!r}; [claim {cn}] Verdict: {cv}" + ("" if cv == verdict else "   (the words differ; never a finding)"))
+            notes.append(f"NOTE      {prog}: verdict printed {verdict!r}; [claim {cn}] {lint_docs.F('verdict')}: {cv}" + ("" if cv == verdict else "   (the words differ; never a finding)"))
     for num, rec in sorted(t.checks.items()):
         if num not in t.programs and (not only or num == only):
             written += 1

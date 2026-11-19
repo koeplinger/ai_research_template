@@ -839,9 +839,9 @@ def check_genres_4_resolution(t: Tree) -> None:
         if pl and pl[1]:
             pf, st = t.plan_of(f)
             if not pf:
-                report("GENRES-4", f, pl[0], f"Plan: {pl[1].split(',')[0].strip()} names no plan file")
+                report("GENRES-4", f, pl[0], f"{F('plan')}: {pl[1].split(',')[0].strip()} names no plan file")
             elif not st:
-                report("GENRES-4", f, pl[0], "the owning plan carries no Status: line")
+                report("GENRES-4", f, pl[0], f"the owning plan carries no {F('status')}: line")
 
 
 def check_genres_5_narrative(t: Tree) -> None:
@@ -1148,7 +1148,7 @@ def check_ont_2_tokens(t: Tree) -> None:
                 bare = re.sub(r"\[claim [^\]]+\]", " ", pre[1])
                 for n in re.findall(rf"\b({NUM})\b", bare):
                     if n not in t.plans:
-                        report("ONT-2", f, pre[0], f"Prerequisites names no plan: {n}")
+                        report("ONT-2", f, pre[0], f"{F('prerequisites')} names no plan: {n}")
 
 
 def key_problem(key: str, closed: bool = True) -> str:
@@ -1238,7 +1238,9 @@ def check_ont_3_required(t: Tree) -> None:
                 # An entry may declare its kind; the required bullets are then
                 # that kind's, so a registry mixing kinds enforces more than
                 # their intersection (evidence_and_reasoning/references/README.md).
-                km = re.search(r"^- Kind:[ \t]*(.+?)[ \t]*$", body, re.M)
+                # The bullet takes the kind role's name, which the setup tool's
+                # rename writes into the registry's index as well.
+                km = re.search(rf"^- {re.escape(F('kind'))}:[ \t]*(.+?)[ \t]*$", body, re.M)
                 ekind = km.group(1).strip() if km else ""
                 need = list(reg.get("required", []))
                 if per_kind:
@@ -1374,7 +1376,7 @@ def check_check_3_mutation(t: Tree) -> None:
         fl = fields_of(t.headers[f][0])
         mut = fl.get(F("mutation"))
         if not mut or not mut[1]:
-            report("CHECK-3", f, 1, "no Mutation: line")
+            report("CHECK-3", f, 1, f"no {F('mutation')}: line")
             continue
         saw = True
         names = [x.strip() for x in mut[1].split(",") if x.strip()]
@@ -1507,13 +1509,23 @@ def fixture() -> dict[str, str]:
     }
 
 
-def scratch_config() -> str:
-    """The project's configuration, with the fixture's own vocabulary forced
-    in, so that the scratch project is a project and not a template.  It does
-    not require the project to have left any value unfilled: a project fills
-    its mutation set and its roster on the first day, and the tools must
-    still be able to test themselves afterwards."""
-    cfg_text = (ROOT / "tools" / "artifacts.toml").read_text()
+# Where a project keeps the template's configuration as it shipped: the
+# setup tool writes it beside the project's own, unchanged, and the template
+# itself has no such file (tools/README.md).
+SHIPPED_CONFIG = "tools/artifacts_shipped.toml"
+
+
+def scratch_config(root: Path = ROOT) -> str:
+    """The configuration of every self-test's scratch project: the
+    template's as it shipped, which the fixture is written for, kept in a
+    project as SHIPPED_CONFIG and in the template as tools/artifacts.toml
+    itself, with the fixture's own vocabulary forced in, so that the scratch
+    project is a project and not a template.  A project's own configuration
+    is the round check's to read, never this: what a project renames,
+    removes, or fills there, its mutation set and roster on the first day
+    among them, leaves the tools able to test themselves."""
+    shipped = root / SHIPPED_CONFIG
+    cfg_text = (shipped if shipped.is_file() else root / "tools" / "artifacts.toml").read_text()
     for table, key, value in (("vocab", "mutations", '["variant-reading"]'),
                               ("parties", "names", "[]"),
                               ("registry", "required",
@@ -1646,6 +1658,21 @@ def selftest() -> int:
         failures += 0 if hit else 1
         print(f"  [{'PASS' if hit else 'FAIL'}] a renamed field's vocabulary is still checked, under the new name"
               + ("" if hit else f": {[(x[0], x[3][:60]) for x in FINDINGS]}"))
+
+    # The scratch projects carry the configuration as shipped: in a project,
+    # the copy the setup tool keeps beside the project's own, whatever the
+    # project has done to that one; where there is no copy, the configuration.
+    with tempfile.TemporaryDirectory() as d:
+        root = Path(d)
+        (root / "tools").mkdir()
+        (root / "tools" / "artifacts.toml").write_text(cfg_text.replace('register = "Register"', 'register = "Trust"'))
+        alone = scratch_config(root)
+        (root / SHIPPED_CONFIG).write_text(cfg_text)
+        kept = scratch_config(root)
+        ok = 'register = "Trust"' in alone and 'register = "Register"' in kept and 'register = "Trust"' not in kept
+        failures += 0 if ok else 1
+        print(f"  [{'PASS' if ok else 'FAIL'}] the scratch projects carry the configuration as shipped where a project keeps "
+              "it, and the configuration where it keeps none")
 
     def w(tmp, rel, body):
         (tmp / rel).parent.mkdir(parents=True, exist_ok=True)
@@ -1851,6 +1878,10 @@ def selftest() -> int:
              by_kind('archival = ["Repository"]\n', lambda b: b.replace("### [Key1]\n", "### [Key1]\n\n- Kind: archival\n", 1)))
     run_case("a registry entry declaring an unconfigured kind", "ONT-3", R, "declares a kind",
              by_kind('archival = ["Repository"]\n', lambda b: b.replace("### [Key1]\n", "### [Key1]\n\n- Kind: printed\n", 1)))
+    run_case("an entry's kind is read under the kind role's name where a project renames it", "ONT-3", R, "lacks the bullet Repository",
+             lambda t, f: ((t / "tools" / "artifacts.toml").write_text(dated(cfg_text.replace(
+                 "[registry.by_kind]", '[registry.by_kind]\narchival = ["Repository"]\n').replace('kind = "Kind"', 'kind = "Sort"'))),
+                 w(t, R, f[R].replace("### [Key1]\n", "### [Key1]\n\n- Sort: archival\n", 1))))
     # An entry is read by its heading: one whose bracketed key the token
     # grammar does not read can be cited by no token, and nothing checks
     # its bullets, so the heading is reported.  A heading that opens no

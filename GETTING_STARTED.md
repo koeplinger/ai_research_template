@@ -18,11 +18,13 @@ done mechanically: it copies the files the template's repository tracks,
 removes what belongs to the template's own construction and the pointers
 to it, strips the build lens, converts the shipped prose to your spelling
 variant, asks you each slot's question of §3 and writes each answer where
-its owner defines it, writes the values the tools read, renames any field
-your discipline has taken, adds your copyright holder and citation beside
-the template's, installs the hooks, writes a front page, records in a
-dated working note what it did and what it left to you, and runs the
-round check in the new tree. Keep the answers file outside both trees:
+its owner defines it, writes the values the tools read, keeps the
+template's configuration as it shipped for the tools' self-tests, renames
+any field your discipline has taken, adds your copyright holder and
+citation beside the template's, installs the hooks, writes a front page,
+records in a dated working note what it did and what it left to you,
+and runs the round check in the new tree. Keep the answers file outside
+both trees:
 
 ```bash
 python3 tools/new_project.py --template > ../answers.toml   # then fill it in

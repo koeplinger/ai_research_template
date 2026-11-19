@@ -64,7 +64,7 @@ def _flag(dep_reg: str, on_reg: str) -> str:
     if dep_reg == "RULED_OUT":
         return "   FLAG: RULED_OUT, reported always (ONTOLOGY.md section 4)"
     if dep_reg not in STRENGTH:
-        return f"   (Register {dep_reg!r} is not one section 4 orders)"
+        return f"   ({lint_docs.F('register')} {dep_reg!r} is not one section 4 orders)"
     if on_reg not in STRENGTH:
         return ""
     if STRENGTH[dep_reg] < STRENGTH[on_reg]:
@@ -115,7 +115,7 @@ def rests_on(t: lint_docs.Tree, num: str) -> list[str]:
         reg = f"  {register(t, n)}" if kind == "claim" and n in t.claims else ""
         out.append("  " * depth + f"[{kind} {n}]{reg}{note}")
     if not members:
-        out.append("  (nothing: no Depends-on, no Backed-by)")
+        out.append(f"  (nothing: no {lint_docs.F('depends-on')}, no {lint_docs.F('backed-by')})")
     return out
 
 
@@ -137,7 +137,7 @@ def unverified(t: lint_docs.Tree, num: str) -> list[str]:
         if reg == "RULED_OUT":
             why.append("RULED_OUT, reported always (ONTOLOGY.md section 4)")
         if vb.split(",")[0].strip() in ("unchecked", "deferred"):
-            why.append(f"Verified-by: {vb}")
+            why.append(f"{lint_docs.F('verified-by')}: {vb}")
         if why:
             out.append(f"  [claim {n}]  " + "; ".join(why))
         else:
@@ -148,7 +148,7 @@ def unverified(t: lint_docs.Tree, num: str) -> list[str]:
 
 
 def deferred(t: lint_docs.Tree) -> list[str]:
-    out = ["Deferred to an instrument or party (Verified-by: deferred):"]
+    out = [f"Deferred to an instrument or party ({lint_docs.F('verified-by')}: deferred):"]
     for n, f in sorted(t.claims.items()):
         vb = fields(t, f).get(lint_docs.F("verified-by"), (0, ""))[1]
         if vb.split(",")[0].strip() == "deferred":
@@ -192,9 +192,9 @@ def literature(t: lint_docs.Tree) -> list[str]:
 
 
 def unfinished(t: lint_docs.Tree) -> list[str]:
-    out = ["Plans by Status:"]
+    out = [f"Plans by {lint_docs.F('status')}:"]
     for n, f in sorted(t.plans.items()):
-        out.append(f"  plan {n}  {t.plan_status.get(f) or '(no Status)'}")
+        out.append(f"  plan {n}  {t.plan_status.get(f) or '(no ' + lint_docs.F('status') + ')'}")
     if not t.plans:
         out.append("  (no plan)")
     out.append("Claims by register:")
@@ -222,13 +222,13 @@ def unfinished(t: lint_docs.Tree) -> list[str]:
         out.append(f"  plan {rp}: " + ", ".join(f"[claim {n}]" for n in ns))
     if not clusters:
         out.append("  (none)")
-    out.append("Plans serving no hypothesis (Serves: none):")
+    out.append(f"Plans serving no hypothesis ({lint_docs.F('serves')}: none):")
     n_found = 0
     for n, f in sorted(t.plans.items()):
-        sv = fields(t, f).get("Serves", (0, ""))[1]
+        sv = fields(t, f).get(lint_docs.F("serves"), (0, ""))[1]
         if sv.split(",")[0].strip() == "none":
             n_found += 1
-            out.append(f"  plan {n}  Serves: {sv}")
+            out.append(f"  plan {n}  {lint_docs.F('serves')}: {sv}")
     if not n_found:
         out.append("  (none)")
     return out
@@ -411,6 +411,16 @@ def selftest() -> int:
     case("an empty ledger says so", "(no row: the ledger is empty)" in r, r)
     r = "\n".join(answer(t, "rests-on", "001"))
     case("a claim with nothing under it says so", "(nothing: no Depends-on, no Backed-by)" in r or "[check 001]" in r, r)
+    # A project that renames a field: the queries read it, and name it, as the
+    # project writes it.
+    held.append(tempfile.TemporaryDirectory())
+    tmp = Path(held[-1].name)
+    lint_docs.scratch_project(tmp, {rel: body.replace("Serves:", "Hypothesis:") for rel, body in base.items()},
+                              lint_docs.scratch_config().replace('serves = "Serves"', 'serves = "Hypothesis"'))
+    lint_docs.scratch_commit(tmp)
+    r = "\n".join(answer(load(tmp), "unfinished", None))
+    case("a renamed field is read, and named, as the project writes it",
+         "plan 001  Hypothesis: none, setup" in r and "(Hypothesis: none)" in r, r)
     print(f"\n  VERDICT: {'every case decided as expected' if not failures else f'{failures} failure(s)'}")
     return 1 if failures else 0
 

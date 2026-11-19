@@ -204,9 +204,9 @@ def probe(t: lint_docs.Tree, timeout: float, only: str | None = None) -> tuple[l
                 mline = fields(t, prog).get(lint_docs.F("mutation"), (1, ""))[0]
                 names = list(dict.fromkeys(names_of(t, prog) + (names_of(t, rec) if rec else [])))
                 if rec and names_of(t, rec) != names_of(t, prog):
-                    notes.append(f"NOTE      {rec}: its Mutation line ({', '.join(names_of(t, rec)) or 'none'}) differs from the program's ({', '.join(names_of(t, prog)) or 'none'}); both are applied")
+                    notes.append(f"NOTE      {rec}: its {lint_docs.F('mutation')} line ({', '.join(names_of(t, rec)) or 'none'}) differs from the program's ({', '.join(names_of(t, prog)) or 'none'}); both are applied")
                 if not names:
-                    matrix.append(f"  [check {num}]  (no Mutation line: the linter's CHECK-3 reports it; nothing to apply)")
+                    matrix.append(f"  [check {num}]  (no {lint_docs.F('mutation')} line: the linter's CHECK-3 reports it; nothing to apply)")
                     continue
                 code, msg, secs = run_one([sys.executable, "-u", str(scratch / prog)], cwd, timeout)
                 if code != 0:
@@ -243,7 +243,7 @@ def probe(t: lint_docs.Tree, timeout: float, only: str | None = None) -> tuple[l
             if names_of(t, rec):
                 notes.append(f"NOTE      {rec}: a written procedure; whether the planted alteration was caught is read from its Executions")
             else:
-                notes.append(f"NOTE      {rec}: a written procedure with no Mutation line: the linter's CHECK-3 reports it")
+                notes.append(f"NOTE      {rec}: a written procedure with no {lint_docs.F('mutation')} line: the linter's CHECK-3 reports it")
     return matrix, notes, ran
 
 

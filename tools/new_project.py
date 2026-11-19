@@ -37,10 +37,17 @@ What it does, printing each step and what it could not do:
      own;
   6. writes the machine halves in tools/artifacts.toml, each under the
      table it belongs to, so that a value the tools read is not left at
-     the template's answer;
+     the template's answer.  The template's configuration as it shipped
+     is kept first, unchanged, as tools/artifacts_shipped.toml, with its
+     row in the tools index: every self-test that builds a scratch
+     project reads it, since the files the self-test plants are written
+     for it, so that what the project changes in its own configuration
+     leaves them as they are (tools/README.md);
   7. renames any header field whose name the project's discipline has
      taken ([fields.roles]; GLOSSARY.md, "Renaming a word this template
-     uses"), in the configuration, the templates, and the rulebooks; a
+     uses"), in the configuration, the templates, and the rulebooks,
+     never in the tools' own sources, which read the name from the
+     configuration and test themselves with the shipped one; a
      new name the tools could not read as that field is refused: one not
      of the form ONTOLOGY.md section 1.1 gives (a capital letter, then
      letters and hyphens, each from A to Z, opening with none of Created,
@@ -247,6 +254,16 @@ belong to every clone, not once to the project: installing the hooks, and
 arming the privacy scan. Sections 1 to 3 are kept below as the account of
 how a project is set up, and of what to change if one of those decisions
 turns out to be wrong; §4 says which rounds come first."""
+
+# The template's configuration as it shipped, kept unchanged in a project for
+# the tools' self-tests (step 6; tools/lint_docs.py, scratch_config), and the
+# row the tools index gives it.
+SHIPPED = "tools/artifacts_shipped.toml"
+SHIPPED_ROW = ("| [artifacts_shipped.toml](artifacts_shipped.toml) | The template's configuration as it shipped, kept "
+               "unchanged by the setup tool: every self-test that builds a scratch project builds it with this file, since the "
+               "files a self-test plants are written for it, so that what this project changes in `artifacts.toml` "
+               "leaves the self-tests as they are. Never edited by hand; the round check reads `artifacts.toml`. A project "
+               "that takes newer tools copies the newer template's `tools/artifacts.toml` over this file. |\n")
 
 # The values the tools accept for the two editorial machine halves.
 SPELLINGS = ("us", "uk", "none", "")
@@ -515,6 +532,20 @@ def remove_pointers(root: Path) -> list[str]:
     return missed
 
 
+def keep_shipped_config(src: Path, root: Path) -> bool:
+    """Step 6, first: the template's configuration as it shipped, kept
+    beside the project's own, and its row in the tools index, under the
+    row of the configuration.  False where that row was not found."""
+    (root / SHIPPED).write_text(read(src / "tools" / "artifacts.toml"), encoding="utf-8")
+    p = root / "tools" / "README.md"
+    s = read(p)
+    m = re.search(r"^\| \[artifacts\.toml\]\(artifacts\.toml\) \|.*\n", s, re.M)
+    if not m:
+        return False
+    p.write_text(s[:m.end()] + SHIPPED_ROW + s[m.end():], encoding="utf-8")
+    return True
+
+
 def strip_build_lens(root: Path) -> int:
     """Step 3: every build-lens blockquote, and the manifesto's lens sections."""
     n = 0
@@ -628,6 +659,11 @@ def rename_fields(root: Path, rename: dict) -> tuple[int, list[str]]:
     n_files, left = 0, []
     for p in walk(root, (".md", ".py")):
         if p.name in ABOUT_SLOTS:
+            continue
+        # The tools read a field's name from the configuration; their sources,
+        # and the scratch projects their self-tests plant, keep the shipped
+        # names, as the configuration they test with does (step 6).
+        if p.suffix == ".py" and p.relative_to(root).parts[0] == "tools":
             continue
         s = read(p)
         out = s
@@ -949,7 +985,9 @@ def restamp(root: Path, day: str, src: Path) -> int:
     n = 0
     for p in walk(root, tuple(STAMPS)):
         s = read(p)
-        orig = src / p.relative_to(root)
+        rel = p.relative_to(root).as_posix()
+        # The shipped configuration is the template's, unchanged, dates and all.
+        orig = src / ("tools/artifacts.toml" if rel == SHIPPED else rel)
         if orig.is_file() and read(orig) == s:
             continue
         m = STAMPS[p.suffix].search(s)
@@ -1227,8 +1265,15 @@ def instantiate(src: Path, dst: Path, answers: dict, quiet: bool = False) -> int
             left.append("the example voice record in `evidence_and_reasoning/editorial_standards.md`, *Voice*, "
                         "which stays only where your voice answer keeps it")
 
+        indexed = keep_shipped_config(src, dst)
         done = write_machine_halves(dst, machine, rename)
         p("  6. the machine halves: " + (", ".join(done) if done else "none given, the template's answers stand"))
+        p(f"     kept the template's configuration as it shipped, {SHIPPED}, for the tools' self-tests"
+          + ("" if indexed else "; NOT INDEXED: add its row to tools/README.md by hand"))
+        did.append("kept the template's configuration as it shipped beside the project's own, for the tools' "
+                   "self-tests (`tools/README.md`)")
+        if not indexed:
+            left.append("the row of `tools/artifacts_shipped.toml` in `tools/README.md`, which it could not place")
         shipped = {"spelling": ed.get("spelling"), "dashes": ed.get("dashes"),
                    "mutations": template_cfg["vocab"].get("mutations"),
                    "parties": template_cfg.get("parties", {}).get("names"),
@@ -1442,6 +1487,9 @@ def selftest() -> int:
                              cwd=dst, capture_output=True, text=True)
         check("the project's own tools can still test themselves", sel.returncode == 0,
               (sel.stdout or sel.stderr).strip().split("\n")[-1][:110])
+        check("the template's configuration is kept as it shipped beside the project's own, and indexed",
+              (dst / SHIPPED).is_file() and read(dst / SHIPPED) == read(ROOT / "tools" / "artifacts.toml")
+              and "[artifacts_shipped.toml](artifacts_shipped.toml)" in read(dst / "tools" / "README.md"))
 
     with tempfile.TemporaryDirectory() as d:
         uk = {**SELFTEST_ANSWERS, "machine": {**SELFTEST_ANSWERS["machine"], "spelling": "UK"},
@@ -1451,6 +1499,10 @@ def selftest() -> int:
         ed = read(Path(d) / "p" / "evidence_and_reasoning" / "editorial_standards.md")
         check("the conversion leaves quotations, the other variant's example, and the researcher's answer alone",
               '"center", "labeled"' in ed and 'never "organize"' in ed and "organization" not in ed.split("## Slots")[0])
+        sel = subprocess.run([sys.executable, str(Path(d) / "p" / "tools" / "lint_docs.py"), "--selftest"],
+                             cwd=Path(d) / "p", capture_output=True, text=True)
+        check("and its linter still tests itself, its own spelling rule in its configuration", sel.returncode == 0,
+              (sel.stdout or sel.stderr).strip().split("\n")[-1][:110])
 
     with tempfile.TemporaryDirectory() as d:
         dst = Path(d) / "p"
@@ -1461,6 +1513,13 @@ def selftest() -> int:
         check("the rename reaches an indented mention in a template's legend",
               "Frame:" not in tpl and "Stated-in:" in tpl,
               str([l for l in tpl.split("\n") if "Frame" in l][:2]))
+        changed = [f.name for f in sorted((ROOT / "tools").glob("*.py"))
+                   if (dst / "tools" / f.name).is_file() and read(dst / "tools" / f.name) != read(f)]
+        check("the rename leaves the tools' own sources as they shipped", not changed, str(changed))
+        sel = subprocess.run([sys.executable, str(dst / "tools" / "lint_docs.py"), "--selftest"],
+                             cwd=dst, capture_output=True, text=True)
+        check("and its linter still tests itself with two fields renamed", sel.returncode == 0,
+              (sel.stdout or sel.stderr).strip().split("\n")[-1][:110])
 
     with tempfile.TemporaryDirectory() as d:
         a, b = Path(d) / "a", Path(d) / "b"
@@ -1471,11 +1530,15 @@ def selftest() -> int:
             (root / "tools" / "changed.py").write_text(prog.replace("X = 1", x))
             (root / "tools" / "same.py").write_text(prog)
             (root / "tools" / "_template.py").write_text(tmpl.replace("X = 1", x))
+        (a / "tools" / "artifacts.toml").write_text("# c\n#\n# Created 1 January 2026; updated 1 January 2026.\n")
+        (b / SHIPPED).write_text(read(a / "tools" / "artifacts.toml"))
         restamp(b, "2 January 2030", a)
-        check("a program the procedure changed takes the day; one it did not, and a template's placeholder, keep theirs",
+        check("a program the procedure changed takes the day; one it did not, a template's placeholder, and the "
+              "shipped configuration keep theirs",
               "updated 2 January 2030." in read(b / "tools" / "changed.py")
               and "updated 1 January 2026." in read(b / "tools" / "same.py")
-              and "updated D Month YYYY." in read(b / "tools" / "_template.py"))
+              and "updated D Month YYYY." in read(b / "tools" / "_template.py")
+              and "updated 1 January 2026." in read(b / SHIPPED))
 
     with tempfile.TemporaryDirectory() as d:
         for bad, why in (({"slots": {"PERSONA": "a | b"}}, "a pipe in a slot value"),

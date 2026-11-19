@@ -273,9 +273,12 @@ output, transcription files kept as data) carry no header, and neither
 does an attachment under `prompt_logs/attachments/`, which is kept as
 received, or an imported file under `inherited/`, which is a verbatim copy
 unless its row in the import ledger records a correction made at the
-researcher's direction (`inherited/README.md`); they are dated by
-the plan that owns them or the index that lists them, and an attachment
-by the entry that received it. A tracked path that
+researcher's direction (`inherited/README.md`); they are dated by the
+plan that owns them or the index that lists them, and an attachment by
+the entry that received it. In a project, the copy of the template's
+configuration as it shipped, which the tools' self-tests read
+(`tools/README.md`), keeps the template's header and dates unchanged,
+and its header is not checked. A tracked path that
 matches no genre in the checker's configuration is reported as unresolved;
 no default is assumed.
 

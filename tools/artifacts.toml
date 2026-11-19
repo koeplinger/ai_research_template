@@ -28,8 +28,9 @@
 #   release        live until its Released stamp (a version) or its
 #                  (release) row (a changelog); a Plan: line overrides,
 #                  save on a version named _vN once it is released
-#   exempt         no header, no genre check: non-prose, imported, or the
-#                  statement of intent
+#   exempt         no header, no genre check: non-prose, imported, the
+#                  statement of intent, or the configuration as shipped
+#                  that a project keeps for the tools' self-tests
 # A Plan: header line overrides any default but immutable, self, and
 # exempt, and a released version named _vN: live while that plan is
 # DRAFT or ENGAGED, frozen when CLOSED.
@@ -563,6 +564,16 @@ header = "none"
 # The settings file of the harness the template was built with
 # (governance/harness/claude_code/README.md); a project on another harness
 # deletes the folder and this row.
+
+[[artifact]]
+kind = "shipped-config"
+glob = "tools/artifacts_shipped.toml"
+genre = "exempt"
+header = "none"
+# In a project, the template's configuration as it shipped, which the
+# setup tool keeps unchanged for the tools' self-tests (tools/README.md);
+# never edited by hand, and not the project's configuration.  The template itself
+# has no such file.
 
 [[artifact]]
 kind = "config"
