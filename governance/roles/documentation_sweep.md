@@ -1,6 +1,6 @@
 # The documentation consistency sweep
 
-*Created 8 September 2026; updated 18 November 2026.*
+*Created 8 September 2026; updated 19 November 2026.*
 
 **Role.** A reader who takes a project's *documentation* as one system and
 reports where it disagrees with itself: the rulebooks, the folder indexes,
@@ -127,6 +127,12 @@ Report, before editing anything:
    item 3);
 10. [this project's own documentation items, listed here]
 
+With the findings, name by path every file read in full. Where the
+reading is split among readers, each reader names the files it read in
+full, the main thread compares the names with what this sweep was to
+read in full, and a file no reader names is read before the sweep is
+reported complete.
+
 Hand each finding to a reader instructed to refute it (the refuter,
 governance/roles/refuter.md). Before applying or bringing what survives,
 look for the researcher's ruling on each finding, in ONBOARDING.md,
@@ -138,18 +144,19 @@ and stop.
 ```
 
 **Output.** The findings, ranked, each with the file, the line, the
-problem, and the fix, reported before any edit and recorded in the round's
-log entry; each then goes to the refuter, and the outcome is recorded
+problem, and the fix, and with them the files read in full, named by
+path, reported before any edit and recorded in the round's log entry;
+each finding then goes to the refuter, and the outcome is recorded
 beside it. A fix to a current-state document that is neither maintained
 nor one of the four `MANIFESTO.md` §12 names may be applied; every other
 fix is brought with its wording (`CHECK_METHODOLOGY.md` §7). Every edit,
-applied or brought, is listed as `MANIFESTO.md` §14 sets out for a sweep.
-What is brought is numbered once, in the round's log entry or, where the
-list is long, in a dated working note the entry points to
-(`evidence_and_reasoning/notes/README.md`), and is put to the researcher
-and ruled by number as `MANIFESTO.md` §16, *Putting a decision*, says; a
-finding that runs against a ruling is recorded as such, with the ruling's
-prompt.
+applied or brought, is listed as `MANIFESTO.md` §14 sets out for a sweep,
+after the files it would touch. What is brought is numbered once, in the
+round's log entry or, where the list is long, in a dated working note the
+entry points to (`evidence_and_reasoning/notes/README.md`), and is put to
+the researcher and ruled by number as `MANIFESTO.md` §16, *Putting a
+decision*, says; a finding that runs against a ruling is recorded as such,
+with the ruling's prompt.
 
 **Item 10 is the project's own.** Every discipline's documentation carries
 facts that drift in ways this list cannot anticipate, and a project writes
@@ -176,6 +183,9 @@ them into the prompt once and keeps them:
   stated in the methodology, the project's dependency file, and the
   paper's appendix, all agreeing.
 
+The prompt's list of files is the project's own as well: a project edits
+it to its files once and keeps it.
+
 **Does not decide.** Which of two disagreeing statements is right: the
 sweep reports the disagreement and its two homes, and the researcher
 decides which yields. Nor whether a rule is *good*: it finds that a rule
@@ -183,10 +193,11 @@ is restated wrongly, never that the rule is wrong.
 
 ## Worked example
 
-A sweep over a freshly instantiated project reports: "the write-up
-folder's index says the first version has no changelog; the genres
-rulebook defines a release as a stamp *and* a changelog row, with no
-exception; the two disagree, and a first release cannot satisfy both."
+A sweep over a project whose rulebooks have lost their clause on a
+first version reports: "the write-up folder's index says the first
+version has no changelog; the genres rulebook defines a release as a
+stamp *and* a changelog row, with no exception; the two disagree, and a
+first release cannot satisfy both."
 
 The refuter is given the finding, the two passages, and the ontology's
 `released` row. It returns *narrowed*: the rulebook is silent on a first
@@ -198,4 +209,4 @@ the Output rule above, since a rulebook is neither maintained nor one of
 the four `MANIFESTO.md` §12 names. It is brought instead, because a sweep
 that rewrites the rule it was reading has stopped being a sweep. The
 researcher directs it. The round's log entry records the sweep, the
-finding, the verdict, and the change.
+files it read in full, the finding, the verdict, and the change.

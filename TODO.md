@@ -1,6 +1,6 @@
 # What this template does not have yet
 
-*Created 8 September 2026; updated 8 September 2026.*
+*Created 8 September 2026; updated 19 November 2026.*
 
 The template's own list of work, kept at the root while the template is
 maintained. It is not a project's file: instantiation leaves it behind,
@@ -74,7 +74,7 @@ has no arrow into it.
 reader who has not opened the ontology. Whatever form the diagrams take
 has to survive being read in a terminal and in a plain-text diff, has to
 carry a header stamp or be listed in an index that dates it
-(`DOCUMENT_GENRES.md`, *Non-prose files*), and needs a row in
+(`DOCUMENT_GENRES.md` §3, on non-prose files), and needs a row in
 `tools/artifacts.toml`. A diagram that disagrees with the table it
 illustrates is the defect the documentation consistency sweep would then
 have to catch, so the two want to be generated from one source or checked

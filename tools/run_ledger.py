@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The run ledger: a local cache of check runs, keyed by a hash of what each verdict rests on, so that recomputation follows a changed basis.
 
-Created 5 September 2026; updated 5 September 2026.
+Created 5 September 2026; updated 19 November 2026.
 
 No rulebook item owns this tool, and it decides nothing.  The record of
 a run is the check record (CHECK_METHODOLOGY.md section 8), which the
@@ -19,7 +19,10 @@ module-level BASIS = ["..."], relative to the repository root, a
 directory standing for every file under it, which is how a program says
 which data it reads (python_project/src/_template_check.py pre-prints the
 list).  Anything else a program reads is outside the hash, and every
-status line says so.  `run` recomputes exactly the checks whose hash
+status line says so.  Each program runs with the interpreter running this
+tool, so the tool is run with the interpreter of the pinned environment
+(python_project/README.md, Running); what that interpreter has installed
+is outside the hash.  `run` recomputes exactly the checks whose hash
 changed or whose last run did not finish; a check whose basis is
 unchanged is not run again unless forced.  Each run's seconds are kept,
 since cost is measured and never a gate (section 8): the expensive
@@ -27,10 +30,10 @@ checks can be examined for avoidable work.  The cached runs are kept as a
 local convenience; the record of a run stays the check record.
 
 Usage
-    python3 tools/run_ledger.py status                 each program: current, stale, or never run
-    python3 tools/run_ledger.py run [--only NNN] [--force] [--timeout S]
+    .venv/bin/python tools/run_ledger.py status        each program: current, stale, or never run
+    .venv/bin/python tools/run_ledger.py run [--only NNN] [--force] [--timeout S]
                                                        run and record what is stale (everything, with --force)
-    python3 tools/run_ledger.py show NNN               the cached runs of one check
+    .venv/bin/python tools/run_ledger.py show NNN      the cached runs of one check
     python3 tools/run_ledger.py --selftest
 
 Exit status: status, 0 when every program is current, 1 otherwise; run,
@@ -318,6 +321,13 @@ def selftest() -> int:
         out, _, _ = run_checks(t, None, True, 30)
         case("--force runs it anyway", "ran " in out[0], str(out))
         case("show lists every cached run", len(show(t, "002")) == 2, str(show(t, "002")))
+        started, real_run = [], subprocess.run
+        subprocess.run = lambda argv, **kw: started.append(argv[0]) or real_run(argv, **kw)
+        try:
+            run_checks(t, None, True, 30)
+        finally:
+            subprocess.run = real_run
+        case("a program is run with the interpreter running this tool", [a for a in started if a != "git"] == [sys.executable], str(started))
         h0, _, _ = basis_hash(t, P2)
         (tmp / "python_project" / "src" / "pkg" / "part.py").write_text(files["python_project/src/pkg/part.py"].replace("P = 0", "P = 2"))
         h1, _, _ = basis_hash(t, P2)

@@ -1,6 +1,6 @@
 # Ontology: the predicates the artifacts share
 
-*Created 3 September 2026; updated 18 November 2026.*
+*Created 3 September 2026; updated 19 November 2026.*
 
 The artifacts of a project built from the template are one system, not a
 folder of forms, because they share a vocabulary. This file is that
@@ -56,8 +56,14 @@ from code.
 
 A **field line** is `<Name>: <value>`, the name matched case-sensitively
 from the catalogue, at most once per artifact, the value running to the
-end of the line. Where a document italicizes its header, the surrounding
-emphasis marks are not part of the value.
+end of the line. A name, shipped or a project's own, is a capital letter
+followed by letters and hyphens, every letter one of the twenty-six from
+A to Z, and opens with none of the words `Created`, `Released`,
+`Reserved`, and `Pre-registered`, however capitalized, which open four
+of the stamps of §1.2. A line whose name has any other shape is read as
+no field, and the header block ends at it; a line that opens with one of
+those four words is read as a stamp. Where a document italicizes its
+header, the surrounding emphasis marks are not part of the value.
 
 ```
 Register: VERIFIED
@@ -79,7 +85,7 @@ Serves: H-B
 ### 1.2 Stamps
 
 A **stamp** is a header line that takes **no colon**, because a colon
-after a date opens a change narrative and the genre checker rejects it
+after a date opens a change narrative and the genre checker reports it
 (`DOCUMENT_GENRES.md`). There are exactly five:
 
 ```
@@ -190,7 +196,7 @@ the duty is the assistant's under the consistency sweep
 | `verification-status` | a claim to who checked it and how | `Verified-by: researcher \| assistant, <route> \| deferred, <instrument> \| unchecked \| <party>, <route>` | `MANIFESTO.md` §5 | ontology 3 | who actually checked this? |
 | `deferred-to` | a claim to an instrument or party the researcher chose not to check behind | the `deferred` form of `Verified-by:` | `MANIFESTO.md` §5; `VISION.md` | ontology query 3 | what did we take on trust? |
 | `pre-registered` | a check or claim to a protocol fixed before the evidence was consulted | `Pre-registered <D Month YYYY>, <locator>` | `evidence_and_reasoning/notes/README.md`, which defines the protocol note | ontology 3: the date precedes the earliest record's date, and the locator resolves | was this confirmatory, or exploratory? |
-| `performed-by` | a check record, transcription, coding pass, derived artifact, log entry, or review to the party that produced it, and, where that party is the assistant, to the AI model that did the work | `By: researcher \| assistant, <AI model> \| <party from the roster>` (Slots below), the AI model with its version as the harness reports them, or `not reported`; a review names its reviewer the same way, in its identity line, or names an outside reader as the report's conditions allow (`paper/reviews/README.md`) | `MANIFESTO.md` §5, and §8 for the AI model | ontology 3: the party, the text before any comma, resolves to the roster; the round check: a log entry not yet committed carries the line, with an AI model or `not reported` after the comma where the party is the assistant; reading: whether the AI model named is right, and a review's identity line | whose work is this, and which AI model did it? |
+| `performed-by` | a check record, written check procedure, check program, transcription, coding pass, derived artifact, log entry, or review to the party that produced it, and, where that party is the assistant, to the AI model that did the work | `By: researcher \| assistant, <AI model> \| <party from the roster>` (Slots below), the AI model with its version as the harness reports them, or `not reported`; a review names its reviewer the same way, in its identity line, or names an outside reader as the report's conditions allow (`paper/reviews/README.md`) | `MANIFESTO.md` §5, and §8 for the AI model | ontology 3: the party, the text before any comma, resolves to the roster; the round check: a log entry not yet committed carries the line, with an AI model or `not reported` after the comma where the party is the assistant; reading: whether an AI model or `not reported` follows the comma on any other artifact that names the assistant, whether the AI model named is right, and a review's identity line | whose work is this, and which AI model did it? |
 
 ### 2.4 Derived material
 
@@ -278,12 +284,18 @@ are theirs, and the catalogue points at them. These are the ontology's own:
    spelled as there, at most once per artifact. An unrecognized field is
    reported rather than ignored, so a typo does not silently drop a
    predicate. A stamp is matched against the five forms of §1.2, and a
-   stamp written with a colon is reported.
+   stamp written with a colon is reported. In `tools/artifacts.toml`, a
+   role `[fields.roles]` names that the tools do not know, and a name
+   there or in `[fields] names` not of the form §1.1 gives, are reported
+   at the configuration.
 2. **Tokens resolve.** Every citation token of §1.3 resolves to an
    existing entry, claim, check, finding, tension row, or plan.
 3. **Required fields are present**, per artifact kind, from the
    configuration of §7, and filled: a value that is only an artifact
-   template's comment is empty.
+   template's comment is empty. A registry entry is read by its heading
+   (§1.4), so in a registry file a level-three heading that opens a
+   bracket and carries no key the grammar of §1.3 reads is reported: no
+   token can cite that entry, and its bullets go unchecked.
 4. **The dependency graph is walkable**: every `Depends-on` number
    resolves, and cycles are reported.
 5. **Backing is two-way**: every `Backed-by` token resolves, the named
@@ -347,7 +359,7 @@ required  = ["Register", "Kind", "Verdict", "Plan", "Verified-by"]
 kind      = "check"
 glob      = "evidence_and_reasoning/checks/[0-9]*.md"
 genre     = "plan-owned"
-required  = ["Plan", "Backs", "Instrument", "Mutation"]
+required  = ["Plan", "Backs", "Instrument", "Mutation", "By"]
 ```
 
 The numbered form is the pattern; a folder's `README.md` and its
@@ -367,10 +379,11 @@ are ranked, and the ranking is part of the design.
 `Kind`, `Verdict`, `Plan`, `Verified-by`, and `Backed-by` once the claim
 is registered `VERIFIED` or `RULED_OUT`.
 
-**Mandatory on every check**: the fields the check row of
-`tools/artifacts.toml` requires, which start as `Plan`, `Backs`,
-`Instrument` and `Mutation`, plus `By`; and `Frame` where the check has
-quantities in a frame.
+**Mandatory on every check**: the fields the check rows of
+`tools/artifacts.toml` require, the record's and the program's, which
+start as `Plan`, `Backs`, `Instrument`, `Mutation` and `By` and are
+reported when missing; and `Frame` where the check has quantities in a
+frame.
 
 **Mandatory on every log entry**, and reported when missing on an entry
 not yet committed: `By`, naming who did the work and, for the assistant,
@@ -401,9 +414,10 @@ stale field is worse than none, because a reader trusts it.
 Add the row with its Answers cell, the syntax to §1 if it is a new form,
 the check to §5 or the reason it is *reading*, the field to the artifact
 template that will pre-print it, and, in `tools/artifacts.toml`, the name
-to `[fields] names`,
-the role to `[fields.roles]` so a project can rename it, and the
-required-field entry to the artifact row that must carry it.
+to `[fields] names` and the required-field entry to the artifact row
+that must carry it. `[fields.roles]` holds only the roles the tools
+know, and any other written there is reported (§5, check 1); a field a
+project adds is renamed where it was added.
 
 The closed vocabularies (`Register`, `Kind`, and each kind's verdicts) are
 `CHECK_METHODOLOGY.md`'s. A project that needs another verdict or another

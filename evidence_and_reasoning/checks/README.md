@@ -1,6 +1,6 @@
 # Checks
 
-*Created 3 September 2026; updated 8 September 2026.*
+*Created 3 September 2026; updated 19 November 2026.*
 
 One file per check: `NNN_short_name.md`, the number zero-padded to three
 digits with an optional lower-case suffix, never reused. `[check NNN]`
@@ -27,9 +27,9 @@ question, or construction (`CHECK_METHODOLOGY.md`); its form is
 
 Copy the template for either form and delete the parts that do not apply.
 It pre-prints the mandatory fields (`ONTOLOGY.md` §8): `Plan`, `Backs`,
-`Instrument` and `Mutation`, which the check row of `tools/artifacts.toml`
-requires, plus `By`, and `Frame` where the check has quantities in a
-frame.
+`Instrument`, `Mutation` and `By`, which the check row of
+`tools/artifacts.toml` requires, and `Frame` where the check has
+quantities in a frame.
 
 ## Contents
 

@@ -1,6 +1,6 @@
 # Derived material
 
-*Created 8 September 2026; updated 8 September 2026.*
+*Created 8 September 2026; updated 19 November 2026.*
 
 What a plan makes from a source before anything is released: a
 transcription, a collation, an extract, a processed table, a figure, an
@@ -12,7 +12,8 @@ which is pre-printed on the template here.
 
 A project whose plans derive nothing may remove this folder at the
 researcher's direction, with its two `[[artifact]]` rows and its
-`[[index]]` row in `tools/artifacts.toml`, and say so here.
+`[[index]]` row in `tools/artifacts.toml`, as `FORKING.md`,
+*Removing a mechanism*, describes; the round's log entry records why.
 
 ## What belongs here, and what does not
 
@@ -34,8 +35,8 @@ researcher's direction, with its two `[[artifact]]` rows and its
   field lines below. Copy [`_template.md`](_template.md).
 - **Non-prose** (a table, a figure, an alignment, an extract): the file
   itself, in whatever form its discipline uses, carrying no header. It is
-  dated by the row that lists it below and by the check that produced it,
-  as `DOCUMENT_GENRES.md`, *Non-prose files*, says. Where the form admits
+  dated by the row that lists it below, as `DOCUMENT_GENRES.md` §3 says of
+  non-prose files, and by the check that produced it. Where the form admits
   a comment or a sidecar, the provenance goes there; where it does not,
   this index carries it.
 

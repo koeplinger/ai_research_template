@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The ontology queries: the questions ONTOLOGY.md section 6 says the record answers from its fields.
 
-Created 5 September 2026; updated 16 November 2026.
+Created 5 September 2026; updated 19 November 2026.
 
 Each query enumerates by reading fields and tokens.  Where a rulebook
 decides, the line is marked FLAG; where only reading can decide, the
@@ -301,7 +301,7 @@ def selftest() -> int:
                 f"Verified-by: {vb}\n{extra}\n## Claim\n\n{body}{fence}")
 
     def check(n, title, plan):
-        return f"# Check {n}: {title}\n\n{S}\nPlan: {plan}, task 1\nBacks: [claim {n}]\nInstrument: the edition\nMutation: variant-reading\n\n## 1\n\nThe claim [claim {n}] against [claim 002].\n"
+        return f"# Check {n}: {title}\n\n{S}\nPlan: {plan}, task 1\nBacks: [claim {n}]\nInstrument: the edition\nMutation: variant-reading\nBy: researcher\n\n## 1\n\nThe claim [claim {n}] against [claim 002].\n"
 
     base = lint_docs.fixture()
     base["evidence_and_reasoning/claims/003_c.md"] = claim("003", "c", "VERIFIED", "confirmed", "001", "researcher",
@@ -320,8 +320,12 @@ def selftest() -> int:
     base["evidence_and_reasoning/claims/README.md"] += "".join(f"| [{n}]({n}_{s}.md) |\n" for n, s in (("003", "c"), ("004", "d"), ("005", "e"), ("006", "f"), ("007", "g")))
     base["evidence_and_reasoning/checks/README.md"] += "| [003](003_c.md) |\n| [005](005_e.md) |\n"
 
+    held = []
+
     def scratch(files, lint: bool):
-        tmp = Path(tempfile.mkdtemp())
+        # each tree is held until the self-test returns, and removed then
+        held.append(tempfile.TemporaryDirectory())
+        tmp = Path(held[-1].name)
         lint_docs.scratch_project(tmp, files, lint_docs.scratch_config())
         lint_docs.scratch_commit(tmp)
         if lint:
@@ -362,7 +366,7 @@ def selftest() -> int:
     case("sites says when the cited claim has no such section", "cites [claim 001] [OPEN]\n      citing: This claim" in r and "has no What is not claimed section" in r, r)
     case("sites says when the section is present and empty", "cites [claim 004] [ATTESTED]" not in r or "(the section is present and empty)" in r, r)
     case("sites lists a check record's header and body citations and marks the claim it backs",
-         "checks/003_c.md:5  [check] cites [claim 003] [VERIFIED]  (the claim it backs)" in r and "checks/003_c.md:11  [check] cites [claim 003]" in r, r)
+         "checks/003_c.md:5  [check] cites [claim 003] [VERIFIED]  (the claim it backs)" in r and "checks/003_c.md:12  [check] cites [claim 003]" in r, r)
     case("sites does not list a claim's own token", "[VERIFIED] cites [claim 003]" not in r and "[check] cites [claim 003] [VERIFIED]  (the claim it backs)" in r, r)
     r = "\n".join(answer(t, "all", None))
     case("all answers every question that takes no claim", all(k in r for k in ("Deferred", "Against the public record", "Plans by Status", "Every place")), r)
@@ -377,7 +381,7 @@ def selftest() -> int:
     except KeyError:
         case("an unknown question is refused", True)
 
-    # a second tree the linter rejects, for the branches a clean tree cannot reach
+    # a second tree with linter findings, for the branches a clean tree cannot reach
     rejected = lint_docs.fixture()
     rejected["evidence_and_reasoning/claims/003_c.md"] = claim("003", "c", "PROVEN", "confirmed", "001", "researcher",
         "Backed-by: [check 042]\nDepends-on: 001, 003, 042\n", "x.", "")
@@ -388,14 +392,14 @@ def selftest() -> int:
         "| T001 | [claim 002] | [Key1] | x | live |", "| T001 | [claim 002](../claims/002_b.md) | [Key1] | x | |")
     t = scratch(rejected, lint=False)
     r = "\n".join(answer(t, "rests-on", "004"))
-    case("on a tree the linter rejects: a register outside the vocabulary is said to be unordered", "[claim 003]  PROVEN   (Register 'PROVEN' is not one section 4 orders)" in r, r)
-    case("on a tree the linter rejects: a Depends-on naming no claim is said so", "[claim 042]   (resolves to no claim)" in r, r)
-    case("on a tree the linter rejects: a Backed-by naming no check is said so", "[check 042]   (resolves to no check)" in r, r)
-    case("on a tree the linter rejects: a cycle names itself", "[claim 003]" in r and "(listed above)" in r, r)
+    case("on a tree with linter findings: a register outside the vocabulary is said to be unordered", "[claim 003]  PROVEN   (Register 'PROVEN' is not one section 4 orders)" in r, r)
+    case("on a tree with linter findings: a Depends-on naming no claim is said so", "[claim 042]   (resolves to no claim)" in r, r)
+    case("on a tree with linter findings: a Backed-by naming no check is said so", "[check 042]   (resolves to no check)" in r, r)
+    case("on a tree with linter findings: a cycle names itself", "[claim 003]" in r and "(listed above)" in r, r)
     r = "\n".join(answer(t, "rests-on", "003"))
-    case("on a tree the linter rejects: a self-dependency is a cycle", "(the claim itself: a cycle)" in r, r)
+    case("on a tree with linter findings: a self-dependency is a cycle", "(the claim itself: a cycle)" in r, r)
     r = "\n".join(answer(t, "unverified", "004"))
-    case("on a tree the linter rejects: unverified lists the unresolved dependency", "[claim 042]  (resolves to no claim)" in r, r)
+    case("on a tree with linter findings: unverified lists the unresolved dependency", "[claim 042]  (resolves to no claim)" in r, r)
     r = "\n".join(answer(t, "literature", None))
     case("a linked token in a ledger row is not read, and an empty caution is said", "(no claim token)" in r and "): (empty)" in r, r)
     r = "\n".join(answer(t, "unfinished", None))

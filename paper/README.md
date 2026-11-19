@@ -1,6 +1,6 @@
 # Paper
 
-*Created 4 September 2026; updated 18 November 2026.*
+*Created 4 September 2026; updated 19 November 2026.*
 
 The write-ups: the main write-up in its versions, standalone notes, and
 the reviews of both. `paper/` is the template's name for the
@@ -96,7 +96,10 @@ table.
    its own, as the attachments are, and given a row in
    `tools/artifacts.toml` where none matches it.
 8. The previous version is marked `superseded by <path>`.
-9. The changelog and the review freeze with the round that closes.
+9. The changelog freezes with its release row (step 6). A review no plan
+   owns freezes when the round that acts on it closes, which may be a
+   round before the release, and a review a plan owns freezes with that
+   plan (`reviews/README.md`).
 10. Where the version is deposited outside the repository, the researcher
     deposits it as it was committed. The text the deposit asks for besides
     the files, such as the title, the authors, and the abstract, is copied
@@ -119,6 +122,7 @@ table.
 |---|---|
 | <!-- [main_v1.md](main_v1.md) --> | <!-- the main write-up, version 1; once it is deposited, also: deposited at <where>, D Month YYYY, as <identifier> --> |
 | <!-- [v1_to_v2_changelog.md](v1_to_v2_changelog.md) --> | <!-- changes from v1 to v2 --> |
+| <!-- [<folder>/](<folder>/) --> | <!-- what a plan delivers in several files, such as a standalone note with its tables and figures: what it is, and the plan that owns it, plan NNN, named here because a file with no header cannot name it; a file in it that no row of tools/artifacts.toml matches is given one --> |
 | [reviews/](reviews/) | the reviews, indexed in [reviews/README.md](reviews/README.md) |
 
 ## Not write-ups

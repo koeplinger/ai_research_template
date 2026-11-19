@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The instantiation procedure: this template, made into a project (GETTING_STARTED.md, sections 1 to 3).
 
-Created 8 September 2026; updated 18 November 2026.
+Created 8 September 2026; updated 19 November 2026.
 
 What it does, printing each step and what it could not do:
 
@@ -40,7 +40,12 @@ What it does, printing each step and what it could not do:
      the template's answer;
   7. renames any header field whose name the project's discipline has
      taken ([fields.roles]; GLOSSARY.md, "Renaming a word this template
-     uses"), in the configuration, the templates, and the rulebooks;
+     uses"), in the configuration, the templates, and the rulebooks; a
+     new name the tools could not read as that field is refused: one not
+     of the form ONTOLOGY.md section 1.1 gives (a capital letter, then
+     letters and hyphens, each from A to Z, opening with none of Created,
+     Released, Reserved, and Pre-registered), one that another field
+     carries or is given in the same run, and a derived predicate's;
   8. adds the project's copyright holder and citation to the licenses,
      each only where it is given, and KEEPS the template's, which CC BY
      4.0 requires of an adaptation; it names each license text it could
@@ -181,6 +186,12 @@ FIELD_DEFAULTS = {
     "prerequisites": "Prerequisites", "serves": "Serves", "status": "Status",
     "by": "By", "produced-from": "Produced-from",
 }
+# A header field name as the tools read one.  Their one reader of a field
+# line, FIELD_RE in tools/lint_docs.py, takes a capital letter and then
+# letters and hyphens, so a name that opens in lower case or carries a
+# digit would be written into every form and never read; the self-test
+# compares this pattern with the linter's own.
+FIELD_NAME = re.compile(r"[A-Z][A-Za-z-]*")
 
 # ------------------------------------------------- what a project does not get
 
@@ -327,6 +338,23 @@ def machine_value(key: str, v: object) -> tuple[object, str]:
     return v, ""
 
 
+def rename_problem(role: str, name: object) -> str:
+    """Why a [rename] pair cannot be used, or "" where it names a role and
+    a name the tools read as a field; ask() puts the question again on a
+    problem, and check_answers refuses.  A name another role carries or is
+    given, and a derived predicate's, pass here and are refused by
+    check_answers."""
+    if role not in FIELD_DEFAULTS:
+        return f"[rename] {role} is not a header-field role; the roles are " + ", ".join(sorted(FIELD_DEFAULTS))
+    if not isinstance(name, str) or not FIELD_NAME.fullmatch(name):
+        return (f"[rename] {role} must be a field name the tools read: a capital letter, then letters and hyphens, "
+                "each from A to Z, and no digit (tools/lint_docs.py reads no other as a header field)")
+    if re.match(r"(?:Created|Released|Reserved|Pre-registered)(?![A-Za-z])", name, re.I):
+        return (f"[rename] {role} must not open with a stamp's word (Created, Released, Reserved, Pre-registered): "
+                "tools/lint_docs.py reads a header line that opens with one as a stamp, and reports it")
+    return ""
+
+
 def check_answers(answers: dict) -> tuple[dict, list[str]]:
     """Everything this program will act on, checked for shape before it
     writes anything.  A value that would corrupt a markdown table or a TOML
@@ -365,11 +393,19 @@ def check_answers(answers: dict) -> tuple[dict, list[str]]:
     if not isinstance(rename, dict):
         raise Refused('[rename] must be a table of role = "Name"')
     for role, name in rename.items():
-        if role not in FIELD_DEFAULTS:
-            raise Refused(f"[rename] {role} is not a header-field role; the roles are "
-                          + ", ".join(sorted(FIELD_DEFAULTS)))
-        if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z][A-Za-z0-9-]*", name or ""):
-            raise Refused(f"[rename] {role} must be a field name: letters, digits and hyphens")
+        problem = rename_problem(role, name)
+        if problem:
+            raise Refused(problem)
+    for role, name in rename.items():
+        # A role keeping its own name is not the one refused: the role
+        # taking that name is.
+        twin = next((r for r, n in [*FIELD_DEFAULTS.items(), *rename.items()] if n == name and r != role), None)
+        if twin and name != FIELD_DEFAULTS[role]:
+            raise Refused(f"[rename] {role} cannot take the name {name}, which the role {twin} carries or is given: "
+                          "the tools tell one field from another by its name alone")
+        if name in ("Genre", "Tier", "Live", "Frozen"):
+            raise Refused(f"[rename] {role} cannot take the name {name}: tools/lint_docs.py reports a header field of "
+                          "that name as derived state (ONTOLOGY.md section 5, check 6)")
 
     proj = answers.get("project") or {}
     if not isinstance(proj, dict):
@@ -556,8 +592,11 @@ def set_key(text: str, table: str, key: str, value: str) -> tuple[str, bool]:
     m = re.search(r"^\[", rest[1:], re.M)
     end = m.start() + 1 if m else len(rest)
     body, tail = rest[:end], rest[end:]
-    new_body, n = re.subn(rf"^{re.escape(key)} = (?:.|\n)*?(?=^[A-Za-z_]+ = |^#|^\[|\Z)",
-                          lambda _: f"{key} = {value}\n", body, count=1, flags=re.M)
+    # The match runs up to the next row, comment, or table header, so it
+    # takes the blank lines after the old value, and they are written back.
+    new_body, n = re.subn(rf"^{re.escape(key)} = (?:.|\n)*?(?=^[A-Za-z0-9_-]+ = |^#|^\[|\Z)",
+                          lambda m: f"{key} = {value}\n" + m.group(0)[len(m.group(0).rstrip("\n")) + 1:],
+                          body, count=1, flags=re.M)
     return (text[:start + 1] + new_body + tail, True) if n else (text, False)
 
 
@@ -971,10 +1010,14 @@ registry_required = ["Authors", "Title", "Where", "Year", "Identifier", "Keyword
 [rename]
 # A header field whose name this project's discipline has taken
 # (GLOSSARY.md, "Renaming a word this template uses").  Cheap now, dear
-# later.  Leave empty to keep the shipped names.  The roles are: register,
-# kind, verdict, plan, depends-on, backed-by, backs, verified-by,
-# instrument, frame, mutation, robustness, original, prerequisites,
-# serves, status, by, produced-from.
+# later.  Leave empty to keep the shipped names.  A new name is a capital
+# letter, then letters and hyphens, each from A to Z, opening with none of
+# Created, Released, Reserved, and Pre-registered (ONTOLOGY.md section
+# 1.1), and it is neither another field's name nor a derived predicate's
+# (Genre, Tier, Live, Frozen): the tools read no other as that field.  The
+# roles are: register, kind, verdict, plan,
+# depends-on, backed-by, backs, verified-by, instrument, frame, mutation,
+# robustness, original, prerequisites, serves, status, by, produced-from.
 # register = "Trust"
 '''
 
@@ -1030,17 +1073,26 @@ def ask(values: dict) -> dict:
 
     rename = dict(values.get("rename") or {})
     print("\nRenaming a header field your discipline has taken (GLOSSARY.md).")
-    print("  Blank keeps the shipped names; otherwise role=Name, comma-separated.")
+    print("  Blank keeps what is shown; otherwise role=Name, comma-separated. A Name is a")
+    print("  capital letter, then letters and hyphens, each from A to Z, opening with none")
+    print("  of Created, Released, Reserved, Pre-registered, and is no other field's nor a")
+    print("  derived predicate's (ONTOLOGY.md section 1.1).")
     while True:
         got = input(f"    [{', '.join(f'{k}={v}' for k, v in rename.items())}] > ").strip()
         parts = [p for p in got.split(",") if p.strip()] if got else []
         pairs = [p.split("=", 1) for p in parts if "=" in p]
-        bad = [p.strip() for p in parts if "=" not in p] + [
-            r.strip() for r, n in pairs if r.strip() not in FIELD_DEFAULTS
-            or not re.fullmatch(r"[A-Za-z][A-Za-z0-9-]*", n.strip())]
+        bad = [f"{p.strip()} is not a role=Name pair" for p in parts if "=" not in p] + [
+            problem for problem in (rename_problem(r.strip(), n.strip()) for r, n in pairs) if problem]
+        if not bad:
+            # A name another role carries or is given, or a derived
+            # predicate's, is refused by check_answers, which sees every pair.
+            try:
+                check_answers({"rename": {**rename, **{r.strip(): n.strip() for r, n in pairs}}})
+            except Refused as e:
+                bad.append(str(e))
         if not bad:
             break
-        print(f"    not a role=Name pair this program can use: {', '.join(bad)}; again:")
+        print(f"    {'; '.join(bad)}; again:")
     for role, name in pairs:
         rename[role.strip()] = name.strip()
     values["rename"] = rename
@@ -1433,7 +1485,12 @@ def selftest() -> int:
                          ({"slots": {"VOICE": "open by decision (prompt 001); filled when a write-up is opened"}},
                           "a slot left open by decision, given as a value"),
                          ({"machine": {"parties": ["none", "a coauthor"]}}, "none beside a party"),
-                         ({"machine": {"dashes": "long dashes"}}, "a dash rule the tools do not know")):
+                         ({"machine": {"dashes": "long dashes"}}, "a dash rule the tools do not know"),
+                         ({"rename": {"register": "trust"}}, "a renamed field the tools would not read, opening in lower case"),
+                         ({"rename": {"frame": "Frame2"}}, "a renamed field the tools would not read, a digit in it"),
+                         ({"rename": {"register": "Kind"}}, "a renamed field given the name another field carries"),
+                         ({"rename": {"register": "Trust", "verdict": "Trust"}}, "two fields renamed to one name"),
+                         ({"rename": {"kind": "Tier"}}, "a renamed field given the name of a derived predicate")):
             rc = instantiate(ROOT, Path(d) / "x", bad, quiet=True)
             check(f"refused, and nothing written: {why}", rc == 2 and not (Path(d) / "x").exists())
 
@@ -1533,6 +1590,69 @@ def selftest() -> int:
           and "{{REFERENCE_FIELDS}}" in answers_template())
     check("the closing message points to sections 1 and 4, and names no first prompt",
           "section 4" in NEXT and "section 1" in NEXT and "first prompt" not in NEXT)
+
+    # A new name passes as a field name exactly where the linter, the tools'
+    # one reader of a header field, reads it as a field and does not take
+    # its line for a stamp.  The linter is imported for its reader and for
+    # its pattern of a stamp's opening word; none of its checks is run.
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import lint_docs
+
+    def linter_reads(name: str) -> bool:
+        line = f"{name}: x"
+        return name in lint_docs.fields_of([(1, line)]) and not lint_docs.STAMP_OPENER_RE.match(line)
+    probes = list(FIELD_DEFAULTS.values()) + ["Trust", "Stated-in", "trust", "Stage2", "2nd", "Stated_in", "Stated in", "Trust:", "",
+                                              "Created-by", "Reserved", "Pre-registered-at", "Createdby"]
+    drift = [n for n in probes if (rename_problem("register", n) == "") != linter_reads(n)]
+    check("a new name passes as a field name exactly where the linter reads it as a header field", not drift, str(drift))
+    # The derived predicates refused as a new name are the configuration's,
+    # which the linter reads (ONTOLOGY.md section 5, check 6).
+    unrefused = []
+    for n in tomllib.loads(read(ROOT / "tools" / "artifacts.toml"))["fields"]["derived"]:
+        try:
+            check_answers({"rename": {"kind": n}})
+            unrefused.append(n)
+        except Refused:
+            pass
+    check("every derived predicate the configuration names is refused as a new name", not unrefused, str(unrefused))
+
+    # The prompt puts the rename question again on a line it cannot use: one
+    # with no pair, one naming no role, one with a name the tools would not
+    # read, one with a name another field carries, one with a derived
+    # predicate's; and it takes the next line, which it can use.  Every
+    # other question is answered with a blank line.
+    import builtins
+    import contextlib
+    import io
+    typed = iter([""] * (len(SLOTS) + len(MACHINE))
+                 + ["Trust", "nosuch=X", "register=Trust, frame=Frame2", "register=Kind", "kind=Tier",
+                    "register=Trust, frame=Stated-in"])
+    said, real_input = io.StringIO(), builtins.input
+    builtins.input = lambda prompt="": next(typed, "")
+    try:
+        with contextlib.redirect_stdout(said):
+            got = ask({})
+    finally:
+        builtins.input = real_input
+    check("the prompt puts a rename again until every pair is one the tools read",
+          got["rename"] == {"register": "Trust", "frame": "Stated-in"} and said.getvalue().count("; again:") == 5,
+          f"{got['rename']}, asked again {said.getvalue().count('; again:')} time(s)")
+
+    # Writing one key of a table leaves the table's other rows as they were:
+    # a role's key may carry a hyphen, and the row after the one written is
+    # where the written value ends.
+    shipped_cfg = read(ROOT / "tools" / "artifacts.toml")
+    cfg_roles = tomllib.loads(shipped_cfg)["fields"]["roles"]
+    lost = {}
+    for role in FIELD_DEFAULTS:
+        written, ok = set_key(shipped_cfg, "fields.roles", role, toml_str("Renamed-field"))
+        roles = tomllib.loads(written)["fields"]["roles"]
+        if not ok or roles != {**cfg_roles, role: "Renamed-field"}:
+            lost[role] = sorted(set(cfg_roles) - set(roles))
+        elif written.count("\n") != shipped_cfg.count("\n"):
+            lost[role] = ["a line"]
+    check("writing one role's name leaves every other role of the table as it was, the hyphenated ones after it included, "
+          "and the blank line after the last", not lost, str(lost))
 
     print(f"\n  VERDICT: {'every case decided as expected' if not failures else f'{failures} failure(s)'}")
     return 1 if failures else 0

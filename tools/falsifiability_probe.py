@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The falsifiability probe: every check program re-run under each mutation it names, in a scratch copy of the tree (CHECK_METHODOLOGY.md, What is checked mechanically, item 3, the half that executes).
 
-Created 5 September 2026; updated 16 November 2026.
+Created 5 September 2026; updated 19 November 2026.
 
 For a check that executes, the probe applies exactly the mutations the
 check names to a scratch copy and re-runs it, reporting it under CHECK-3
@@ -14,10 +14,13 @@ what construct() returns and returns the altered object, and the probe
 runs the program with that function wrapped around construct(), so main()
 sanity checks and verifies the altered object.  The program runs
 unbuffered, with the interpreter running this tool, from a copy of the
-whole tree (.git and the usual caches excepted; a large tree costs the
-copy), from the parent of the configured program directory, as
+whole tree (.git, an environment named .venv or venv, and the usual
+caches excepted; a large tree, or an environment under another name,
+costs the copy), from the parent of the configured program directory, as
 python_project/README.md, Running, says a check is run; nothing it writes
-lands in the tree.
+lands in the tree.  The probe is therefore run with the interpreter of
+the pinned environment, as that section says; which interpreter ran it
+is not checked.
 
 The matrix prints one row per program and one cell per mutation named:
 CAUGHT where the mutated run reaches a failing verdict; SURVIVES where it
@@ -38,6 +41,19 @@ them only beside its own PROBE: line, so a program's own exit status is
 never mistaken for the wrapper's.  It honors a row's `skip` list, like
 the linter.
 
+WHAT IT COSTS.  One copy of the tree, and for each program two runs plus
+one per mutation named: the direct run, the wrapped run with no
+mutation, and one run under each mutation, every one a full run of the
+check.  A program whose direct or wrapped run does not pass costs those
+runs alone, and one that names no mutation is not run.  The row of a
+program that was run ends with the runs made and their wall-clock
+seconds, and the summary line gives the seconds of the whole probe, the
+scratch copy included.  --only NNN narrows the probe to one check; the
+copy is still of the whole tree.  Cost is measured, never a gate
+(CHECK_METHODOLOGY.md section 8).  The probe does not reuse the run
+ledger's cached runs, and it runs one program at a time; a project
+whose checks are expensive may add either to its own copy of this tool.
+
 WHAT IT DOES NOT DECIDE.  A written check procedure has nothing to run:
 whether the planted alteration was caught is read from its record's
 Executions, and the probe lists the procedure and says so; an absent or
@@ -48,9 +64,9 @@ mutation set is adequate, and whether a mutation alters what the claim
 depends on, is reading.
 
 Usage
-    python3 tools/falsifiability_probe.py              every check program
-    python3 tools/falsifiability_probe.py --only NNN
-    python3 tools/falsifiability_probe.py --timeout S  seconds per run (default 600)
+    .venv/bin/python tools/falsifiability_probe.py              every check program
+    .venv/bin/python tools/falsifiability_probe.py --only NNN   one check
+    .venv/bin/python tools/falsifiability_probe.py --timeout S  seconds per run (default 600)
     python3 tools/falsifiability_probe.py --selftest
 
 Exit status: 0 no finding; 1 a survival, or a program that cannot be
@@ -67,6 +83,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import tomllib
 from pathlib import Path
 
@@ -133,20 +150,21 @@ def names_of(t: lint_docs.Tree, f: str) -> list[str]:
 
 
 def scratch_copy(root: Path, tmp: Path) -> Path:
-    """The whole tree, .git and the caches excepted, under tmp/tree."""
+    """The whole tree, .git, an environment named .venv or venv, and the caches excepted, under tmp/tree."""
     dest = tmp / "tree"
     shutil.copytree(root, dest, symlinks=True, ignore=shutil.ignore_patterns(*IGNORED))
     return dest
 
 
-def run_one(argv: list[str], cwd: Path, timeout: float) -> tuple[int | None, str]:
-    """(exit status, or None on timeout; the last PROBE: line, else the last line of stderr)."""
+def run_one(argv: list[str], cwd: Path, timeout: float) -> tuple[int | None, str, float]:
+    """(exit status, or None on timeout; the last PROBE: line, else the last line of stderr; the wall-clock seconds the run took)."""
+    t0 = time.monotonic()
     try:
         p = subprocess.run(argv, cwd=cwd, capture_output=True, text=True, timeout=timeout)
     except subprocess.TimeoutExpired:
-        return None, f"timed out after {timeout:g} s"
+        return None, f"timed out after {timeout:g} s", time.monotonic() - t0
     probe = [l for l in (p.stdout + "\n" + p.stderr).splitlines() if l.startswith("PROBE:")]
-    return p.returncode, (probe[-1] if probe else (p.stderr.strip().splitlines() or [""])[-1][:120])
+    return p.returncode, (probe[-1] if probe else (p.stderr.strip().splitlines() or [""])[-1][:120]), time.monotonic() - t0
 
 
 def classify(code: int | None, msg: str) -> tuple[str, str]:
@@ -164,6 +182,11 @@ def classify(code: int | None, msg: str) -> tuple[str, str]:
     if code == NO_VERDICT and msg.startswith("PROBE: "):
         return "ERROR", msg[7:]
     return "CAUGHT", ""
+
+
+def spent(runs: int, seconds: float) -> str:
+    """What probing one program cost, for the end of its row of the matrix."""
+    return f"  ({runs} run{'' if runs == 1 else 's'}, {seconds:.1f} s)"
 
 
 def probe(t: lint_docs.Tree, timeout: float, only: str | None = None) -> tuple[list[str], list[str], int]:
@@ -185,25 +208,27 @@ def probe(t: lint_docs.Tree, timeout: float, only: str | None = None) -> tuple[l
                 if not names:
                     matrix.append(f"  [check {num}]  (no Mutation line: the linter's CHECK-3 reports it; nothing to apply)")
                     continue
-                code, msg = run_one([sys.executable, "-u", str(scratch / prog)], cwd, timeout)
+                code, msg, secs = run_one([sys.executable, "-u", str(scratch / prog)], cwd, timeout)
                 if code != 0:
                     what = msg if code is None else f"exited {code}"
                     word = "ERROR" if code is None else "FAILS"
                     notes.append(f"NOTE      {prog}: the direct run {'did not finish (' + msg + ')' if code is None else 'reaches a failing verdict (exited ' + str(code) + ')'}; its mutations are not judged, and the verdict is read from its record")
-                    matrix.append(f"  [check {num}]  direct: {word} ({what})  " + "  ".join(f"{n}: not judged" for n in names))
+                    matrix.append(f"  [check {num}]  direct: {word} ({what})  " + "  ".join(f"{n}: not judged" for n in names) + spent(1, secs))
                     continue
-                code, msg = run_one([sys.executable, "-u", "-c", RUNNER, str(scratch / prog), ""], cwd, timeout)
+                code, msg, s = run_one([sys.executable, "-u", "-c", RUNNER, str(scratch / prog), ""], cwd, timeout)
+                secs += s
                 if code != 0:
                     detail = msg[7:] if msg.startswith("PROBE: ") else (msg if code is None else f"exited {code}")
                     if code == NO_HOOK and msg.startswith("PROBE: no "):
                         lint_docs.report("CHECK-3", prog, 1, f"cannot be probed: {detail} (the check-program template's form)")
                     else:
                         lint_docs.report("CHECK-3", prog, 1, f"cannot be probed: its verdict is not reached by calling main() as the check-program template's form does ({detail})")
-                    matrix.append(f"  [check {num}]  direct: passes  wrapped: FAILS ({detail})  " + "  ".join(f"{n}: not probed" for n in names))
+                    matrix.append(f"  [check {num}]  direct: passes  wrapped: FAILS ({detail})  " + "  ".join(f"{n}: not probed" for n in names) + spent(2, secs))
                     continue
-                cells = []
+                cells, runs = [], 2
                 for k, n in enumerate(names):
-                    code, msg = run_one([sys.executable, "-u", "-c", RUNNER, str(scratch / prog), n], cwd, timeout)
+                    code, msg, s = run_one([sys.executable, "-u", "-c", RUNNER, str(scratch / prog), n], cwd, timeout)
+                    runs, secs = runs + 1, secs + s
                     word, detail = classify(code, msg)
                     cells.append(f"{n}: {word}" + (f" ({detail})" if detail and word != "SURVIVES" else ""))
                     if word == "SURVIVES":
@@ -212,7 +237,7 @@ def probe(t: lint_docs.Tree, timeout: float, only: str | None = None) -> tuple[l
                         lint_docs.report("CHECK-3", prog, 1, f"cannot be probed: {detail} (the check-program template's form)")
                         cells += [f"{m}: not probed" for m in names[k + 1:]]
                         break
-                matrix.append(f"  [check {num}]  direct: passes  wrapped: passes  " + "  ".join(cells))
+                matrix.append(f"  [check {num}]  direct: passes  wrapped: passes  " + "  ".join(cells) + spent(runs, secs))
     for num, rec in sorted(t.checks.items()):
         if num not in t.programs and (not only or num == only):
             if names_of(t, rec):
@@ -234,7 +259,9 @@ def run(root: Path, timeout: float, only: str | None) -> int:
     if t.programs and not t.dir_of_kind("check-program"):
         print("falsifiability_probe: the check-program row's glob names no directory", file=sys.stderr)
         return 2
+    t0 = time.monotonic()
     matrix, notes, ran = probe(t, timeout, only)
+    seconds = time.monotonic() - t0
     print("The matrix:" if matrix else "The matrix: (no check program)")
     for m in matrix:
         print(m)
@@ -243,7 +270,7 @@ def run(root: Path, timeout: float, only: str | None) -> int:
     for n in notes:
         print(n)
     k = len(lint_docs.FINDINGS)
-    print(f"\nprobe: {ran} program(s) probed, {k} finding(s)")
+    print(f"\nprobe: {ran} program(s) probed, {k} finding(s)" + (f"; {seconds:.1f} s in all, the scratch copy included" if ran else ""))
     return 1 if k else 0
 
 
@@ -293,7 +320,7 @@ def selftest() -> int:
     f, m, _, _, _ = run_on(sub(P2, GOOD, '"variant-reading": "not a function"'))
     case("a name bound to something not callable is UNBOUND, said so", not f and any("UNBOUND (MUTATIONS['variant-reading'] is bound to a value that is not callable)" in x for x in m), str((f, m)))
     f, m, n, _, _ = run_on(sub(P2, CHECK, 'report("x", value("count", obj) == 2)'))
-    case("a program whose direct run fails is noted, not reported, and not judged", not f and any("reaches a failing verdict (exited 1)" in x for x in n) and any("direct: FAILS (exited 1)  variant-reading: not judged" in x for x in m), str((f, m, n)))
+    case("a program whose direct run fails is noted, not reported, and not judged", not f and any("reaches a failing verdict (exited 1)" in x for x in n) and any("direct: FAILS (exited 1)  variant-reading: not judged  (1 run, " in x for x in m), str((f, m, n)))
     f, m, n, _, _ = run_on(sub(P2, "def construct():\n", "import time\ntime.sleep(5)\ndef construct():\n"), timeout=1)
     case("a program whose direct run does not finish is noted as ERROR, not judged", not f and any("direct: ERROR (timed out" in x for x in m) and any("did not finish" in x for x in n), str((f, m, n)))
     f, m, _, _, _ = run_on(sub(P2, GOOD, '"variant-reading": lambda o: 1 / 0'))
@@ -303,7 +330,7 @@ def selftest() -> int:
     f, m, _, _, _ = run_on(sub(P2, GOOD, '"variant-reading": lambda o: __import__("time").sleep(5) or o'), timeout=1)
     case("a mutated run that exceeds the timeout is ERROR", not f and any("ERROR (timed out" in x for x in m), str((f, m)))
     f, m, _, _, _ = run_on(sub(P2, "def construct():\n    return len(sys.argv)\ndef main():\n    obj = construct()\n", "def main():\n    obj = len(sys.argv)\n"))
-    case("a program without construct() cannot be probed and is reported", any("cannot be probed: no construct() to wrap" in x[3] for x in f) and any("wrapped: FAILS (no construct() to wrap)" in x for x in m), str((f, m)))
+    case("a program without construct() cannot be probed and is reported", any("cannot be probed: no construct() to wrap" in x[3] for x in f) and any("wrapped: FAILS (no construct() to wrap)  variant-reading: not probed  (2 runs, " in x for x in m), str((f, m)))
     f, m, _, _, _ = run_on(sub(P2, 'if __name__ == "__main__":\n    raise SystemExit(main())', 'if __name__ == "__main__":\n    SEED = 1\n    raise SystemExit(main())').__call__ and (lambda files: (sub(P2, "def main():\n    obj = construct()\n", "def main():\n    obj = construct() + SEED - 1\n")(files), sub(P2, 'if __name__ == "__main__":\n    raise SystemExit(main())', 'if __name__ == "__main__":\n    SEED = 1\n    raise SystemExit(main())')(files))))
     case("a program that passes directly but not through the wrapper is reported, not judged", any("its verdict is not reached by calling main()" in x[3] for x in f) and any("wrapped: FAILS" in x and "not probed" in x for x in m), str((f, m)))
     f, m, _, _, _ = run_on(sub(P2, "    return 1 if FAILURES else 0\n", "    return None\n"))
@@ -315,7 +342,7 @@ def selftest() -> int:
                          sub(P2, GOOD, GOOD + ', "other": lambda o: o')(files),
                          sub(K2, "Mutation: variant-reading", "Mutation: variant-reading, other")(files))
     f, m, _, _, _ = run_on(two, cfg=two_cfg)
-    case("two mutations named: one caught, one surviving, one finding", len(f) == 1 and any("variant-reading: CAUGHT  other: SURVIVES" in x for x in m), str((f, m)))
+    case("two mutations named: one caught, one surviving, one finding", len(f) == 1 and any("variant-reading: CAUGHT  other: SURVIVES  (4 runs, " in x for x in m), str((f, m)))
     f, m, n, _, _ = run_on(sub(K2, "Mutation: variant-reading", "Mutation: variant-reading, base-witness-swap"), cfg=two_cfg.replace('"other"', '"base-witness-swap"'))
     case("a name only the record carries is applied and comes out UNBOUND, with a note", not f and any("base-witness-swap: UNBOUND" in x for x in m) and any("differs from the program's" in x for x in n), str((f, m, n)))
     f, m, _, _, _ = run_on(lambda files: (sub(P2, "Mutation: variant-reading\n", "Mutation: variant-reading\nRobustness: other\n")(files), sub(P2, GOOD, GOOD + ', "other": lambda o: o')(files)), cfg=two_cfg)
@@ -341,6 +368,25 @@ def selftest() -> int:
         with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
             code = run(tmp, 30, "042")
         case("an unknown --only number exits 2", code == 2, str(code))
+    started, real_run = [], subprocess.run
+    subprocess.run = lambda argv, **kw: started.append(argv[0]) or real_run(argv, **kw)
+    try:
+        run_on(lambda files: None)
+    finally:
+        subprocess.run = real_run
+    case("every run of a program is started with the interpreter running this tool: the direct run, the wrapped one, one per mutation",
+         [a for a in started if a != "git"] == [sys.executable] * 3, str(started))
+    with tempfile.TemporaryDirectory() as d:
+        tmp, files, out = Path(d), lint_docs.fixture(), io.StringIO()
+        sub(P2, "def construct():\n", 'def construct():\n    __import__("time").sleep(0.5)\n')(files)
+        lint_docs.scratch_project(tmp, files, lint_docs.scratch_config())
+        lint_docs.scratch_commit(tmp)
+        with contextlib.redirect_stdout(out):
+            run(tmp, 30, None)
+        row = re.search(r"variant-reading: CAUGHT  \((\d+) runs, (\d+\.\d) s\)$", out.getvalue(), re.M)
+        total = re.search(r"; (\d+\.\d) s in all", out.getvalue())
+        case("the cost is printed: two runs and one per mutation on the program's row, with their seconds, and the whole probe's after",
+             bool(row and total) and row.group(1) == "3" and 1.5 <= float(row.group(2)) <= float(total.group(1)), out.getvalue())
     print(f"\n  VERDICT: {'every case decided as expected' if not failures else f'{failures} failure(s)'}")
     return 1 if failures else 0
 

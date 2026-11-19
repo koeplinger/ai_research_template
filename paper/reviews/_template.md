@@ -28,7 +28,7 @@ A referee pass by <!-- reviewer: a party from the roster, written as a By: line 
 
 | # | Where | Finding | Fix proposed | Refuted? | Outcome |
 |---|---|---|---|---|---|
-| 1 | | | | <!-- stands / refuted, why / narrowed, the finding as it survives; a refuter that returned nothing gave no verdict: play the role again, or enter the main thread's own verdict, marked as such (MANIFESTO.md section 14) --> | <!-- applied, see changelog / brought to the researcher, prompt NNN / runs against a ruling, prompt NNN; not proposed / outside the list being finished, left for the next version, prompt NNN --> |
+| 1 | | | | <!-- stands / refuted, why / narrowed, the finding as it survives; a refuter that returned nothing gave no verdict: play the role again, or enter the main thread's own verdict, marked as such (MANIFESTO.md section 14) --> | <!-- applied, see changelog / brought to the researcher, prompt NNN / runs against a ruling, prompt NNN; not proposed / outside the list being finished, left for the next version, prompt NNN. In a review a plan keeps live, a finding brought takes its ruling when given: applied at the researcher's ruling, prompt NNN, see changelog / not applied, at the researcher's ruling, prompt NNN / left for the next version, prompt NNN --> |
 
 ## What the released document rests on
 

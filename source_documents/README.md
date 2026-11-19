@@ -1,6 +1,6 @@
 # Source documents
 
-*Created 3 September 2026; updated 16 November 2026.*
+*Created 3 September 2026; updated 19 November 2026.*
 
 The sources of record (`PRECEDENCE.md`, tier 2): what a source *actually
 says*, read against the source itself in the form the project designates.
@@ -20,11 +20,15 @@ key as registered.
 
 One row per source of record. A row names **either** a held file or
 folder with its license note **or** a locator with its access conditions,
-never neither (`ONTOLOGY.md` §2.1, `held` and `consulted-at`).
+never neither (`ONTOLOGY.md` §2.1, `held` and `consulted-at`). Where the
+origin publishes a checksum for a held file, the row records that file's
+SHA-256 checksum beside it; where the form consulted is a working copy
+kept outside version control (*Rules*, below), the row records the
+working copy's beside the locator.
 
 | Key | What | File or folder, or locator | License note, or access conditions | Form consulted |
 |---|---|---|---|---|
-| <!-- [ShortKey] --> | <!-- one line --> | <!-- `Key_short_title.pdf` \| shelfmark, release and version, or URL --> | <!-- the license that permits holding it, with the date retrieved \| the archive's terms, the data license, the closure period --> | <!-- original, facsimile, microfilm, digital surrogate, printed table, data release --> |
+| <!-- [ShortKey] --> | <!-- one line --> | <!-- `Key_short_title.pdf` \| shelfmark, release and version, or URL; then the SHA-256 checksum, where the paragraph above asks for one --> | <!-- the license that permits holding it, with the date retrieved \| the archive's terms, the data license, the closure period --> | <!-- original, facsimile, microfilm, digital surrogate, printed table, data release --> |
 
 ## Rules
 

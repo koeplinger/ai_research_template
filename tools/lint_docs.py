@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The genre and ontology linter: every statically decidable check, in one program.
 
-Created 4 September 2026; updated 18 November 2026.
+Created 4 September 2026; updated 19 November 2026.
 
 Reads tools/artifacts.toml, the single source of every path pattern and
 vocabulary (ONTOLOGY.md section 7), walks every tracked or untracked-but-
@@ -49,8 +49,11 @@ values agree with its program's RESULT line (the concordance tool, item 4);
 which version a changelog's release row belongs to (read, not checked);
 whether a file last written on a day was changed that day or only
 rewritten, as a stash or an edit to its header rewrites it (GENRES-3;
-DOCUMENT_GENRES.md, What the checker verifies, item 3); everything the
-rulebooks assign to reading.
+DOCUMENT_GENRES.md, What the checker verifies, item 3); whether a section
+a pointer names says what the pointer promised, and whether a section
+named otherwise than by an italicized name at once after a backticked
+path exists (GENRES-7; item 7 there); everything the rulebooks assign
+to reading.
 
 Usage
     python3 tools/lint_docs.py              check; exit 1 on any finding (--quiet: the summary line only when there is a finding)
@@ -64,6 +67,7 @@ from __future__ import annotations
 
 import ast
 import datetime
+import posixpath
 import re
 import subprocess
 import sys
@@ -147,15 +151,30 @@ PAPER_PHRASES = ["without loss of generality", "clearly", "it is easy to see",
                  "the point at issue"]
 
 NUM = r"[0-9]{3}[a-z]?"
+# A registry key as the token grammar reads it (ONTOLOGY.md section 1.3): a
+# capital letter, then letters and digits, three to thirty-two characters.
+KEY = r"[A-Z][A-Za-z0-9]{2,31}"
 TOKEN_CLAIM = re.compile(rf"\[claim ({NUM})\]")
 TOKEN_CHECK = re.compile(rf"\[check ({NUM})\]")
 TOKEN_FINDING = re.compile(r"\[finding (F[0-9]{3,})\]")
 TOKEN_TENSION = re.compile(r"\[tension (T[0-9]{3,})\]")
 TOKEN_PLAN = re.compile(rf"(?<![\w/])plan ({NUM})(?![\w-])")
-TOKEN_KEY = re.compile(r"\[([A-Z][A-Za-z0-9]{2,31})(?:,\s*[^\]]+)?\](?![\(\[])")
+TOKEN_KEY = re.compile(rf"\[({KEY})(?:,\s*[^\]]+)?\](?![\(\[])")
 LINK_RE = re.compile(r"\[([^\]]*)\](?:\(([^)]+)\)|\[[^\]]*\])")
-BACKTICK_PATH_RE = re.compile(r"`([A-Za-z0-9_][A-Za-z0-9_./-]*(?:/|\.(?:md|py|toml|txt|sh|json|tex|pdf)))`")
+BACKTICK_PATH_RE = re.compile(r"`((?:\.\.?/)*[A-Za-z0-9_][A-Za-z0-9_./-]*(?:/|\.(?:md|py|toml|txt|sh|json|tex|pdf)))`")
 PLACEHOLDER = re.compile(r"NNN|YYYY|<|>|\{\{|_short_|\*|\[0-9\]|name\.md|topic\.md|D Month|\bv[NM](?=[_.])|_v[NM]\b")
+# A section named in a pointer (DOCUMENT_GENRES.md, What the checker verifies,
+# item 7): a backticked path to a markdown file and, at once after it, an
+# italicized name.  Between the two may stand a section number, then a comma
+# or an opening parenthesis; the pointer may wrap between the path and the
+# name or inside the name, which runs to 120 characters and crosses no
+# blank line.
+_WRAP = r"(?:[ \t]+|[ \t]*\n[ \t>]*)"
+SECTION_POINTER_RE = re.compile(
+    r"`([A-Za-z0-9_.][A-Za-z0-9_./-]*\.md)`"
+    rf"(?:{_WRAP}?§ ?[0-9]+(?:\.[0-9]+)*)?"
+    rf"(?:,{_WRAP}|{_WRAP}\(|{_WRAP})"
+    r"\*(?=\S)((?:[^*\n]|\n(?![ \t>]*\n)){1,120}?)(?<=\S)\*(?![\w*])")
 
 FINDINGS: list[tuple[str, str, int, str]] = []
 _TREE: "Tree | None" = None
@@ -333,8 +352,9 @@ def F(role: str) -> str:
 
 
 def bind_field_names(cfg: dict) -> None:
-    """Adopt the project's field names from [fields.roles]; unknown roles are
-    reported by the configuration check, not here."""
+    """Adopt the project's field names from [fields.roles].  A role the tools
+    do not know, and a name no tool reads as a field, are reported by
+    check_ont_1_fields at the configuration, not here."""
     _NAMES.update(ROLES)
     for role, name in (cfg.get("fields", {}).get("roles") or {}).items():
         if role in ROLES and isinstance(name, str) and name:
@@ -609,7 +629,10 @@ class Tree:
         self.keys = set()
         for f in self.files:
             if self.kind(f) == "registry":
-                self.keys |= set(re.findall(r"^### \[([A-Z][A-Za-z0-9]{2,31})\]", self.text[f], re.M))
+                # A heading in a comment or in fenced code is no entry: no tool
+                # reads there (ONTOLOGY.md section 1.3).
+                visible = re.sub(r"```.*?```", _blank, re.sub(r"<!--.*?-->", _blank, self.text[f], flags=re.S), flags=re.S)
+                self.keys |= set(re.findall(rf"^###[ \t]+\[({KEY})\]", visible, re.M))
         self.basenames = {Path(f).name for f in self.files} | {p for f in self.files for p in Path(f).parts[:-1]}
         self._head_status: dict[str, str] | None = None
         self._head_paths: set[str] | None = None
@@ -698,7 +721,10 @@ class Tree:
         if g == "release":
             if any(s.startswith("Released ") for _, s in header):
                 return "frozen"
-            if row["kind"] == "changelog" and re.search(r"^\| \(release\) \|", text, re.M):
+            # The release row is written once its second cell names the
+            # release (ONTOLOGY.md section 1.4): the row the changelog
+            # template pre-prints, its cells comments, releases nothing.
+            if row["kind"] == "changelog" and re.search(r"^\| \(release\) \|[ \t]*[^|\s]", strip_unread(text, True), re.M):
                 return "frozen"
             return "current-state"
         return "current-state"
@@ -874,7 +900,49 @@ def check_genres_6_ledger(t: Tree) -> None:
             report("GENRES-6", idx, 1, f"index has no row for plan {num}")
 
 
+def plain_words(s: str) -> str:
+    """A name as two writings of it are compared: emphasis and code marks,
+    line wrapping, and a closing period or colon aside, case folded."""
+    s = re.sub(r"\n[ \t>]*", " ", s)
+    return " ".join(re.sub(r"[`*]", "", s).split()).strip(" .:").casefold()
+
+
+def labels_of(text: str) -> list[str]:
+    """What a pointer may name in a markdown file, as plain words: every
+    heading written with hash marks at the start of a line, every span set
+    in bold with asterisks, and every column heading of a table whose rows
+    open a line with a pipe and close with one.  A heading or a table set
+    in a block quote or indented in a list is not read, nor is an
+    underlined heading, and a link in a label keeps its target.  Comments
+    and fenced code are not read, and an asterisk inside a code span opens
+    no label."""
+    text = re.sub(r"```.*?```", _blank, re.sub(r"<!--.*?-->", _blank, text, flags=re.S), flags=re.S)
+    text = re.sub(r"`[^`\n]+`", lambda m: m.group(0).replace("*", " "), text)
+    out = [m.group(1) for m in re.finditer(r"^#{1,6}[ \t]+(.+?)[ \t#]*$", text, re.M)]
+    out += [m.group(1) for m in re.finditer(r"\*\*(?=\S)((?:[^*\n]|\n(?![ \t>]*\n))+?)(?<=\S)\*\*", text)]
+    for m in re.finditer(r"^(\|.*\|)[ \t]*\n\|[ \t:|-]+\|[ \t]*$", text, re.M):
+        out += m.group(1).strip().strip("|").split("|")
+    return [plain_words(x) for x in out]
+
+
+def named_markdown(t: Tree, f: str, c: str) -> str | None:
+    """The one file of the tree a path named in `f` resolves to, as the
+    path half takes it: beside `f` or from the root, and, for a bare name
+    found at neither, the one file outside the exempt genre that carries
+    it.  None where it resolves to no file, or to more than one, as a bare
+    `README.md` does where one stands beside `f` and another at the root."""
+    here = {rel for rel in (posixpath.normpath(posixpath.join(posixpath.dirname(f), c)), posixpath.normpath(c)) if rel in t.text}
+    if here:
+        return here.pop() if len(here) == 1 else None
+    if "/" not in c:
+        same = [g for g in t.files if Path(g).name == c and t.genre(g) != "exempt"]
+        if len(same) == 1:
+            return same[0]
+    return None
+
+
 def check_genres_7_paths(t: Tree) -> None:
+    labels: dict[str, list[str]] = {}
     for f in t.files:
         if t.genre(f) != "current-state" or t.is_template(f):
             continue
@@ -888,12 +956,36 @@ def check_genres_7_paths(t: Tree) -> None:
                 if not c or c in seen or PLACEHOLDER.search(c) or "://" in c or c.startswith("mailto:"):
                     continue
                 seen.add(c)
-                if (base / c).exists() or (t.root / c).exists():
+                if (base / c).exists() or (not c.startswith(".") and (t.root / c).exists()):
                     continue
                 bare = c.rstrip("/")
                 if "/" not in bare and bare in t.basenames:
                     continue
-                report("GENRES-7", f, i, f"named path does not exist: {c}")
+                report("GENRES-7", f, i, f"named path does not exist: {c}", part="paths")
+        # A section named in a pointer, read over the whole text because a
+        # pointer wraps across lines.  Each name is reported once in a file,
+        # at the line of its path, and only where the path resolves to one
+        # markdown file and the name opens with a capital letter or a digit:
+        # an italic in lower case is most often a quotation or an emphasis,
+        # so a section named in lower case is not checked.
+        named: set[tuple[str, str]] = set()
+        # A comment mark that opens a line of a program or a configuration
+        # file is set aside, so that a pointer wrapped across comment lines
+        # reads as it does in a docstring.
+        if (t.rows[f] or {}).get("header") in ("docstring", "comment"):
+            clean = re.sub(r"^([ \t]*)#", r"\1 ", clean, flags=re.M)
+        for m in SECTION_POINTER_RE.finditer(clean):
+            shown = " ".join(re.sub(r"\n[ \t>]*", " ", m.group(2)).split())
+            target, name = named_markdown(t, f, m.group(1)), plain_words(shown)
+            if not (shown[:1].isupper() or shown[:1].isdigit()) or not target or (target, name) in named:
+                continue
+            named.add((target, name))
+            if target not in labels:
+                labels[target] = labels_of(t.text[target])
+            if not any(re.search(rf"(?<!\w){re.escape(name)}(?!\w)", label) for label in labels[target]):
+                report("GENRES-7", f, clean[:m.start()].count("\n") + 1,
+                       f"named section does not exist: {m.group(1)} carries no heading, bold label, or column heading {shown!r}",
+                       part="sections")
 
 
 def check_genres_8_index(t: Tree) -> None:
@@ -961,6 +1053,22 @@ def check_edit_2(t: Tree) -> None:
 def check_ont_1_fields(t: Tree) -> None:
     names = set(t.cfg["fields"]["names"]) | set(_NAMES.values())
     derived = set(t.cfg["fields"]["derived"])
+    # A name the reader cannot read is reported where it is written: every
+    # artifact carrying it would otherwise lose the field without a word.
+    for role, name in (t.cfg["fields"].get("roles") or {}).items():
+        if role not in ROLES:
+            report("ONT-1", CONFIG, 1, f"[fields.roles] names no role the tools know: {role}")
+        elif not (isinstance(name, str) and re.fullmatch(r"[A-Z][A-Za-z-]*", name)) or STAMP_OPENER_RE.match(name + ":"):
+            report("ONT-1", CONFIG, 1, f"[fields.roles] {role} = {name!r}: a field name is a capital letter, then letters and "
+                   "hyphens, each from A to Z, opening with none of Created, Released, Reserved, Pre-registered (ONTOLOGY.md section 1.1)")
+    # A project's own name, in [fields] names, is held to the same form; a
+    # name a role carries is checked by the loop above, and not twice.
+    carried = {v for v in (t.cfg["fields"].get("roles") or {}).values() if isinstance(v, str)}
+    for name in t.cfg["fields"].get("names", []):
+        if isinstance(name, str) and (name in carried or re.fullmatch(r"[A-Z][A-Za-z-]*", name) and not STAMP_OPENER_RE.match(name + ":")):
+            continue
+        report("ONT-1", CONFIG, 1, f"[fields] names {name!r}: a field name is a capital letter, then letters and hyphens, "
+               "each from A to Z, opening with none of Created, Released, Reserved, Pre-registered (ONTOLOGY.md section 1.1)")
     for f, row in t.rows.items():
         if not row or row.get("header", "stamp") == "none":
             continue
@@ -1043,6 +1151,22 @@ def check_ont_2_tokens(t: Tree) -> None:
                         report("ONT-2", f, pre[0], f"Prerequisites names no plan: {n}")
 
 
+def key_problem(key: str, closed: bool = True) -> str:
+    """Why the bracketed key of a registry heading is one the token grammar
+    does not read (ONTOLOGY.md section 1.3), or "" where it reads it."""
+    if not closed:
+        return "the bracket is not closed"
+    if re.fullmatch(KEY, key):
+        return ""
+    if re.fullmatch(rf"{KEY},.*", key):
+        return "an entry heading holds the key alone, and a locus belongs to a citation of it"
+    if not re.fullmatch(r"[A-Za-z0-9]+", key):
+        return "a key is letters and digits alone, each letter from A to Z, with no space or punctuation"
+    if not re.match(r"[A-Z]", key):
+        return "a key opens with a capital letter"
+    return f"a key has 3 to 32 characters, and this one has {len(key)}"
+
+
 def check_ont_3_required(t: Tree) -> None:
     # The roster beyond the researcher and the assistant.  An empty list is
     # unfilled, and the party check is skipped; ["none"] records by decision
@@ -1082,7 +1206,7 @@ def check_ont_3_required(t: Tree) -> None:
             # reported as empty above, and on a log entry not yet committed by
             # the round check (ROUND-2).
             v = read_value(fl[name][1]).split(",")[0].strip() if name in fl else ""
-            if not v or v in ("researcher", "assistant", "deferred", "unchecked"):
+            if not v or v in ("researcher", "assistant") or (name == F("verified-by") and v in ("deferred", "unchecked")):
                 continue
             saw_party = True
             if decided and v not in parties:
@@ -1090,13 +1214,32 @@ def check_ont_3_required(t: Tree) -> None:
         if row["kind"] == "registry":
             reg = t.cfg["registry"]
             per_kind = reg.get("by_kind") or {}
-            for m in re.finditer(r"^### \[([A-Z][A-Za-z0-9]{2,31})\]\n(.*?)(?=^### |\Z)", t.text[f], re.M | re.S):
+            # An entry is read by its heading, a level-three heading holding
+            # its key in brackets.  One that opens a bracket and carries no
+            # key the token grammar reads is collected by nothing: no token
+            # can cite the entry, and its bullets go unchecked, so the
+            # heading itself is reported.  Comments and fenced code hold no
+            # heading, and a heading that opens no bracket is not an entry.
+            visible = re.sub(r"```.*?```", _blank, re.sub(r"<!--.*?-->", _blank, t.text[f], flags=re.S), flags=re.S)
+            for m in re.finditer(r"^###[ \t]+\[([^\]\n]*)(\]?)", visible, re.M):
+                why = key_problem(m.group(1), closed=bool(m.group(2)))
+                if why:
+                    report("ONT-3", f, visible[:m.start()].count("\n") + 1,
+                           f"entry heading [{m.group(1)[:40]}] carries no key the token grammar reads ({why}): no token "
+                           "can cite the entry, and its bullets are not checked (ONTOLOGY.md section 1.3)")
+            # The walk reads an entry as the key collection does: by the key
+            # that opens its heading, whatever follows it on the line, in the
+            # view blanked above.  A heading that ends the file with no line
+            # break is an entry all the same, and an entry ends at the next
+            # heading of its own level or a higher one, so that a bullet
+            # under a later section heading is not counted as its own.
+            for m in re.finditer(rf"^###[ \t]+\[({KEY})\][^\n]*(?:\n|\Z)(.*?)(?=^#{{1,3}}[ \t]|\Z)", visible, re.M | re.S):
                 key, body = m.group(1), m.group(2)
                 # An entry may declare its kind; the required bullets are then
                 # that kind's, so a registry mixing kinds enforces more than
                 # their intersection (evidence_and_reasoning/references/README.md).
                 km = re.search(r"^- Kind:[ \t]*(.+?)[ \t]*$", body, re.M)
-                ekind = km.group(1) if km else ""
+                ekind = km.group(1).strip() if km else ""
                 need = list(reg.get("required", []))
                 if per_kind:
                     if ekind and ekind not in per_kind:
@@ -1338,8 +1481,8 @@ def fixture() -> dict[str, str]:
         "evidence_and_reasoning/claims/001_a.md": f"# Claim 001: a\n\n{S}\nRegister: OPEN\nKind: documentary\nVerdict: none\nPlan: 001, task 1\nVerified-by: unchecked\nBacked-by: [check 001]\n\n## Claim\n\nSays so [Key1, p. 2].\n",
         "evidence_and_reasoning/claims/002_b.md": f"# Claim 002: b\n\n{S}\nRegister: VERIFIED\nKind: documentary\nVerdict: confirmed\nPlan: 002, task 1\nVerified-by: researcher\nBacked-by: [check 002]\n\n## Claim\n\nHolds [Key1, f. 3r].\n",
         "evidence_and_reasoning/checks/README.md": f"# Checks\n\n{S}\n\n| Check |\n|---|\n| [001](001_a.md) |\n| [002](002_b.md) |\n",
-        "evidence_and_reasoning/checks/001_a.md": f"# Check 001: a\n\n{S}\nPlan: 001, task 1\nBacks: [claim 001]\nInstrument: the edition\nMutation: variant-reading\n\n## 1\n\nx\n",
-        "evidence_and_reasoning/checks/002_b.md": f"# Check 002: b\n\n{S}\nPlan: 002, task 1\nBacks: [claim 002]\nInstrument: the edition\nMutation: variant-reading\n\n## 1. What is checked\n\ny\n\n## 4. Results\n\ncount = 1\n",
+        "evidence_and_reasoning/checks/001_a.md": f"# Check 001: a\n\n{S}\nPlan: 001, task 1\nBacks: [claim 001]\nInstrument: the edition\nMutation: variant-reading\nBy: researcher\n\n## 1\n\nx\n",
+        "evidence_and_reasoning/checks/002_b.md": f"# Check 002: b\n\n{S}\nPlan: 002, task 1\nBacks: [claim 002]\nInstrument: the edition\nMutation: variant-reading\nBy: assistant, not reported\n\n## 1. What is checked\n\ny\n\n## 4. Results\n\ncount = 1\n",
         "evidence_and_reasoning/research_plans/README.md": f"# Plans\n\n{S}\n\n| Plan |\n|---|\n| [001](001_a.md) |\n| [002](002_b.md) |\n| [ROADMAP.md](ROADMAP.md) |\n",
         "evidence_and_reasoning/research_plans/001_a.md": f"# Plan 001: a\n\n{S}\nStatus: ENGAGED 1 January 2026\nServes: none, setup\nPrerequisites: none\n\n## Execution status\n\n| Task | State |\n|---|---|\n| 1 | done |\n",
         "evidence_and_reasoning/research_plans/002_b.md": f"# Plan 002: b\n\n{S}\nStatus: CLOSED 2 January 2026, verdict COMPLETE\nServes: none, setup\nPrerequisites: 001\n\n## Execution status\n\n| Task | State |\n|---|---|\n| 1 | done |\n",
@@ -1358,7 +1501,7 @@ def fixture() -> dict[str, str]:
         "python_project/README.md": f"# Py\n\n{S}\n\n| File |\n|---|\n| [src/](src/) |\n| [conftest.py](conftest.py) |\n",
         "python_project/conftest.py": '"""Puts src on the path.\n\nCreated 1 January 2026; updated 1 January 2026.\n"""\nimport sys\n',
         "python_project/src/README.md": f"# Src\n\n{S}\n\n| File |\n|---|\n| [check_002_b.py](check_002_b.py) |\n",
-        "python_project/src/check_002_b.py": '"""Check 002: b.\n\nCreated 1 January 2026; updated 1 January 2026.\nPlan: 002, task 1\nBacks: [claim 002]\nInstrument: x\nMutation: variant-reading\n"""\nimport sys\nFAILURES = []\nVALUES = {}\ndef report(n, ok, d=""):\n    if not ok:\n        FAILURES.append(n)\ndef value(n, v):\n    VALUES[n] = v\n    return v\nMUTATIONS: dict[str, "callable"] = {"variant-reading": lambda o: o + 1}\nBASIS: list[str] = []\ndef construct():\n    return len(sys.argv)\ndef main():\n    obj = construct()\n    report("x", value("count", obj) == 1)\n    print("RESULT: confirmed" + "".join(f"; {k}={v}" for k, v in VALUES.items()))\n    return 1 if FAILURES else 0\nif __name__ == "__main__":\n    raise SystemExit(main())\n',
+        "python_project/src/check_002_b.py": '"""Check 002: b.\n\nCreated 1 January 2026; updated 1 January 2026.\nPlan: 002, task 1\nBacks: [claim 002]\nInstrument: x\nMutation: variant-reading\nBy: assistant, not reported\n"""\nimport sys\nFAILURES = []\nVALUES = {}\ndef report(n, ok, d=""):\n    if not ok:\n        FAILURES.append(n)\ndef value(n, v):\n    VALUES[n] = v\n    return v\nMUTATIONS: dict[str, "callable"] = {"variant-reading": lambda o: o + 1}\nBASIS: list[str] = []\ndef construct():\n    return len(sys.argv)\ndef main():\n    obj = construct()\n    report("x", value("count", obj) == 1)\n    print("RESULT: confirmed" + "".join(f"; {k}={v}" for k, v in VALUES.items()))\n    return 1 if FAILURES else 0\nif __name__ == "__main__":\n    raise SystemExit(main())\n',
         "tools/README.md": f"# Tools\n\n{S}\n\n| File |\n|---|\n| [artifacts.toml](artifacts.toml) |\n",
         ".gitignore": "*.log\n.privacy/\n.run_ledger.json*\n__pycache__/\n*.py[cod]\n",
     }
@@ -1384,7 +1527,7 @@ def scratch_config() -> str:
         rest = cfg_text[start + 1:]
         m = re.search(r"^\[", rest[1:], re.M)
         end = m.start() + 1 if m else len(rest)
-        body = re.sub(rf"^{key} = (?:.|\n)*?(?=^[A-Za-z_]+ = |^#|^\[|\Z)",
+        body = re.sub(rf"^{key}[ \t]*=(?:.|\n)*?(?=^[A-Za-z0-9_-]+[ \t]*=|^#|^\[|\Z)",
                       f"{key} = {value}\n", rest[:end], count=1, flags=re.M)
         cfg_text = cfg_text[:start + 1] + body + rest[end:]
     return cfg_text
@@ -1515,6 +1658,7 @@ def selftest() -> int:
         return lambda t, f: w(t, rel, f[rel] + extra)
 
     C1, C2, K2, P2 = "evidence_and_reasoning/claims/001_a.md", "evidence_and_reasoning/claims/002_b.md", "evidence_and_reasoning/checks/002_b.md", "python_project/src/check_002_b.py"
+    K1, LONG_KEY = "evidence_and_reasoning/checks/001_a.md", "K" + "e" * 32
     run_case("a rulebook with no stamp", "GENRES-1", "MANIFESTO.md", "no header stamp", lambda t, f: w(t, "MANIFESTO.md", "# M\n\nRules.\n"))
     run_case("a stamp with trailing text", "GENRES-1", "MANIFESTO.md", "exact form", sub("MANIFESTO.md", STAMP, "*Created 1 January 2026; updated 1 January 2026 (typo).*"))
     run_case("a committed log entry edited", "GENRES-2", "prompt_logs/001_setup.md", "modified", add("prompt_logs/001_setup.md", "\nafterthought\n"))
@@ -1599,10 +1743,58 @@ def selftest() -> int:
     run_case("a plan whose Status: is malformed", "GENRES-4", "evidence_and_reasoning/research_plans/001_a.md", "three forms", sub("evidence_and_reasoning/research_plans/001_a.md", "Status: ENGAGED 1 January 2026", "Status: Engaged"))
     run_case("historical voice in a rulebook", "GENRES-5", "MANIFESTO.md", "previously", add("MANIFESTO.md", "\nThis section previously read otherwise.\n"))
     run_case("a stamp with a colon narrative", "GENRES-5", "MANIFESTO.md", "change narrative", add("MANIFESTO.md", "\nUpdated 2 January 2026: clause tightened.\n"))
+    # A changelog's release row is written once its second cell names the
+    # release: the row its template pre-prints, comments for cells, leaves
+    # the changelog live, and the checks of a live file still read it.
+    CL = "paper/v1_to_v2_changelog.md"
+    run_case("a changelog whose release row still holds the template's comments is live", "GENRES-5", CL, "previously",
+             add(CL, "| (release) | <!-- vM released D Month YYYY --> | <!-- the researcher's direction, prompt NNN --> | |\n\nThe heading previously read otherwise.\n"))
+    absent_case("and one whose release row names the release is frozen", "GENRES-5", CL, "previously",
+                add(CL, "| (release) | v2 released 3 January 2026 | the researcher's direction, prompt 001 | |\n\nThe heading previously read otherwise.\n"))
     run_case("index status disagreeing with the plan", "GENRES-6", "evidence_and_reasoning/research_plans/ROADMAP.md", "status column", sub("evidence_and_reasoning/research_plans/ROADMAP.md", "| ENGAGED |", "| DRAFT |"))
     run_case("a plan with no index row", "GENRES-6", "evidence_and_reasoning/research_plans/ROADMAP.md", "no row for plan", sub("evidence_and_reasoning/research_plans/ROADMAP.md", "| [002](002_b.md) | b | CLOSED |\n", ""))
     run_case("a named path that does not exist", "GENRES-7", "MANIFESTO.md", "does not exist", add("MANIFESTO.md", "\nSee `tools/nothing.py`.\n"))
     run_case("a path named in a docstring", "GENRES-7", "python_project/conftest.py", "does not exist", sub("python_project/conftest.py", "Puts src on the path.", "Puts `src/gone.py` on the path."))
+    run_case("a relative path that does not exist", "GENRES-7", "tools/README.md", "does not exist: ../nothing.md", add("tools/README.md", "\nSee `../nothing.md`.\n"))
+    # A section named in a pointer: an italicized name at once after a
+    # backticked path to a markdown file.  It is found under a numbered
+    # heading, as a bold label, or as a table's column heading, and the
+    # pointer may wrap; an italic in any other position, or in lower case,
+    # is no section's name; and a row may skip either half of the item.
+    G = "DOCUMENT_GENRES.md"
+    SECTIONED = f"# G\n\n{STAMP}\n\n## 3. Current state\n\n**Dated records.** Kept.\n\n| Artifact | Frozen when |\n|---|---|\n| a note | on writing |\n"
+    DANGLING = add("MANIFESTO.md", "\nSee `DOCUMENT_GENRES.md`, *Where state is recorded*.\n")
+    run_case("a section named in a pointer that the named file does not carry", "GENRES-7", "MANIFESTO.md", "named section does not exist", DANGLING)
+    run_case("a dangling section name read whole from a pointer wrapped across lines", "GENRES-7", "MANIFESTO.md", "'Where state is recorded'",
+             add("MANIFESTO.md", "\nSee (`DOCUMENT_GENRES.md` §2,\n*Where state\nis recorded*).\n"))
+    run_case("a dangling section name set in parentheses after its path", "GENRES-7", "MANIFESTO.md", "'Where state is recorded'",
+             add("MANIFESTO.md", "\nSee `DOCUMENT_GENRES.md` (*Where state is recorded*).\n"))
+    run_case("a dangling section name at once after its path, with nothing between", "GENRES-7", "MANIFESTO.md", "'Where state is recorded'",
+             add("MANIFESTO.md", "\nSee `DOCUMENT_GENRES.md` *Where state is recorded*.\n"))
+    absent_case("a section named by a numbered heading, a bold label, or a column heading is found", "GENRES-7", "MANIFESTO.md", "named section",
+                lambda t, f: (w(t, G, SECTIONED), w(t, "MANIFESTO.md", f["MANIFESTO.md"] + "\nSee `DOCUMENT_GENRES.md`, *Current\nstate*, "
+                              "`DOCUMENT_GENRES.md` §3, *Dated records*, and `DOCUMENT_GENRES.md` (*Frozen when*).\n")))
+    run_case("a name the file carries only in running prose, in a comment, and in fenced code is no label", "GENRES-7", "MANIFESTO.md", "named section does not exist",
+             lambda t, f: (w(t, G, f[G] + "\nWhere state is recorded, it stays.\n\n<!--\n## Where state is recorded\n-->\n\n```\n## Where state is recorded\n```\n"), DANGLING(t, f)))
+    absent_case("an italic not at once after the path, or in lower case, is no section's name", "GENRES-7", "MANIFESTO.md", "named section",
+                add("MANIFESTO.md", "\n`DOCUMENT_GENRES.md` reserves *Register*; it is `DOCUMENT_GENRES.md`, *not* the index, that says so (*Reads*, below).\n"))
+    run_case("a section named inside a block quote, wrapped as its lines are", "GENRES-7", "MANIFESTO.md", "'Where state is recorded'",
+             add("MANIFESTO.md", "\n> See `DOCUMENT_GENRES.md`,\n> *Where state\n> is recorded*.\n"))
+    run_case("a name that opens with a digit is a section's", "GENRES-7", "MANIFESTO.md", "'9. Where state is recorded'",
+             add("MANIFESTO.md", "\nSee `DOCUMENT_GENRES.md`, *9. Where state is recorded*.\n"))
+    run_case("a bare file name is the one file that carries it", "GENRES-7", "MANIFESTO.md", "named section does not exist: editorial_standards.md",
+             add("MANIFESTO.md", "\nSee `editorial_standards.md`, *Where state is recorded*.\n"))
+    absent_case("a bare file name that several files carry has no section checked", "GENRES-7", "MANIFESTO.md", "named section",
+                add("MANIFESTO.md", "\nSee `001_a.md`, *Where state is recorded*.\n"))
+    absent_case("a bare README.md naming one file beside the document and another at the root has no section checked", "GENRES-7",
+                "tools/README.md", "named section", add("tools/README.md", "\nSee `README.md`, *Where state is recorded*.\n"))
+    run_case("a section name wrapped across the comment lines of a program", "GENRES-7", "python_project/conftest.py", "'Where state is recorded'",
+             add("python_project/conftest.py", "# See `DOCUMENT_GENRES.md`,\n# *Where state\n# is recorded*.\n"))
+    RULEBOOK_ROW = 'glob = "MANIFESTO.md"\ngenre = "current-state"'
+    absent_case("a row's skip list naming the section half silences it", "GENRES-7", "MANIFESTO.md", "named section", DANGLING,
+                cfg=cfg_text.replace(RULEBOOK_ROW, RULEBOOK_ROW + '\nskip = ["GENRES-7/sections"]'))
+    absent_case("and one naming the path half silences that", "GENRES-7", "MANIFESTO.md", "named path", add("MANIFESTO.md", "\nSee `tools/nothing.py`.\n"),
+                cfg=cfg_text.replace(RULEBOOK_ROW, RULEBOOK_ROW + '\nskip = ["GENRES-7/paths"]'))
     run_case("a claim missing from its index", "GENRES-8", "evidence_and_reasoning/claims/README.md", "not listed", sub("evidence_and_reasoning/claims/README.md", "| [002](002_b.md) |\n", ""))
     run_case("an em-dash", "EDIT-1", "MANIFESTO.md", "em-dash", add("MANIFESTO.md", "\nOne — two.\n"))
     run_case("a UK spelling", "EDIT-1", "MANIFESTO.md", "spelling variant", add("MANIFESTO.md", "\nIt is labelled.\n"))
@@ -1622,9 +1814,26 @@ def selftest() -> int:
     run_case("an empty field", "ONT-3", C1, "present but empty", sub(C1, "Verified-by: unchecked", "Verified-by:"))
     run_case("a field holding only the artifact template's comment is empty", "ONT-3", C1, "present but empty",
              sub(C1, "Verified-by: unchecked", "Verified-by: <!-- unchecked, or the check that backs it -->"))
-    run_case("a check's By: line still holding the template's comment is empty", "ONT-3", "evidence_and_reasoning/checks/001_a.md",
-             "present but empty: By", sub("evidence_and_reasoning/checks/001_a.md", "Mutation: variant-reading\n",
-                                          "Mutation: variant-reading\nBy: <!-- who produced this record: researcher | assistant, then the AI model -->\n"))
+    run_case("a check's By: line still holding the template's comment is empty", "ONT-3", K1, "present but empty: By",
+             sub(K1, "By: researcher", "By: <!-- who produced this record: researcher | assistant, then the AI model -->"))
+    run_case("a By: line on an artifact whose row does not require one is filled all the same", "ONT-3", "evidence_and_reasoning/notes/2026-01-02_x.md",
+             "present but empty: By", sub("evidence_and_reasoning/notes/2026-01-02_x.md", STAMP + "\n", STAMP + "\nBy: <!-- who made the note -->\n"))
+    run_case("a check record with no By: line", "ONT-3", K1, "required field missing: By", sub(K1, "By: researcher\n", ""))
+    run_case("a check program with no By: line", "ONT-3", P2, "required field missing: By", sub(P2, "By: assistant, not reported\n", ""))
+    # A name written into [fields.roles] by hand is held to three of the
+    # setup tool's refusals: a role the tools do not know, a name of a shape
+    # no tool reads as a field, and one that opens with a stamp's word are
+    # reported at the configuration.  The other two, a name another role
+    # carries and a name of derived state, are reported only at the
+    # artifacts that carry the field.
+    run_case("a role [fields.roles] names that no tool knows", "ONT-1", "tools/artifacts.toml", "names no role the tools know: regster",
+             lambda t, f: w(t, "tools/artifacts.toml", dated(cfg_text.replace('register = "Register"', 'register = "Register"\nregster = "Trust"'))))
+    run_case("a name in [fields.roles] that no tool reads as a field", "ONT-1", "tools/artifacts.toml", "frame = 'Frame2'",
+             lambda t, f: w(t, "tools/artifacts.toml", dated(cfg_text.replace('frame = "Frame"', 'frame = "Frame2"'))))
+    run_case("and one that opens with a stamp's word", "ONT-1", "tools/artifacts.toml", "by = 'Created-by'",
+             lambda t, f: w(t, "tools/artifacts.toml", dated(cfg_text.replace('by = "By"', 'by = "Created-by"'))))
+    run_case("a name in [fields] names that no tool reads as a field", "ONT-1", "tools/artifacts.toml", "[fields] names 'Sample_size'",
+             lambda t, f: w(t, "tools/artifacts.toml", dated(cfg_text.replace('"By", "Produced-from"]', '"By", "Produced-from", "Sample_size"]', 1))))
     run_case("a comment running past its header line is still a comment", "ONT-3", C1, "present but empty",
              sub(C1, "Verified-by: unchecked", "Verified-by: <!-- unchecked, or the\n     check that backs it -->"))
     run_case("a registry entry lacking a bullet", "ONT-3", "evidence_and_reasoning/references/topic.md", "lacks the bullet", sub("evidence_and_reasoning/references/topic.md", "- Standing: searched x, 1 January 2026; none found\n", ""))
@@ -1642,6 +1851,57 @@ def selftest() -> int:
              by_kind('archival = ["Repository"]\n', lambda b: b.replace("### [Key1]\n", "### [Key1]\n\n- Kind: archival\n", 1)))
     run_case("a registry entry declaring an unconfigured kind", "ONT-3", R, "declares a kind",
              by_kind('archival = ["Repository"]\n', lambda b: b.replace("### [Key1]\n", "### [Key1]\n\n- Kind: printed\n", 1)))
+    # An entry is read by its heading: one whose bracketed key the token
+    # grammar does not read can be cited by no token, and nothing checks
+    # its bullets, so the heading is reported.  A heading that opens no
+    # bracket, and an example in fenced code, are not entries.
+    run_case("a registry heading whose key is longer than the grammar reads", "ONT-3", R, "this one has 33", sub(R, "### [Key2]", f"### [{LONG_KEY}]"))
+    # The two ends of a key's length, three characters and thirty-two, pinned
+    # from both sides through the report itself (CHECK_METHODOLOGY.md section
+    # 5, "Pin a boundary from both sides").  The keys are written as counts,
+    # never read from KEY: a control computed from the pattern would move
+    # with it.
+    absent_case("a key of thirty-two characters raises nothing: the upper bound is no lower", "ONT-3", R, "token grammar", sub(R, "### [Key2]", "### [K" + "e" * 31 + "]"))
+    run_case("a registry heading whose key is shorter than the grammar reads", "ONT-3", R, "this one has 2", sub(R, "### [Key2]", "### [Ke]"))
+    absent_case("a key of three characters raises nothing: the lower bound is no higher", "ONT-3", R, "token grammar", sub(R, "### [Key2]", "### [Key]"))
+    run_case("a registry heading whose key opens in lower case", "ONT-3", R, "opens with a capital letter", sub(R, "### [Key2]", "### [key2]"))
+    run_case("a registry heading whose key carries punctuation", "ONT-3", R, "letters and digits alone", sub(R, "### [Key2]", "### [Key-2]"))
+    run_case("a registry heading with a tab after its hashes is read as one", "ONT-3", R, "letters and digits alone", sub(R, "### [Key2]", "###\t[Key 2]"))
+    run_case("and one with a tab whose key the grammar reads has its bullets checked", "ONT-3", R, "entry [Key2] lacks the bullet Standing",
+             lambda t, f: w(t, R, f[R].replace("### [Key2]", "###\t[Key2]").replace(
+                 "- Year: 2021\n- Identifier: doi\n- Keywords: k\n- Standing: searched x, 1 January 2026; none found\n",
+                 "- Year: 2021\n- Identifier: doi\n- Keywords: k\n")))
+    absent_case("and a token citing an entry whose heading has a tab after its hashes resolves", "ONT-2", C1, "[Key1] resolves",
+                sub(R, "### [Key1]", "###\t[Key1]"))
+    run_case("a registry heading that holds a locus with its key", "ONT-3", R, "holds the key alone", sub(R, "### [Key2]", "### [Key2, p. 3]"))
+    run_case("a registry heading whose bracket is never closed", "ONT-3", R, "the bracket is not closed", sub(R, "### [Key2]", "### [Key2"))
+    absent_case("a heading inside a comment is not an entry", "ONT-3", R, "token grammar", add(R, "\n<!--\n### [not a key]\n-->\n"))
+    absent_case("a registry heading that opens no bracket, and a fenced example, are not entries", "ONT-3", R, "token grammar",
+                add(R, "\n### On this collection\n\nHeld in two series.\n\n```\n### [not a key]\n```\n"))
+    # Nor is an example whose key the grammar does read, where it stands in
+    # fenced code or in a comment: no bullet is asked of it, and a token
+    # that names it resolves to nothing.
+    EXAMPLE = "\n```\n### [Sample1]\n```\n\n<!--\n### [Sample1]\n-->\n"
+    absent_case("a fenced or commented example whose key the grammar reads is asked for no bullet", "ONT-3", R, "[Sample1]", add(R, EXAMPLE))
+    run_case("and a token that names it resolves to no entry", "ONT-2", "CURRENT_STATE.md", "[Sample1] resolves to no registry entry",
+             lambda t, f: (add(R, EXAMPLE)(t, f), add("CURRENT_STATE.md", "\nSee [Sample1].\n")(t, f)))
+    # An entry ends at the next heading of its own level or a higher one: a
+    # bullet under a later section heading is not the entry's own.
+    run_case("an entry lacking a bullet that a later section carries", "ONT-3", R, "entry [Key1] lacks the bullet Standing",
+             sub(R, "- Standing: searched x, 1 January 2026; none found\n\n### [Key2]", "\n## Other sources\n\n- Standing: all searched\n\n### [Key2]"))
+    # The key is all the grammar asks of the heading: words after it, or a
+    # space no reader sees, leave the entry an entry, cited and checked.
+    run_case("an entry whose heading carries words after its key still has its bullets checked", "ONT-3", R, "entry [Key2] lacks the bullet Standing",
+             lambda t, f: w(t, R, f[R].replace("### [Key2]", "### [Key2] a second work").replace(
+                 "- Year: 2021\n- Identifier: doi\n- Keywords: k\n- Standing: searched x, 1 January 2026; none found\n",
+                 "- Year: 2021\n- Identifier: doi\n- Keywords: k\n")))
+    run_case("and one whose heading ends in a space", "ONT-3", R, "entry [Key2] lacks the bullet Standing",
+             lambda t, f: w(t, R, f[R].replace("### [Key2]", "### [Key2] ").replace(
+                 "- Year: 2021\n- Identifier: doi\n- Keywords: k\n- Standing: searched x, 1 January 2026; none found\n",
+                 "- Year: 2021\n- Identifier: doi\n- Keywords: k\n")))
+    absent_case("and a token citing an entry whose heading carries words after its key resolves", "ONT-2", C1, "[Key1] resolves",
+                sub(R, "### [Key1]", "### [Key1] a first work"))
+    run_case("and a heading that ends the file, with no line break after it, is an entry whose bullets are asked for", "ONT-3", R, "entry [Key9] lacks the bullet Authors", add(R, "\n### [Key9]"))
     run_case("Mutation and Robustness sharing a name", "ONT-3", K2, "share names", sub(K2, "Mutation: variant-reading", "Mutation: variant-reading\nRobustness: variant-reading"))
     run_case("a dependency naming no claim", "ONT-4", C1, "names no claim", sub(C1, "Verified-by: unchecked", "Verified-by: unchecked\nDepends-on: 042"))
     run_case("a dependency cycle", "ONT-4", C1, "cycle", sub(C1, "Verified-by: unchecked", "Verified-by: unchecked\nDepends-on: 001"))
@@ -1676,14 +1936,14 @@ def selftest() -> int:
     run_case("none listed beside a name", "ONT-3", "tools/artifacts.toml", "stands alone", roster('["none", "a coauthor"]'))
     absent_case("a roster decided empty is not unfilled", "ONT-3", "tools/artifacts.toml", "unfilled", roster('["none"]', "an outsider"))
     # The assistant is named with its AI model after a comma (ONTOLOGY.md,
-    # performed-by), as the fixture's log entry is: only the text before the
-    # comma is read against the roster, in a log entry's header as in a
-    # check's.
+    # performed-by), as the fixture's log entry and its second check are:
+    # only the text before the comma is read against the roster, in a log
+    # entry's header as in a check's.
     L1 = "prompt_logs/001_setup.md"
     clean_case("the assistant named with its AI model, in a log entry and a check, is clean under a decided roster",
-               roster('["none"]'),
-               before_commit=lambda f: f.__setitem__(K2, f[K2].replace("Mutation: variant-reading\n",
-                                                                       "Mutation: variant-reading\nBy: assistant, not reported\n", 1)))
+               roster('["none"]'))
+    run_case("a check's By: line holding a word of Verified-by in place of a party", "ONT-3", K1, "By names a party not on the roster: 'unchecked'",
+             lambda t, f: (roster('["none"]')(t, f), w(t, K1, f[K1].replace("By: researcher", "By: unchecked", 1))))
     run_case("a log entry's By: line is read against the roster", "ONT-3", L1, "not on the roster: 'an outsider'",
              lambda t, f: (roster('["none"]')(t, f), w(t, L1, f[L1].replace("By: assistant, not reported", "By: an outsider", 1))))
     absent_case("a By: line still holding the template's comment is not read as a party", "ONT-3", L1, "not on the roster",

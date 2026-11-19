@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The round check: every gate a round must pass, in one command.
 
-Created 5 September 2026; updated 18 November 2026.
+Created 5 September 2026; updated 19 November 2026.
 
 Run before work is handed back and before changes are reported ready to
 commit (MANIFESTO.md section 13).  Nothing here blocks the researcher: a
@@ -525,6 +525,27 @@ def selftest() -> int:
              lambda t, f: enable_publication(t, f, extra=(('sources = ["paper/*.md", "paper/*.bib"]', 'sources = ["paper/none/*.md"]'),)))
     run_case("an unusable error-marker pattern", "ROUND-3", "tools/artifacts.toml", "log_errors pattern unusable",
              lambda t, f: enable_publication(t, f, extra=(("log_errors = ['^! ']", "log_errors = ['[']"),)))
+    # The configuration's commented example is what a project copies, so its
+    # error markers are taken as it writes them and through the gate itself:
+    # each of the three that tell of a build one pass behind, or of a label
+    # defined twice, catches the log line it is for, and a clean log passes.
+    example = re.search(r"^# (log_errors = \[.*\])$", cfg_text, re.M)
+    assert example, "the commented example's log_errors line"
+    copied = (("log_errors = ['^! ']", example.group(1)),)
+
+    def logged(tmp: Path, files: dict, line: str) -> None:
+        enable_publication(tmp, files, extra=copied)
+        log = tmp / "paper" / "out" / "main.log"
+        when = log.stat().st_mtime
+        log.write_text(line + "\n")
+        os.utime(log, (when, when))
+    for what, line in (("a request for another pass", "LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right."),
+                       ("the other request for another pass", "Please rerun LaTeX."),
+                       ("a label defined twice", "LaTeX Warning: There were multiply-defined labels.")):
+        run_case(f"the commented example's markers, copied, catch {what}", "ROUND-3", "paper/out/main.log", "error marker",
+                 lambda t, f, line=line: logged(t, f, line))
+    clean_case("the commented example's markers, copied, pass a clean build log",
+               lambda t, f: enable_publication(t, f, extra=copied))
     run_case("an entry cited nowhere", "ROUND-4", "paper/refs.bib", "cited nowhere",
              lambda t, f: enable_publication(t, f, bib="@misc{Key1,\n@misc{Key2,\n@misc{Key3,\n"))
     run_case("a citation the bibliography lacks", "ROUND-4", "paper/main_v2.md", "does not carry",

@@ -1,6 +1,6 @@
 # Check methodology
 
-*Created 2 September 2026; updated 18 November 2026.*
+*Created 2 September 2026; updated 19 November 2026.*
 
 This file defines the unit of verification in a repository built from the
 template: the **check**. It owns four things the other rulebooks point to:
@@ -210,8 +210,8 @@ check records both routes.
 ## 5. A passing check is not a true claim
 
 A check whose verdict depends on real work can still certify nothing, if
-the work answers a different question. Six rules follow, each closing a
-way a check can pass while testing nothing.
+the work answers a different question. Six rules follow, one to a bullet,
+each closing a way a check can pass while testing nothing.
 
 - **Fix the frame of reference.** A quantity, and equally a reading, a
   sequence, a category, or a date, is expressed in some frame: a basis, a
@@ -227,6 +227,21 @@ way a check can pass while testing nothing.
   re-running it never reveals that. Each negative needs a control the same
   search *must* find: a planted instance, a known positive case, a source
   known to contain what is being looked for.
+  **Pin a boundary from both sides.** Where an assertion turns on a
+  boundary (a threshold, a cutoff, either end of a window, a minimum
+  count), a control placed well inside one side of it comes out the same
+  for a whole range of boundaries, and re-running it never reveals which
+  one the check enforces. Such an assertion has two controls at the
+  boundary itself, the last value that must pass and the first that must
+  fail, both taken through the same code or procedure as the check, since
+  a control run through a copy of the condition pins the copy. The two
+  values come from the claim and are written out, never computed from the
+  limit the check itself holds, since a control computed from that limit
+  moves with it. For a counted quantity the two are adjacent values. For a
+  continuous one they are one step apart at the precision the claim
+  asserts (§1), the smallest difference the claim distinguishes. A floor
+  of thirty cases is controlled at thirty and at twenty-nine; a limit of
+  2.5 on a quantity stated to one decimal, at 2.5 and at 2.6.
 - **Show every assertion falsifiable.** Alter something the assertion
   claims to *depend on*, and confirm the check reaches a failing verdict.
   An assertion that cannot fail is not an assertion. Each check names its
@@ -354,7 +369,10 @@ What a sweep covers, at minimum:
    correction it proposed that a later round adopted, a later record says
    so (a later note or review, or that round's log entry), and the
    sweep's own log entry says so where none does. The earlier record is
-   never rewritten for it: it says what was found on its day.
+   never rewritten for it: it says what was found on its day. The one
+   exception is the *Outcome* column of a review a plan keeps live, where
+   a finding brought to the researcher takes the ruling when it is given
+   (`paper/reviews/README.md`).
 6. **The write-ups against each other**: any fact stated in two of
    them must be stated compatibly. A released version, and the changelog
    that froze with it, is never brought into line with a later version

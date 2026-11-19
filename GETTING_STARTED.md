@@ -1,6 +1,6 @@
 # Getting started: from a clone to a first commit
 
-*Created 8 September 2026; updated 18 November 2026.*
+*Created 8 September 2026; updated 19 November 2026.*
 
 This is the walkthrough. It takes a clone of the template and leaves you
 with a project whose first plan is engaged, whose first claim is checked,
@@ -518,8 +518,12 @@ or both.
 1. **Write the check** from `evidence_and_reasoning/checks/_template.md`
    (and, for a program, `python_project/src/_template_check.py`). Name in
    its header the plan it serves, the claim it backs, the instrument of
-   record, the frame its quantities are stated in, and at least one
-   mutation from your `{{MUTATION_SET}}`.
+   record, the frame its quantities are stated in, at least one mutation
+   from your `{{MUTATION_SET}}`, and who produced it. For a program, pin
+   what it runs on in `python_project/requirements.txt` and build the
+   pinned environment before the first run: a check program, and each
+   tool that executes one, runs with that environment's interpreter
+   (`python_project/README.md`, *Running*).
 2. **Show that it can fail.** Apply each mutation and confirm the check
    reaches a failing verdict. For a program, `tools/falsifiability_probe.py`
    does it; for a written procedure, plant the alteration, follow the
@@ -587,7 +591,8 @@ registers and the plans are unchanged.
 
 **Do I have to write programs?** No. `{{CHECK_FORM}}` may be a written
 procedure alone, and the rulebooks treat a written procedure as a check in
-every rule. If no check of yours is a program, `python_project/` can go.
+every rule. If no check of yours is a program and you keep no other
+program, `python_project/` can go.
 
 **What if my field's word for something clashes?** Rename it. See
 `GLOSSARY.md`, *Renaming a word this template uses*. Do it before the

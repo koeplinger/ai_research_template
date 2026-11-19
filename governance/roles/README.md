@@ -1,6 +1,6 @@
 # Opposition roles
 
-*Created 5 September 2026; updated 18 November 2026.*
+*Created 5 September 2026; updated 19 November 2026.*
 
 Structured argument against the researcher's own position, as
 `MANIFESTO.md` §17 and `VISION.md` require: a reader instructed to find
@@ -39,4 +39,9 @@ worked example. The prompts are generic: a project fills the bracketed
 placeholders and changes nothing else, so that a departure from the
 standard prompt is visible. Those placeholders are not slots in this
 methodology's sense (`GLOSSARY.md`): they are filled afresh at each use,
-not once per project.
+not once per project. The documentation sweep's prompt is the
+exception: its file list, edited to the project's files, and its
+item 10, the project's own documentation items, are written once and
+kept (`documentation_sweep.md`, *Item 10 is the project's own*).
+Neither is a slot: no double-brace token marks it, no Slots table lists
+it, and setup does not ask for it.

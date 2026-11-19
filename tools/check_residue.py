@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The residue check: what a rebuild or a correction batch leaves behind in a live draft, listed for the reading that closes the round.
 
-Created 5 September 2026; updated 16 November 2026.
+Created 5 September 2026; updated 19 November 2026.
 
 No rulebook lists these as checked mechanically.  CHECK_METHODOLOGY.md
 section 7 makes a rebuild's duties reading ("a rebuild round therefore
@@ -17,7 +17,9 @@ draft in these forms has nothing for it to read.  It honors a row's
 
   RESIDUE-1  seams: a section with nothing under it before the next
              heading of its own level or higher, two identical adjacent
-             paragraphs, a paragraph that opens in the middle of a sentence
+             paragraphs of three words or more, a paragraph that opens in
+             the middle of a sentence, a line that opens on a comma or a
+             semicolon with more than a comment after it
   RESIDUE-2  dangling references: a reference to a label, heading anchor,
              or footnote that no longer exists; labels are pooled across
              every LaTeX source
@@ -45,7 +47,14 @@ fences, and backtick spans blank); a LaTeX source (.tex) named by the
 [publication] sources is read from the linter's file walk with its %
 comments blank, every source the globs match, since a typeset file
 carries no header from which live or frozen could be derived.  The
-Ontology's citation tokens are the linter's and are not read here.
+Ontology's citation tokens are the linter's and are not read here.  In a
+LaTeX source a bare numeric citation is not listed, and a quotation is
+read like any other text: a pointer inside one is listed, and its words
+count toward an echo's eight.  A paragraph whose first line opens on a
+heading, a table row, a footnote, or a command is not read for echoes,
+the text under that line included: in a LaTeX source, a section's
+first paragraph written directly under its heading, a list, and an
+abstract or a theorem written directly under its opening line.
 
 A candidate the researcher has ruled to leave, entered in the
 configuration's [[accepted]] list, is left out and counted; an entry of a
@@ -158,6 +167,17 @@ def check_seams(d: Draft) -> None:
         first_raw = raw_lines[ln - 1].lstrip() if ln - 1 < len(raw_lines) else ""
         if re.match(r"^[a-z]", p) and not first_raw.startswith("`"):
             lint_docs.report("RESIDUE-1", d.path, ln, f"paragraph opens in the middle of a sentence: {p[:60]!r}")
+    # A line that opens on a comma or a semicolon, in the file as written and
+    # in the view read, so that a comma after a code span, or one inside a
+    # backtick fence or a comment, is not listed.  A line that holds the mark
+    # alone is not listed either: the semicolon that closes a drawing command
+    # stands so, and a display's punctuation.  A sentence that starts in
+    # lower case inside a paragraph is deliberately not listed: a symbol, a
+    # unit, or a name written in lower case opens one in too many fields.
+    for ln, (l, raw) in enumerate(zip(d.lines, raw_lines), 1):
+        m = re.match(r"\s*[;,]", raw)
+        if m and l[:m.end()] == m.group(0) and l[m.end():].strip():
+            lint_docs.report("RESIDUE-1", d.path, ln, f"line opens on a comma or a semicolon: {l.strip()[:60]!r}")
 
 
 def tex_labels(d: Draft) -> tuple[dict[str, int], dict[str, int]]:
@@ -429,6 +449,12 @@ def selftest() -> int:
     planted("a paragraph repeating the one before", "RESIDUE-1", V2, "repeats the one before", add(V2, "\nOne two three.\n\nOne two three.\n"))
     planted("a paragraph opening mid-sentence", "RESIDUE-1", V2, "middle of a sentence", add(V2, "\nwhich was left behind by the cut.\n"))
     case("a paragraph opening with a code span is not a seam", not any(x[0] == "RESIDUE-1" for x in run_on(add(V2, "\n`base` is the module.\n"))))
+    planted("a paragraph opening on a comma", "RESIDUE-1", V2, "opens on a comma or a semicolon", add(V2, "\n, which was left behind by the cut.\n"), line=17)
+    planted("a line opening on a semicolon inside a paragraph, at that line", "RESIDUE-1", V2, "opens on a comma or a semicolon", add(V2, "\nThe first clause stands\n; the second was moved here.\n"), line=18)
+    case("a comma after a code span, or one opening a line of fenced code, is not a seam",
+         not any(x[0] == "RESIDUE-1" for x in run_on(add(V2, "\nThe value is read from\n`base`, which is the module.\n\n```\nfirst\n, second\n```\n"))))
+    case("a sentence starting in lower case inside a paragraph is not a seam",
+         not any(x[0] == "RESIDUE-1" for x in run_on(add(V2, "\nThe count was taken twice. n is the larger of the two.\n"))))
     planted("a link to a heading that does not exist", "RESIDUE-2", V2, "does not exist: #gone", add(V2, "\nSee [above](#gone).\n"))
     case("a link to a heading with a code span or an underscore resolves", not any(x[0] == "RESIDUE-2" for x in run_on(add(V2, "\n## The `foo()` function\n\nA.\n\n## the_variable\n\nB. See [it](#the-foo-function) and [that](#the_variable).\n"))))
     planted("a footnote used and not defined", "RESIDUE-2", V2, "used and not defined", add(V2, "\nA point.[^9]\n"))
@@ -442,9 +468,21 @@ def selftest() -> int:
     case("a section named in a citation locus or a quotation is not a phantom", not any(x[0] == "RESIDUE-4" for x in run_on(add(V2, "\nSee [Key1, Section 12] and \"Section 9 is unclear\".\n"))))
     planted("a sentence appearing twice in one draft", "RESIDUE-5", V2, "sentence also at", add(V2, f"\n{LONG}\n"))
     planted("a sentence appearing twice in one paragraph", "RESIDUE-5", V2, "sentence also at", add(V2, "\nThis sentence has enough words to be counted here. This sentence has enough words to be counted here.\n"))
+    # The eight-word threshold, pinned from both sides through the scan itself
+    # (CHECK_METHODOLOGY.md section 5, "Pin a boundary from both sides").
+    # Both sentences are written out, never built from MIN_WORDS: a control
+    # computed from the constant would move with it.
+    planted("a sentence of eight words appearing twice is listed: the threshold is no higher", "RESIDUE-5", V2, "main_v2.md:17: 'One two three four five six seven eight.'",
+            add(V2, "\nOne two three four five six seven eight. One two three four five six seven eight.\n"), line=17)
+    case("a sentence of seven words appearing twice is not: the threshold is no lower",
+         not any(x[0] == "RESIDUE-5" for x in run_on(add(V2, "\nOne two three four five six seven. One two three four five six seven.\n"))))
+    planted("a sentence with eight words outside its quotation appearing twice is listed", "RESIDUE-5", V2, "main_v2.md:17: 'The referee wrote",
+            add(V2, '\nThe referee wrote "it fails" and we agree here now. The referee wrote "it fails" and we agree here now.\n'), line=17)
+    case("a sentence with seven words outside its quotation, nine in all, appearing twice is not",
+         not any(x[0] == "RESIDUE-5" for x in run_on(add(V2, '\nThe referee wrote "it fails" and we agree here. The referee wrote "it fails" and we agree here.\n'))))
     f = run_on(lambda files: (files.__setitem__("paper/note_v1.md", f"# Note\n\n{S}\n\n{LONG}\n"), files.__setitem__("paper/README.md", files["paper/README.md"] + "| [note_v1.md](note_v1.md) |\n")))
     case("an echo across two live drafts is listed with the twin's line", any(x[0] == "RESIDUE-5" and "main_v2.md:7" in x[3] for x in f), str(f))
-    case("two sentences sharing a tail after an abbreviation are not echoes", not any(x[0] == "RESIDUE-5" for x in run_on(add(V2, "\nSmith et al. show that the count is one for every cohort studied. Jones et al. show that the count is one for every cohort studied here.\n"))))
+    case("two sentences sharing a tail after an abbreviation are not echoes", not any(x[0] == "RESIDUE-5" for x in run_on(add(V2, "\nSmith et al. show that the count is one for every cohort studied. Jones et al. show that the count is one for every cohort studied.\n"))))
     QUOTED = '"The method fails whenever the sample is smaller than ten cases."'
     case("a passage quoted twice is a quotation, not an echo",
          not any(x[0] == "RESIDUE-5" for x in run_on(add(V2, f"\nThe first source says so. {QUOTED} That is its claim.\n\nThe second source agrees. {QUOTED} It cites the first.\n"))))
@@ -503,6 +541,18 @@ def selftest() -> int:
     case("a LaTeX source: a section number beyond the count", any(x[0] == "RESIDUE-4" and "'Section 4' names more" in x[3] for x in f), str(f))
     case("a LaTeX source: a comment, trailing or whole-line, is not read", not any("sec:comment" in x[3] for x in f), str(f))
     case("a LaTeX source: a seam", any(x[0] == "RESIDUE-1" and x[1] == "paper/main.tex" and "middle of a sentence" in x[3] for x in f), str(f))
+    # The line that opens on a comma or a semicolon, where the cases beside
+    # the other seams leave it untried.  In the LaTeX source, lines 8 and 10
+    # are what a cut leaves, the second after white space; lines 2 and 5 hold
+    # the mark alone, the first with a comment after it.  In the markdown
+    # draft the display's comma stands alone, and the line that opens on a
+    # comma opens inside a comment.
+    f = run_on(lambda files: files.__setitem__("paper/main.tex", "\\draw (0,0) -- (1,1)\n; % closes the path\n\\[\na = b\n,\n\\]\nThe first clause stands\n; the second was moved here.\n\n  , which was left behind by the cut.\n"), cfg=tex_cfg)
+    listed = {x[2] for x in f if x[0] == "RESIDUE-1" and x[1] == "paper/main.tex" and "opens on a comma or a semicolon" in x[3]}
+    case("a LaTeX source: a line opening on a comma or a semicolon is listed, white space before the mark aside", {8, 10} <= listed, str(f))
+    case("a LaTeX source: a line holding the mark alone, a comment after it or none, is not", not listed & {2, 5}, str(f))
+    case("a comma alone on its line in a display, or one opening a line inside a comment, is not a seam",
+         not any(x[0] == "RESIDUE-1" for x in run_on(add(V2, "\nAs follows:\n\n$$\na = b\n,\n$$\n\n<!-- a note\n, set aside --> The text goes on.\n"))))
     case("the linter knows every RESIDUE tag as one the list covers", set(ITEMS) <= set(lint_docs.OTHER_TAGS))
     for i in [i for i in ITEMS if i not in covered]:
         failures += 1

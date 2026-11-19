@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The blast radius of a claim (ONTOLOGY.md section 6, question 4): everything citing it by token, everything whose Depends-on names it, and the Reserved cluster if one holds it.
 
-Created 5 September 2026; updated 8 September 2026.
+Created 5 September 2026; updated 19 November 2026.
 
 For [claim NNN] the report lists, by reading fields and tokens only, the
 three things the question names: every artifact whose prose carries the
@@ -159,7 +159,7 @@ def selftest() -> int:
             f"# Claim 004: d\n\n{S}\nRegister: ATTESTED\nKind: documentary\nVerdict: confirmed\nPlan: 001, task 1\n"
             f"Verified-by: deferred, the edition\nReserved 2 January 2026, plan 001\n\n## Claim\n\nSays d [Key1, p. 4].\n")
         files["evidence_and_reasoning/checks/003_c.md"] = (
-            f"# Check 003: c\n\n{S}\nPlan: 001, task 1\nBacks: [claim 003]\nInstrument: the edition\nMutation: variant-reading\n\n## 1\n\nz\n")
+            f"# Check 003: c\n\n{S}\nPlan: 001, task 1\nBacks: [claim 003]\nInstrument: the edition\nMutation: variant-reading\nBy: researcher\n\n## 1\n\nz\n")
         files["evidence_and_reasoning/claims/README.md"] += "| [003](003_c.md) |\n| [004](004_d.md) |\n"
         files["evidence_and_reasoning/checks/README.md"] += "| [003](003_c.md) |\n"
         files["FINDINGS.md"] += "| F002 | y [claim 001](evidence_and_reasoning/claims/001_a.md) |\n"

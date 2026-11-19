@@ -1,6 +1,6 @@
 # Reviews
 
-*Created 4 September 2026; updated 18 November 2026.*
+*Created 4 September 2026; updated 19 November 2026.*
 
 Review records for the write-ups under `paper/`: dated records of what a
 referee pass found, against the document as it stood. Naming:
@@ -17,6 +17,19 @@ written across the round that acts on it. When it freezes is
 closes, its *Refuted?* and *Outcome* columns and its last section filled;
 a review a plan owns freezes with that plan. Copy [`_template.md`](_template.md)
 to start one.
+
+A review whose findings will be ruled on over several rounds is owned by
+the plan under which the version is prepared: its `Plan:` line, written
+before the round that acts on it closes, keeps it live until that plan
+closes, and the *Outcome* of a finding brought to the researcher takes the
+ruling when it is given. Where no plan owns the review, the *Outcome* of a
+finding still waiting on a ruling records it as brought, with its prompt,
+and the review freezes when that round closes; the ruling is then recorded
+in its own round's log entry, never in the review. A plan's ownership
+keeps the review live, not a released version of a versioned write-up,
+which is never corrected even while a plan that owns it is open
+(`DOCUMENT_GENRES.md` §2): what a ruling given after the release asks of
+it goes into the next version.
 
 ## What a review is
 

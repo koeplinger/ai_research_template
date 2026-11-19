@@ -8,7 +8,7 @@
 # folder by the KIND of the row that names them, never by a second copy
 # of the path.  Current state; indexed in tools/README.md.
 #
-# Created 4 September 2026; updated 18 November 2026.
+# Created 4 September 2026; updated 19 November 2026.
 #
 # Rows are matched top to bottom and the FIRST matching glob wins, so a
 # specific row (a template, an index) stands above the general row for
@@ -23,7 +23,8 @@
 #   plan-owned     follows the owning plan's Status: line
 #   self           a plan: follows its own Status: line
 #   dated-record   frozen on writing, or with the plan its Plan: line
-#                  names; exempt from the narrative and path checks
+#                  names; exempt from the narrative check's phrase list,
+#                  and path-checked only while a plan keeps it live
 #   release        live until its Released stamp (a version) or its
 #                  (release) row (a changelog); a Plan: line overrides,
 #                  save on a version named _vN once it is released
@@ -48,6 +49,14 @@
 #       list below is the narrower tool.
 
 [template]
+# The oldest Python the tools run under, which their TOML reader sets: the
+# tools' floor, stated for the reader and read by no tool.  It is not the
+# instrument of record.  The version and the pinned environment a check
+# runs in are the project's to record (CHECK_METHODOLOGY.md, section 3),
+# and a check program runs under that environment's interpreter, never
+# under whichever Python meets this floor.  The three tools that execute
+# check programs run under that interpreter as well (tools/README.md),
+# so this floor binds it too.
 python = "3.11"
 
 [editorial]
@@ -101,11 +110,16 @@ derived = ["Genre", "Tier", "Live", "Frozen"]
 # The name this project writes for each header field, by the ROLE the field
 # plays.  Every tool reads the name from here, so a project whose discipline
 # has taken one of these words renames it in this table alone, and the checks
-# follow (GLOSSARY.md, "Renaming a word this template uses").  Rename before
-# any artifact carries the field: the log is immutable and a frozen artifact
-# keeps its wording, so the cost rises with every round.  The artifact
-# templates under evidence_and_reasoning/ and python_project/src/ are
-# edited to match by hand, since they are prose.
+# follow (GLOSSARY.md, "Renaming a word this template uses").  A name has
+# the form ONTOLOGY.md, section 1.1, gives a field's name: a capital
+# letter, then letters and hyphens, each from A to Z, opening with none of
+# Created, Released, Reserved, and Pre-registered; the linter reports a
+# name of any other form written here.  Nor is it a name another field
+# carries, or one of [fields] derived.  Rename before any artifact carries
+# the field: the log is immutable and a frozen artifact keeps its wording,
+# so the cost rises with every round.  The artifact templates under
+# evidence_and_reasoning/, python_project/src/, paper/reviews/, and
+# prompt_logs/ are edited to match by hand, since they are prose.
 #   register: how far a statement may be trusted   (Trust, Warrant, Grade)
 #   instrument: the tool or procedure of record    (Instrument-of-record)
 #   mutation: the planted alteration a check must fail under  (Planted-fault)
@@ -198,13 +212,22 @@ log_errors = []     # regular expressions, one per error marker
 bibliography = ""   # the bibliography source, if the deliverable has one; empty skips ROUND-4
 entry = ""          # a regular expression whose first group is an entry's key, matched line by line in the bibliography
 cite = ""           # a regular expression whose first group is the keys at a citation site, comma-separated, matched line by line in the sources, comments included
-# A LaTeX deliverable with its bibliography in first-citation order:
+# A LaTeX deliverable with its bibliography in first-citation order.  The
+# last three error markers are two forms of the log's request for another
+# pass and its report of a label defined twice.  The build command shown
+# runs until nothing changes; a build of a fixed number of passes needs
+# both forms, or an output whose cross-references are one pass behind
+# passes the gate.  The two forms do not cover all that such a build
+# leaves behind: LaTeX itself asks for another pass when a label or a
+# citation changed, not when the table of contents did, and a package may
+# word its request otherwise ("Rerun LaTeX."), so a project adds the
+# forms its packages print, or builds until nothing changes:
 # enabled = true
 # build = "latexmk -pdf paper/main.tex"
 # sources = ["paper/*.tex", "paper/*.bib"]
 # outputs = ["paper/main.pdf"]
 # log = "paper/main.log"
-# log_errors = ['^! ', 'Undefined control sequence', 'Citation .* undefined', 'Reference .* undefined']
+# log_errors = ['^! ', 'Undefined control sequence', 'Citation .* undefined', 'Reference .* undefined', 'Rerun to get', 'Please .?re.?run', 'multiply[- ]defined']
 # bibliography = "paper/references.bib"
 # entry = '^@\w+\{([^,\s]+),'
 # cite = '\\cite[a-z]*\*?(?:\[[^\]]*\])*\{([^}]*)\}'
@@ -380,7 +403,7 @@ required = ["Register", "Kind", "Verdict", "Plan", "Verified-by"]
 kind = "check"
 glob = "evidence_and_reasoning/checks/[0-9]*.md"
 genre = "plan-owned"
-required = ["Plan", "Backs", "Instrument", "Mutation"]
+required = ["Plan", "Backs", "Instrument", "Mutation", "By"]
 
 [[artifact]]
 kind = "plan"
@@ -501,7 +524,7 @@ kind = "check-program"
 glob = "python_project/src/check_[0-9]*.py"
 genre = "plan-owned"
 header = "docstring"
-required = ["Plan", "Backs", "Instrument", "Mutation"]
+required = ["Plan", "Backs", "Instrument", "Mutation", "By"]
 
 [[artifact]]
 kind = "program"

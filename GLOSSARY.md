@@ -1,6 +1,6 @@
 # Glossary: the words this template uses in its own sense
 
-*Created 8 September 2026; updated 18 November 2026.*
+*Created 8 September 2026; updated 19 November 2026.*
 
 This file defines the method's own vocabulary. It exists because a
 methodology that means to serve every discipline has to name its parts,
@@ -27,7 +27,7 @@ where a reader who meets an unfamiliar word should look first.
 | **registry** | the project's catalogue of references, one entry per work (`evidence_and_reasoning/references/`) | a public register of companies, land, or trials; a container registry |
 | **claim** | one statement the project makes, filed as its own document with a register and a kind | a cause of action in law; a patent claim; an insurance claim |
 | **check** | one self-contained investigation of one claim, with a printed or written verdict | a robustness check in empirical work, which is a specification and not a verification unit; a cheque |
-| **gated** | of a statement: a check stands behind it that would fail if the statement were false | flow-cytometry gating; a gating network in machine learning; "blocked", which is how the round check gates a build |
+| **gated** | of a statement: a check stands behind it that would fail if the statement were false | flow-cytometry gating; a gating network in machine learning; "blocked"; the round check's gate on a build, which reports a stale or failed build and decides nothing |
 | **verdict** | the word a check reaches, from the vocabulary its claim's kind fixes | what a jury returns; a court gives judgment, not a verdict |
 | **finding** | a statement the record has established, entered in `FINDINGS.md` at the researcher's decision | a finding of fact, as against a conclusion of law; a finding in the sense of a search result |
 | **mutation** | a named alteration to something a claim depends on, planted to show that a check can fail (`CHECK_METHODOLOGY.md` §5) | a heritable change in a DNA sequence, which is a subject of study and not a method term |
@@ -41,7 +41,7 @@ where a reader who meets an unfamiliar word should look first.
 | **witness** | one surviving record of a work, where a work survives in several | a person who gives evidence |
 | **concordance** | agreement between what a check program printed and what its record states | an alphabetical index of words; a crosswalk between classification schemes; agreement between twins |
 | **sweep** | a reading pass for statements that disagree: over the record (`CHECK_METHODOLOGY.md` §7) or over the documentation (`governance/roles/documentation_sweep.md`) | a hyperparameter sweep. Never write bare *the sweep* where both could be meant |
-| **residue** | what a rebuild left behind in a live draft: a reference to something no longer there | a chemical residue; an amino-acid residue |
+| **residue** | what a rebuild left behind in a live draft, such as a reference to something no longer there | a chemical residue; an amino-acid residue |
 | **authority** | which statement of this repository governs when two disagree (`PRECEDENCE.md`) | a cited case or statute, and the hierarchy of legal sources. `PRECEDENCE.md` orders this project's own statements, and says nothing about any discipline's order of sources |
 | **the public record**, also *the published literature* | what is published outside this repository: articles, editions, reference works, published estimates (`PRECEDENCE.md`, tier 4). It names tier 4, heads a column of the tension ledger, and names that ledger's file | the public record in the *legal* sense, which is the court record and the reporters; those are sources of record here, at tier 2, and a divergence from one is an ordinary tension row |
 | **standing** | of a registry entry: what searching for later or contrary material found, and when; or that no search was made, and why | *locus standi*, the right to bring a claim |
@@ -68,9 +68,9 @@ where a reader who meets an unfamiliar word should look first.
 | **derived**, of an input | forced by prior structure, as against *imposed* (a choice the project made) and *conjectured* (assumed and not established), the three kinds every input of a check is classified into (`CHECK_METHODOLOGY.md` §4) | the `DERIVED` register, which is a trust level and not an input kind; *derived material*, which is what a plan made from a source; a derived cell line, a derived allele, a derived variable |
 | **imposed** | of an input: a choice the project made, which it states as a choice rather than as a fact | imposed in the sense of forced from outside |
 | **conjectured** | of an input: assumed and not established, so that what rests on it is no stronger | a conjecture in the mathematical sense, which is a claim and not an input |
-| **seam** | of a rebuilt draft: a section with nothing under it before the next | a seam in the geological or textile sense |
+| **seam** | of a rebuilt draft: a section with nothing under it before the next heading of its own level or higher, two identical adjacent paragraphs of three words or more, a paragraph that opens in the middle of a sentence, or a line that opens on a comma or a semicolon | a seam in the geological or textile sense |
 | **dangling**, **orphaned** | of a reference: pointing at what is not there, and pointed at by nothing | dangling in the grammatical sense |
-| **phantom** | a bare numeric citation or a "Section N" pointer that resolves to nothing | anything in the perceptual sense |
+| **phantom** | a bare numeric citation that resolves to nothing, or a "Section N", "Table N", "Figure N", or "Equation (N)" pointer numbered beyond what the draft has | anything in the perceptual sense |
 | **echo** | a sentence with eight words or more outside its quotations, appearing twice in a draft or across the live drafts | an echo in acoustics |
 | **mark**, **markup** | a mark is one annotation a reader made on a copy of a write-up: a comment, a highlight, a strike-through, a margin note; a copy's markup is all of its marks, each accounted for in a markup ledger (`paper/_template_changelog.md`) | a grade; a trademark; a label or a sign in the everyday sense, as in a version marked `superseded by <path>` or one that marks itself on the page as a draft, or a quotation mark; markup in the sense of a markup language or of text formatting, as in the status block's rule against markup around a label (`MANIFESTO.md` §16) |
 | **accepted finding** | a finding of a check, or a findings-gate reminder, that the researcher has ruled to leave, entered in the `[[accepted]]` list of `tools/artifacts.toml` with the log entry of the ruling, so the tools stop raising it (`MANIFESTO.md` §16) | a finding entered in `FINDINGS.md`; a claim accepted as established |
@@ -89,13 +89,15 @@ that a reader outside the field they come from is not stopped by them.
 | **apparatus** | an edition's record of what its witnesses read where they differ | the rule that a claim is not re-derived from a source's own summary |
 | **vintage** | the release or edition of a dataset, as against its name | the discrepancy analysis of a check |
 | **provenance** | where a thing came from and by what steps, recorded so a reader can follow it back | throughout |
+| **pinned environment** | the software a check program runs on, held at the exact versions the project records, so that a second reader runs the check on the same thing | the instrument of record where it is software (`CHECK_METHODOLOGY.md` §3), and the running of a check program |
+| **checksum** | a short string computed from a file's bytes, which changes when any byte does, so that two copies can be compared without having both at hand; SHA-256 names one standard way of computing it | the import ledger and the source index |
 | **pre-registration** | fixing what will count as confirmation before the evidence is consulted | the plan's *Confirmation and refutation* section, the `Pre-registered` stamp (`ONTOLOGY.md` §2), and the protocol note `evidence_and_reasoning/notes/README.md` describes |
 
 ## The finding tags
 
 Every mechanical finding carries a tag naming the rule it comes from, so
-that a reader can find the rule from the output. The tools' own README
-lists them; the families are:
+that a reader can find the rule from the output. Each tool's docstring
+lists the items it reports; the families are:
 
 | Tag | The rule it enforces |
 |---|---|
@@ -126,11 +128,17 @@ Three kinds of name, with three costs:
    `Frame:`, and the rest). Configured: `tools/artifacts.toml` carries a
    `[fields.roles]` table mapping each role to the name this project
    writes, and every tool reads the name from there. Change it there,
-   change the artifact templates under `evidence_and_reasoning/` and
-   `python_project/src/` to match, and the checks follow. Do this before
-   any artifact carries the field. A
-   registry bullet, `Standing:` among them, is not a header field: it is
-   renamed in `[registry] required` and in the registry's own template.
+   change the artifact templates under `evidence_and_reasoning/`,
+   `python_project/src/`, `paper/reviews/`, and `prompt_logs/` to match,
+   and the checks follow. Do this before any artifact carries the field.
+   The new name has the form `ONTOLOGY.md` §1.1 gives a field's name: a
+   capital letter, then letters and hyphens, each from A to Z, opening
+   with none of the words `Created`, `Released`, `Reserved`, and
+   `Pre-registered`. It is neither a name another field carries nor
+   `Genre`, `Tier`, `Live`, or `Frozen`, which name derived state
+   (`ONTOLOGY.md` §5, check 6). A registry bullet, `Standing:` among
+   them, is not a header field: it is renamed in `[registry] required`
+   and in the registry's own template.
 
 3. **A value in a closed vocabulary** (`VERIFIED`, `reproduced`, and the
    rest). Configured under `[vocab]` in the same file. A project may

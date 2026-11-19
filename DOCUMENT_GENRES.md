@@ -1,6 +1,6 @@
 # Document genres
 
-*Created 2 September 2026; updated 18 November 2026.*
+*Created 2 September 2026; updated 19 November 2026.*
 
 Every artifact in a repository built from the template belongs to exactly
 one of three genres, and the genre determines how the artifact may be
@@ -269,9 +269,11 @@ current-state artifact says about its own history. In a project made from
 the template, a file carried over from it keeps the template's Created
 date, the day the file first existed there, and the template's updated date
 until the project changes the file. Non-prose files (data, images, rendered
-output, transcription files) carry no header, and neither does an imported
-file under `inherited/`, which is a verbatim copy, or an attachment under
-`prompt_logs/attachments/`, which is kept as received; they are dated by
+output, transcription files kept as data) carry no header, and neither
+does an attachment under `prompt_logs/attachments/`, which is kept as
+received, or an imported file under `inherited/`, which is a verbatim copy
+unless its row in the import ledger records a correction made at the
+researcher's direction (`inherited/README.md`); they are dated by
 the plan that owns them or the index that lists them, and an attachment
 by the entry that received it. A tracked path that
 matches no genre in the checker's configuration is reported as unresolved;
@@ -462,11 +464,29 @@ matter stays ruled*).
 7. **Paths.** Every repository path named in a current-state document
    exists. A path is recognized by shape: a markdown link's target, or a
    backticked span that ends in a slash or in one of the extensions the
-   configuration lists. So a shelfmark, a citation, or an identifier that
+   checker lists (`.md`, `.py`, `.toml`, `.txt`, `.sh`, `.json`, `.tex`,
+   `.pdf`). So a shelfmark, a citation, or an identifier that
    happens to end in a listed extension is read as a path and reported;
    written without backticks, or with the extension not among those
    listed, it is not. A project whose loci take that shape says so in its
-   glossary and writes them plainly.
+   glossary and writes them plainly. A path is looked for beside the
+   document and from the root, one that opens with `./` or `../` beside
+   the document alone, and a bare file or folder name anywhere in the
+   repository; one with a placeholder or a pattern in it (`NNN`, `YYYY`,
+   `<name>`, `*`) is not checked. A section named in a pointer is checked
+   as well. The pointer is a backticked path to a markdown file followed
+   at once by a name set in italics with asterisks that opens with a
+   capital letter or a digit; between the two may stand a section number
+   written with the section sign (`§3`, `§1.2`), a comma or an opening
+   parenthesis, or the number and then one of those, and nothing else.
+   The named file carries that name in a heading written with hash
+   marks, a label set in bold with asterisks, or a table's column
+   heading, or the pointer is reported. So a work's title, a status word,
+   or an emphasized word in that position is read as a section's name,
+   and reported unless the named file carries it; an italic in any other
+   position, or one that opens in lower case, is not. Where the path
+   resolves to no file, or to more than one, no section is checked. A row
+   may skip either half: `GENRES-7/paths` or `GENRES-7/sections`.
 8. **Index.** Every file in a directory that has an indexing file appears
    in it. The indexing file is a `README.md`, except where the
    configuration names another: the plan folder's is `ROADMAP.md`.

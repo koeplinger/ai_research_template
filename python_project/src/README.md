@@ -1,6 +1,6 @@
 # Source index
 
-*Created 3 September 2026; updated 3 September 2026.*
+*Created 3 September 2026; updated 19 November 2026.*
 
 Every program in this folder, indexed; the index is checked
 (`DOCUMENT_GENRES.md`, *What the checker verifies*, item 8). A check
@@ -26,3 +26,4 @@ prints its own verdict, and has its record at
 | File | Purpose |
 |---|---|
 | [_template_check.py](_template_check.py) | the check-program template; not run, not indexed as a check |
+| <!-- [<name>.py](<name>.py) --> | <!-- a program that backs no claim, such as one that computes the tables and figures of a write-up: the plan its Plan: line names, and what the program serves --> |

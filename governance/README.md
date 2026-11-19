@@ -1,20 +1,21 @@
 # Governance: the mechanisms, each with the rule it serves and the moment it fires
 
-*Created 5 September 2026; updated 18 November 2026.*
+*Created 5 September 2026; updated 19 November 2026.*
 
 `VISION.md` promises four kinds of mechanism that keep the discipline
 running when attention lapses: reminders, checks, opposition, and
 support. All are advisory by design, with the one exception the privacy
 scan row states: they fire, they inform, and they leave the decision
 with the researcher. This folder holds the ones that
-are not tools (the standing reminders, the opposition roles, the harness
-wirings) and this file maps every mechanism, tool or not, to the rule it
-serves and the moment it fires.
+are not tools (the standing reminders, the opposition roles and the
+documentation consistency sweep kept with them, the harness wirings) and
+this file maps every mechanism, tool or not, to the rule it serves and
+the moment it fires.
 
 | File | What it holds |
 |---|---|
 | [reminders.md](reminders.md) | the standing instructions, each named, with its trigger, its output, what computes it, and what it does not decide; the plan-closure checklist |
-| [roles/](roles/) | the opposition roles with their standard prompts: the refuter, the blind referee, the structure census, the deletion ledger, the coverage auditor, the probe as opposition |
+| [roles/](roles/) | the opposition roles with their standard prompts: the refuter, the blind referee, the structure census, the deletion ledger, the coverage auditor, the probe as opposition; and the documentation consistency sweep, a reading pass kept with them |
 | [harness/](harness/) | one folder per harness with the wiring that runs the tools after each reply and at session start |
 
 ## Reminders
