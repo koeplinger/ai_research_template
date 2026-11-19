@@ -10,7 +10,8 @@ with the researcher. This folder holds the ones that
 are not tools (the standing reminders, the opposition roles and the
 documentation consistency sweep kept with them, the harness wirings) and
 this file maps every mechanism, tool or not, to the rule it serves and
-the moment it fires.
+the moment it fires. The items of `CHECK_METHODOLOGY.md` this file cites
+without a section are those under *What is checked mechanically*.
 
 | File | What it holds |
 |---|---|
@@ -22,8 +23,8 @@ the moment it fires.
 
 | Mechanism | Rule | Fires | Output | Does not decide |
 |---|---|---|---|---|
-| the session brief, `tools/session_brief.py` | `MANIFESTO.md` §16; `ONBOARDING.md` | at session start, through the harness wiring, and on demand | the reading order, the plans by status, the reminders the record can compute | anything: it prints |
-| the documentation consistency sweep, [roles/documentation_sweep.md](roles/documentation_sweep.md) | `CHECK_METHODOLOGY.md` §7, which sweeps the record; this sweeps the documentation | at the moments its *Fires* list names | the disagreements between documents, each with its two homes | which of two disagreeing statements yields: the researcher's |
+| the session brief, `tools/session_brief.py` | `MANIFESTO.md` §16; `ONBOARDING.md` | at session start, through the harness wiring, and on demand | the reading order, the plans by status, the reminders the record can compute, save reference-not-registered, which the linter reports (ONT-2) | anything: it prints |
+| the documentation consistency sweep, [roles/documentation_sweep.md](roles/documentation_sweep.md) | `CHECK_METHODOLOGY.md` §7, which sweeps the record; this sweeps the documentation | at the moments its *Fires* list names | the findings, ranked, each with its file, line, and fix, and both homes where two documents disagree; the files read in full | which of two disagreeing statements yields: the researcher's |
 | the standing reminders, [reminders.md](reminders.md) | §16, and the section each names | at the stage of work each names | one sentence in the reply, once | the action: taken only with direction |
 
 ## Checks
@@ -32,10 +33,10 @@ the moment it fires.
 |---|---|---|---|---|
 | the linter, `tools/lint_docs.py` | `DOCUMENT_GENRES.md`, `editorial_standards.md`, `ONTOLOGY.md` §5, `CHECK_METHODOLOGY.md` items 1 to 3 (static) | inside the round check, and alone | findings tagged with their item | what its docstring lists as reading |
 | the round check, `tools/check_round.py` | `MANIFESTO.md` §13 | before work is handed back; on pre-commit where the hooks are installed | the linter's findings and the round's own | the researcher's commit: it reports, and the hook lets the commit proceed unless installed strict |
-| the concordance check, `tools/check_concordance.py` | `CHECK_METHODOLOGY.md` item 4 | when a check program has been run | every named value that disagrees with its record | the verdict word: printed beside the claim's, never a finding |
-| the falsifiability probe, `tools/falsifiability_probe.py` | `CHECK_METHODOLOGY.md` item 3 (executing) and §5 | before a check is relied on; before a plan closes | the matrix, and a survival as a finding | whether the mutation set is adequate |
-| the status-block check, `tools/check_status_reply.py` | `MANIFESTO.md` §16 | after each reply, through the harness wiring | the reasons a block does not conform | the truth of any line |
-| the privacy scan, `tools/privacy_scan.py` | none in the donor text; `MANIFESTO.md` §6 on what must not enter, and §8 on what a log entry leaves out; opt-in | beside the round check where a stop-word list exists, and on every commit where the hooks are installed | every place a stop word appears | what belongs on the list: the researcher's. The one mechanism that refuses (a commit, on a finding), overridden with `--no-verify` and the reason in the commit message (`MANIFESTO.md` §12) |
+| the concordance check, `tools/check_concordance.py` | `CHECK_METHODOLOGY.md` item 4 | when a check program has been run | every named value that disagrees with its record, a program that prints no `RESULT:` line, and a program with no record | the verdict word: printed beside the claim's, never a finding |
+| the falsifiability probe, `tools/falsifiability_probe.py` | `CHECK_METHODOLOGY.md` item 3 (executing) and §5 | before a check is relied on; before a plan closes | the matrix, and a survival, or a program that cannot be probed, as a finding | whether the mutation set is adequate |
+| the status-block check, `tools/check_status_reply.py` | `MANIFESTO.md` §16 | after each reply, through the harness wiring; and inside the round check (ROUND-2), on the closing status of every log entry not yet committed | the reasons a block does not conform | the truth of any line |
+| the privacy scan, `tools/privacy_scan.py` | none; `MANIFESTO.md` §6 on what must not enter, and §8 on what a log entry leaves out; opt-in | where a stop-word list exists: beside the round check, and on every commit where the hooks are installed | every place a stop word appears | what belongs on the list: the researcher's. The one mechanism that refuses by default (a commit, on a finding), overridden with `--no-verify` and the reason in the commit message (`GETTING_STARTED.md` §8) |
 | the run ledger, `tools/run_ledger.py` | none; `CHECK_METHODOLOGY.md` §8 on cost | when a check *program*'s basis may have changed; a project whose checks are all written procedures never uses it | what is stale, and the cost of each run | anything: a cache |
 | the residue check, `tools/check_residue.py` | none; `CHECK_METHODOLOGY.md` §7 on a rebuild | after a rebuild or a correction batch to a live draft | candidates for the reading that closes the round | any of them: candidates |
 | the ontology queries, `tools/query_ontology.py`, and `tools/claim_sites.py` | `ONTOLOGY.md` §6 | when a question of §6 is asked; before a claim is revisited | the answer from the fields, flagged where §4 decides | what it says is reading |
@@ -44,21 +45,21 @@ the moment it fires.
 
 | Mechanism | Rule | Fires | Output | Does not decide |
 |---|---|---|---|---|
-| the refuter, [roles/refuter.md](roles/refuter.md) | `MANIFESTO.md` §17; `CHECK_METHODOLOGY.md` §7 | on every sweep or review finding, before it is acted on | stands, refuted with the reason, or narrowed | the fix |
+| the refuter, [roles/refuter.md](roles/refuter.md) | `MANIFESTO.md` §17; `CHECK_METHODOLOGY.md` §7 | on every sweep or review finding, and on every gap the coverage auditor reports, before it is acted on | stands, refuted with the reason, or narrowed | the fix |
 | the blind referee, [roles/blind_referee.md](roles/blind_referee.md) | `MANIFESTO.md` §17; `paper/README.md` | before a version freezes | a review record under `paper/reviews/` | the release: the researcher's |
 | the structure census, [roles/structure_census.md](roles/structure_census.md) | `CHECK_METHODOLOGY.md` §7, the structure lens | at the head of every review, and before a review patches a sentence into a section it has not audited | the census table | whether to rebuild |
-| the deletion ledger, [roles/deletion_ledger.md](roles/deletion_ledger.md) | `CHECK_METHODOLOGY.md` §7, what a rebuild owes | on every rebuild of a section | the ledgers in the version changelog | a content cut: the researcher's |
-| the coverage auditor, [roles/coverage_auditor.md](roles/coverage_auditor.md) | `CHECK_METHODOLOGY.md` §5 and item 2 | before a check backs a claim registered `VERIFIED` or `RULED_OUT` | every atomic assertion classified, each gap refuted by a second reader | the register: the researcher's |
-| the probe as opposition, [roles/falsifiability_probe.md](roles/falsifiability_probe.md) | `CHECK_METHODOLOGY.md` §5 | when a check is written, and before it is relied on | the matrix, and the check's named mutations judged against what the claim depends on | the project's mutation set: a missing mutation is proposed, and the set is amended at the researcher's direction |
+| the deletion ledger, [roles/deletion_ledger.md](roles/deletion_ledger.md) | `CHECK_METHODOLOGY.md` §7, what a rebuild owes | on every rebuild of a section | the ledgers in the version changelog, or in the review where the version is the first | a content cut: the researcher's |
+| the coverage auditor, [roles/coverage_auditor.md](roles/coverage_auditor.md) | `CHECK_METHODOLOGY.md` §5 and item 2 | before a check backs a claim registered `VERIFIED` or `RULED_OUT`, and before a plan closes on its checks | every atomic assertion classified, each gap handed to the refuter | the register: the researcher's |
+| the probe as opposition, [roles/falsifiability_probe.md](roles/falsifiability_probe.md) | `CHECK_METHODOLOGY.md` §5 | when a check is written, before it is relied on, and before a plan closes on it | the matrix, and the check's named mutations judged against what the claim depends on | the project's mutation set: a missing mutation is proposed, and the set is amended at the researcher's direction |
 
 ## Support
 
 | Mechanism | Rule | Fires | Output | Does not decide |
 |---|---|---|---|---|
 | the artifact templates, one per kind, with their guidance in comments | `ONTOLOGY.md` §8: every predicate written as a header field, a stamp, or a registry bullet names the artifact template that pre-prints it, save the two stamps an event writes | when an artifact is started | a form whose mandatory fields are pre-printed | the values |
-| the folder indexes, every `README.md` | `DOCUMENT_GENRES.md` item 8 | when a file is added | the map of the folder, checked | what a file is for |
+| the folder indexes, every `README.md` and the plan index `ROADMAP.md` | `DOCUMENT_GENRES.md` item 8 | when a file is added | the map of the folder, checked | what a file is for |
 | the configuration, `tools/artifacts.toml` | `ONTOLOGY.md` §7 | when a project files its artifacts elsewhere | one edit that every tool follows | the filing convention |
-| the instantiation procedure, `tools/new_project.py` | `VISION.md`, *Expectation*: the researcher sets up quickly; `GETTING_STARTED.md` §1 to §3 | once, when a project is made from the template | a project with the slots it was given filled, the build's own files and the pointers to them gone, the shipped prose in its spelling variant, the template's configuration kept as it shipped for the tools' self-tests, the licenses and the hooks in place, a dated note of what it did and what it left, and the round check run in the new tree | every value in it: each is asked for, or read from an answers file |
+| the instantiation procedure, `tools/new_project.py` | `VISION.md`, *Expectation*: the researcher sets up quickly; `GETTING_STARTED.md` §1 to §3 | once, when a project is made from the template | a project with the slots it was given filled and the values the tools read written, any header field its discipline has taken renamed, the build's own files and the pointers to them gone, the build lens stripped, a front page of its own, the shipped prose in its spelling variant, the template's configuration kept as it shipped for the tools' self-tests, the licenses and the hooks in place, a dated note of what it did and what it left, and the round check run in the new tree | every value in it: each is asked for, or read from an answers file |
 | the hook installer, `tools/install_hooks.sh` | `MANIFESTO.md` §13 and §6 | once per clone | the git hooks | whether to install strict |
 | the harness wirings, [harness/](harness/) | `MANIFESTO.md` §16 and its reply-hook slot | after each reply; at session start | the tools run at those moments | which harness: the researcher's |
 | the guide: [GETTING_STARTED.md](../GETTING_STARTED.md), [HOW_IT_FITS_TOGETHER.md](../HOW_IT_FITS_TOGETHER.md), [FORKING.md](../FORKING.md) | `VISION.md`, *Expectation*: clear guidance on how to begin, and as the project proceeds | when a project is instantiated; at each stage, by the list of prompts the second names | the walkthrough, the system with the round as its unit of time, the prompts to make and when, and how to change a mechanism legibly | any of it: the repository is the researcher's (`FORKING.md`) |

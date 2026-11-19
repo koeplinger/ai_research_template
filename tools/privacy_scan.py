@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The privacy scan: a stop-word list that never enters version control, applied to every file, path, and commit message.
 
-Created 5 September 2026; updated 5 September 2026.
+Created 5 September 2026; updated 19 November 2026.
 
 Opt-in.  Many projects must keep something out of a public repository
 that no rulebook can name in advance: a collaborator, an embargoed topic,
@@ -34,10 +34,10 @@ Usage
                                                   own list, where present, pattern by pattern,
                                                   without printing any of it
 
-Exit status: 0 clean; 1 findings, or a failed self-test; 2 no list, no
-repository to list, or a usage error.  A verdict is never given over an
-empty listing: where git cannot list the tree, nothing is scanned and the
-exit status says so.
+Exit status: 0 clean; 1 findings, or a failed self-test; 2 no list, a
+list holding no pattern, no repository to list, or a usage error.  No
+verdict is given where git cannot list the tree: nothing is scanned, and
+the exit status says so.
 """
 from __future__ import annotations
 

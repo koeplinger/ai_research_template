@@ -11,8 +11,9 @@ names them and says what each does not decide):
 
   log-the-prompt-first      the log holds no uncommitted entry, so this
                             round's is not yet written (section 8)
-  more-than-one-plan-engaged  the plan index shows more than one ENGAGED
-                            plan (research_plans/README.md)
+  more-than-one-plan-engaged  more than one plan's Status: line reads
+                            ENGAGED: the reply says so while it is true
+                            (evidence_and_reasoning/research_plans/README.md)
   plan-closure-checklist    an ENGAGED plan whose execution ledger has
                             every task done or dropped: it stays ENGAGED
                             until the researcher closes it
@@ -45,8 +46,8 @@ Usage
     python3 tools/session_brief.py --reminders   the reminders alone
     python3 tools/session_brief.py --selftest
 
-Exit status: 0 the brief printed; 2 a usage error, or tools/artifacts.toml
-unreadable.
+Exit status: 0 the brief printed; 1 a failed self-test; 2 a usage error,
+or tools/artifacts.toml unreadable.
 """
 from __future__ import annotations
 
@@ -166,11 +167,12 @@ def declined(t: lint_docs.Tree, n: str) -> bool:
 def reminders(t: lint_docs.Tree) -> list[str]:
     out = []
     logdir = t.dir_of_kind("log-entry")
-    entries = sorted(f for f in t.files if t.kind(f) == "log-entry")
+    entries = sorted((f for f in t.files if t.kind(f) == "log-entry"),
+                     key=lambda f: (int(re.match(r"\d*", Path(f).name).group() or -1), f))
     if logdir:
         if lint_docs.git(t.root, "rev-parse", "--verify", "HEAD"):
             # an entry untracked or staged new is taken for this round's; a committed entry edited is the linter's GENRES-2
-            staged = lint_docs.git(t.root, "diff", "--name-only", "-z", "--diff-filter=A", "HEAD", "--", logdir + "/")
+            staged = lint_docs.git(t.root, "diff", "--name-only", "-z", "--no-renames", "--diff-filter=A", "HEAD", "--", logdir + "/")
             new = lint_docs.git(t.root, "ls-files", "--others", "--exclude-standard", "-z", "--", logdir + "/")
             uncommitted = [f for f in (staged + new).split("\0") if f and t.kind(f) == "log-entry"]
         else:
@@ -183,14 +185,14 @@ def reminders(t: lint_docs.Tree) -> list[str]:
     engaged = [n for n, f in sorted(t.plans.items()) if (t.plan_status.get(f) or "").startswith("ENGAGED")]
     if len(engaged) > 1:
         out.append("REMINDER  more-than-one-plan-engaged: " + ", ".join(f"plan {n}" for n in engaged)
-                   + " (research_plans/README.md: say so in the reply while it is true)")
+                   + f" ({t.dir_of_kind('plan')}/README.md: say so in the reply while it is true)")
     for n in engaged:
         states = ledger_states(t, t.plans[n])
         if states and all(re.fullmatch(r"(done|dropped)(,.*)?", s) for s in states):
             out.append(f"REMINDER  plan-closure-checklist: plan {n} has every task done or dropped; it stays ENGAGED until the researcher closes it, and the checklist is governance/reminders.md")
     frozen_changed = []
     if lint_docs.git(t.root, "rev-parse", "--verify", "HEAD"):
-        for f in [x for x in lint_docs.git(t.root, "diff", "--name-only", "-z", "HEAD").split("\0") if x]:
+        for f in [x for x in lint_docs.git(t.root, "diff", "--name-only", "-z", "--no-renames", "HEAD").split("\0") if x]:
             row = t.rows.get(f) if f in t.rows else lint_docs.classify(t.cfg, f)
             if not row or row.get("header", "stamp") == "none":
                 continue
@@ -203,7 +205,8 @@ def reminders(t: lint_docs.Tree) -> list[str]:
         out.append("REMINDER  sweep-after-correction: the body of a frozen artifact differs from its committed version: " + ", ".join(frozen_changed)
                    + " (CHECK_METHODOLOGY.md section 7: a consistency sweep closes every correction batch)")
     fnd = t.first_of_kind("findings")
-    cited = set(lint_docs.TOKEN_CLAIM.findall(lint_docs.LINK_RE.sub(" ", t.prose(fnd)))) if fnd else set()
+    rows = [l for l in t.prose(fnd).splitlines() if re.match(r"\|\s*F[0-9]{3,}\s*\|", l)] if fnd else []
+    cited = set(lint_docs.TOKEN_CLAIM.findall(lint_docs.LINK_RE.sub(" ", "\n".join(rows))))
     established = [n for n, f in sorted(t.claims.items()) if fields(t, f).get(lint_docs.F("register"), (0, ""))[1] in ("VERIFIED", "RULED_OUT") and n not in cited]
     left = [n for n in established if declined(t, n)]
     gate = [n for n in established if n not in left]
@@ -221,7 +224,7 @@ def reminders(t: lint_docs.Tree) -> list[str]:
     if unchecked:
         out.append(f"REMINDER  verification-not-recorded: registered beyond OPEN yet {lint_docs.F('verified-by')} unchecked: " + ", ".join(titled(t, n) for n in unchecked)
                    + " (MANIFESTO.md section 5)")
-    return out or ["  (no reminder the record can compute; the rest are the assistant's by reading)"]
+    return out or ["  (no reminder this brief computes; the linter reports an unresolved reference token, and the rest are the assistant's by reading)"]
 
 
 def brief(t: lint_docs.Tree) -> list[str]:

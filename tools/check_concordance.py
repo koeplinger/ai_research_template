@@ -22,7 +22,7 @@ are not read.
 WHAT IT DOES NOT DECIDE.  A written check procedure has no program and
 nothing to run: it is listed as such and not compared.  The verdict word
 is printed beside the backed claim's Verdict, marked where the words
-differ, never a finding: who assigns the register and its verdict is
+differ, never a finding: who assigns the register is
 CHECK_METHODOLOGY.md section 1's.  Single-sourcing a figure across
 documents, and the wrong value stated in a passage about the right
 subject, are reading duties of the sweep (CHECK_METHODOLOGY.md section

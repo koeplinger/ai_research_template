@@ -1,6 +1,6 @@
 # Research result
 
-*Created 3 September 2026; updated 3 September 2026.*
+*Created 3 September 2026; updated 19 November 2026.*
 
 <!-- The condensed summary of what the project has established, at the
      altitude of the write-up. Every sentence is backed by a claim, cited
@@ -10,9 +10,9 @@
      findings, and a fact stated here is stated once (DOCUMENT_GENRES.md,
      "Indexes and cross-references are kept on purpose"). -->
 
-Nothing is established yet. <!-- Delete this line when the first plan
-closes, and replace with one section per closed plan or per line of
-inquiry, as below. -->
+Nothing is established yet. <!-- Delete this line when the first
+finding is entered in FINDINGS.md, and replace with one section per
+closed plan or per line of inquiry, as below. -->
 
 ## <!-- Plan NNN, or the line of inquiry -->
 

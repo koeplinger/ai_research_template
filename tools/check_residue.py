@@ -32,8 +32,9 @@ draft in these forms has nothing for it to read.  It honors a row's
              across the live drafts; a markdown draft's block quotes are not
              read, since a passage quoted twice is not an echo
   RESIDUE-6  structure: a heading level that skips, a heading title that
-             repeats (reported at the repeat), an explicit heading number
-             out of sequence
+             repeats (reported at the repeat), an explicit number on a
+             heading of level two (a LaTeX source's section) out of
+             sequence
   RESIDUE-7  the ledgers of a live changelog against the draft it
              describes (paper/_template_changelog.md): a cut sentence
              classed decoration or content still in the draft, a cut
@@ -113,7 +114,7 @@ def drafts_of(t: lint_docs.Tree) -> list[Draft]:
     if pub.get("enabled"):
         for g in pub.get("sources", []):
             for f in t.files:
-                if lint_docs.match(g, f) and f.endswith(".tex"):
+                if lint_docs.match(g, f) and f.endswith(".tex") and all(d.path != f for d in out):
                     out.append(Draft(t, f, "tex"))
     return out
 

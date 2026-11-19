@@ -19,9 +19,9 @@ matter stays ruled*).
 
 | Role | Fires | Reads | Returns |
 |---|---|---|---|
-| [refuter.md](refuter.md) | on every sweep or review finding | the finding, or several resting on the same passages; the passages; and what they cite | stands, refuted with the reason, or narrowed, for each finding |
-| [documentation_sweep.md](documentation_sweep.md) | at the moments its *Fires* list names | the project's documentation, as one system, and the log's prompts since the last documentation sweep | the disagreements, each with its two homes |
-| [blind_referee.md](blind_referee.md) | before a version freezes | the write-up alone | a review record |
+| [refuter.md](refuter.md) | on every sweep or review finding, and every gap the coverage auditor reports | the finding, or several resting on the same passages; the passages; and what they cite | stands, refuted with the reason, or narrowed, for each finding |
+| [documentation_sweep.md](documentation_sweep.md) | at the moments its *Fires* list names | the project's documentation, as one system, and the log's prompts since the last documentation sweep | the findings, ranked, each with its file, line, problem, and fix, and the files read in full |
+| [blind_referee.md](blind_referee.md) | before a version freezes | the write-up alone, or with what is released with it | a review record |
 | [structure_census.md](structure_census.md) | at the head of a review, and before a review patches a section | the section and the sections it refers to | the census table |
 | [deletion_ledger.md](deletion_ledger.md) | on every rebuild | the section before and after, and the census where one was | the two ledgers and the net word delta |
 | [coverage_auditor.md](coverage_auditor.md) | before a check backs an established claim | the check, its record, the claim, and a source at a locus | every assertion classified |

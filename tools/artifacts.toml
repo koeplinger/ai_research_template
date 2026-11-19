@@ -17,7 +17,7 @@
 # numbered form excludes README.md and the _template files.
 #
 # genre, the default the linter derives from (ONTOLOGY.md, section 3):
-#   current-state  described what is; corrected in place
+#   current-state  describes what is; corrected in place
 #   immutable      never edited once committed
 #   frozen         a dated record; frozen on writing
 #   plan-owned     follows the owning plan's Status: line
@@ -31,8 +31,8 @@
 #   exempt         no header, no genre check: non-prose, imported, the
 #                  statement of intent, or the configuration as shipped
 #                  that a project keeps for the tools' self-tests
-# A Plan: header line overrides any default but immutable, self, and
-# exempt, and a released version named _vN: live while that plan is
+# A Plan: header line overrides any default but immutable, frozen, self,
+# and exempt, and a released version named _vN: live while that plan is
 # DRAFT or ENGAGED, frozen when CLOSED.
 # header: stamp (a markdown artifact) | docstring (a program) |
 #         comment (a configuration file or a shell script: its comment lines
@@ -80,7 +80,8 @@ dashes = "no-em-dash"
 # another's precise sentence: "robust to <perturbation>" is the honest
 # result of a robustness check, and "scholars agree" with the works cited
 # beside it is a literature review doing its job.  An empty list turns the
-# check off; removing the key leaves the shipped list in force.  One hit
+# phrase half of that item off, its heading rule running on; removing
+# the key leaves the shipped list in force.  One hit
 # the researcher has ruled to leave goes in the [[accepted]] list below.
 paper_phrases = ["without loss of generality", "clearly", "it is easy to see",
                  "it follows immediately", "as is well known", "it is well established that",
@@ -166,7 +167,8 @@ internal-consistency = ["consistent", "inconsistent"]
 [parties]
 # {{PARTIES}}: the roster By: and Verified-by: may name, beyond the
 # researcher and the assistant.  Empty means unfilled; the roster check is
-# skipped and reported once, when a By: line exists to apply it to.
+# skipped and reported once, when a By: or Verified-by: line names a
+# party beyond them.
 # ["none"] records by decision that there is no one beyond them: the check
 # runs, and any other name, "none" included, is reported.  Unlike "none"
 # for the spelling and the dashes, which turns a check off, this "none"
@@ -175,17 +177,18 @@ names = []
 
 [log]
 # The parts of a log entry the round check looks for (prompt_logs/README.md):
-# the first two delimit the verbatim region, which no check reads; the last
-# is the closing status, whose fenced block the round check reads.
+# the first two delimit the verbatim region, which no prose check reads;
+# the last is the closing status, whose fenced block the round check reads.
 parts = ["--- PROMPT START ---", "--- PROMPT END ---", "## What was done", "## Corrections and departures", "## Closing status"]
 
 [registry]
 # {{REFERENCE_FIELDS}}: the bullets EVERY registry entry must carry.
 required = ["Authors", "Title", "Where", "Year", "Identifier", "Keywords", "Standing"]
-# Further bullets required of an entry that declares "- Kind: <name>", so
-# that a registry holding several kinds of work enforces more than their
+# Further bullets required of an entry that declares "- Kind: <name>", the
+# bullet taking the name [fields.roles] gives the kind role, so that a
+# registry holding several kinds of work enforces more than their
 # intersection rather than dropping to it.  Empty means every entry is
-# checked against `required` alone and a Kind: bullet is optional prose.
+# checked against `required` alone and that bullet is optional prose.
 # A project fills this with its own kinds; the names below are examples of
 # the shape, commented out.
 [registry.by_kind]
@@ -203,7 +206,8 @@ required = ["Authors", "Title", "Where", "Year", "Identifier", "Keywords", "Stan
 # the main thread may run within a round (paper/README.md, Conventions).
 # Freshness is by modification time, which a checkout does not preserve:
 # build once after a clone or a branch switch before the gate is
-# meaningful.
+# meaningful.  While the table is enabled, the residue check also reads
+# the .tex files its sources match (tools/check_residue.py).
 enabled = false
 build = ""          # the command that builds the deliverable, named in a finding
 sources = []        # globs of what the build reads, in reading order: first-citation order follows it, alphabetically within a glob
@@ -224,7 +228,7 @@ cite = ""           # a regular expression whose first group is the keys at a ci
 # word its request otherwise ("Rerun LaTeX."), so a project adds the
 # forms its packages print, or builds until nothing changes:
 # enabled = true
-# build = "latexmk -pdf paper/main.tex"
+# build = "latexmk -pdf -cd paper/main.tex"
 # sources = ["paper/*.tex", "paper/*.bib"]
 # outputs = ["paper/main.pdf"]
 # log = "paper/main.log"
@@ -439,7 +443,9 @@ header = "none"
 # The non-prose forms of the same thing: a table, a figure, an alignment,
 # an extract.  No header; dated by the row that lists it in the folder's
 # index and by the check that produced it.  This row stands below the
-# prose row, so a .md there matches the prose row first.
+# prose row, so a numbered .md there matches the prose row first; one not
+# numbered, against the folder's naming, falls to this row: no header, no
+# genre check.
 
 [[artifact]]
 kind = "registry"
@@ -496,7 +502,8 @@ glob = "paper/**/*.tex"
 genre = "exempt"
 header = "none"
 # A typeset source is out of the linter's reach: the editorial checks read
-# markdown, and the header check reads a stamp.  Its prose is the sweep's.
+# markdown, and the header check reads a stamp.  Its prose is read in the
+# consistency sweep of the record (CHECK_METHODOLOGY.md, section 7).
 [[artifact]]
 kind = "bibliography"
 glob = "paper/**/*.bib"
@@ -572,8 +579,8 @@ genre = "exempt"
 header = "none"
 # In a project, the template's configuration as it shipped, which the
 # setup tool keeps unchanged for the tools' self-tests (tools/README.md);
-# never edited by hand, and not the project's configuration.  The template itself
-# has no such file.
+# never edited by hand, and not the project's configuration.  The template
+# itself has no such file.
 
 [[artifact]]
 kind = "config"

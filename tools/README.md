@@ -5,14 +5,16 @@
 Project scaffolding: the programs that keep the record honest. Nothing
 here is part of the research. Every tool needs nothing beyond the Python
 standard library (3.11 or later) and git; the hook installer is a shell
-script. Each carries a `--selftest` that builds a scratch project and
-confirms every case it claims, a planted defect firing or an answer
-coming out as stated, and reports rather than blocks: a finding names
-the rulebook item it implements, and the researcher decides
-(`MANIFESTO.md` §13). The one exception is the privacy scan the hooks
-install, which refuses a commit, since a leak into the history is hard
-to undo; the researcher overrides it with `--no-verify` and says why in
-the commit message.
+script. Each carries a `--selftest` that confirms every case it claims,
+a planted defect firing or an answer coming out as stated, in a scratch
+project it builds; the privacy scan's self-test builds a scratch
+repository instead, and the status-block check's holds its cases in
+memory. Each reports rather than blocks: a finding names the rulebook
+item it implements, where there is one, and the researcher decides
+(`MANIFESTO.md`, opening paragraph, and §13). The one exception is the
+privacy scan the hooks install, which refuses a commit, since a leak
+into the history is hard to undo; the researcher overrides it with
+`--no-verify` and says why in the commit message.
 
 The scratch project a self-test builds carries the template's
 configuration as it shipped, since the files the self-test plants are
@@ -25,7 +27,8 @@ project that takes newer tools from the template copies the newer
 template's `tools/artifacts.toml` over that copy as well; one made
 before the setup tool kept the copy makes it the same way, named
 artifacts_shipped.toml beside the configuration, and gives it the row
-the newer template's configuration gives it and a row of its own in
+the newer template's configuration gives it, above the configuration's
+own row, which would otherwise match it first, and a row of its own in
 this index, under that of the configuration.
 
 A finding the researcher has seen and ruled to leave is entered in the

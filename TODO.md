@@ -32,11 +32,10 @@ nothing in the rulebooks depends on a particular assistant. The wiring
 does. Today one harness is wired and the rest of the arrangement is a
 promise: `governance/harness/` holds one folder per harness,
 `{{REPLY_HOOK}}` is the slot that names which, and
-`governance/harness/claude_code/README.md`, *Another harness*, says what
-replacing it costs, which is itself a thing to fix: the recipe for leaving
-a harness lives inside the folder it tells you to delete. A second wiring
-turns that promise into a demonstrated fact, and until one exists the claim that the template endorses no harness
-is untested.
+`governance/harness/README.md`, *Adding a wiring, and removing one*, says
+what adding a wiring or removing the shipped one costs. A second wiring
+turns that promise into a demonstrated fact, and until one exists the
+claim that the template endorses no harness is untested.
 
 **What it touches.** A new folder under `governance/harness/`, with its
 own README and whatever the harness needs to run
@@ -65,9 +64,9 @@ source, a plan, and a write-up relate through them.
 
 **Why.** The ontology is the thing that makes the artifacts one system
 rather than a folder of forms, and it is the hardest part to hold in the
-head from a table of thirty rows. A reader who can see the graph can see
-at once what a claim rests on, what a check backs, and where a predicate
-has no arrow into it.
+head from the forty-eight rows of its catalogue. A reader who can see the
+graph can see at once what a claim rests on, what a check backs, and
+where a predicate has no arrow into it.
 
 **What it touches.** `ONTOLOGY.md` first, and probably
 `HOW_IT_FITS_TOGETHER.md`, which explains the same thing in words for a
@@ -86,9 +85,9 @@ against each other.
 
 **What.** A mode in which a researcher who has cloned the template types
 something like *let's start* and is walked through the decisions, one
-question at a time: the field of work, the researcher's own role, the
-instrument of record, the dash convention, the rest of the sixteen slots,
-and finally the research question and the first plan.
+question at a time: the expert the assistant works as, the instrument of
+record, the dash convention, the rest of the sixteen slots, and finally
+the research question and the first plan.
 
 **Why.** The template asks for sixteen decisions before any work begins,
 and `GETTING_STARTED.md` explains them well but assumes a reader who will
@@ -97,7 +96,8 @@ conversation, and the assistant is already there. It would also make the
 setup round self-documenting: the answers are the log entry.
 
 **What it touches.** `tools/new_project.py` already asks these questions
-in a terminal and writes both halves of every value, so the machinery
+in a terminal and writes both halves of every value but `[publication]`
+and `[registry.by_kind]`, left to be filled by hand, so the machinery
 exists; what is missing is the conversational front and the standing
 prompt that starts it. That means: a role or a prompt under
 `governance/roles/` with the questions in order, what each decides, and

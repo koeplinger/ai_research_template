@@ -54,7 +54,7 @@ Marks in the file: <!-- N, and the route that counted them -->; marks read: <!--
 |---|---|---|---|
 | <!-- 1 --> | <!-- page 4, second paragraph --> | <!-- the margin note "give the interval", beside the estimate --> | <!-- applied in vM, section 3.2 / brought: the reason, prompt NNN / not applied, at the researcher's ruling, prompt NNN --> |
 
-## The deletion ledger
+## Deletion ledger
 
 <!-- For a section rebuilt rather than corrected (CHECK_METHODOLOGY.md
      section 7): every cut sentence or display classified restatement,
@@ -66,7 +66,7 @@ Marks in the file: <!-- N, and the route that counted them -->; marks read: <!--
 |---|---|---|
 | | | |
 
-## The additions ledger
+## Additions ledger
 
 <!-- For a rebuilt section: every sentence added, with where it entered,
      and the round's net word delta (CHECK_METHODOLOGY.md section 7).

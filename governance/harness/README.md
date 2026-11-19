@@ -1,11 +1,11 @@
 # Harness wirings
 
-*Created 5 September 2026; updated 16 November 2026.*
+*Created 5 September 2026; updated 19 November 2026.*
 
 One folder per harness, each holding the commands that make that
-harness run this repository's tools at the moments the manifesto names:
-after each reply (the reply hook of `MANIFESTO.md` §16) and at session
-start (`ONBOARDING.md`). The tools themselves know no harness; a wiring
+harness run this repository's tools at two moments: after each reply
+(the reply hook of `MANIFESTO.md` §16) and at session start
+(`ONBOARDING.md`). The tools themselves know no harness; a wiring
 is a thin adapter from what the harness provides (a transcript, a hook
 object, an environment variable) to what a tool reads (a reply on
 standard input, a repository root).
@@ -47,7 +47,7 @@ does with the verdict, is the adapter's business.
 
 **To remove one**, the same list in reverse, and then delete the folder
 and its settings file. **Do not delete `tools/check_status_reply.py`**:
-the round check imports it, so ROUND-2 goes with it. A project whose
+the round check imports it and does not run without it. A project whose
 harness can run neither command keeps the form of `MANIFESTO.md` §16 by
 hand and says so in the reply-hook slot; the checker still runs inside the
 round check.

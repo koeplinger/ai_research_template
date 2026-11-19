@@ -64,7 +64,8 @@ What it does, printing each step and what it could not do:
      and what it left to the researcher, and points to it from the head of
      GETTING_STARTED.md; and stamps every file it changed, and only those,
      with the day it runs, read from the clock: a file it did not change
-     keeps the template's dates (DOCUMENT_GENRES.md section 3);
+     keeps the template's dates (DOCUMENT_GENRES.md section 3), and an
+     artifact template keeps its placeholder, changed or not;
  11. runs the round check in the new tree and prints what it found.
 
 It decides nothing about the research: every value is the researcher's,
@@ -87,10 +88,13 @@ showing what the file gave.  Without `--answers` it asks about all of
 them.  `--yes` asks nothing and uses the file as it stands.
 
 Exit status: 0 when the new tree's round check is clean; 1 when it reports
-findings (which are named, and are the researcher's to clear); 2 on a
-usage error, an answers file this program cannot use, a target that exists
-and is not empty, is inside the template, or contains it, or a machine
-without git.
+findings (which are named, and are the researcher's to clear); 2, with
+nothing written, on a usage error, an answers file this program cannot
+use, a target that exists and is not empty, is inside the template, or
+contains it, a machine without git, or a template configuration it cannot
+read; 2 also on a failure during the run, after which the target is
+removed, and when the new tree's round check reports itself misconfigured,
+in which case the new tree stays.
 """
 from __future__ import annotations
 
@@ -303,7 +307,7 @@ def walk(root: Path, suffixes: tuple[str, ...] | None = None) -> list[Path]:
 def toml_str(value: str) -> str:
     """A TOML basic string: the escapes the format requires, and no others."""
     out = value.replace("\\", "\\\\").replace('"', '\\"')
-    return '"' + out.replace("\n", "\\n").replace("\t", "\\t").replace("\r", "\\r") + '"'
+    return '"' + re.sub(r"[\x00-\x08\x0a-\x1f\x7f]", lambda m: f"\\u{ord(m.group(0)):04x}", out) + '"'
 
 
 def toml_list(items: list[str]) -> str:
@@ -473,7 +477,7 @@ def copy_tree(src: Path, dst: Path) -> tuple[str, list[str]]:
     if paths is None:
         def ignore(directory: str, names: list[str]) -> set[str]:
             out = {n for n in names if n in top and Path(directory) == src}
-            out |= {n for n in names if n in ("__pycache__", ".pytest_cache")}
+            out |= {n for n in names if n in ("__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache")}
             out |= {n for n in names if n.startswith(".run_ledger.json")}
             return out
 
@@ -657,9 +661,10 @@ def rename_fields(root: Path, rename: dict) -> tuple[int, list[str]]:
     if not pairs:
         return 0, []
     n_files, left = 0, []
+    # The guide's pages and GLOSSARY.md are renamed and read like any other
+    # file: they are about slots, not fields, and they tell the researcher
+    # which field to write.
     for p in walk(root, (".md", ".py")):
-        if p.name in ABOUT_SLOTS:
-            continue
         # The tools read a field's name from the configuration; their sources,
         # and the scratch projects their self-tests plant, keep the shipped
         # names, as the configuration they test with does (step 6).
@@ -676,8 +681,6 @@ def rename_fields(root: Path, rename: dict) -> tuple[int, list[str]]:
     # prose about the field and is the researcher's to reword.
     for old, _ in pairs:
         for p in walk(root, (".md",)):
-            if p.name in ABOUT_SLOTS:
-                continue
             for i, line in enumerate(read(p).split("\n"), 1):
                 if re.search(rf"(?<![\w-]){re.escape(old)}(?![\w-]):?", line) and f"{old}:" not in line:
                     left.append(f"{p.relative_to(root)}:{i} still says {old!r}")
@@ -695,9 +698,11 @@ def convert_spelling(root: Path, want: str, shipped: str, words: dict) -> int:
     """Step 4.  The shipped prose is written in one variant; a project that
     picks another would inherit a failing gate on prose it did not write.
     The two starter lists are parallel, so the conversion is exact for the
-    words the check knows, which are the only ones it reports; what the
-    check does not read keeps its spelling, so a quotation or an example
-    of the other variant survives."""
+    words the check knows, in lower case or with an initial capital and
+    clear of a hyphen; one in capitals or beside a hyphen, which the check
+    also reports, is left for the round check to name.  What the check
+    does not read keeps its spelling, so a quotation or an example of the
+    other variant survives."""
     if not want or want == shipped or want not in words or shipped not in words:
         return 0
     pairs = [(a, b) for a, b in zip(words[want], words[shipped]) if a != b]
@@ -1113,8 +1118,8 @@ def ask(values: dict) -> dict:
     print("\nRenaming a header field your discipline has taken (GLOSSARY.md).")
     print("  Blank keeps what is shown; otherwise role=Name, comma-separated. A Name is a")
     print("  capital letter, then letters and hyphens, each from A to Z, opening with none")
-    print("  of Created, Released, Reserved, Pre-registered, and is no other field's nor a")
-    print("  derived predicate's (ONTOLOGY.md section 1.1).")
+    print("  of Created, Released, Reserved, Pre-registered (ONTOLOGY.md section 1.1), and")
+    print("  is no other field's nor a derived predicate's (GLOSSARY.md).")
     while True:
         got = input(f"    [{', '.join(f'{k}={v}' for k, v in rename.items())}] > ").strip()
         parts = [p for p in got.split(",") if p.strip()] if got else []
@@ -1324,7 +1329,7 @@ def instantiate(src: Path, dst: Path, answers: dict, quiet: bool = False) -> int
 
         hooks = subprocess.run(["bash", str(dst / "tools" / "install_hooks.sh")],
                                cwd=dst, capture_output=True, text=True)
-        p("  9. the git hooks: installed, advisory" if hooks.returncode == 0
+        p("  9. the git hooks: installed; the round check reports, and the privacy scan refuses once its list exists" if hooks.returncode == 0
           else "  9. the git hooks: NOT INSTALLED, run tools/install_hooks.sh yourself")
         if hooks.returncode == 0:
             did.append("installed the git hooks")
@@ -1337,6 +1342,9 @@ def instantiate(src: Path, dst: Path, answers: dict, quiet: bool = False) -> int
         pointed = write_setup_pointer(dst)
         if not pointed:
             left.append("the passage of `GETTING_STARTED.md` on the tool, which here points to this note")
+        left.append("the removal of the shipped harness wiring, which it copies whatever the reply-hook answer, "
+                    "where this project runs on another harness (`governance/harness/README.md`, *Adding a "
+                    "wiring, and removing one*)")
         left.append("the setup decisions it never makes: the privacy scan's list, before the first commit; the two "
                     "standing directions; and whether the shipped Python check suite stays (`GETTING_STARTED.md` §1)")
         note, indexed = write_setup_note(dst, day, iso, did, left)
@@ -1359,7 +1367,7 @@ def instantiate(src: Path, dst: Path, answers: dict, quiet: bool = False) -> int
     except Exception as e:                                    # noqa: BLE001
         shutil.rmtree(dst, ignore_errors=True)
         print(f"new_project: {type(e).__name__}: {str(e).replace(str(dst.resolve()), dst.resolve().name)}\n"
-              "new_project: nothing was left behind; the target was removed", file=sys.stderr)
+              "new_project: the target was removed; nothing of the run remains", file=sys.stderr)
         return 2
 
     p(NEXT)
@@ -1427,7 +1435,7 @@ def selftest() -> int:
         check("every owner's Slots row carries its value", not unfilled, str(unfilled[:3]))
         check("nothing of the template's own construction is left",
               not any((dst / x).exists() for x in
-                      ("example", ".review", "tools/new_project.py")))
+                      ("example", ".review", "TODO.md", "tools/new_project.py")))
         check("no build lens survives",
               not [str(f.relative_to(dst)) for f in walk(dst, (".md",))
                    if "Build lens" in read(f) and f.name not in ABOUT_SLOTS])
@@ -1485,7 +1493,7 @@ def selftest() -> int:
         check("no file of the project names this program, or links to the example or the work list", not named, str(named))
         sel = subprocess.run([sys.executable, str(dst / "tools" / "lint_docs.py"), "--selftest"],
                              cwd=dst, capture_output=True, text=True)
-        check("the project's own tools can still test themselves", sel.returncode == 0,
+        check("the project's own linter can still test itself", sel.returncode == 0,
               (sel.stdout or sel.stderr).strip().split("\n")[-1][:110])
         check("the template's configuration is kept as it shipped beside the project's own, and indexed",
               (dst / SHIPPED).is_file() and read(dst / SHIPPED) == read(ROOT / "tools" / "artifacts.toml")
@@ -1559,7 +1567,7 @@ def selftest() -> int:
 
     for target in (ROOT, ROOT / "inside", ROOT.parent):
         rc = instantiate(ROOT, target, SELFTEST_ANSWERS, quiet=True)
-        check(f"a target inside the template is refused: {target.name or target}",
+        check(f"a target that is the template, is inside it, or contains it is refused: {target.name or target}",
               rc == 2 and (target == ROOT or not (target / "MANIFESTO.md").exists()))
 
     # An empty-answers run from a scratch template holding files git does not
@@ -1746,7 +1754,7 @@ def main(argv: list[str]) -> int:
     try:
         answers = tomllib.loads(read(answers_path)) if answers_path else {}
     except (OSError, tomllib.TOMLDecodeError) as e:
-        print(f"new_project: cannot read {answers_path}: {e}", file=sys.stderr)
+        print(f"new_project: cannot read {answers_path.name}: {getattr(e, 'strerror', None) or e}", file=sys.stderr)
         return 2
     problem = target_problem(ROOT, into)
     if problem:

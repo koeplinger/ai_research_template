@@ -6,8 +6,8 @@ This file defines the unit of verification in a repository built from the
 template: the **check**. It owns four things the other rulebooks point to:
 the **register** vocabulary, in which every claim's trust level is stated;
 the **instrument or procedure of record**; the discipline that makes a
-passing check mean something; and the **standing reservation**, the
-instrument for a question the project has deliberately deferred. It also
+passing check mean something; and the **standing reservation**, which
+records a question the project has deliberately deferred. It also
 treats a **written check procedure** as a check in every rule below.
 
 A check is one self-contained investigation of one claim, question, or
@@ -17,8 +17,9 @@ that owns it is open, and frozen once that plan closes
 project fixes once in the Slots table below: {{CHECK_FORM}}.
 
 > **Build lens.** The template makes no research claims and runs no
-> checks. The registers, the rules, and the sweep are shipped, not
-> applied; the build's own verification is `MANIFESTO.md` §5's build lens.
+> checks. The registers, the rules, and the consistency sweep of the
+> record are shipped, not applied; the build's own verification is
+> `MANIFESTO.md` §5's build lens.
 
 ## Words used here
 
@@ -74,14 +75,16 @@ can be implemented:
 
 ```
 Register: VERIFIED          one of VERIFIED, DERIVED, ATTESTED, SPECULATIVE, RULED_OUT, OPEN
-Kind: documentary           one of the kinds of §2
+Kind: documentary           one of the kinds of §2, as [vocab] kinds writes it
 Verdict: confirmed          a value from that kind's vocabulary; none while OPEN or SPECULATIVE
 Plan: 003, task 2           the owning plan (DOCUMENT_GENRES.md)
 ```
 
-A check's header adds `Mutation: <name>`, naming one or more members of
-the mutation set (Slots below) by the short names `[vocab] mutations`
-lists. A claim inside a standing reservation (§6) also carries
+A check's header carries no `Register:`, `Kind:`, or `Verdict:` line,
+but the lines `ONTOLOGY.md` §8 requires of a check, among them
+`Mutation: <name>`, which names one or more members of the mutation set
+(Slots below) by the short names `[vocab] mutations` lists. A claim
+inside a standing reservation (§6) also carries
 `Reserved <D Month YYYY>, plan NNN`: a comma after the date and never a
 colon, so the line is a stamp and not a change narrative
 (`DOCUMENT_GENRES.md`).
@@ -103,8 +106,8 @@ repository states trust in, and `PRECEDENCE.md` assigns authority by it.
 | `OPEN` | stated precisely, not settled | nothing yet |
 
 **A measured or estimated quantity carries its tolerance, and the
-registers are read at it.** Where a claim states a number that an
-instrument, a sample, or a computation reaches only within a margin, the
+registers are read at it.** Where a claim states a number that a
+measurement, a sample, or a computation reaches only within a margin, the
 claim states the margin with it: the interval, the precision, the seed or
 replicate count, and the decision rule where one was pre-registered. Then
 `VERIFIED` means a check would fail if the statement were false *at that
@@ -470,7 +473,7 @@ and naming who followed it.
 **Cost is measurement, never a gate.** A check is judged by its verdict; a
 slow or expensive check is not a failing one. Where cost is recorded, it
 is recorded so the expensive checks can be examined for avoidable work,
-and a check that is expensive of necessity says so in its header, so the
+and a check that is expensive of necessity says so in its part 1, so the
 next reader does not go looking.
 
 ---
@@ -482,8 +485,9 @@ The tools check the following and report what they find (`MANIFESTO.md`
 
 1. **Register.** Every file matching the configured claim pattern carries
    exactly one `Register:` line, one `Kind:` line, and one `Verdict:`
-   line, each holding a value from the vocabularies of §1 and §2. A file
-   with none, or more than one, is reported.
+   line, each holding a value from the vocabularies of §1 and §2, as
+   `[vocab]` in `tools/artifacts.toml` lists them. A file with none, or
+   more than one, is reported.
 2. **No unfalsifiable assertion.** In a check program, no reported
    assertion has a syntactically constant condition. Such an assertion
    passes whatever the work does.
@@ -492,7 +496,7 @@ The tools check the following and report what they find (`MANIFESTO.md`
    `tools/artifacts.toml` lists them. For a check that executes, the probe
    applies exactly the mutations that check names to a scratch copy,
    re-runs it, and reports it if it still passes. For a written check
-   procedure the probe reports only an absent or unrecognized `Mutation:`
+   procedure the tools report only an absent or unrecognized `Mutation:`
    line; whether the planted alteration was caught is read from the check
    record.
 4. **Concordance.** A check program prints a summary line
@@ -504,9 +508,9 @@ The tools check the following and report what they find (`MANIFESTO.md`
    seed count the claim states. A program that prints every digit it has
    makes its own record disagree with it on the next machine.
 5. **Index.** Every check appears in the index that lists it.
-6. **Citation sites.** Every place where a claim cites another claim is
-   listed, so that rule six of §5 can be applied by reading. This is a
-   report, not a verdict.
+6. **Citation sites.** Every place where a claim or a check record cites
+   a claim is listed, so that rule six of §5 can be applied by reading.
+   This is a report, not a verdict.
 
 Single-sourcing a figure, and finding the wrong value stated in a passage
 about the right subject, are reading duties and belong to the sweep
@@ -518,4 +522,4 @@ about the right subject, are reading duties and belong to the sweep
 |---|---|---|
 | `{{CHECK_FORM}}` | What a check is in this project | an executable program with a printed verdict; a written collation protocol against the source of record; an estimation script plus a pre-registered analysis protocol; a proof written out and cross-checked by a second reader |
 | `{{VERIFICATION_TOOL}}` | The instrument or procedure of record (§3), identified so a second reader can return to it | a computer-algebra system at a stated version; a statistics environment pinned to exact package versions, holding the raw data at a named release; the manuscript at its shelfmark, consulted as a digital surrogate; a printed edition, named and dated |
-| `{{MUTATION_SET}}` | Named alterations to things claims *depend on*, kept where the checker can apply them. Never a perturbation a claim asserts independence from: that is a robustness check | reverse one structural convention, flip one defining sign, drop one axiom; corrupt one linked identifier, mis-key one variable's coding, drop one stratum from the frame; substitute a variant reading, swap the base manuscript, alter one date in the chronology |
+| `{{MUTATION_SET}}` | Named alterations to things claims *depend on*, their short names listed in `[vocab] mutations`. Never a perturbation a claim asserts independence from: that is a robustness check | reverse one structural convention, flip one defining sign, drop one axiom; corrupt one linked identifier, mis-key one variable's coding, drop one stratum from the sample frame; substitute a variant reading, swap the base manuscript, alter one date in the chronology |

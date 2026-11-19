@@ -9,11 +9,12 @@
 # as MANIFESTO.md section 13 has every check inform and the researcher
 # decide, unless the hooks were installed with --strict.  A refusal names
 # the override, git commit --no-verify, and asks that the commit message
-# say why (MANIFESTO.md section 12).  A hook this script did not write is
-# left alone unless --force is given; a hooks directory shared beyond this
+# say why, as MANIFESTO.md section 12 has it for a correction made by hand.
+# A hook this script did not write is left alone unless --force is given;
+# a hooks directory shared beyond this
 # repository (core.hooksPath) is never written without --force.
 #
-# Created 5 September 2026; updated 16 November 2026.
+# Created 5 September 2026; updated 19 November 2026.
 #
 # Usage
 #   tools/install_hooks.sh              install pre-commit and commit-msg
@@ -29,7 +30,9 @@
 #                                       --strict; a foreign hook is left alone
 #
 # Exit status: 0 done; 1 refused, or a failed self-test; 2 not a repository,
-# or python3 not found.
+# or an unknown argument.  Without python3 on PATH it installs the hooks
+# and warns; the pre-commit hook then refuses every commit until python3
+# is found.
 set -u
 
 MARK="# installed by tools/install_hooks.sh"
@@ -99,7 +102,7 @@ install() {
     echo "install_hooks: hooks for this repository live at $dir (core.hooksPath), shared beyond it; not written (use --force to write there anyway)"
     return 1
   fi
-  command -v python3 >/dev/null || echo "install_hooks: python3 is not on PATH; the hooks will not run until it is" >&2
+  command -v python3 >/dev/null || echo "install_hooks: python3 is not on PATH; until it is, the pre-commit hook refuses every commit" >&2
   mkdir -p "$dir"
   for name in pre-commit commit-msg; do
     target="$dir/$name"

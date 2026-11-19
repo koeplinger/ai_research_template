@@ -4,7 +4,7 @@
 Created D Month YYYY; updated D Month YYYY.
 Plan: NNN, task M
 Backs: [claim NNN]
-Instrument: <name, and version | edition | release>
+Instrument: <!-- name, and version | edition | release -->
 Frame: <what the quantities are stated in, and what fixes it; delete where there are none>
 Mutation: <name[, name], each a member of the project's mutation set, bound in MUTATIONS below>
 Robustness: <name[, name], disjoint from Mutation, or delete the line>
@@ -143,8 +143,9 @@ def discrepancies(obj) -> None:
 #   documentary: confirmed | not confirmed
 #   interpretive: supported | underdetermined | contradicted
 #   internal-consistency: consistent | inconsistent
-# For a two-valued kind the default below suffices.  For a three-valued kind
-# set the verdict from WHICH assertions failed, not from how many.  The RESULT
+# For a two-valued kind the default below suffices.  For a kind with three
+# or four values, and for the inferential kind's two pairs, set the verdict
+# from WHICH assertions failed, not from how many.  The RESULT
 # line is the machine-readable summary the concordance check compares with
 # the record: RESULT: <verdict>; <name>=<value>; ...
 # ---------------------------------------------------------------------------

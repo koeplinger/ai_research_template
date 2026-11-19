@@ -68,7 +68,7 @@ that needs it and has no prose carries it in its row below.
 
 | File | Produced from | By | What it is |
 |---|---|---|---|
-| <!-- [NNN_name.md](NNN_name.md) --> | <!-- [ShortKey, locus range] --> | <!-- [check NNN], or a party and a date --> | <!-- one line; for a non-prose file, what a reader must not read off it --> |
+| <!-- [NNN_name.md](NNN_name.md) --> | <!-- [ShortKey, locus range] --> | <!-- [check NNN], or a party and a date --> | <!-- one line; for a non-prose file, the conventions the derivation fixed and what a reader must not read off it --> |
 
 <!-- Every file here appears in this table; the index is checked
      (DOCUMENT_GENRES.md, What the checker verifies, item 8). -->

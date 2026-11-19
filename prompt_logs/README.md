@@ -1,6 +1,6 @@
 # Prompt logs
 
-*Created 4 September 2026; updated 18 November 2026.*
+*Created 4 September 2026; updated 19 November 2026.*
 
 Every prompt is recorded here, numbered contiguously and zero-padded to
 at least three digits, `NNN_short_description.md`, as the first act of
@@ -39,8 +39,9 @@ assistant with nothing after the comma, is reported as not written. The
 closing status is the round's final
 status block in the form `MANIFESTO.md` §16 fixes,
 or, for a round the next prompt closed, a block of that form saying why
-(below). It stands inside a fence so that its labels are not read as
-header fields, and it carries no `RUNNING` line, since the round has
+(below). It stands inside a fence, where the round check reads it, and
+outside the header block, so its labels are not header fields
+(`ONTOLOGY.md` §1.1); it carries no `RUNNING` line, since the round has
 closed. The round check verifies the form, and reads no comment there: a
 label still carrying the artifact template's placeholder is reported as
 not written. An entry whose closing status is not written is **open**,

@@ -9,9 +9,8 @@ glossary, read together rather than one at a time.
 
 It is not the consistency sweep of `CHECK_METHODOLOGY.md` §7, which reads
 the *record* (the claims, the checks, the ledgers) after a correction
-batch; the two never overlap and neither replaces the other. Nor is it any
-sweep a project's own discipline names: never write bare *the sweep* where
-both could be meant.
+batch; neither replaces the other. Nor is it any sweep a project's own
+discipline names: never write bare *the sweep* where both could be meant.
 
 Between the two lies the round check (`tools/check_round.py`), which
 covers what a machine can see: a path that does not resolve, an index row
@@ -96,13 +95,15 @@ Report, before editing anything:
 4. every restatement of a rule or a fact that disagrees with the document
    that owns it, naming both;
 5. every file carried over from the template that this project has
-   changed, by its history since the instantiation commit, while its
+   changed, by its history since the project's first commit, while its
    header still bears the template's updated date (a file it has not
    changed keeps the template's dates, DOCUMENT_GENRES.md section 3), and
    every file whose text still describes the template rather than this
    project (a build-lens block; a slot's token outside the Slots tables,
    unless the slot's owner row records it as open by decision, and other
-   than a slot's name in a comment of tools/artifacts.toml; an artifact
+   than where GETTING_STARTED.md section 3 keeps a token that names or
+   quotes its slot: the guide's pages, GLOSSARY.md, the comments of
+   tools/artifacts.toml and program source, and the log; an artifact
    template's placeholder left in an instance; a sentence about the
    template's own construction);
 6. every slot value that does not read as a sentence where it was
@@ -205,7 +206,7 @@ version rather than contradicting the folder index, and the folder index
 is the only statement under which a first version can release at all.
 
 The fix, one clause where `released` is defined, could be applied under
-the Output rule above, since a rulebook is neither maintained nor one of
+the Output rule above, since the rulebook is neither maintained nor one of
 the four `MANIFESTO.md` §12 names. It is brought instead, because a sweep
 that rewrites the rule it was reading has stopped being a sweep. The
 researcher directs it. The round's log entry records the sweep, the

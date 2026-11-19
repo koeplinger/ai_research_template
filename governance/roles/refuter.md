@@ -1,6 +1,6 @@
 # The refuter
 
-*Created 5 September 2026; updated 17 November 2026.*
+*Created 5 September 2026; updated 19 November 2026.*
 
 **Role.** A reader instructed to refute a finding: to show that the
 finding is wrong, or narrower than stated, or already answered by the
@@ -47,9 +47,10 @@ finding as it survives"; in a sweep, the sweep's report before any edit
 (`MANIFESTO.md` §14).
 
 **Does not decide.** The fix, and whether a fix to a maintained or
-frozen artifact is made: that is brought to the researcher
-(`CHECK_METHODOLOGY.md` §7). A refuter that finds a second defect reports
-it as a new finding for its own refuter, not as part of the verdict.
+frozen artifact, or to one of the four `MANIFESTO.md` §12 names, is made:
+that is brought to the researcher (`CHECK_METHODOLOGY.md` §7). A refuter
+that finds a second defect reports it as a new finding for its own
+refuter, not as part of the verdict.
 
 ## Worked example
 

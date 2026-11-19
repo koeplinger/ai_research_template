@@ -1,6 +1,6 @@
 # How it fits together
 
-*Created 8 September 2026; updated 18 November 2026.*
+*Created 8 September 2026; updated 19 November 2026.*
 
 `GETTING_STARTED.md` gets a project moving. This file says what the parts
 are for, how they make one system rather than a folder of forms, and what
@@ -60,10 +60,11 @@ files). `DOCUMENT_GENRES.md` says which is which and when each freezes.
 ### The ontology: the vocabulary they share
 
 The artifacts are one system because they share a vocabulary, and the
-vocabulary is implemented rather than described. Most predicates appear in
-a template as a header field, are checked mechanically, and can be queried
-across the whole repository; the rest are carried in prose and are the
-sweep's business.
+vocabulary is implemented rather than described. Most predicates are
+written in a fixed syntax, as a header field, a stamp, a citation token,
+or a governed file; they are checked mechanically and can be queried
+across the whole repository. The rest are carried in prose and are the
+business of the consistency sweep of the record.
 
 That is what lets you ask, by looking rather than remembering:
 
@@ -92,7 +93,7 @@ a commit can still be forced with the reason recorded.
   verification recorded rather than asserted. `tools/check_round.py` runs
   the linter and the round's own gates in one command; the concordance
   check, the falsifiability probe, the residue check and the privacy scan
-  are run beside it, each at the moment `tools/README.md` names.
+  are run beside it, each at the moment `governance/README.md` names.
 - **Opposition** is structured argument against your own position, played
   the same way each time by a standing role with a fixed prompt:
   `governance/roles/`. An assistant is agreeable by default, and a process
@@ -109,7 +110,8 @@ it.
 
 1. **The log entry opens the round**, before any work. The prompt goes in
    verbatim.
-2. **The work happens**, through an engaged plan.
+2. **The work happens**; a line of work is executed only through an
+   engaged plan.
 3. **The entry is completed**: what was done, by artifact; what was
    brought to you and left for your decision; the reason for any
    correction or departure.
@@ -131,7 +133,7 @@ current-state document is corrected in place, the frozen one is corrected
 in its running text with your authorization, and the reason lives in the
 round's log entry. A released version of a versioned write-up is frozen
 but never corrected, even with your authorization: it is succeeded by the
-next (`paper/README.md`, *Releasing a version*). The immutable record is
+next (`MANIFESTO.md` §12). The immutable record is
 where a reader goes to see what was believed and done at each step.
 
 ---
@@ -147,13 +149,13 @@ way each time, and so that a reader of the log can see which one was made.
 |---|---|---|
 | **Make a documentation consistency sweep.** | After the round that states a new project's question (`GETTING_STARTED.md` §4); after a batch of edits to the rulebooks, indexes, artifact templates, or configuration; after amending a rule or removing or replacing a mechanism; before a release, and again after it, over what was changed since the last documentation sweep; before the project closes; and whenever a pointer sent a reader to a document that did not say what it promised, which is the sign that it is overdue | Every pointer that does not resolve or misdescribes its target, every index out of step, every state recorded twice, every rule restated wrongly, every file still speaking in the template's voice, every slot value that does not read where it was substituted or was filled twice differently, every term used in two senses or missing from the project glossary, every standing direction given in a prompt and written down in neither of its homes, and every count that a fresh count of the thing it counts does not bear out. `governance/roles/documentation_sweep.md` carries the prompt in full, with an item the project fills with its own |
 | **Make a consistency sweep of the record.** | After every correction batch, at your direction | The same defect class over the claims, checks, and ledgers instead of the documentation: a fact established in one place and restated wrongly in another. `CHECK_METHODOLOGY.md` §7 |
-| **Refute this finding.** | On every finding of any sweep or review, and on every gap the coverage auditor reports, before it is acted on | Stands, refuted with the reason, or narrowed to what survives. `governance/roles/refuter.md`. This is the one that keeps a review honest: in the reviews of the template's own construction, roughly half of what a first reader reported did not survive a second |
+| **Refute this finding.** | On every finding of any sweep or review, and on every gap the coverage auditor reports, before it is acted on | Stands, refuted with the reason, or narrowed to what survives. `governance/roles/refuter.md`. This is the one that keeps a review honest: a first reader's findings do not all survive a second |
 | **Referee this draft blind.** | Before a version of a write-up freezes | A structure lens, what the referee could re-derive from the page alone, findings ranked, and what the released document rests on. `governance/roles/blind_referee.md` |
-| **Audit this check's coverage.** | Before a check backs an established claim | Every atomic assertion classified: gated, printed only, not computed, mismatched, attested. `governance/roles/coverage_auditor.md` |
+| **Audit this check's coverage.** | Before a check backs a claim registered `VERIFIED` or `RULED_OUT`, and before a plan closes on its checks | Every atomic assertion classified: gated, printed only, not computed, mismatched, attested. `governance/roles/coverage_auditor.md` |
 | **Probe this check.** | When a check is written, and before it is relied on | The matrix: each named fault applied, and whether the check noticed. `governance/roles/falsifiability_probe.md`, and `tools/falsifiability_probe.py` for a program |
 | **Take a structure census of this section.** | At the head of a review, and before a review patches a section | Per sentence: what it is, where its facts are established, every restatement and cross-reference. `governance/roles/structure_census.md` |
 | **Check every program against its record.** | After a check program has been run, and before a plan closes on it | Every named value whose printed figure disagrees with part 4 of its record. `tools/check_concordance.py`; it prints the verdicts side by side and decides neither |
-| **Read the whole file for what the rebuild left.** | On every rebuild, after the deletion ledger, before the round closes | Seams, dangling and orphaned references, phantoms, echoes, and a live changelog's ledgers against the draft, as candidates for your reading. `tools/check_residue.py`; a section-level comparison cannot see them, which is why the round ends with a reading of the whole file (`CHECK_METHODOLOGY.md` §7) |
+| **Read the whole file for what the rebuild left.** | On every rebuild, after the deletion ledger, before the round closes | Seams, dangling and orphaned references, phantoms, echoes, heading structure, and a live changelog's ledgers against the draft, as candidates for your reading. `tools/check_residue.py`; a section-level comparison cannot see them, which is why the round ends with a reading of the whole file (`CHECK_METHODOLOGY.md` §7) |
 | **Give me the deletion ledger for this rebuild.** | On every rebuild of a section, as against a correction | Every cut sentence classified, the net word delta, and every sentence added. `governance/roles/deletion_ledger.md` |
 | **Make the strongest case against this conclusion.** | When you are about to rely on something and nothing has argued with it | That case, labeled as that case. `MANIFESTO.md` §17 |
 | **Finish this list, and look for nothing new.** | When what remains of a version or a plan is a list you have fixed; and whenever each round brings you new decisions instead of fewer, which is the sign that it is due | The list finished and nothing else, handed back once, in one reply, with everything noticed outside it listed and not put to you as a decision; a false statement in the text being finished and the trivial corrections of frozen artifacts still come in the round that finds them, and a release still runs each of its steps (*Finishing a version or a plan*, below) |

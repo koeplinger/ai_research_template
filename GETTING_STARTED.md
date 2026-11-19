@@ -10,8 +10,8 @@ no prior knowledge of where the template came from.
 Two words before you start. A **round** is one prompt, the work done in
 response to it, and the log entry that records it; a **slot** is a value
 your project fills once, written `{{LIKE_THIS}}`, whose *owner row* is its
-line in the Slots table of the file that owns it. Everything else you
-meet is in `GLOSSARY.md`.
+line in the Slots table of the file that owns it. For any other word you
+meet, look first in `GLOSSARY.md`.
 
 **Steps 1 to 3 have a tool.** `tools/new_project.py` does what can be
 done mechanically: it copies the files the template's repository tracks,
@@ -43,12 +43,13 @@ first and runs the tool once:
    recommendation after the options where it has one, labeled as its own
    (`MANIFESTO.md` §16, *Putting a decision*); with them, the values the
    tools read, worked out from your answers and shown to you (§3, *The
-   machine half*); and then the setup decisions that are not slots,
-   listed at the end of §1, the privacy list first;
+   machine half*); and the setup decisions that are not slots, listed
+   at the end of §1, the privacy list before everything else;
 2. you name the new project's folder, and where the answers file goes,
    outside both trees;
-3. it writes your answers there: both halves of each slot, the copyright
-   holder, citation and start date under `[project]`, and any rename under
+3. it writes your answers there: each slot under `[slots]`, each value the
+   tools read that has a key under `[machine]`, the copyright holder,
+   citation and start date under `[project]`, and any rename under
    `[rename]`, leaving blank whichever of the three slots you leave to
    wait; and it runs the tool with `--answers` and `--yes`;
 4. in the new project, before anything is committed, it writes your
@@ -58,8 +59,9 @@ first and runs the tool once:
    `tools/artifacts.toml`, where you named any. Where you chose to drop the
    shipped Python check suite, it removes it as `python_project/README.md`
    says. It then writes entry 001, the record of the setup, as §4 says,
-   recording there a privacy list of none, and marks whichever of the
-   three slots you left to wait in its owner row (§3).
+   recording there a privacy list of none where that was your answer,
+   and marks whichever of the three slots you left to wait in its owner
+   row (§3).
 
 Read §1 to §3 anyway: they say what the tool does and why, and the
 decisions are the same either way. §4 onward is yours.
@@ -77,8 +79,9 @@ belongs to the template's own construction rather than to your project.
 
 | Leave behind | And also |
 |---|---|
-| the worked example, the example folder | its rows in `README.md` and `governance/README.md`, and its row in `tools/artifacts.toml` |
-| the template's own work list, TODO.md | its row in `README.md`; your project's open work is its plans and its roadmap |
+| the worked example, the example folder | its rows in `README.md` and `governance/README.md`, its row in `tools/artifacts.toml`, and its mention under *Support* in `HOW_IT_FITS_TOGETHER.md` |
+| the template's own work list, TODO.md | its rows in `README.md` and `tools/artifacts.toml`; your project's open work is its plans and its roadmap |
+| the template's instantiation tool, under `tools/` | its rows in `tools/README.md` and `governance/README.md` |
 | `.review/`, interim review records, if present | nothing; add it to `.gitignore` if you keep the folder for your own reviews |
 
 Removing a folder means removing the pointers to it as well, or the path
@@ -161,9 +164,10 @@ commit:
 
 ## 2. Strip the build lens, and make the front page yours
 
-The rulebooks and `ONBOARDING.md` carry blocks that begin
-`> **Build lens.**`. They are addressed to the construction of the
-template itself and say nothing to a project. Delete every one:
+The rulebooks, `ONBOARDING.md`, and the shipped wiring's README under
+`governance/harness/` carry blocks that begin `> **Build lens.**`. They
+are addressed to the construction of the template itself and say nothing
+to a project. Delete every one:
 
 ```bash
 grep -rn "Build lens" --include=*.md . | grep -v GETTING_STARTED
@@ -197,7 +201,7 @@ file that owns it.
 **How a slot is filled**, in two moves:
 
 1. **Decide the value once, in the Slots table of the file that owns it.**
-   Write it into the first cell after the slot name, as a colon and the
+   Write it into the first cell, after the slot name, as a colon and the
    value:
 
    ```
@@ -221,9 +225,10 @@ file that owns it.
    carry the full value.
 
    ```bash
-   grep -rno "{{[A-Z_]*}}" --include=*.md --exclude=GETTING_STARTED.md \
-     --exclude=HOW_IT_FITS_TOGETHER.md --exclude=FORKING.md \
-     --exclude=GLOSSARY.md --exclude-dir=prompt_logs . | sort -u
+   grep -rno "{{[A-Z_][A-Z_]*}}" --include=*.md \
+     --exclude=GETTING_STARTED.md --exclude=HOW_IT_FITS_TOGETHER.md \
+     --exclude=FORKING.md --exclude=GLOSSARY.md \
+     --exclude-dir=prompt_logs --exclude-dir=.venv . | sort -u
    ```
 
    When the slots are filled, that list holds the Slots table rows and
@@ -254,8 +259,9 @@ moves.
 There are sixteen; three of them may wait. Each row's question is the one
 the assistant puts at setup, in plain words, adding its recommendation
 after the options where it has one (`MANIFESTO.md` §16, *Putting a
-decision*). An answer is a phrase that completes its owner's sentence, as
-the examples below are, with no closing period.
+decision*). An answer is a phrase that completes the sentence its token
+stands in, where it stands in one, as the examples below are, with no
+closing period.
 
 | Slot | Owner | Asked in plain words |
 |---|---|---|
@@ -276,8 +282,8 @@ the examples below are, with no closing period.
 | `{{REPLY_HOOK}}` | `MANIFESTO.md` | Every reply of the assistant ends in status lines saying whether to wait, answer, or walk away. Where and how does the program that runs the assistant check them after each reply: the wiring this repository carries, one you add, or none, with the form kept by hand? |
 | `{{DISCLOSURE_RULE}}` | `MANIFESTO.md` | Do your sources' terms, an agreement, or an ethics approval limit what the project may publish or share, such as a minimum count per table cell, the scope of consent, or an embargo? State the rule, or answer none beyond the general privacy rules. |
 
-Where two Slots tables carry the same slot, the Owner column above is the
-authority; the other table's row is a pointer to it.
+Where more than one Slots table carries the same slot, the Owner column
+above is the authority; every other table's row is a pointer to it.
 
 ### The machine half
 
@@ -379,11 +385,11 @@ biologist, a scholar of contract law, and a machine-learning researcher.
 - a peer-reviewed paper or a preprint at a stated version for any method claim; the dataset paper and release for any claim about the data; a repository at a commit for any claim about code
 
 **`{{DELIVERABLE}}`**
-- a journal article of about nine thousand words with footnotes in the house style, drafted in markdown and rendered for submission
-- a journal article in a typesetting system, an online appendix carrying the same version, and a replication package
-- a research article with figures and legends, methods, supplementary tables, and a source-data file per panel; released with the deposited data
-- a law review article of about fifteen thousand words including footnotes, with a table of cases and a table of legislation
-- a conference paper with an appendix of experiments, released with the code at a tag, the configurations, and the per-seed metrics
+- a journal article of about nine thousand words with footnotes in the house style, drafted in markdown and rendered for submission; a title and subtitle in the journal's style; its version and date under the title, and a draft marker until the release
+- a journal article in a typesetting system, an online appendix carrying the same version, and a replication package; a short descriptive title; the date of the version on its title page, and a draft marker until the release
+- a research article with figures and legends, methods, supplementary tables, and a source-data file per panel; a title that states the finding; its version and date in the footer, and a draft marker until the release; released with the deposited data
+- a law review article of about fifteen thousand words including footnotes, with a table of cases and a table of legislation; a title that names the doctrine; a dated draft legend on the cover page until the release
+- a conference paper with an appendix of experiments in the venue's template, which sets the title block and marks the copy as under review until the release; its version number on the first page; released with the code at a tag, the configurations, and the per-seed metrics
 
 **`{{SPELLING}}`**
 - UK English, the *-ise* ending (`uk`)
@@ -520,7 +526,7 @@ or both.
 1. **Write the check** from `evidence_and_reasoning/checks/_template.md`
    (and, for a program, `python_project/src/_template_check.py`). Name in
    its header the plan it serves, the claim it backs, the instrument of
-   record, the frame its quantities are stated in, at least one mutation
+   record, the frame of any quantities it states, at least one mutation
    from your `{{MUTATION_SET}}`, and who produced it. For a program, pin
    what it runs on in `python_project/requirements.txt` and build the
    pinned environment before the first run: a check program, and each
@@ -628,7 +634,8 @@ asserts is in the record first, with its register; the paper says what to
 read off the evidence.
 
 **Nobody will read all this.** Nobody should. `ONBOARDING.md` is what a
-session reads before working, and it is two pages. This file you read
+session reads first, and it is two pages; it sends the session on to
+the manifesto, read in full, and the status files. This file you read
 once. The rulebooks you consult when a question comes up, and the tools
 tell you which one.
 

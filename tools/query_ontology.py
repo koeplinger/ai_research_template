@@ -242,7 +242,7 @@ def not_claimed(t: lint_docs.Tree, f: str) -> str | None:
 
 
 def sites(t: lint_docs.Tree) -> list[str]:
-    out = ["Every place a claim or a check record cites a claim, in its header or its body (the comparison of rule six is reading):"]
+    out = ["Every place a claim or a check record cites a claim, in its header or its body (the comparison of rule six, CHECK_METHODOLOGY.md section 5, is reading):"]
     n_found = 0
     for f in sorted(t.files):
         kind = t.kind(f)

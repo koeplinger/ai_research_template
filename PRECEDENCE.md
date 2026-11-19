@@ -1,6 +1,6 @@
 # Precedence: what governs when sources disagree
 
-*Created 2 September 2026; updated 18 November 2026.*
+*Created 2 September 2026; updated 19 November 2026.*
 
 A research project that verifies things independently will, sooner or
 later, establish something the published record does not say, or says
@@ -59,15 +59,17 @@ exactly this order.
    is itself gated, an alteration planted and caught and a second pass
    recorded, the claim may be `VERIFIED` on the same evidence
    (`CHECK_METHODOLOGY.md` §1, §2), and what is then verified is still
-   what the source says and not that it is right. The tier is the same;
-   the register says how far the reading of it may be trusted.
+   what the source says and not that it is right. The source stays at
+   tier 2, and the claim speaks from the tier its register earns; the
+   register says how far the reading of it may be trusted.
 3. **Registered references**: works cited but not collated here. Their
    canonical identity is authoritative; their content is not.
 4. **The public record at large**: published literature not registered
    here, reference works, and textbook knowledge. Lowest, always.
 
-**Which tier a statement speaks from is decided by its register**
-(`CHECK_METHODOLOGY.md` §1).
+**Which tier a claim speaks from is decided by its register**
+(`CHECK_METHODOLOGY.md` §1); any other statement speaks from the tier
+it is carried at.
 
 | The statement | Speaks from |
 |---|---|
@@ -156,9 +158,11 @@ erased by the result.
 
 ## What is checked mechanically
 
-Nothing beyond what `CHECK_METHODOLOGY.md` checks for registers and what
-`DOCUMENT_GENRES.md` checks for current-state documents, which together
-cover this file and the ledger.
+Nothing beyond what `CHECK_METHODOLOGY.md` checks for registers, what
+`DOCUMENT_GENRES.md` checks for current-state documents, and what
+`ONTOLOGY.md` §5 checks of citation tokens, among them that every
+`[tension T###]` resolves to a row of the ledger; together they cover
+this file and the ledger.
 
 Whether a divergence has been recorded at all, whether a caution is still
 live, and whether a tier 4 statement has been silently promoted are
@@ -169,7 +173,7 @@ touches a claim or a reference, and item 8 of the consistency sweep
 ## What this rulebook does not do
 
 It does not make this project infallible. A tier 1 claim is overturned by
-a **better verification**: a failing check, a mutation the probe catches,
+a **better verification**: a failing check, a mutation the check survives,
 a correction the researcher authorizes. It is never overturned by an
 appeal to the literature. If the public record one day supplies a
 demonstration that contradicts a claim here, the route is the same as for
@@ -202,8 +206,8 @@ recorded; whether a caution is *still* live is reading.
 
 State this project's side with its claim citation and its register. State
 the public record's side plainly, without polemic, and name where it is
-said. Name the caution that survives. **A row whose caution column is
-empty is suspect**: almost every divergence leaves one, and the commonest
+said. Name the caution that survives. **A row with no surviving caution is
+suspect**: almost every divergence leaves one, and the commonest
 is that no systematic search of the literature has been made, so the
 absence is established for what was searched and not for the record at
 large.

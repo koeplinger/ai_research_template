@@ -32,8 +32,11 @@ where it has one, replace the old value in every current-state sentence
 that carries it (`GETTING_STARTED.md` §3), and record the change in the
 round's log entry; frozen and immutable artifacts keep the wording they
 were written with. A change of spelling variant also converts the words
-of the prose that the spelling check reads, and the round check names
-each one. Nothing else is owed.
+of the current-state prose that the spelling check reads, and the round
+check names each one. It names them in frozen and immutable artifacts
+too, whose words stay as written; each such finding is yours to leave
+reported or to enter in the list of accepted findings (`MANIFESTO.md`
+§16, *A ruled matter stays ruled*). Nothing else is owed.
 
 ### 2. A name
 
@@ -60,8 +63,9 @@ What the amendment owes:
 1. **Say what the rule was for.** Most rules here are one half of a pair.
    Before changing one, find the other half: the tool that enforces it,
    the artifact template that pre-prints it, the index that lists it, the
-   reminder that fires on it. `HOW_IT_FITS_TOGETHER.md`, *Where a rule
-   lives*, and `governance/README.md` map them.
+   reminder that fires on it. `governance/README.md` maps them,
+   and `HOW_IT_FITS_TOGETHER.md`, *Where a rule lives*, names the file that
+   holds each kind of rule.
 2. **Change the halves together**, in one round.
 3. **Make the documentation consistency sweep afterwards**
    (`governance/roles/documentation_sweep.md`). Amending a rule in one
@@ -80,10 +84,12 @@ the harness wiring.
 `governance/README.md`, *Removing a mechanism*, states the rule: a removal
 is deliberate and legible. In practice, four steps.
 
-1. **Strike the row with the reason.** Every mechanism has a row in
-   `governance/README.md` or `tools/README.md` giving what it enforces,
-   when it fires, and what it does not decide. Strike it there and say
-   why, in one line. That row is where a later reader looks first.
+1. **Strike the row with the reason.** A mechanism the governance map
+   lists has a row in `governance/README.md` giving what it enforces,
+   when it fires, and what it does not decide, and a tool has a second in
+   `tools/README.md`; a folder or a ledger has the row of the index that
+   lists it. Strike each and say why, in one line. The map's row is where
+   a later reader looks first.
 2. **Amend or retire the rule it served.** A mechanism enforces a rule
    that lives in a rulebook. Either amend the rule, or keep it and say in
    the rulebook that its enforcement is now by hand. What you must not do
@@ -106,10 +112,10 @@ the removal is complete.
 | Remove | Also touches |
 |---|---|
 | the Python check suite | `python_project/`'s three artifact rows and three index rows in the configuration, the root README's folder row, `python_project/README.md`'s own removal note, what `tools/README.md` and `GETTING_STARTED.md` §7 say of the pinned environment, three tool docstrings (the concordance check, the probe, the run ledger), and every other pointer a search for the folder's name finds, this row among them; `{{CHECK_FORM}}` becomes a written procedure alone |
-| the harness wiring | `governance/harness/`, the tracked settings file and its `harness-settings` row in the configuration, its line in `.gitignore`, and the `{{REPLY_HOOK}}` slot, which becomes *none, with the form kept by hand*. **Keep `tools/check_status_reply.py`**: the round check imports it, so ROUND-2 goes with it |
+| the harness wiring | `governance/harness/` and its artifact row and two index rows in the configuration, the tracked settings file and its `harness-settings` row, its line in `.gitignore`, and the `{{REPLY_HOOK}}` slot, which becomes *none, with the form kept by hand*. **Keep `tools/check_status_reply.py`**: the round check imports it for ROUND-2 and does not start without it |
 | the status block (`MANIFESTO.md` §16) | the reply hook and its `{{REPLY_HOOK}}` slot, not the session-start wiring; the checker, `tools/check_status_reply.py`; and the log's closing status, which ROUND-2 of `tools/check_round.py` reads with the checker under the last of `[log] parts` in the configuration. Either keep the closing status, and the checker for the round check alone, or remove the closing status together from `tools/check_round.py`, `[log] parts`, `prompt_logs/_template.md`, `prompt_logs/README.md`, `MANIFESTO.md` §8, and the round's definition in its *Words used throughout*; and amend the passages that tell an open entry by its closing status: `DOCUMENT_GENRES.md` §1, `ONBOARDING.md` (*The first minutes*), `HOW_IT_FITS_TOGETHER.md` (*Picking the work back up*), `GETTING_STARTED.md` §8, and the log-the-prompt-first row of `governance/reminders.md` |
-| the privacy scan | its row in the two READMEs; the staged-scan block of the pre-commit hook and the whole commit-message hook that `tools/install_hooks.sh` writes, and the installer's account of both. `GETTING_STARTED.md`'s *Arm the privacy scan* paragraph in §1, the item pointing to it in the list that ends §1, the privacy clause of §4's first item, and the pointer in §8; and the comment on `.privacy/` in `.gitignore`. `MANIFESTO.md` §6 and §8 state the rules it serves in discipline-neutral terms and name no scanner, so nothing there has to change |
-| the tension ledger | `PRECEDENCE.md`'s compliance section, which requires a row; amend it or the rule stands unenforced |
+| the privacy scan | its row in the two READMEs; the staged-scan block of the pre-commit hook and the whole commit-message hook that `tools/install_hooks.sh` writes, the installer's account of both, and its two self-test cases for a stop word. `GETTING_STARTED.md`'s *Arm the privacy scan* paragraph in §1, the item pointing to it in the list that ends §1, the privacy clause of §4's first item, the pointer in §8, and what the head of the file says of it; the statements that it is the one mechanism that refuses, in the openings of `governance/README.md` and `tools/README.md` and in `HOW_IT_FITS_TOGETHER.md` under *Governance* and in its questions; the comment on `.privacy/` in `.gitignore`; and every other passage naming the scan, which a search for *privacy* finds. `MANIFESTO.md` §6 and §8 state the rules it serves in discipline-neutral terms and name no scanner, so nothing there has to change |
+| the tension ledger | its artifact row in the configuration and its row in `evidence_and_reasoning/README.md`; `PRECEDENCE.md`, which sends every divergence to a row, in its trump rule, its cautions, and its compliance section, and gives the ledger's form: amend each, or the rule stands unenforced; item 8 of the consistency sweep (`CHECK_METHODOLOGY.md` §7); the `[tension T###]` token and the `diverges` predicate of `ONTOLOGY.md`, which the linter's ONT-2, the `literature` question of `tools/query_ontology.py`, and `tools/claim_sites.py` read; the tension-row-not-entered reminder in `governance/reminders.md`; and every other passage a search for *tension* finds |
 | the publication gate | nothing while it is disabled, as it starts, and `paper/README.md` says a project that publishes otherwise leaves it so; once enabled, `enabled = false` in the `[publication]` table, and that README's account of the gate |
 | derived material | its two rows and its index row; `source_documents/README.md` names it as the destination |
 | a standing role | its file, its row in `governance/roles/README.md`, and any reminder that proposes it |

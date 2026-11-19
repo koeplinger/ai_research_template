@@ -57,10 +57,11 @@ By: <!-- who produced this record: researcher | assistant, then the AI model and
 
 <!-- Run D Month YYYY, by <party>. What the verification found. Every
      named value the program prints in its RESULT line, one per line as
-     `name = value`, exactly as printed; the concordance check compares
-     them. The program prints at the precision the claim asserts, so that
-     the comparison survives a re-run (CHECK_METHODOLOGY.md, What is
-     checked mechanically, item 4). -->
+     `name = value`, exactly as printed and written bare: the concordance
+     check, which compares them, reads no backtick span. The program
+     prints at the precision the claim asserts, so that the comparison
+     survives a re-run (CHECK_METHODOLOGY.md, What is checked mechanically,
+     item 4). -->
 
 ## 5. Discrepancies
 

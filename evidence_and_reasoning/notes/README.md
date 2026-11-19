@@ -1,35 +1,38 @@
 # Notes
 
-*Created 3 September 2026; updated 16 November 2026.*
+*Created 3 September 2026; updated 19 November 2026.*
 
-Dated working notes: `YYYY-MM-DD_short_name.md`. A note is a dated record
+Dated notes: `YYYY-MM-DD_short_name.md`. A note is a dated record
 of what a sweep, an audit, a search, a reading, a day in the archive, a
 cleaning or run, or a line of reasoning found on that day. A note's
-subject is an event, so it is exempt from the narrative rule and frozen on
-writing, or with the plan that owns it (`DOCUMENT_GENRES.md`, *Dated
+subject is an event, so it is exempt from the narrative rule for what it
+records, though not for how its own text came to read, and is frozen on
+writing, or with the plan that owns it (`DOCUMENT_GENRES.md` §2 and *Dated
 records*). Copy [`_template.md`](_template.md) to start one. The record of
 a search is a *search record*, and its hits are listed as
 `evidence_and_reasoning/references/README.md` says.
 
 ## Two kinds
 
-This folder distinguishes two kinds of note, and a note says which in its
-first line.
+This folder distinguishes two kinds of note, and a note says which in the
+first line after its header.
 
 - **A working note.** A sketch that speculates, or a record of the day
   without inference: a reading log, an archive day, a bench day, a
   cleaning or run log. Where the discipline keeps its day-to-day record
-  in an instrument outside this repository (a laboratory notebook, a field
-  book, an enclave's session log), the working note carries that record's
-  locator rather than copying it, and the source index holds the
-  instrument as a source consulted at its locator.
+  outside this repository (in a laboratory notebook, a field book, an
+  enclave's session log), the working note carries that record's locator
+  rather than copying it; once a claim is collated against that record,
+  the source index holds it as a source consulted at its locator
+  (`source_documents/README.md`).
   Never cited as a result; what it records enters the record through a
   plan and its checks.
 - **An analytical note.** Construction, sanity checks, and second pass
-  recorded (`CHECK_METHODOLOGY.md` §8), serving a claim, a check, or a
-  plan. It is cited by path from a claim's *Evidence and route* as
-  material of the route; it backs nothing. A derivation or reading that
-  *establishes* a claim is written as a check, not as a note.
+  recorded (`CHECK_METHODOLOGY.md` §8; `MANIFESTO.md` §5), serving a
+  claim, a check, or a plan. It is cited by path from a claim's
+  *Evidence and route* as material of the route; it backs nothing. A
+  derivation or reading that *establishes* a claim is written as a check,
+  not as a note.
 
 The decision rule: analytical if a claim, check, or correction round will
 cite it; otherwise a working note. A working note may later be superseded

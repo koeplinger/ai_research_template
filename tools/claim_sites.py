@@ -18,9 +18,9 @@ ONTOLOGY.md section 2.8, written nowhere by design), a derived table or
 figure that used the claim without naming it, a write-up's paraphrase;
 a token inside backticks, a fenced block, an HTML comment, or a markdown
 link, which no tool reads (ONTOLOGY.md section 1.3); a file whose
-configured row carries header = none, which no tool reads; and a claim
-that depends on this one only through another claim's Depends-on, which
-the rests-on query shows.  A report, not a gate.
+configured row carries header = none, where no tool reads a token; and
+a claim that depends on this one only through another claim's
+Depends-on, which the rests-on query shows.  A report, not a gate.
 
 Usage
     python3 tools/claim_sites.py NNN        the report for [claim NNN]

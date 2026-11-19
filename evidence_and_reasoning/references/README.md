@@ -1,12 +1,14 @@
 # Reference registry
 
-*Created 3 September 2026; updated 16 November 2026.*
+*Created 3 September 2026; updated 19 November 2026.*
 
 Every citation anywhere in the repository resolves to an entry here
 (`MANIFESTO.md` §2). A reference list carried verbatim inside material
 imported under `inherited/`, or inside a review by an outside reader,
 belongs to its original author and is not registered unless the project
-cites the work itself. A search record, the note of what a search
+cites the work itself. In a review, where its keys would be read as
+citations, the list goes in a fenced block, which no tool reads
+(`ONTOLOGY.md` §1.3). A search record, the note of what a search
 returned, lists its hits by author, title, and identifier rather than by
 key, and a hit is registered once the work is relied on. The registry is
 self-contained: every work relied
@@ -43,7 +45,8 @@ An entry's fields are bullets, `- Field: value`, inside its `### [Key]`
 block; they are not header lines (`ONTOLOGY.md` §1.4). The required
 fields are the project's reference fields, filled once in `ONTOLOGY.md`
 (Slots) and enforced from `[registry] required` in `tools/artifacts.toml`;
-the file template shows the default set.
+the file template pre-prints them, and a project whose set differs from
+the default edits the template to match.
 
 ```
 ### [ShortKey]
@@ -82,7 +85,8 @@ separate entries, and cite the record consulted, since the locus belongs
 to it. Where the work exists only through its records, its `Identifier`
 reads `none; see witnesses` and its `Year` is the range the discipline
 assigns; neither is reported missing. A facsimile names the manuscript it
-reproduces, the manuscript names the work; the tool follows the chain.
+reproduces, the manuscript names the work; each link is a key the tools
+resolve, and the chain is followed by reading.
 
 ## Not entries
 

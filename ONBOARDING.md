@@ -1,16 +1,19 @@
 # Onboarding: what every session must know before it works
 
-*Created 4 September 2026; updated 18 November 2026.*
+*Created 4 September 2026; updated 19 November 2026.*
 
 This file is read at the start of every assistant session, before any
 substantive action. Reading it, and then the manifesto in full, is the
-assistant's duty (`MANIFESTO.md`, opening paragraph); where the harness
-can present a file at session start, that wiring is recorded where the
-harness configuration lives, and the manifesto defines no slot for it.
+assistant's duty (`MANIFESTO.md`, opening paragraph and *Words used
+throughout*); where the harness can present a file at session start,
+that wiring is recorded where the harness configuration lives, and the
+manifesto defines no slot for it.
 This file points; the rulebooks govern:
 [`MANIFESTO.md`](MANIFESTO.md), [`DOCUMENT_GENRES.md`](DOCUMENT_GENRES.md),
 [`CHECK_METHODOLOGY.md`](CHECK_METHODOLOGY.md),
-[`PRECEDENCE.md`](PRECEDENCE.md), [`ONTOLOGY.md`](ONTOLOGY.md).
+[`PRECEDENCE.md`](PRECEDENCE.md), [`ONTOLOGY.md`](ONTOLOGY.md),
+[`GLOSSARY.md`](GLOSSARY.md),
+[`evidence_and_reasoning/editorial_standards.md`](evidence_and_reasoning/editorial_standards.md).
 
 > **Build lens.** No session works on a research project here; this file
 > ships as the template's onboarding and is filled by the project. The
@@ -65,13 +68,13 @@ the assistant's own priors, at exactly the scope the claim states; never
 literature says it. The rule runs both ways: the public record is never
 promoted to established fact without a check, and a claim is never
 inflated past its wording. The assistant applies the trump rule on its
-own only for a claim whose register the researcher has assigned;
-otherwise it states the claim with its verification status, proposes the
-ledger row, and stops. Every divergence is brought as a tension-ledger
-row in the same round, save one found outside a fixed list being
-finished, which is kept and listed when the list is handed back
-(`PRECEDENCE.md`, *Compliance*); the row enters at the researcher's
-direction.
+own only for a claim whose register the researcher has assigned; for one
+the assistant alone has checked, it states the claim with its
+verification status, proposes the ledger row and the prose, and stops.
+Every divergence is brought as a tension-ledger row in the same round,
+save one found outside a fixed list being finished, which is kept and
+listed when the list is handed back (`PRECEDENCE.md`, *Compliance*); the
+row enters at the researcher's direction.
 
 ## The keystone
 

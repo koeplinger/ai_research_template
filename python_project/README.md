@@ -34,11 +34,11 @@ name written as a pattern; a search for this folder's name finds every
 one.
 
 A project whose checks are all written procedures, and which keeps no
-other program, has no programs. This folder then holds nothing but its
-indexes, which stay empty, and the rules below do not apply; the project
+other program, has no programs. This folder's indexes then stay empty,
+and the rules below do not apply; the project
 may remove the folder at the researcher's
-direction, with the reason recorded (`MANIFESTO.md`, *Amending this
-manifesto*). A written procedure is a check in every rule
+direction, with the reason recorded (`FORKING.md`, *Removing a
+mechanism*). A written procedure is a check in every rule
 (`CHECK_METHODOLOGY.md`), and nothing in the record requires a program.
 
 ## Structure
@@ -129,7 +129,8 @@ runs them, and as shipped run no such check.
   (`CHECK_METHODOLOGY.md`, *What is checked mechanically*, item 4).
 - **No assertion with a constant condition**: a reported assertion whose
   truth does not depend on the computation asserts nothing, and the
-  linter reports it.
+  linter reports one whose condition is syntactically constant
+  (`CHECK_METHODOLOGY.md`, *What is checked mechanically*, item 2).
 - **Every mutation is bound.** Each name in a check's `Mutation:` line is
   a member of the mutation set (`CHECK_METHODOLOGY.md`, Slots), bound in
   the program's `MUTATIONS` to a function that takes what `construct()`
@@ -154,5 +155,5 @@ runs them, and as shipped run no such check.
 | Slot | Meaning | Examples |
 |---|---|---|
 | `{{CHECK_FORM}}` | what a check is in this project; this suite ships the program form (`CHECK_METHODOLOGY.md`) | see that file's Slots table |
-| `{{VERIFICATION_TOOL}}` | the instrument of record, pinned in `requirements.txt` where it is software (`CHECK_METHODOLOGY.md` §3) | a computer-algebra library at an exact version; a statistics stack at exact versions with the data release named |
+| `{{VERIFICATION_TOOL}}` | the instrument of record, pinned in `requirements.txt` where it is software (`CHECK_METHODOLOGY.md` §3) | see that file's Slots table |
 | `{{MUTATION_SET}}` | the alterations the probe applies (`CHECK_METHODOLOGY.md`) | see that file's Slots table |

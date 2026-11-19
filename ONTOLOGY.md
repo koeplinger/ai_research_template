@@ -33,18 +33,19 @@ restate the rules that govern each predicate: those live in the rulebook
 named in the Owner column, and the Checked-by column points at that
 rulebook's own numbered check rather than repeating or extending it.
 
+`tools/README.md` names the tool behind each check of §5 and each query of
+§6; the round check runs the checks, and the queries run on demand.
+
 > **Build lens.** The template records no research, so every predicate
-> here is shipped and none is instantiated. The checks and queries below
-> are implemented: `tools/README.md` names the tool that runs each, and
-> the round check runs them together.
+> here is shipped and none is instantiated.
 
 ---
 
 ## 1. Surface syntax
 
 Four forms carry every mechanically read predicate. A fifth group of
-relations is carried in prose and is read, never parsed; those are marked
-*prose* in the catalogue and are listed in §2.8.
+relations is carried in prose and is read, never parsed; those are listed
+in §2.8.
 
 ### 1.1 Field lines
 
@@ -85,8 +86,8 @@ Serves: H-B
 ### 1.2 Stamps
 
 A **stamp** is a header line that takes **no colon**, because a colon
-after a date opens a change narrative and the genre checker reports it
-(`DOCUMENT_GENRES.md`). There are exactly five:
+after a date opens a change narrative (`DOCUMENT_GENRES.md`) and the
+linter reports it (§5, check 1). There are exactly five:
 
 ```
 Created 12 August 2026; updated 3 September 2026
@@ -101,7 +102,7 @@ superseded by paper/capstone_v2.md
 Written inline in prose, in a table cell, or in a docstring. A bracket
 immediately followed by `(` or `[` is a markdown link and is skipped. Text
 inside an HTML comment (`<!-- ... -->`) is not read at all: that is where
-a template's guidance and its example tokens live, and they resolve to
+a form's guidance and its example tokens live, and they resolve to
 nothing by design.
 
 | Token | Grammar | Resolves to |
@@ -112,14 +113,14 @@ nothing by design.
 | `[check NNN]` | the same | the check of that number, under the configured check pattern |
 | `[finding F###]` | an opaque key, assigned once and never reused | that row of `FINDINGS.md` |
 | `[tension T###]` | the same | that row of the tension ledger |
-| `plan NNN` | lowercase, never inside a header line | that plan file |
+| `plan NNN` | lowercase; in a header line, only in the `Reserved` stamp | that plan file |
 
 **A bracketed word that is not a citation is written in backticks.** The
 `[ShortKey]` grammar matches any capitalized word of three to
 thirty-two characters in square brackets, and several disciplines write
 one in running prose for something else: an editorial interpolation in a
 transcription, a special token in a model's vocabulary, a bracketed short
-name. No tool reads inside a backtick span, a fenced block, or an HTML
+name. No tool reads a token in a backtick span, a fenced block, or an HTML
 comment, so such a word goes in backticks and resolves to nothing, while a
 real citation is written bare so that it resolves. A project whose prose
 is thick with them says so in `evidence_and_reasoning/terminology.md` and
@@ -139,9 +140,9 @@ pattern comes from the configuration of §7, and the predicate's row names
 which. A registry entry's fields are bullets, `- Field: value`, inside its
 `### [ShortKey]` block; the tool reads them by entry, and they are not
 header lines. A version changelog's release row, the one
-`DOCUMENT_GENRES.md` §2 requires beside the `Released` stamp, is its last
-table row, whose first cell reads `(release)` and whose second names the
-version and its date.
+`DOCUMENT_GENRES.md` §2 requires beside the `Released` stamp, is the last
+row of its table of changes, whose first cell reads `(release)` and
+whose second names the version and its date.
 
 ---
 
@@ -149,9 +150,9 @@ version and its date.
 
 The Owner column names the rulebook that governs the predicate. **Checked
 by** points at the owner's own numbered check where one exists, names an
-ontology check from §5, or says *reading* where no tool can decide it and
-the duty is the assistant's under the consistency sweep
-(`CHECK_METHODOLOGY.md` §7).
+ontology check from §5, an ontology query from §6, or the round check, or
+says *reading* where no tool can decide it and the duty is the
+assistant's under the consistency sweep (`CHECK_METHODOLOGY.md` §7).
 
 ### 2.1 Sources and references
 
@@ -175,7 +176,7 @@ the duty is the assistant's under the consistency sweep
 | `verdict` | a claim to the conclusion reached | `Verdict:` with a value from the declared kind's vocabulary, the Inferential vocabulary taking two, comma-separated; `none` while the register is `OPEN` or `SPECULATIVE` | `CHECK_METHODOLOGY.md` §2 | `CHECK_METHODOLOGY.md` mechanical 1 | what did the work conclude? |
 | `not-claimed` | a claim to what it explicitly does not assert | a `What is not claimed` section | `PRECEDENCE.md` ("tier 1 does not inflate") | reading; a claim relied on elsewhere that has none is reported by ontology 3 | where does this claim stop? |
 | `original` | a claim to the fact that it has no external source | `Original: <pointer to the evidence here>` | `MANIFESTO.md` §2 | ontology 3 | is this ours, and what backs it? |
-| `depends-on` | a claim to a claim it rests on | `Depends-on: NNN[, NNN]` | `CHECK_METHODOLOGY.md`, *Words used here* | ontology 4 | what falls if this falls? |
+| `depends-on` | a claim to a claim it rests on | `Depends-on: NNN[, NNN]` | this file: no rulebook fixes how one claim rests on another | ontology 4 | what falls if this falls? |
 | `derives-from` | a claim to the claim, source, or construction it was obtained from | the inputs named in the claim body with their tokens | `CHECK_METHODOLOGY.md` §4 | reading | how was this reached? |
 | `assumes` | a claim to an input it takes | the input named in the claim, with its `input-kind` | `CHECK_METHODOLOGY.md` §4 | reading | what is taken for granted? |
 | `input-kind` | an input to *derived*, *imposed*, or *conjectured* | the word beside the input | `CHECK_METHODOLOGY.md` §4 | reading | was this forced, or chosen? |
@@ -190,9 +191,9 @@ the duty is the assistant's under the consistency sweep
 | `gates` | a check to an assertion it would fail on | the reported assertion inside the check | `CHECK_METHODOLOGY.md` §5 | `CHECK_METHODOLOGY.md` mechanical 2, in a check program only | would this notice if the claim were false? |
 | `refutes` | a check to a claim it shows not to hold | `Verdict:` with the failing word of that kind's vocabulary | `CHECK_METHODOLOGY.md` §2 | reading: a failing verdict does not entail `RULED_OUT`, and the register is the researcher's (`CHECK_METHODOLOGY.md` §1) | what did we rule out? |
 | `records` | a check record to one execution of a check | a dated record naming the check and the party | `CHECK_METHODOLOGY.md` §8 | `CHECK_METHODOLOGY.md` mechanical 4 | when was this last actually run? |
-| `instrument-of-record` | a check to the instrument or procedure it used | `Instrument: <name>, <version, edition, shelfmark, or release>` | `CHECK_METHODOLOGY.md` §3 | ontology 3 | what would a second reader return to? |
+| `instrument-of-record` | a check to the instrument or procedure of record, whatever else it used | `Instrument: <name>, <version, edition, shelfmark, or release>` | `CHECK_METHODOLOGY.md` §3 | ontology 3 | what would a second reader return to? |
 | `mutation` | a check to an alteration of something the claim depends on | `Mutation: <name>[, <name>]`, each a key into the project's mutation set (`CHECK_METHODOLOGY.md`, Slots; `[vocab] mutations`) | `CHECK_METHODOLOGY.md` §5 | `CHECK_METHODOLOGY.md` mechanical 3, which splits by check form | would this check notice a change? |
-| `robustness` | a check to a perturbation the claim asserts independence *from* | `Robustness: <name>[, <name>]`, names disjoint from `Mutation:` | `CHECK_METHODOLOGY.md` §5 | ontology 3: the two lists are disjoint. Survival is the intended result here, and a failure is a finding | what does this not depend on? |
+| `robustness` | a check to a perturbation the claim asserts independence *from* | `Robustness: <name>[, <name>]`, names disjoint from `Mutation:` | `CHECK_METHODOLOGY.md` §5 | ontology 3: the two lists are disjoint. Survival is the intended result here, and a failure is a result to report, not a defect in the check | what does this not depend on? |
 | `verification-status` | a claim to who checked it and how | `Verified-by: researcher \| assistant, <route> \| deferred, <instrument> \| unchecked \| <party>, <route>` | `MANIFESTO.md` §5 | ontology 3 | who actually checked this? |
 | `deferred-to` | a claim to an instrument or party the researcher chose not to check behind | the `deferred` form of `Verified-by:` | `MANIFESTO.md` §5; `VISION.md` | ontology query 3 | what did we take on trust? |
 | `pre-registered` | a check or claim to a protocol fixed before the evidence was consulted | `Pre-registered <D Month YYYY>, <locator>` | `evidence_and_reasoning/notes/README.md`, which defines the protocol note | ontology 3: the date precedes the earliest record's date, and the locator resolves | was this confirmatory, or exploratory? |
@@ -202,7 +203,7 @@ the duty is the assistant's under the consistency sweep
 
 | Predicate | Relates | Written as | Owner | Checked by | Answers |
 |---|---|---|---|---|---|
-| `produced-from` | a derived artifact (transcription, collation, extract, table, figure) to the source it came from and the check or program that produced it | `Produced-from: <source token>, <check or path>`, pre-printed by `evidence_and_reasoning/derived/_template.md` | `CHECK_METHODOLOGY.md` §8 | ontology 2 | where did this material come from? |
+| `produced-from` | a derived artifact (transcription, collation, extract, table, figure) to the source it came from and the check or program that produced it | `Produced-from: <source token>, <check or path>`, pre-printed by `evidence_and_reasoning/derived/_template.md` | `evidence_and_reasoning/derived/README.md`, which says what a derived file owes | ontology 2 | where did this material come from? |
 
 ### 2.5 Plans and state
 
@@ -213,7 +214,7 @@ the duty is the assistant's under the consistency sweep
 | `prerequisite` | a plan to a plan or claim it builds on | `Prerequisites: NNN[, NNN][, [claim NNN]]` or `none`: plans by bare number, claims by token | this file: no rulebook fixes plan structure | ontology 3 | what must land first? |
 | `serves` | a plan to a keystone hypothesis | `Serves: <hypothesis>` or `Serves: none, <reason>` | `DOCUMENT_GENRES.md` | ontology 3 | why are we doing this? |
 | `reserved-by` | a claim to the plan holding a deferred question | `Reserved <date>, plan NNN` | `CHECK_METHODOLOGY.md` §6 | ontology query 4 | what is waiting on an unanswered question? |
-| `finding` | a stable key to what the record has established | a row in `FINDINGS.md` carrying `[finding F###]` | `MANIFESTO.md` §12 | reading; additions are the researcher's | what has this project established? |
+| `finding` | a stable key to what the record has established | a row in `FINDINGS.md` whose first cell is its key, `F###`, which `[finding F###]` cites | `MANIFESTO.md` §12 | reading; additions are the researcher's | what has this project established? |
 
 ### 2.6 Genre and provenance
 
@@ -241,10 +242,10 @@ the duty is the assistant's under the consistency sweep
 These relations matter and no tool parses them. They are the sweep's
 business and the reason `CHECK_METHODOLOGY.md` §7 exists: `asserts`,
 `derives-from`, `assumes`, `input-kind`, `measured-against`,
-`standing-disputed`, `authorized`, `reason-for`, `imported`, `context`,
-`restates` (prose restating a fact established elsewhere: the defect the
-sweep hunts, written nowhere by design), and `single-source` (a
-load-bearing figure stated once and cited elsewhere).
+`authorized`, `reason-for`, `imported`, `context`, `restates` (prose
+restating a fact established elsewhere: the defect the sweep hunts,
+written nowhere by design), and `single-source` (a load-bearing figure
+stated once and cited elsewhere).
 
 ---
 
@@ -262,8 +263,8 @@ a second ledger, and a second ledger drifts (`DOCUMENT_GENRES.md`).
 
 ## 4. How registers compare
 
-Two queries below rank registers, and no rulebook orders them. For the
-purpose of those queries only:
+Queries 1 and 2 of §6 rank registers, and no rulebook orders them. For
+the purpose of those queries only:
 
 > `VERIFIED` and `DERIVED` are stronger than `ATTESTED`, which is stronger
 > than `OPEN` and `SPECULATIVE`. `VERIFIED` and `DERIVED` are not ordered
@@ -276,9 +277,10 @@ and `RULED_OUT` together.
 
 ## 5. What the tools check
 
-The ontology tool reads the surface syntax of §1 and reports; nothing here
-blocks the researcher (`MANIFESTO.md` §13). Checks the owners already fix
-are theirs, and the catalogue points at them. These are the ontology's own:
+The linter, `tools/lint_docs.py`, reads the surface syntax of §1 and
+reports; nothing here blocks the researcher (`MANIFESTO.md` §13). Checks
+the owners already fix are theirs, and the catalogue points at them. These
+are the ontology's own:
 
 1. **Fields are known.** Every field line's name is one of the catalogue's,
    spelled as there, at most once per artifact. An unrecognized field is
@@ -303,20 +305,22 @@ are theirs, and the catalogue points at them. These are the ontology's own:
    `RULED_OUT` names at least one check.
 6. **Derived state is not written down.** A header field named `Genre`,
    `Tier`, `Live`, or `Frozen` is reported. Derived state stated in running
-   prose is a reading matter and belongs to the sweep.
+   prose is a reading matter for both sweeps, of the record
+   (`CHECK_METHODOLOGY.md` §7) and of the documentation.
 
 ## 6. What the predicates buy
 
-Each of these is a question the tools answer by reading the fields. Where
-a query can only enumerate and not decide, it says so, and the deciding is
-the assistant's under the sweep.
+Each of the first seven is a question the tools answer by reading the
+fields. Where a query can only enumerate and not decide, it says so, and
+the deciding is the assistant's under the sweep.
 
 1. **What does this conclusion rest on?** The transitive closure of
    `depends-on` and `backed-by` from a claim, with any member weaker than
    the claim relying on it flagged, per §4.
 2. **What is unverified underneath a result?** The same closure, filtered
-   to `OPEN` and `SPECULATIVE`, and to `Verified-by` of unchecked or
-   deferred.
+   to `OPEN` and `SPECULATIVE`, to `RULED_OUT`, reported always (§4), to
+   a dependency that resolves to no claim, and to `Verified-by` of
+   unchecked or deferred.
 3. **What did the researcher defer?** Every `Verified-by: deferred`, with
    its instrument. This is the answer to "which parts of this did you check
    yourself", and the repository produces it without anyone remembering.
@@ -329,10 +333,10 @@ the assistant's under the sweep.
 6. **What is not finished?** Plans by `status`, claims by `register`,
    reservations by `Reserved`, and every `Serves: none`.
 7. **Where might a claim be stronger than its backing?** Every place a
-   claim cites another, listed with both registers and with the cited
-   claim's *What is not claimed* quoted beside the citing sentence. The
-   tool lists sites; the comparison is reading (`CHECK_METHODOLOGY.md` §5,
-   rule six).
+   claim or a check record cites a claim, listed with both registers and
+   with the cited claim's *What is not claimed* quoted beside the citing
+   sentence. The tool lists sites; the comparison is reading
+   (`CHECK_METHODOLOGY.md` §5, rule six).
 8. **What changed when a result was overturned?** Not a predicate query. A
    current-state artifact narrates none of its own past
    (`DOCUMENT_GENRES.md`); the answer is assembled from `logged` and
@@ -421,8 +425,9 @@ project adds is renamed where it was added.
 
 The closed vocabularies (`Register`, `Kind`, and each kind's verdicts) are
 `CHECK_METHODOLOGY.md`'s. A project that needs another verdict or another
-kind amends that file, in place, at the researcher's direction, and this
-catalogue follows.
+kind amends that file, in place, at the researcher's direction, adds the
+value under `[vocab]` in `tools/artifacts.toml`, which the linter reads,
+and this catalogue follows.
 
 ## Slots
 
@@ -432,6 +437,6 @@ project fills each slot once, where its owner defines it.
 
 | Slot | Meaning | Examples |
 |---|---|---|
-| `{{PARTIES}}` | The roster of people and agents whose work the record attributes, for `By:` and `Verified-by:`: the researcher and the assistant always, and those this value names besides them; *none* where there is no one else | *none*; a named co-author, a doctoral assistant transcribing in the archive; a research assistant coding occupations, a replication partner |
+| `{{PARTIES}}` | The roster of people and agents whose work the record attributes, for `By:` and `Verified-by:`: the researcher and the assistant always, and those this value names besides them; *none* where there is no one else | *none*; a named coauthor, a doctoral assistant transcribing in the archive; a research assistant coding occupations, a replication partner |
 | `{{REFERENCE_FIELDS}}` | The fields a registry entry must carry, per the discipline's citation convention | author, title, venue, year, DOI; repository, collection, shelfmark, folio range, access conditions; producer, series, wave, release, documentation |
 | `{{CITATION_LOCUS}}` | The units a `[ShortKey, locus]` may name | section, equation, page; folio, recto or verso, line; table, column, specification; wave, variable, value label |

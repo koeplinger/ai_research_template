@@ -21,12 +21,12 @@ table.
   `DOCUMENT_GENRES.md`, *Versioned write-ups*).
 - **A release is the researcher's**: a `Released D Month YYYY` stamp on
   the version, and a row in the changelog. The first version has no
-  changelog; its release is its stamp and its row in the Contents table
-  below.
+  changelog, and its stamp alone releases it (`DOCUMENT_GENRES.md` §2).
 - **Changes between versions go in a changelog**, `vN_to_vM_changelog.md`,
   which is live until vM releases and freezes then. Copy
   [`_template_changelog.md`](_template_changelog.md). The ledgers of a
-  rebuild live there. A version's filename ends in `_vN` before its
+  rebuild live there, or in a review where the version is the first. A
+  version's filename ends in `_vN` before its
   extension, as in a file named main_v2.md, which is how the ledgers are
   paired with the version they describe (`tools/check_residue.py`). A
   reader's marked-up copy is accounted for in the changelog's markup
@@ -35,15 +35,18 @@ table.
 - **Standalone notes carry their date first in the filename**,
   `YYYY-MM-DD_short_topic.<ext>`, like every dated record; a note is
   released by the researcher's `Released` stamp, with no changelog, and
-  freezes then.
+  freezes then, or, where an open plan owns it, when that plan closes
+  (`DOCUMENT_GENRES.md` §2).
 - **Every version has a blind referee review before it freezes**
   (`MANIFESTO.md` §17), under [`reviews/`](reviews/).
 - **What is released with a version** is what the deliverable names:
   the version itself, as its build output where the deliverable is built
   and as the file itself where it is not, and what else goes out with it,
-  such as data, code, or transcriptions. Scratch produced on the way is not committed. The prose is
-  governed by `evidence_and_reasoning/editorial_standards.md`, *Writing
-  for publication*, on every unfrozen draft here.
+  such as data, code, or transcriptions. Scratch produced on the way is
+  not committed. The prose of every draft, note, changelog, and
+  maintained companion here that is not frozen is governed by
+  `evidence_and_reasoning/editorial_standards.md`, *Writing for
+  publication*.
 - **Where the deliverable is built, the round check gates the build and
   the bibliography** from the `[publication]` table of
   `tools/artifacts.toml`, which names the build command, its sources,

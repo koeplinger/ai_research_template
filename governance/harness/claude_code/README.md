@@ -1,6 +1,6 @@
 # Harness wiring: Claude Code
 
-*Created 5 September 2026; updated 16 November 2026.*
+*Created 5 September 2026; updated 19 November 2026.*
 
 The wiring for one command-line harness, the one the template was built
 with. It is the wiring a project records in the reply-hook slot
@@ -25,9 +25,10 @@ names two hooks:
 - **Stop** runs `stop_hook.py`.
 
 Both commands resolve the repository through the variable the harness
-sets for its hooks, `CLAUDE_PROJECT_DIR`, and fall back to the working
-directory; where neither holds the script, the command exits 0 and runs
-nothing, so a missing script is never a bounce. The harness decides when a project's hooks may run (it asks
+sets for its hooks, `CLAUDE_PROJECT_DIR`, or, where that is unset or
+empty, through the working directory; where the folder so resolved does
+not hold the script, the command exits 0 and runs nothing, so a missing
+script is never a bounce. The harness decides when a project's hooks may run (it asks
 whether to trust the folder); that decision is the researcher's, and
 where the hooks do not run, the form of §16 is the assistant's duty by
 hand. The harness's per-user settings file, `.claude/settings.local.json`,

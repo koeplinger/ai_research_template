@@ -37,9 +37,9 @@ Usage
     python3 tools/run_ledger.py --selftest
 
 Exit status: status, 0 when every program is current, 1 otherwise; run,
-0 when every run recorded reached a passing verdict, 1 when one failed
-(a run that did not finish is counted apart, and is not a failure); 2
-an unknown check, a usage error, or tools/artifacts.toml unreadable.
+0 when no run recorded failed, 1 when one failed (a run that did not
+finish is counted apart, and is not a failure); 2 an unknown check, a
+usage error, or tools/artifacts.toml unreadable.
 """
 from __future__ import annotations
 
@@ -185,7 +185,7 @@ def load_ledger(t: lint_docs.Tree) -> tuple[dict, bool]:
         data = None
     ok = isinstance(data, dict) and all(isinstance(v, list) and all(isinstance(r, dict) and "basis" in r for r in v) for v in data.values())
     if not ok:
-        print(f"run_ledger: {p.relative_to(t.root)} unreadable or not a ledger; starting a new one (the old file is kept as {LEDGER}.corrupt)", file=sys.stderr)
+        print(f"run_ledger: {p.relative_to(t.root)} unreadable or not a ledger; read as empty until the run command replaces it, keeping the old file as {LEDGER}.corrupt", file=sys.stderr)
         return {}, True
     return data, False
 

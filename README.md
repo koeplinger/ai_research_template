@@ -1,6 +1,6 @@
 # A research template for AI-assisted work
 
-*Created 2 September 2026; updated 16 November 2026.*
+*Created 2 September 2026; updated 19 November 2026.*
 
 A repository structure, a shared vocabulary, and a set of advisory checks
 for research done with an AI assistant. It is a *template*: you clone it,
@@ -16,7 +16,8 @@ the structure alone.
 cannot detect self-deception or motivated reasoning, and does not try. It
 is not a compliance system, not a substitute for peer review, not a
 guarantee of correctness, and not a way to make an assistant trustworthy;
-every mechanism informs and records, and none blocks. `VISION.md` states
+every mechanism informs and records, and none blocks but the opt-in
+privacy scan, which refuses a commit on a stop word. `VISION.md` states
 the precondition and the non-goals in full, and they are worth reading
 before adopting it.
 
@@ -34,7 +35,7 @@ installed from the moment you instantiate a project, and running once the
 harness trusts the project's folder.
 
 Concretely, what ships and is armed: a settings file at the repository
-root that the harness reads, a hook that checks the form of every reply
+root that the harness reads, a hook that checks the form of a reply
 after it is written, and a command that prints the reading order at the
 start of each session. `governance/harness/claude_code/` holds the
 adapter; `governance/harness/README.md` holds the table of wirings and the
@@ -52,9 +53,8 @@ removes it afterwards rather than declining it up front.
 
 **Vendor independence is intended, and is scheduled rather than promised.**
 [TODO.md](TODO.md) holds that work and what each part of it touches, with
-support for further assistants added one at a time. It moves at a
-deliberate pace now: the template is live and working, so the bar for
-changing it is higher than it was while it was being built.
+support for further assistants added one at a time, at the deliberate
+pace it sets out.
 
 ## Start here
 
@@ -77,7 +77,8 @@ Three things meant to be one system, described in
   and a rule for how it may change. The organizing commitment is that the
   repository is the primary artifact and the paper is a projection of it.
 - **An ontology.** The vocabulary the artifacts share, implemented rather
-  than described: most predicates appear in a template as a header field,
+  than described: most predicates are written in a form the tools read (a
+  header field, a stamp, a citation token, or a file at a governed path),
   are checked mechanically, and can be queried across the repository, and
   the rest are carried in prose and are the sweep's business. That is what
   makes *what is this conclusion standing on* a question you answer by
@@ -95,10 +96,11 @@ Three things meant to be one system, described in
 | [HOW_IT_FITS_TOGETHER.md](HOW_IT_FITS_TOGETHER.md) | The system as one thing, the round as the unit of time, and the prompts to make |
 | [FORKING.md](FORKING.md) | How to change or remove a mechanism deliberately and legibly |
 | [TODO.md](TODO.md) | What this template does not have yet, and what each item would touch |
+| [VISION.md](VISION.md) | The durable statement of intent, which the rulebooks cite |
 | [MANIFESTO.md](MANIFESTO.md) | The methodology: what the record is, who does what, and the round |
 | [DOCUMENT_GENRES.md](DOCUMENT_GENRES.md) | The three genres of artifact and what the checker verifies |
 | [CHECK_METHODOLOGY.md](CHECK_METHODOLOGY.md) | Registers, claim kinds, and the shape of a check |
-| [PRECEDENCE.md](PRECEDENCE.md) | Which artifact wins when two disagree |
+| [PRECEDENCE.md](PRECEDENCE.md) | Which statement governs when two disagree |
 | [ONTOLOGY.md](ONTOLOGY.md) | The predicates the tools read and the surface syntax that carries them |
 | [GLOSSARY.md](GLOSSARY.md) | The method's own words, what each will be mistaken for, and how to rename one |
 | [ONBOARDING.md](ONBOARDING.md) | What every assistant session reads before it works |

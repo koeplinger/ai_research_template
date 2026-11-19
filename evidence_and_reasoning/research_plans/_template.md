@@ -63,8 +63,8 @@ Prerequisites: <!-- plans by number, a claim as [claim NNN], or: none -->
 
 ## Deliverables
 
-<!-- The claims, checks, notes, and write-ups this plan produces, by
-     number where already assigned. -->
+<!-- The claims, checks, derived material, notes, and write-ups this plan
+     produces, by number where already assigned. -->
 
 ## Confirmation and refutation
 

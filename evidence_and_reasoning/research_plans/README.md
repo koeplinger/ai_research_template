@@ -1,6 +1,6 @@
 # Research plans
 
-*Created 3 September 2026; updated 8 September 2026.*
+*Created 3 September 2026; updated 19 November 2026.*
 
 Numbered plan files, `NNN_short_name.md`, the number zero-padded to three
 digits with an optional lower-case suffix, never reused, plus the plan
@@ -21,9 +21,9 @@ means, and that both transitions are the researcher's, is
 or directs the assistant to write it, and the assistant never changes it
 on its own initiative.
 
-While a plan is open, everything it owns is current state
-(`DOCUMENT_GENRES.md`, *Artifacts of an open plan*); on closure it
-freezes, with any verdict.
+While a plan is open, everything it owns is current state, a released
+version of a versioned write-up aside (`DOCUMENT_GENRES.md`, *Artifacts
+of an open plan*); on closure it freezes, with any verdict.
 
 ## Rules
 

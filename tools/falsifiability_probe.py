@@ -8,8 +8,9 @@ check names to a scratch copy and re-runs it, reporting it under CHECK-3
 if it still passes (item 3; section 5: "a mutation that a claim survives
 is a defect").  The names applied are the program's Mutation: line and
 its record's, the program's first; a name only the record carries comes
-out UNBOUND.  A mutation is applied the way python_project/src/_template_check.py
-binds it: the program's MUTATIONS maps each name to a function that takes
+out UNBOUND unless the program's MUTATIONS binds it all the same.  A
+mutation is applied the way python_project/src/_template_check.py binds
+it: the program's MUTATIONS maps each name to a function that takes
 what construct() returns and returns the altered object, and the probe
 runs the program with that function wrapped around construct(), so main()
 sanity checks and verifies the altered object.  The program runs
@@ -25,7 +26,10 @@ is not checked.
 The matrix prints one row per program and one cell per mutation named:
 CAUGHT where the mutated run reaches a failing verdict; SURVIVES where it
 passes, a finding at the Mutation: line; UNBOUND where the name has no
-callable entry in MUTATIONS, which the linter's CHECK-3 reports; ERROR
+callable entry in MUTATIONS, which the linter's CHECK-3 reports for a
+name on the program's own Mutation: line that MUTATIONS lacks, and no
+tool for a name only the record carries or one bound to a value that is
+not callable; ERROR
 where the run ended in an exception, a signal, or a timeout, said as
 such, since none is a verdict.  Before any mutation is judged, two runs
 must pass: the program run directly, and the program run through the
@@ -70,8 +74,8 @@ Usage
     python3 tools/falsifiability_probe.py --selftest
 
 Exit status: 0 no finding; 1 a survival, or a program that cannot be
-probed; 2 an unknown check, a usage error, or tools/artifacts.toml
-unreadable.
+probed; 2 an unknown check, a usage error, tools/artifacts.toml
+unreadable, or a check-program row whose glob names no directory.
 """
 from __future__ import annotations
 

@@ -18,9 +18,10 @@ WHAT IT RUNS
            least three digits, no number twice, every name of the form
            NNN_short_description.md (MANIFESTO.md section 8)
   ROUND-2  an entry not yet committed, untracked or staged new: the
-           parts [log] names, each once and in order, searched
-           after the verbatim region, which ends at the first closing
-           delimiter, and outside fenced code; and, under the last part, a
+           parts [log] names, in order: the two delimiters anywhere,
+           and each other part once, searched after the verbatim region,
+           which ends at the first closing delimiter, and outside fenced
+           code; and, under the last part, a
            fenced status block of the section-16 form with no RUNNING line
            (prompt_logs/README.md, "The four parts of an entry"), its
            comments unread, so that a label still carrying the artifact
@@ -39,12 +40,12 @@ WHAT IT RUNS
            check never runs the build; the finding names the command,
            which the main thread may run within a round (paper/README.md,
            Conventions).
-  ROUND-4  the bibliography, where [publication] names one: every entry
-           cited, no citation of an entry the bibliography lacks, no entry
-           defined twice, and the entries in the order of their first
-           citation, taking the sources in the configured order and
-           alphabetically within a glob, comments included, keys compared
-           as written.
+  ROUND-4  the bibliography, where [publication] is enabled and names one:
+           every entry cited, no citation of an entry the bibliography
+           lacks, no entry defined twice, and the entries in the order of
+           their first citation, taking the sources in the configured
+           order and alphabetically within a glob, comments included, keys
+           compared as written.
 
 A finding the researcher has ruled to leave, entered in the configuration's
 [[accepted]] list, is left out and counted, the linter's and the round's

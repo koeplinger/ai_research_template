@@ -1,6 +1,6 @@
 # Editorial standards
 
-*Created 2 September 2026; updated 18 November 2026.*
+*Created 2 September 2026; updated 19 November 2026.*
 
 The five standards, the conventions, and the corollaries below govern every
 prose change to every **durable artifact** (`MANIFESTO.md`, *Words used
@@ -33,8 +33,9 @@ with the project's own conventions.
 ## The five standards
 
 1. **Lead with the claim, then develop.** State the finding or claim
-   first; build the apparatus that supports it afterwards. A paragraph
-   announces what it is about before it elaborates.
+   first; build the argument and the evidence that support it
+   afterwards. A paragraph announces what it is about before it
+   elaborates.
 
 2. **Introduce one thing at a time, each before what depends on it.**
    Never use a term before it is defined. Each sentence brings in at most
@@ -88,7 +89,7 @@ The project's choices, recorded once and used throughout.
   paragraph then answers. Where a point is substantial enough to need
   marking, start a paragraph or a subsection; where it is not, state it in
   the prose. The title of a write-up follows its venue's convention, per
-  the deliverable's form, in the Slots table below.
+  the deliverable's form (`DOCUMENT_GENRES.md`, Slots).
 - **Never assert what the project could have checked and did not.**
   Phrases that assert an equivalence, an immateriality, or a consensus the
   project could have verified are cut or replaced by the verification: in
@@ -122,8 +123,8 @@ then recognize why it is relevant, and only then accept it. The standard
 is *gentle in each step, comprehensive over the material*: each move small
 enough to follow without effort, the sequence complete enough to leave
 nothing owed. The form of the write-up (whether it has a results section,
-a discussion, an appendix, or notes in their place) is the deliverable's,
-in the Slots table below.
+a discussion, an appendix, or notes in their place) is the deliverable's
+(`DOCUMENT_GENRES.md`, Slots).
 
 ### Evidence
 
@@ -300,13 +301,17 @@ assistant's duty. A finding the researcher has ruled to leave is entered
 in the list of accepted findings in `tools/artifacts.toml` (`MANIFESTO.md`
 §16, *A ruled matter stays ruled*).
 
-1. On every durable artifact: the dash convention, as the character rule
-   `[editorial] dashes` names; the spelling variant, by the word list
-   `[editorial] spelling` selects, skipping quoted text.
-2. On every unfrozen artifact under `paper/`: the phrases the project
-   lists in `tools/artifacts.toml` under `[editorial] paper_phrases`,
-   matched case-insensitively as whole phrases, skipping quoted text; and
-   body headings that begin with an article or end in a question mark.
+1. On every durable artifact, skipping quoted text and block quotes: the
+   dash convention, as the character rule `[editorial] dashes` names; and
+   the spelling variant, by the word list `[editorial] spelling` selects.
+   A file whose row in `tools/artifacts.toml` gives it no header, such as
+   a typeset source, an imported file, an attachment, or `VISION.md`, is
+   not read.
+2. On every unfrozen markdown draft, note, changelog, and companion under
+   `paper/`, skipping quoted text and block quotes: the phrases the
+   project lists under `[editorial] paper_phrases` in
+   `tools/artifacts.toml`, matched case-insensitively as whole phrases;
+   and body headings that begin with an article or end in a question mark.
    The list starts as *without loss of generality*, *clearly*, *it is easy
    to see*, *it follows immediately*, *as is well known*, *it is well
    established that*, *scholars agree*, *robust to*, *remarkable*,

@@ -1,6 +1,6 @@
 # The deletion ledger
 
-*Created 5 September 2026; updated 6 September 2026.*
+*Created 5 September 2026; updated 19 November 2026.*
 
 **Role.** A reader who accounts for a rebuild: every sentence or display
 cut, classified restatement, decoration, or content, with the home of
@@ -42,15 +42,17 @@ else and write nothing. Return:
    phrase that reads as a citation and now resolves to nothing.
 ```
 
-**Output.** The two ledgers and the delta, entered in the version
-changelog's ledger sections (a first version's, in its review); where more than one section was rebuilt in
-the round, the changelog's single `Net word delta:` line is the sum, and
-`tools/check_residue.py` recounts it. Part 4 goes to the reading that
-closes the rebuild round, which the same tool assists.
+**Output.** The two ledgers, entered in the version changelog's ledger
+sections (a first version's, in its review), and the delta, which the
+round reports. The changelog's single `Net word delta:` line is the
+version's, the words of the body of vM less those of vN, as the
+changelog template fixes it, and `tools/check_residue.py` recounts it.
+Part 4 goes to the reading that closes the rebuild round, which the same
+tool assists.
 
 **Does not decide.** A content cut: it needs the researcher's approval,
 and the ledger brings it. Whether a restatement's surviving home is the
-right one is the sweep's.
+right one is the consistency sweep's (`CHECK_METHODOLOGY.md` §7).
 
 ## Worked example
 

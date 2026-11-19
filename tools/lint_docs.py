@@ -8,7 +8,8 @@ vocabulary (ONTOLOGY.md section 7), walks every tracked or untracked-but-
 not-ignored file, and reports.  Nothing here blocks the researcher: a
 finding names the rulebook item it implements, and the researcher decides
 (MANIFESTO.md section 13).  No dependency beyond the standard library;
-Python 3.11 or later for its TOML reader; git for the two history checks.
+Python 3.11 or later for its TOML reader; git to list the files it walks
+and for the two history checks.
 
 WHAT EACH TAG IMPLEMENTS
   GENRES-1..8   DOCUMENT_GENRES.md, What the checker verifies, items 1 to 8
@@ -20,16 +21,19 @@ WHAT EACH TAG IMPLEMENTS
                 sites query of tools/query_ontology.py)
 
 WHAT IS NEVER READ, by the prose checks: HTML comments, fenced code, and
-backtick spans, in every file; a program's code, so that only its
-docstrings and comments are prose; a configuration file's values, so that
-only its comments are prose; the verbatim region of a log entry; markdown
-link targets, for tokens; quoted text and block quotes, for the editorial
+backtick spans, in every file, save a backticked path, which the path
+check reads (GENRES-7); a program's code, so that only its docstrings and
+comment lines are prose; a configuration file's values, so that only its
+comment lines are prose; a comment that follows code or a value on its
+line; the verbatim region of a log entry; markdown links, their text and
+target alike, for tokens; quoted text and block quotes, for the editorial
 checks; and the italicized examples of the two files the narrative rule
 names, for the narrative check.  Every skipped span is blanked, not
 removed, so line numbers stay true.  A template's placeholders (NNN, D
 Month YYYY, <...>) are admitted where the artifact kind is "template".  The
 two history checks, GENRES-2 and GENRES-3, compare a file's whole text
-with its committed version instead.
+with its committed version instead, GENRES-3 leaving its header lines
+aside.
 
 FINDINGS ACCEPTED AT THE RESEARCHER'S RULING: an [[accepted]] entry of the
 configuration names a tag, the file a finding names, the first words of
@@ -60,8 +64,9 @@ Usage
     python3 tools/lint_docs.py --list       kind, default genre, and derived genre of every file
     python3 tools/lint_docs.py --selftest   build a scratch project under git, plant each
                                             defect, confirm the named check fires at the
-                                            named file; exit 1 if any check stays silent or
-                                            has no case
+                                            named file, and that a change the rules allow
+                                            stays clean; exit 1 if any case fails or a
+                                            check has no case
 """
 from __future__ import annotations
 
@@ -102,9 +107,9 @@ def format_day(d: datetime.date) -> str:
 
 def dated(text: str, day: datetime.date | None = None) -> str:
     """The text with the updated date of its first header stamp set to `day`,
-    today by default: what an edit made on that day writes.  The round
-    check's self-test uses it for every committed file a case changes; the
-    linter's uses it in its GENRES-3 cases."""
+    today by default: what an edit made on that day writes.  The self-tests
+    of the round check, the linter, and the hook installer use it where a
+    case changes a committed file."""
     day = day or datetime.date.today()
     return re.sub(rf"(Created {DATE}; updated ){DATE}", lambda m: m.group(1) + format_day(day), text, count=1)
 
@@ -162,7 +167,7 @@ TOKEN_PLAN = re.compile(rf"(?<![\w/])plan ({NUM})(?![\w-])")
 TOKEN_KEY = re.compile(rf"\[({KEY})(?:,\s*[^\]]+)?\](?![\(\[])")
 LINK_RE = re.compile(r"\[([^\]]*)\](?:\(([^)]+)\)|\[[^\]]*\])")
 BACKTICK_PATH_RE = re.compile(r"`((?:\.\.?/)*[A-Za-z0-9_][A-Za-z0-9_./-]*(?:/|\.(?:md|py|toml|txt|sh|json|tex|pdf)))`")
-PLACEHOLDER = re.compile(r"NNN|YYYY|<|>|\{\{|_short_|\*|\[0-9\]|name\.md|topic\.md|D Month|\bv[NM](?=[_.])|_v[NM]\b")
+PLACEHOLDER = re.compile(r"NNN|YYYY|<|>|\{\{|_short_|\*|\[0-9\]|snake_case_|(?:^|/)name\.md|(?:^|/)topic\.md|D Month|\bv[NM](?=[_.])|_v[NM]\b")
 # A section named in a pointer (DOCUMENT_GENRES.md, What the checker verifies,
 # item 7): a backticked path to a markdown file and, at once after it, an
 # italicized name.  Between the two may stand a section number, then a comma
@@ -1186,9 +1191,9 @@ def check_ont_3_required(t: Tree) -> None:
         for name in row.get("required", []):
             if name not in fl:
                 report("ONT-3", f, 1, f"required field missing: {name}")
-        # A By: line, where written, is filled (ONTOLOGY.md section 8), save a
-        # log entry's, which is the round check's while the entry is not yet
-        # committed (ROUND-2) and is never touched after.
+        # A By: line, where written, is filled (ONTOLOGY.md, performed-by),
+        # save a log entry's, which is the round check's while the entry is not
+        # yet committed (ROUND-2) and is never touched after.
         filled = {F(r) for r in ("register", "kind", "verdict", "status", "serves", "prerequisites", "backs", "mutation")}
         if row["kind"] != "log-entry":
             filled.add(F("by"))
@@ -1202,9 +1207,9 @@ def check_ont_3_required(t: Tree) -> None:
                 report("ONT-3", f, fl[F("mutation")][0], f"{F('mutation')} and {F('robustness')} share names: {sorted(mut & rob)}")
         for name in (F("by"), F("verified-by")):
             # The party is the text before any comma, comments unread: a value
-            # that is only the template's comment names no party; it is
-            # reported as empty above, and on a log entry not yet committed by
-            # the round check (ROUND-2).
+            # that is only the artifact template's comment names no party; it
+            # is reported as empty above, and on a log entry not yet committed
+            # by the round check (ROUND-2).
             v = read_value(fl[name][1]).split(",")[0].strip() if name in fl else ""
             if not v or v in ("researcher", "assistant") or (name == F("verified-by") and v in ("deferred", "unchecked")):
                 continue
@@ -1252,7 +1257,7 @@ def check_ont_3_required(t: Tree) -> None:
                     if not re.search(rf"^- {re.escape(name)}:", body, re.M):
                         report("ONT-3", f, t.text[f][:m.start()].count("\n") + 1, f"entry [{key}] lacks the bullet {name}")
     if saw_party and not decided and not warned_party:
-        report("ONT-3", "tools/artifacts.toml", 1, "roster unfilled ({{PARTIES}}); party check skipped")
+        report("ONT-3", "tools/artifacts.toml", 1, "roster unfilled ({{PARTIES}}); roster check skipped")
 
 
 def check_ont_4_depends(t: Tree) -> None:

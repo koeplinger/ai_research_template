@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The stop hook for one harness: the reply's final text handed to tools/check_status_reply.py, and a non-conforming reply bounced.
 
-Created 5 September 2026; updated 8 September 2026.
+Created 5 September 2026; updated 19 November 2026.
 
 This is the wiring MANIFESTO.md section 16 calls the reply hook, for a
 command-line harness that runs a command when the assistant stops and
@@ -27,7 +27,8 @@ type "assistant" carries a message whose content is a list of blocks,
 one of which may be text; a record marked as a sidechain belongs to a
 subagent and is not the reply.  The harness's settings file, .claude/settings.json at the
 repository root, names this hook; governance/harness/claude_code/README.md
-says how it is installed and removed.
+says how it is installed, and governance/harness/README.md how it is
+removed.
 
 Usage
     python3 governance/harness/claude_code/stop_hook.py            reads the hook object on standard input

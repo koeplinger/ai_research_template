@@ -51,7 +51,8 @@ it is the first.
 A **blind referee** review is taken before a version freezes
 (`MANIFESTO.md` §17): a reader with no access to the first pass's
 reasoning (§5), which for an assistant means a fresh session or a
-subagent given the write-up and nothing else (§14).
+subagent given the write-up, and what is released with it where that is
+to be read too, and nothing else (§14).
 
 ## Contents
 
