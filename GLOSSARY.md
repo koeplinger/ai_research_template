@@ -13,11 +13,12 @@ A project's own subject-matter terms are not defined here. They go in
 (`MANIFESTO.md` §9). This file is the method's, and it is the same in
 every project.
 
-The rulebooks each open with the words they own (`MANIFESTO.md`, *Words
-used throughout*; `DOCUMENT_GENRES.md` and `CHECK_METHODOLOGY.md`, *Words
-used here*). Those sections define the words for the argument they are
-making; this file gathers them in one place, adds the collisions, and is
-where a reader who meets an unfamiliar word should look first.
+Four of the rulebooks open with the words they own (`MANIFESTO.md`,
+*Words used throughout*; `DOCUMENT_GENRES.md`, `CHECK_METHODOLOGY.md`,
+and `PRECEDENCE.md`, *Words used here*). Those sections define the words
+for the argument they are making; this file gathers them in one place,
+adds the collisions, and is where a reader who meets an unfamiliar word
+should look first.
 
 ## The method's words
 
@@ -119,8 +120,8 @@ lists the items it reports; the families are:
 **If one of these words is a term of art in your field, rename it before
 the record exists.** The cost of renaming rises with every claim, check,
 and log entry written under the old name, because the log is immutable and
-a frozen artifact keeps its wording; on the first day the cost is one
-edit.
+a frozen artifact keeps its wording; on the first day the cost is only
+the edits below.
 
 Three kinds of name, with three costs:
 

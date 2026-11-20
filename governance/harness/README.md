@@ -17,7 +17,7 @@ standard input, a repository root).
 The template endorses no harness (`VISION.md`, *Non-goals and limits*).
 One wiring ships because one had to, and it is Anthropic's Claude in its
 command-line harness; the rest of this file is what a second costs. The
-template's instantiation procedure records the answer to its reply-hook
+template's setup tool records the answer to its reply-hook
 question but copies this wiring whatever the answer, so a project on
 another harness removes it afterwards, by the recipe below.
 

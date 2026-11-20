@@ -206,7 +206,7 @@ assistant's under the consistency sweep (`CHECK_METHODOLOGY.md` §7).
 
 | Predicate | Relates | Written as | Owner | Checked by | Answers |
 |---|---|---|---|---|---|
-| `produced-from` | a derived artifact (transcription, collation, extract, table, figure) to the source it came from and the check or program that produced it | `Produced-from: <source token>, <check or path>`, pre-printed by `evidence_and_reasoning/derived/_template.md` | `evidence_and_reasoning/derived/README.md`, which says what a derived file owes | ontology 2 | where did this material come from? |
+| `produced-from` | a derived artifact (transcription, collation, extract, table, figure) to the source it came from and the check or program that produced it, or the party who made it by hand | `Produced-from: <source token>, <check or path>`, or `Produced-from: <source token>, by hand, <party>`, pre-printed by `evidence_and_reasoning/derived/_template.md` | `evidence_and_reasoning/derived/README.md`, which says what a derived file owes | ontology 2 | where did this material come from? |
 
 ### 2.5 Plans and state
 
@@ -461,5 +461,5 @@ project fills each slot once, where its owner defines it.
 | Slot | Meaning | Examples |
 |---|---|---|
 | `{{PARTIES}}` | The roster of people and agents whose work the record attributes, for `By:` and `Verified-by:`: the researcher and the assistant always, and those this value names besides them; *none* where there is no one else | *none*; a named coauthor, a doctoral assistant transcribing in the archive; a research assistant coding occupations, a replication partner |
-| `{{REFERENCE_FIELDS}}` | The fields a registry entry must carry, per the discipline's citation convention | author, title, venue, year, DOI; repository, collection, shelfmark, folio range, access conditions; producer, series, wave, release, documentation |
+| `{{REFERENCE_FIELDS}}` | The bullets every registry entry must carry, and those an entry of a declared kind adds: the discipline's citation fields, with the keywords that find an entry and the standing `MANIFESTO.md` §3 records; the tools read them from `[registry] required` and `[registry.by_kind]` | the seven defaults: authors, title, where published or held, year, identifier, keywords, standing; the seven, plus repository, collection, and access conditions for an archival item; the seven, plus producer, series, wave, and release for a dataset |
 | `{{CITATION_LOCUS}}` | The units a `[ShortKey, locus]` may name | section, equation, page; folio, recto or verso, line; table, column, specification; wave, variable, value label |

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The instantiation procedure: this template, made into a project (GETTING_STARTED.md, sections 1 to 3).
+"""The setup tool: this template, made into a project (GETTING_STARTED.md, sections 1 to 3).
 
 Created 8 September 2026; updated 19 November 2026.
 
@@ -251,7 +251,7 @@ POINTER_LINES = [("tools/README.md", "[new_project.py](new_project.py)"),
 SETUP_START = "**Steps 1 to 3 have a tool.**"
 SETUP_END = "§4 onward is yours."
 SETUP_POINTER = """**The mechanical part of steps 1 to 3 was done for this project** by
-the template's instantiation tool, which does not travel with a project.
+the template's setup tool, which does not travel with a project.
 Its working note under `evidence_and_reasoning/notes/`, dated the day of
 the run, records what it did and what it left to you. Two steps of §1
 belong to every clone, not once to the project: installing the hooks, and
@@ -966,7 +966,7 @@ def write_setup_note(root: Path, day: str, iso: str, did: list[str], left: list[
     (root / rel).parent.mkdir(parents=True, exist_ok=True)
     (root / rel).write_text(SETUP_NOTE.format(
         day=day,
-        asked=paragraph(f"The template's instantiation tool, which does not travel with a project, made "
+        asked=paragraph(f"The template's setup tool, which does not travel with a project, made "
                         f"this project from the template on {day}, with the answers it was given."),
         found=paragraph("It " + series(did) + "."),
         left=paragraph("It left to you " + series(left) + "."),

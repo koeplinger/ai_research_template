@@ -31,9 +31,10 @@
 #   release        live until its Released stamp (a version) or its
 #                  (release) row (a changelog); a Plan: line overrides,
 #                  save on a version named _vN once it is released
-#   exempt         no header, no genre check: non-prose, imported, the
-#                  statement of intent, or the configuration as shipped
-#                  that a project keeps for the tools' self-tests
+#   exempt         no header, no genre check: non-prose, imported, a held
+#                  source, a license text, a typeset source, the statement
+#                  of intent, or the configuration as shipped that a
+#                  project keeps for the tools' self-tests
 # A Plan: header line overrides any default but immutable, frozen, self,
 # and exempt, and a released version named _vN: live while that plan is
 # DRAFT or ENGAGED, frozen when CLOSED.

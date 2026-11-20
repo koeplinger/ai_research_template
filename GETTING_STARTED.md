@@ -81,7 +81,7 @@ belongs to the template's own construction rather than to your project.
 |---|---|
 | the worked example, the example folder | its rows in `README.md` and `governance/README.md`, its row in `tools/artifacts.toml`, and its mention under *Support* in `HOW_IT_FITS_TOGETHER.md` |
 | the template's own work list, TODO.md | its rows in `README.md` and `tools/artifacts.toml`; your project's open work is its plans and its roadmap |
-| the template's instantiation tool, under `tools/` | its rows in `tools/README.md` and `governance/README.md` |
+| the template's setup tool, under `tools/` | its rows in `tools/README.md` and `governance/README.md` |
 | `.review/`, interim review records, if present | nothing; add it to `.gitignore` if you keep the folder for your own reviews |
 
 Removing a folder means removing the pointers to it as well, or the path
@@ -312,7 +312,8 @@ be mistaken for. If one of them is a term of art in your field, **rename
 it now**: the field names the tools read are configured in one table,
 `[fields.roles]` in `tools/artifacts.toml`, and the cost of renaming rises
 with every claim, check, and log entry written under the old name. On the
-first day it is one edit.
+first day it costs only the edits `GLOSSARY.md`, *Renaming a word this
+template uses*, lists.
 
 The commonest case is *register*, which this methodology uses for a
 claim's trust level and which several fields use for a primary source.

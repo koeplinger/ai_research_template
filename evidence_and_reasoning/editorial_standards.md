@@ -26,9 +26,8 @@ with the project's own conventions.
 
 > **Build lens.** The five standards, the conventions, and the corollaries
 > apply to every document of the template. The build's house conventions
-> are US spelling and no em-dashes (`VISION.md` keeps its own dash
-> convention); no slot is filled by that. *Writing for publication* is
-> shipped, not applied.
+> are US spelling and no em-dashes; no slot is filled by that.
+> *Writing for publication* is shipped, not applied.
 
 ## The five standards
 
@@ -67,7 +66,7 @@ The project's choices, recorded once and used throughout.
 | Convention | This project's choice |
 |---|---|
 | Language and spelling | {{SPELLING}}. Quoted titles and verbatim quotations keep their source spelling. |
-| Dashes | {{DASH_CONVENTION}}. |
+| Dashes | {{DASH_CONVENTION}}. `VISION.md`, the template's statement of intent, keeps its own. |
 | The paper's agent | {{PAPER_PRONOUN}}. The paper's acts (the acts its argument performs, such as fixing a notation or measuring a quantity) take this agent throughout: never a bare imperative, and never an agentless passive where the paper is the agent. |
 | Adequate references | {{REFERENCE_ADEQUACY}} (`MANIFESTO.md` §2). |
 | The deliverable | {{DELIVERABLE}} (`DOCUMENT_GENRES.md`, Slots). |

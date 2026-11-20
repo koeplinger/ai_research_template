@@ -96,7 +96,7 @@ This file is read in two situations, and it says where the rules differ.
   departures stated in a block beginning `> **Build lens.**` beneath the
   section they modify. The build is not a research project: it makes no
   research claims, keeps no prompt log, and holds nothing project-specific
-  from the sources it is lifted from. The instantiation procedure removes
+  from the sources it is lifted from. The setup tool removes
   every build-lens block; nothing of the build lens reaches a project. A
   table near the end summarizes the divergences.
 

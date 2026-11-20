@@ -1,11 +1,13 @@
 # Roadmap
 
-*Created 3 September 2026; updated 6 September 2026.*
+*Created 3 September 2026; updated 19 November 2026.*
 
 The plan index: every plan, one line and a link each, with its status.
-The status column is a deliberate copy of each plan's `Status:` line, kept
-for navigation and compared by the checker (`DOCUMENT_GENRES.md`, *What
-the checker verifies*, item 6); the plan file is the source of truth.
+The status column holds the first word of each plan's `Status:` line,
+`DRAFT`, `ENGAGED`, or `CLOSED`: a deliberate copy, kept for navigation
+and compared by the checker (`DOCUMENT_GENRES.md`, *What the checker
+verifies*, item 6). The date and the verdict are read in the plan file,
+the source of truth.
 The lifecycle is [README.md](README.md). `CURRENT_STATE.md` points here
 for the state of the plans.
 

@@ -279,11 +279,16 @@ date, the day the file first existed there, and the template's updated date
 until the project changes the file. Non-prose files (data, images, rendered
 output, transcription files kept as data) carry no header, and neither
 does an attachment under `prompt_logs/attachments/`, which is kept as
-received, or an imported file under `inherited/`, which is a verbatim copy
+received, an imported file under `inherited/`, which is a verbatim copy
 unless its row in the import ledger records a correction made at the
-researcher's direction (`inherited/README.md`); they are dated by the
-plan that owns them or the index that lists them, and an attachment by
-the entry that received it. In a project, the copy of the template's
+researcher's direction (`inherited/README.md`), a held source under
+`source_documents/`, which is never edited (`source_documents/README.md`),
+or a typeset source under `paper/`, which the linter does not read; they
+are dated by the plan that owns them or the index that lists them, and an
+attachment by the entry that received it. `LICENSE-CODE`, a license text
+kept in its standard form, and `VISION.md`, the template's statement of
+intent, carry none either, and the version history dates them. In a
+project, the copy of the template's
 configuration as it shipped, which the tools' self-tests read
 (`tools/README.md`), keeps the template's header and dates unchanged,
 and its header is not checked. A tracked path that
