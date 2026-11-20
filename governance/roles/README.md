@@ -24,8 +24,8 @@ matter stays ruled*).
 | [blind_referee.md](blind_referee.md) | before a version freezes | the write-up alone, or with what is released with it | a review record |
 | [structure_census.md](structure_census.md) | at the head of a review, and before a review patches a section | the section and the sections it refers to | the census table |
 | [deletion_ledger.md](deletion_ledger.md) | on every rebuild | the section before and after, and the census where one was | the two ledgers and the net word delta |
-| [coverage_auditor.md](coverage_auditor.md) | before a check backs an established claim | the check, its record, the claim, and a source at a locus | every assertion classified |
-| [falsifiability_probe.md](falsifiability_probe.md) | when a check is written | the check, its record, the claim, and the mutation set | the matrix, and the check's named mutations judged against what the claim depends on |
+| [coverage_auditor.md](coverage_auditor.md) | before a check backs a claim registered `VERIFIED` or `RULED_OUT`, and before a plan closes on its checks | the check, its record, the claim, and a source at a locus | every assertion classified |
+| [falsifiability_probe.md](falsifiability_probe.md) | when a check is written, before it is relied on, and before a plan closes on it | the check, its record, the claim, and the mutation set | the matrix, and the check's named mutations judged against what the claim depends on |
 
 The documentation sweep is not opposition but a reading pass, and it is
 kept here because it is played the same way: a standard prompt, a fixed

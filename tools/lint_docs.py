@@ -29,7 +29,8 @@ comment lines are prose; a comment that follows code or a value on its
 line; the verbatim region of a log entry; markdown links, their text and
 target alike, for tokens; quoted text and block quotes, for the editorial
 checks; and the italicized examples of the two files the narrative rule
-names, for the narrative check.  Every skipped span is blanked, not
+names, for the narrative check's phrase list, its stamp half reading
+them.  Every skipped span is blanked, not
 removed, so line numbers stay true.  A template's placeholders (NNN, D
 Month YYYY, <...>) are admitted where the artifact kind is "template".  The
 two history checks, GENRES-2 and GENRES-3, compare a file's whole text
@@ -457,13 +458,17 @@ def _blank(m: re.Match) -> str:
     return re.sub(r"[^\n]", " ", m.group(0))
 
 
+def blank_fences(text: str) -> str:
+    """Fenced code, of backticks or of tildes, blanked: no tool reads there."""
+    text = re.sub(r"```.*?```", _blank, text, flags=re.S)
+    return re.sub(r"^ {0,3}(~{3,})[^\n]*\n.*?^ {0,3}\1[^\n]*$", _blank, text, flags=re.S | re.M)
+
+
 def strip_unread(text: str, keep_backticks: bool = False) -> str:
     """Blank what no tool reads: HTML comments, fenced code, and backtick
     spans, any of which may cross a line.  Bold keeps its content; italics
     are read, except where the narrative check says otherwise."""
-    text = re.sub(r"<!--.*?-->", _blank, text, flags=re.S)
-    text = re.sub(r"```.*?```", _blank, text, flags=re.S)
-    text = re.sub(r"^ {0,3}(~{3,})[^\n]*\n.*?^ {0,3}\1[^\n]*$", _blank, text, flags=re.S | re.M)
+    text = blank_fences(re.sub(r"<!--.*?-->", _blank, text, flags=re.S))
     if not keep_backticks:
         text = re.sub(r"`[^`]+`", _blank, text, flags=re.S)
     text = re.sub(r"\*\*([^*]+?)\*\*", r"\1", text, flags=re.S)
@@ -480,7 +485,9 @@ def blank_italics(text: str) -> str:
 def blank_quoted(text: str) -> str:
     """Quoted text and block quotes, which the editorial checks skip.  A
     quotation may run across lines, though not past a blank line, so that
-    a stray mark hides no more than the rest of its paragraph."""
+    a stray mark hides no more than the rest of its paragraph.  The three
+    quotation marks that open and close a docstring are no quotation."""
+    text = re.sub(r'"{3}', _blank, text)
     text = re.sub(r'"(?:[^"\n]|\n(?![ \t]*\n))+"', _blank, text)
     text = re.sub(r"“(?:[^”\n]|\n(?![ \t]*\n))+”", _blank, text)
     return "\n".join(re.sub(r"[^\n]", " ", l) if l.startswith(">") else l for l in text.splitlines())
@@ -642,7 +649,7 @@ class Tree:
             if self.kind(f) == "registry":
                 # A heading in a comment or in fenced code is no entry: no tool
                 # reads there (ONTOLOGY.md section 1.3).
-                visible = re.sub(r"```.*?```", _blank, re.sub(r"<!--.*?-->", _blank, self.text[f], flags=re.S), flags=re.S)
+                visible = blank_fences(re.sub(r"<!--.*?-->", _blank, self.text[f], flags=re.S))
                 self.keys |= set(re.findall(rf"^###[ \t]+\[({KEY})\]", visible, re.M))
         self.basenames = {Path(f).name for f in self.files} | {p for f in self.files for p in Path(f).parts[:-1]}
         self._head_status: dict[str, str] | None = None
@@ -927,7 +934,7 @@ def labels_of(text: str) -> list[str]:
     underlined heading, and a link in a label keeps its target.  Comments
     and fenced code are not read, and an asterisk inside a code span opens
     no label."""
-    text = re.sub(r"```.*?```", _blank, re.sub(r"<!--.*?-->", _blank, text, flags=re.S), flags=re.S)
+    text = blank_fences(re.sub(r"<!--.*?-->", _blank, text, flags=re.S))
     text = re.sub(r"`[^`\n]+`", lambda m: m.group(0).replace("*", " "), text)
     out = [m.group(1) for m in re.finditer(r"^#{1,6}[ \t]+(.+?)[ \t#]*$", text, re.M)]
     out += [m.group(1) for m in re.finditer(r"\*\*(?=\S)((?:[^*\n]|\n(?![ \t>]*\n))+?)(?<=\S)\*\*", text)]
@@ -1175,10 +1182,11 @@ def check_ont_2_tokens(t: Tree) -> None:
                         report("ONT-2", f, pre[0], f"{F('prerequisites')} names no plan: {n}")
         # A claim registered ATTESTED says what a source of record says, at
         # a place in it (CHECK_METHODOLOGY.md section 1): it cites at least
-        # one work at a locus, its key and the locus in one bracket.
+        # one work at a locus, its key and the locus in one bracket, which
+        # may wrap across a line.
         reg = fields_of(t.headers[f][0]).get(F("register"))
         if row["kind"] == "claim" and reg and reg[1] == "ATTESTED" and not any(
-                "," in k.group(0) for line in clean.splitlines() for k in TOKEN_KEY.finditer(LINK_RE.sub(" ", line))):
+                "," in k.group(0) for k in TOKEN_KEY.finditer(LINK_RE.sub(" ", clean))):
             report("ONT-2", f, reg[0], "a claim registered ATTESTED cites no work at a locus, [ShortKey, locus]")
 
 
@@ -1276,7 +1284,7 @@ def check_ont_3_required(t: Tree) -> None:
             # can cite the entry, and its bullets go unchecked, so the
             # heading itself is reported.  Comments and fenced code hold no
             # heading, and a heading that opens no bracket is not an entry.
-            visible = re.sub(r"```.*?```", _blank, re.sub(r"<!--.*?-->", _blank, t.text[f], flags=re.S), flags=re.S)
+            visible = blank_fences(re.sub(r"<!--.*?-->", _blank, t.text[f], flags=re.S))
             for m in re.finditer(r"^###[ \t]+\[([^\]\n]*)(\]?)", visible, re.M):
                 why = key_problem(m.group(1), closed=bool(m.group(2)))
                 if why:
@@ -1308,8 +1316,8 @@ def check_ont_3_required(t: Tree) -> None:
                     # Present and filled, as a field is: the view is blank
                     # where a comment stood, so a value that is only the
                     # template's comment is empty; a value may run onto the
-                    # indented lines below its bullet.
-                    b = re.search(rf"^- {re.escape(name)}:(.*(?:\n[ \t]+(?!- )\S.*)*)", body, re.M)
+                    # indented lines below its bullet, a list among them.
+                    b = re.search(rf"^- {re.escape(name)}:(.*(?:\n[ \t]+\S.*)*)", body, re.M)
                     if not b:
                         report("ONT-3", f, t.text[f][:m.start()].count("\n") + 1, f"entry [{key}] lacks the bullet {name}")
                     elif not b.group(1).strip():
@@ -1895,6 +1903,7 @@ def selftest() -> int:
     run_case("a version released with its changelog's release row unwritten", "ONT-3", V2, "is not written", second_version(True, False))
     run_case("a changelog's release row written with its version unreleased", "ONT-3", CL, "carries no Released stamp", second_version(False, True))
     absent_case("a release that writes both is not reported", "ONT-3", V2, "", second_version(True, True))
+    absent_case("and its changelog is not reported either", "ONT-3", CL, "", second_version(True, True))
     run_case("a version released with an earlier one beside it and no changelog to it", "ONT-3", V2, "no changelog to it",
              lambda t, f: (second_version(True, False)(t, f), (t / CL).unlink()))
     run_case("index status disagreeing with the plan", "GENRES-6", "evidence_and_reasoning/research_plans/ROADMAP.md", "status column", sub("evidence_and_reasoning/research_plans/ROADMAP.md", "| ENGAGED |", "| DRAFT |"))
@@ -1971,6 +1980,9 @@ def selftest() -> int:
              lambda t, f: w(t, C1, f[C1].replace("Register: OPEN", "Register: ATTESTED").replace("Verdict: none", "Verdict: confirmed").replace("[Key1, p. 2]", "[Key1]")))
     absent_case("and one citing its source at a locus", "ONT-2", C1, "at a locus",
                 lambda t, f: w(t, C1, f[C1].replace("Register: OPEN", "Register: ATTESTED").replace("Verdict: none", "Verdict: confirmed")))
+    absent_case("and one whose citation wraps across a line at its comma", "ONT-2", C1, "at a locus",
+                lambda t, f: w(t, C1, f[C1].replace("Register: OPEN", "Register: ATTESTED").replace("Verdict: none", "Verdict: confirmed")
+                               .replace("[Key1, p. 2]", "[Key1,\np. 2]")))
     run_case("a missing required field", "ONT-3", C1, "required field missing", sub(C1, "Verified-by: unchecked\n", ""))
     run_case("an empty field", "ONT-3", C1, "present but empty", sub(C1, "Verified-by: unchecked", "Verified-by:"))
     run_case("a field holding only the artifact template's comment is empty", "ONT-3", C1, "present but empty",
@@ -2082,6 +2094,13 @@ def selftest() -> int:
              sub(R, "- Title: U\n", "- Title: <!-- as the work gives it -->\n"))
     absent_case("a bullet whose value runs onto the line below is filled", "ONT-3", R, "has the bullet Title empty",
                 sub(R, "- Title: U\n", "- Title:\n  U, on the line below\n"))
+    absent_case("and one whose value is a list on the indented lines below", "ONT-3", R, "has the bullet Authors empty",
+                sub(R, "- Authors: B\n", "- Authors:\n  - B. One\n  - C. Two\n"))
+    absent_case("a registry heading inside a fence of tildes is no entry", "ONT-3", R, "Sample1", add(R, "\n~~~\n### [Sample1]\n~~~\n"))
+    run_case("and a token citing it resolves to no entry", "ONT-2", C1, "[Sample1] resolves to no registry entry",
+             lambda t, f: (w(t, R, f[R] + "\n~~~\n### [Sample1]\n~~~\n"), w(t, C1, f[C1].replace("[Key1, p. 2]", "[Sample1, p. 2]"))))
+    run_case("a section heading standing only inside a fence of tildes is no section", "GENRES-7", "MANIFESTO.md", "Fenced only",
+             add("MANIFESTO.md", "\n~~~\n## Fenced only\n~~~\n\nSee `MANIFESTO.md`, *Fenced only*.\n"))
     run_case("Mutation and Robustness sharing a name", "ONT-3", K2, "share names", sub(K2, "Mutation: variant-reading", "Mutation: variant-reading\nRobustness: variant-reading"))
     run_case("a dependency naming no claim", "ONT-4", C1, "names no claim", sub(C1, "Verified-by: unchecked", "Verified-by: unchecked\nDepends-on: 042"))
     run_case("a dependency cycle", "ONT-4", C1, "cycle", sub(C1, "Verified-by: unchecked", "Verified-by: unchecked\nDepends-on: 001"))
@@ -2101,6 +2120,12 @@ def selftest() -> int:
     run_case("the mutation set left unfilled", "CHECK-3", "tools/artifacts.toml", "unfilled", lambda t, f: w(t, "tools/artifacts.toml", cfg_text.replace('mutations = ["variant-reading"]', "mutations = []")))
     run_case("the dash convention left unfilled", "EDIT-1", "tools/artifacts.toml", "unfilled", lambda t, f: w(t, "tools/artifacts.toml", cfg_text.replace('dashes = "no-em-dash"', 'dashes = ""')))
     absent_case("an em-dash inside a fence of tildes", "EDIT-1", "MANIFESTO.md", "", add("MANIFESTO.md", "\n~~~\nOne " + chr(0x2014) + " two.\n~~~\n"))
+    run_case("an em-dash in a docstring of several lines", "EDIT-1", "python_project/conftest.py", "em-dash",
+             add("python_project/conftest.py", 'def f():\n    """A summary ' + chr(0x2014) + ' here,\n    and more there."""\n'))
+    run_case("and in a docstring of one line", "EDIT-1", "python_project/conftest.py", "em-dash",
+             add("python_project/conftest.py", 'def g():\n    """One line ' + chr(0x2014) + ' here."""\n'))
+    absent_case("a quotation inside a docstring is still not read", "EDIT-1", "python_project/conftest.py", "em-dash",
+                add("python_project/conftest.py", 'def h():\n    """It says "one ' + chr(0x2014) + ' two" here,\n    and more."""\n'))
     run_case("a party off the roster, roster unfilled", "ONT-3", "tools/artifacts.toml", "roster unfilled", sub(C2, "Verified-by: researcher", "Verified-by: an outsider"))
     # [parties] names = ["none"] decides that no one beyond the researcher and
     # the assistant appears: the check runs, and "none" is not a party.

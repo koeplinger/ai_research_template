@@ -24,11 +24,11 @@ exit on failure, a `RESULT:` summary line) and records the language in the check
 `CHECK_METHODOLOGY.md` names in its Slots table. The tools do not read
 such a program as a check: they take a check program's header from a
 Python docstring and run it with Python, and no row of
-`tools/artifacts.toml` matches a file under `src/` whose name does not
+`tools/artifacts.toml` matches a program under `src/` whose name does not
 end in .py, so such a file is reported until the project gives it a row.
-Its header, its concordance with its record, and its mutations are then
-read by hand, as a written procedure's are (`CHECK_METHODOLOGY.md`,
-*What is checked mechanically*).
+Its header, its concordance with its record, and whether it fails under
+its mutations are then read by hand; its check record's header is still
+checked (`CHECK_METHODOLOGY.md`, *What is checked mechanically*).
 
 Removing this folder is more than deleting it: the root `README.md` lists
 it, `tools/artifacts.toml` carries its `[[artifact]]` and `[[index]]`
@@ -124,7 +124,7 @@ runs them, and as shipped run no such check.
   is software, its exact version is in `requirements.txt`, and where the
   version alone does not fix the result, the rest of the environment that
   does (the interpreter, the accelerator and its driver, the container
-  digest, a frozen package manifest) is recorded with it, so that a second
+  digest, a package manifest pinned to exact versions) is recorded with it, so that a second
   reader returns to the same thing (`CHECK_METHODOLOGY.md` §3, *the
   version and the pinned environment*).
 - **Exact arithmetic where the claim depends on it**; floating point where

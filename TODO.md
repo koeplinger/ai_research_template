@@ -64,7 +64,7 @@ source, a plan, and a write-up relate through them.
 
 **Why.** The ontology is the thing that makes the artifacts one system
 rather than a folder of forms, and it is the hardest part to hold in the
-head from the forty-eight rows of its catalogue. A reader who can see the
+head from the forty-nine rows of its catalogue. A reader who can see the
 graph can see at once what a claim rests on, what a check backs, and
 where a predicate has no arrow into it.
 
@@ -97,14 +97,17 @@ setup round self-documenting: the answers are the log entry.
 
 **What it touches.** Most of it exists. `GETTING_STARTED.md` §3 puts
 each slot's question in plain words, with filled examples from five
-fields, and `tools/new_project.py` asks the same words in a terminal; the
-three slots that wait for a write-up come last, and may stay open by
+fields, and `tools/new_project.py` asks the same words in a terminal, the
+three slots that wait for a write-up last; those three may stay open by
 decision. An assistant asked in a clone to make a project runs setup as
 one pass (`GETTING_STARTED.md`, *Setup at a prompt, as one pass*): it
 puts the questions one at a time, writes the answers to a file and runs
 the tool once, and records the whole exchange as the project's entry
 001. What is missing is the standing prompt that starts it: its words,
 and its row in `HOW_IT_FITS_TOGETHER.md`'s list of suggested prompts.
+Continuing on to the research question and the first plan is not built
+either, and `GETTING_STARTED.md` §4 keeps both out of setup today: the
+question is the round after setup, and setup proposes no plan.
 Each question stops for the researcher's answer, with the assistant's
 recommendation, where it has one, after the options and labeled as its
 own (`MANIFESTO.md` §16, *Putting a decision*).

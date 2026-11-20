@@ -340,7 +340,7 @@ biologist, a scholar of contract law, and a machine-learning researcher.
 
 **`{{VERIFICATION_TOOL}}`**
 - collation against the source in the form the source index records: the original at its shelfmark, in the holding repository's reading room
-- the statistical environment at a stated version with its package directory frozen, on the named data extract
+- the statistical environment at a stated version with its packages pinned, on the named data extract
 - the project's analysis container at a stated digest, holding the pinned pipeline and the reference assembly with its annotation release
 - the authorized report where one exists, else the neutral-citation transcript, read at the pinpoint
 - the released training and evaluation code at the named tag, in the pinned container, on one stated accelerator
@@ -374,10 +374,10 @@ biologist, a scholar of contract law, and a machine-learning researcher.
 - section; table; figure; equation; appendix section; file path and commit, for code; split and version, for a dataset
 
 **`{{REFERENCE_FIELDS}}`**
-- for archival items: repository, collection, reference, description, date range, form consulted, access conditions; for print: author, title, place, publisher, year
+- the seven defaults, plus repository, collection, reference, description, date range, form consulted, and access conditions for an archival item, and place and publisher for print
 - the seven defaults, plus producer, series and release for a dataset
 - the seven defaults, plus accession and version for a database record, and supplier, catalogue and lot for a reagent
-- parties, neutral citation, report citation, court, judgment date, jurisdiction, judges, currency
+- the seven defaults, plus parties, neutral citation, report citation, court, judgment date, jurisdiction, judges, and currency for a case
 - the seven defaults, plus version: a preprint version, a dataset release, or a commit
 
 **`{{REFERENCE_ADEQUACY}}`**

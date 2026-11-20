@@ -6,7 +6,9 @@ This document defines the operating rules for an AI assistant working in
 this research repository. The rules are **binding on the assistant**
 for all AI-assisted work, and they are **advisory toward the researcher**:
 every check described here informs and records; none blocks the
-researcher, and none is a control in the audit sense. A check that fails is
+researcher, save a refusal to commit what would leak where a project
+sets one up, which a stated reason overrides (`VISION.md`); and none is
+a control in the audit sense. A check that fails is
 reported, and the researcher decides. An assistant reads this file before
 taking substantive action; a session that has not read it is not ready to
 work.
@@ -55,8 +57,9 @@ and is corrected in place.
 
 This repository presumes git for version history and a Python
 interpreter for its tools; both are infrastructure, not slots. Slots a
-project fills are written in double braces; the ones this file relies on
-are listed at the end of it, and `GETTING_STARTED.md` §3 lists every slot
+project fills are written in double braces; the ones this file owns are
+listed at the end of it, with a pointer row for the instrument of record
+of §5, and `GETTING_STARTED.md` §3 lists every slot
 with the file that owns it. Every file and directory named in this
 document is part of this repository:
 
@@ -442,14 +445,14 @@ the project's own subject-matter terms and starts empty.
 - The reason for a correction has a home: the prompt-log entry of the round
   that made it (§8), or the commit message when the researcher corrects by
   hand. What changed, and why, is then readable without reconstruction.
-- Four current-state artifacts require the researcher's authorization for
-  substantive change: `FINDINGS.md`; the keystone problem statement and the
-  research statement, which state the researcher's thesis and question;
-  and this manifesto. What counts as a finding is the researcher's
-  decision. The assistant may
-  propose a finding, and may correct wording, typos, and pointers; adding a
-  finding, removing one, or changing one substantially follows the same
-  pattern: bring the finding and the wording, and stop.
+- Four current-state artifacts change only at the researcher's direction:
+  `FINDINGS.md`; the keystone problem statement and the research
+  statement, which state the researcher's thesis and question; and this
+  manifesto. What counts as a finding is the researcher's decision. The
+  assistant may propose a finding, a change of substance, or a correction
+  of wording, a typo, or a pointer in any of the four; adding a finding,
+  removing one, changing one, or correcting any of the four follows the
+  same pattern: bring the proposal and its wording, and stop.
 
 > **Build lens.** There are no frozen artifacts during the build and no
 > prompt log, so the immutable record is the version history alone.
@@ -577,9 +580,11 @@ the project's own subject-matter terms and starts empty.
   dictated or ruled on is not proposed for change. A finding of a sweep or
   a review that runs against a ruling is reported as such, with the
   ruling's prompt, and not proposed; a mechanical finding the researcher
-  has ruled to leave is entered, with the log entry of that ruling, in the
-  list of accepted findings in `tools/artifacts.toml`, and the tools that
-  read the list, which `tools/README.md` names, stop raising it. The
+  has ruled to leave, of a tool that reads the list of accepted findings
+  in `tools/artifacts.toml` (`tools/README.md` names those tools), is
+  entered there with the log entry of that ruling, and that tool stops
+  raising it; a finding of any other tool is still raised, and is
+  reported as ruled. The
   exception is what the ruling did not have before it: new
   evidence that a ruled statement is false, or a later change in the
   record that the ruled text now contradicts. Either is brought once, with
@@ -686,7 +691,7 @@ unenforced, and the prompt log records why.
 | 12 | three genres; frozen artifacts; reasons in the prompt log | `VISION.md` at the researcher's direction; everything else current state; reasons in the commit message |
 | 13 | round check before handing back | round check and privacy scan, both over the whole tree |
 | 14 | subagents find, do not write | additionally: never given the source projects |
-| 16 | hook-enforced status block; reminders from the stage of work | in force, with the hook installed; reminders as in a project |
+| 16 | hook-enforced status block; reminders from the stage of work | in force, with the hook installed; reminders as in a project, the log reminder read and not acted on (§8) |
 | 17 | opposition to the researcher's claims | adversarial review of each governance document |
 
 Sections 3, 4, 7, and 15 apply identically under both lenses.

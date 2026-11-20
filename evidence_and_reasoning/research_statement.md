@@ -2,8 +2,8 @@
 
 *Created 3 September 2026; updated 19 November 2026.*
 
-<!-- Maintained: changed only on a significant deviation of the question,
-     not on every finding (DOCUMENT_GENRES.md). States the question as it
+<!-- Maintained: the question is changed only on a significant
+     deviation, not on every finding (DOCUMENT_GENRES.md). States the question as it
      now stands; how it came to be sharpened is in the log and the version
      history. Every change, a correction of wording or a pointer
      included, is made at the researcher's direction. -->

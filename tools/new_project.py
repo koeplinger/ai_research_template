@@ -211,7 +211,7 @@ LEAVE_BEHIND = ["example", ".review", ".git", ".privacy", "TODO.md",
 
 # The pointers to what was left behind: (path, exact text, what it becomes).
 # A miss is reported rather than guessed at, because a pointer that moved
-# is a change this procedure has not been taught.
+# is a change this tool has not been taught.
 # The front page README.md is always written over (step 10), so its
 # pointers need no entry here.
 POINTERS: list[tuple[str, str, str]] = [
@@ -1002,7 +1002,7 @@ def write_setup_pointer(root: Path) -> bool:
 
 
 def restamp(root: Path, day: str, src: Path) -> int:
-    """Step 10.  A file this procedure changed is no longer the template's: its
+    """Step 10.  A file this tool changed is no longer the template's: its
     updated date becomes `day`, the day of the run.  A file it did not
     change, compared with the template's copy at `src`, keeps the
     template's dates (DOCUMENT_GENRES.md section 3)."""
@@ -1045,7 +1045,7 @@ ANSWERS_TEMPLATE = '''# Answers for tools/new_project.py.
 [project]
 holder = ""          # the copyright holder for this project's code
 citation = ""        # one line: author, title, year, and where it lives
-date = ""            # the project's start date, "D Month YYYY": its year dates the copyright; files are stamped with the day the procedure runs
+date = ""            # the project's start date, "D Month YYYY": its year dates the copyright; files are stamped with the day the setup tool runs
 
 [slots]
 {slots}
@@ -1062,7 +1062,7 @@ mutations = []                  # the names a Mutation: line may carry, as a hea
 parties = []                    # the roster beyond the researcher and the assistant, or ["none"]
 registry_required = ["Authors", "Title", "Where", "Year", "Identifier", "Keywords", "Standing"]
 # {{{{DELIVERABLE}}}} has a machine half too, the [publication] table, which
-# gates a build and a bibliography.  It ships disabled and this procedure
+# gates a build and a bibliography.  It ships disabled and the setup tool
 # leaves it so: a project that builds its deliverable fills it in by hand,
 # as paper/README.md says, once it knows what the build command is.
 # {{{{REFERENCE_FIELDS}}}} has a second half, [registry.by_kind], for a
@@ -1463,7 +1463,7 @@ def selftest() -> int:
               and "adapted from the template" in read(dst / "LICENSE.md"))
         check("the copyright year is the project's, not this program's",
               "Copyright (c) 2027 A. Researcher" in read(dst / "LICENSE-CODE"))
-        check("a file the procedure rewrote is stamped with the day of the run, not the answers' date",
+        check("a file the setup tool rewrote is stamped with the day of the run, not the answers' date",
               f"; updated {today_day()}.*" in read(dst / "MANIFESTO.md"))
         cfg_stamp = TOML_STAMP.search(read(dst / "tools" / "artifacts.toml"))
         check("the configuration, rewritten with the machine halves, is stamped too",
@@ -1474,7 +1474,7 @@ def selftest() -> int:
         kept = [f for f, o in pairs if read(f) == read(o)]
         moved = [str(f.relative_to(dst)) for f, o in pairs
                  if read(f) != read(o) and unstamped(read(f)) == unstamped(read(o))]
-        check("a file the procedure did not change keeps the template's dates",
+        check("a file the setup tool did not change keeps the template's dates",
               bool(kept) and not moved, f"{len(kept)} kept; restamped although unchanged: {moved[:3]}")
         check("the guide's own pages still explain the slots, unsubstituted",
               "{{PERSONA}}" in read(dst / "GETTING_STARTED.md"))
@@ -1572,7 +1572,7 @@ def selftest() -> int:
         (a / "tools" / "artifacts.toml").write_text("# c\n#\n# Created 1 January 2026; updated 1 January 2026.\n")
         (b / SHIPPED).write_text(read(a / "tools" / "artifacts.toml"))
         restamp(b, "2 January 2030", a)
-        check("a program the procedure changed takes the day; one it did not, a template's placeholder, and the "
+        check("a program the setup tool changed takes the day; one it did not, a template's placeholder, and the "
               "shipped configuration keep theirs",
               "updated 2 January 2030." in read(b / "tools" / "changed.py")
               and "updated 1 January 2026." in read(b / "tools" / "same.py")

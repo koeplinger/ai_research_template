@@ -32,12 +32,17 @@ after *by locator only*. Where the copy is several files, the checksums
 go in a checksum list, `<copy>_sha256.txt` in this folder, tracked even
 where the copy is not: one line per file, its SHA-256 checksum and then
 its path inside the copy. The row links the list and records the list's
-own checksum.
+own checksum. Nothing in this folder has its line endings converted on
+checkout (`.gitattributes`), so every checksum recorded here holds on
+every system.
 
 Where the row records a checksum and the copy is corrected at the
 researcher's direction, the row keeps the checksum of the copy as
 imported and adds the corrected copy's after it, marked *as imported*
-and *as held*.
+and *as held*. Where the checksums are in a list, the list is kept as
+imported, and the corrected copy's go in a second list,
+`<copy>_held_sha256.txt` in this folder, which the row links beside the
+first, with its own checksum.
 
 A **candidate list** may be kept here at the researcher's direction
 (`MANIFESTO.md` §10): each item by locator and access conditions as §6

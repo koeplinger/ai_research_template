@@ -309,7 +309,10 @@ are the ontology's own:
    (§1.4), so in a registry file a level-three heading that opens a
    bracket and carries no key the grammar of §1.3 reads is reported: no
    token can cite that entry, and its bullets go unchecked. An entry's
-   required bullets are present and filled, as a field is.
+   required bullets are present and filled, as a field is: those of
+   `[registry] required`, and, where the entry declares a kind that
+   `[registry.by_kind]` names, that kind's as well; once that table names
+   a kind, an entry declaring a kind it does not name is reported.
    A claim another claim or a check record cites, or another claim's
    `Depends-on` names, has a `What is not claimed` section holding more
    than a comment.

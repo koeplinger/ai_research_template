@@ -169,7 +169,8 @@ and it says what is true now. It is in scope for *Writing for publication*
 
 ### Artifacts of an open plan
 
-**Nothing a plan owns freezes until the plan closes.** While a plan is
+**Nothing a plan owns freezes until the plan closes**, save a released
+version of a versioned write-up, which freezes on release. While a plan is
 open, its plan file, claims, check records, checks, and notes are
 current-state documents: edited freely in place, and **deleted when they
 turn out to be obsolete**.
@@ -216,7 +217,7 @@ copied into the artifacts it describes:
 | the state of the research as a whole | `CURRENT_STATE.md`: the top-level entry point |
 | the status of every plan | the `Status:` line of the plan; `evidence_and_reasoning/research_plans/ROADMAP.md` is an index of plans, one line and a link each, whose status column the checker compares with each plan's line |
 | what a plan established, and what it left open | that plan's own execution status |
-| whether a given artifact is live or frozen | **derived**: live while its owning plan is open, frozen once that plan closes |
+| whether a given artifact is live or frozen | **derived**: live while its owning plan is open, frozen once that plan closes; a released version frozen on release |
 | the rules that produce all of the above | `MANIFESTO.md`, this file, `CHECK_METHODOLOGY.md`, `PRECEDENCE.md` |
 
 An artifact **names its owning plan** in its header, `Plan: NNN`, and stops
@@ -238,7 +239,7 @@ altitude that owns it, and referred to from below by link.
 
 | Artifact | |
 |---|---|
-| `MANIFESTO.md` | the operating rules; substantive change requires the researcher's authorization |
+| `MANIFESTO.md` | the operating rules; every change at the researcher's direction (`MANIFESTO.md` §12) |
 | `DOCUMENT_GENRES.md` | this file |
 | `PRECEDENCE.md` | what governs when sources disagree |
 | `CHECK_METHODOLOGY.md` | how a check is written; where register is defined |
@@ -283,7 +284,9 @@ received, an imported file under `inherited/`, which is a verbatim copy
 unless its row in the import ledger records a correction made at the
 researcher's direction (`inherited/README.md`), a held source under
 `source_documents/`, which is never edited (`source_documents/README.md`),
-or a typeset source under `paper/`, which the linter does not read; they
+or a typeset source under `paper/`, which the linter does not read (a
+version among them still carries its header, §2, *Versioned
+write-ups*); they
 are dated by the plan that owns them or the index that lists them, and an
 attachment by the entry that received it. `LICENSE-CODE`, a license text
 kept in its standard form, and `VISION.md`, the template's statement of
@@ -334,7 +337,7 @@ must never appear:
 **A statement about the subject of the research is content, not
 narrative, whatever words it uses**: a source's revisions, a dataset's
 release vintage, an institution's past, a published correction, a
-measurement artefact of an instrument. So is an internal cross-reference (*"established in
+measurement artifact of an instrument. So is an internal cross-reference (*"established in
 the earlier sections"*), a proper noun (*"the corrected edition"*), the
 dated provenance of a directive (*"recorded <date>, prompt NNN"*), and a
 present-tense description of an operation a program performs.
@@ -416,7 +419,8 @@ stated so that it can be implemented; the editorial checks are listed in
 the researcher with its output (`MANIFESTO.md` §13). One the researcher
 has ruled to leave is entered, with the log entry of the ruling, in the
 list of accepted findings in `tools/artifacts.toml`, and is left out
-while the words the entry quotes stand (`MANIFESTO.md` §16, *A ruled
+while the words the entry quotes stand and still begin on the line the
+finding names (`MANIFESTO.md` §16, *A ruled
 matter stays ruled*).
 
 1. **Header.** Every durable artifact, by the configured path patterns and

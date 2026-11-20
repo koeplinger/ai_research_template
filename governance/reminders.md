@@ -47,8 +47,7 @@ rulebooks', gathered in one place.
    (`governance/roles/falsifiability_probe.md`, and
    `tools/falsifiability_probe.py` for a program), each of its check
    programs agrees with its record (`tools/check_concordance.py`), and each
-   that backs a claim registered `VERIFIED` or `RULED_OUT` has had its
-   coverage audited (`governance/roles/coverage_auditor.md`).
+   has had its coverage audited (`governance/roles/coverage_auditor.md`).
 3. The round check is clean and the indexes are in step
    (`tools/check_round.py`).
 4. The pre-registered confirmation and refutation criteria decide the

@@ -110,7 +110,7 @@ def closure(t: lint_docs.Tree, num: str) -> list[tuple[int, str, str, str]]:
 
 def rests_on(t: lint_docs.Tree, num: str) -> list[str]:
     reg = register(t, num)
-    note = "" if reg in STRENGTH else f"   ({lint_docs.F('register')} {reg!r} is not one section 4 orders: no member is flagged as weaker)"
+    note = "" if reg in STRENGTH else f"   ({lint_docs.F('register')} {reg!r} is not one section 4 orders: no claim it rests on directly is flagged as weaker)"
     out = [f"[claim {num}]  {reg}  rests on:{note}"]
     members = closure(t, num)
     for depth, kind, n, note in members:
@@ -404,8 +404,8 @@ def selftest() -> int:
     case("on a tree with linter findings: a cycle names itself", "[claim 003]" in r and "(listed above)" in r, r)
     r = "\n".join(answer(t, "rests-on", "003"))
     case("on a tree with linter findings: a self-dependency is a cycle", "(the claim itself: a cycle)" in r, r)
-    case("on a tree with linter findings: a claim whose own register section 4 does not order says so, and flags no member as weaker",
-         "[claim 003]  PROVEN  rests on:   (Register 'PROVEN' is not one section 4 orders: no member is flagged as weaker)" in r
+    case("on a tree with linter findings: a claim whose own register section 4 does not order says so, and flags no claim it rests on directly as weaker",
+         "[claim 003]  PROVEN  rests on:   (Register 'PROVEN' is not one section 4 orders: no claim it rests on directly is flagged as weaker)" in r
          and "FLAG: weaker" not in r, r)
     r = "\n".join(answer(t, "unverified", "004"))
     case("on a tree with linter findings: unverified lists the unresolved dependency", "[claim 042]  (resolves to no claim)" in r, r)

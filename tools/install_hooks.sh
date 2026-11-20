@@ -7,7 +7,7 @@
 # refuses the commit on a finding, and where its list holds no pattern,
 # since a leak into the history is hard to undo; the round check reports
 # its findings and lets the commit proceed,
-# as MANIFESTO.md section 13 has every check inform and the researcher
+# as MANIFESTO.md's opening has every check inform and the researcher
 # decide, unless the hooks were installed with --strict.  A refusal names
 # the override, git commit --no-verify, and asks that the commit message
 # say why, as MANIFESTO.md section 12 has it for a correction made by hand.
@@ -89,7 +89,10 @@ ROOT="\$(git rev-parse --show-toplevel)" || exit 2
 cd "\$ROOT" || exit 2
 [ -r .privacy/stopwords.txt ] || exit 0
 command -v python3 >/dev/null || { echo "commit-msg: python3 not on PATH; the scan did not run" >&2; exit 2; }
-if ! python3 tools/privacy_scan.py --message "\$1"; then
+# git sets GIT_EDITOR=: for its hooks when no editor opens; from a message
+# written in its editor, git strips the lines beginning with #.
+edited=--edited; [ "\${GIT_EDITOR-}" = ":" ] && edited=
+if ! python3 tools/privacy_scan.py --message "\$1" \$edited; then
   echo "commit-msg: refused on the report above; reword or fix the list, or commit with --no-verify and say why in the commit message (MANIFESTO.md sections 12 and 13)" >&2
   exit 1
 fi
@@ -174,6 +177,23 @@ selftest() {
   if commit_in "mention the $word"; then echo "  [FAIL] a stop word in the message was committed"; fails=$((fails+1))
   elif grep -q "in commit message" "$tmp/out"; then echo "  [PASS] a stop word in the commit message is refused"
   else echo "  [FAIL] refused, but not by the message scan:"; sed 's/^/         /' "$tmp/out"; fails=$((fails+1)); fi
+  reset_in
+
+  # A message given with -m keeps its lines beginning with #, so they are read.
+  printf '\nOne more line.\n' >> "$repo/CURRENT_STATE.md"; add_all
+  if commit_in "$(printf 'a change\n# the %s note' "$word")"; then echo "  [FAIL] a stop word on a line beginning with # in a message given with -m was committed"; fails=$((fails+1))
+  elif grep -q "in commit message" "$tmp/out"; then echo "  [PASS] a stop word on a line beginning with # in a message given with -m is refused"
+  else echo "  [FAIL] refused, but not by the message scan:"; sed 's/^/         /' "$tmp/out"; fails=$((fails+1)); fi
+  reset_in
+
+  # A message written in git's editor: git lists the branch among the lines
+  # it strips, so a stop word there is no finding.
+  git -C "$repo" checkout -q -b "$word"
+  printf '\nYet another line.\n' >> "$repo/CURRENT_STATE.md"; add_all
+  if git -C "$repo" -c user.name=t -c user.email=t@t -c core.editor=true commit -q -e -m "a change" >"$tmp/out" 2>&1; then
+    echo "  [PASS] a message written in git's editor is not refused for the lines git strips"
+  else echo "  [FAIL] the lines git strips from an edited message were read:"; sed 's/^/         /' "$tmp/out"; fails=$((fails+1)); fi
+  git -C "$repo" checkout -q -
   reset_in
 
   printf '# none yet\n' > "$repo/.privacy/stopwords.txt"

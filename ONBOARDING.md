@@ -99,9 +99,10 @@ meets in its first minutes.
   closes every plan. The assistant reports work ready and stops.
 - **A register is the researcher's to assign**; the assistant proposes it
   with its evidence (`CHECK_METHODOLOGY.md` §1).
-- **Four current-state files change substantively only with the
-  researcher's authorization**: `FINDINGS.md`, the keystone, the research
-  statement, and the manifesto (§12).
+- **Four current-state files change only at the researcher's
+  direction**, a correction of wording or a pointer included:
+  `FINDINGS.md`, the keystone, the research statement, and the manifesto
+  (§12).
 - **A frozen artifact is corrected only with authorization**: bring the
   finding and the proposed wording, and stop; bring the trivial
   corrections a round finds together, as one numbered list; a released

@@ -17,7 +17,8 @@ cannot detect self-deception or motivated reasoning, and does not try. It
 is not a compliance system, not a substitute for peer review, not a
 guarantee of correctness, and not a way to make an assistant trustworthy;
 every mechanism informs and records, and none blocks but the opt-in
-privacy scan, which refuses a commit on a stop word. `VISION.md` states
+privacy scan, which refuses a commit on a stop word, and every commit
+while its list holds no pattern. `VISION.md` states
 the precondition and the non-goals in full, and they are worth reading
 before adopting it.
 
@@ -46,8 +47,8 @@ that wiring still applies: the record, the checks, the registers, the
 plans, the roles and the tools are all harness-free, and they run on their
 own. What you do is fill the reply-hook slot with your own wiring or with
 *none, with the form kept by hand*, and add or remove a folder under
-`governance/harness/` by the recipe there. Be aware that the instantiation
-procedure records your answer to its reply-hook question but copies the
+`governance/harness/` by the recipe there. Be aware that the template's
+setup tool records your answer to its reply-hook question but copies the
 shipped wiring whatever the answer, so a project on another assistant
 removes it afterwards rather than declining it up front.
 

@@ -76,7 +76,8 @@ the release's stamps and its changelog row]
   every file whose name begins with an underscore (the artifact
     templates);
   the configuration tools/artifacts.toml and the harness settings;
-  the docstrings of the programs under tools/ and governance/harness/;
+  the docstrings of the programs under tools/ and governance/harness/,
+    or the leading comment block where a program has none;
   the status files CURRENT_STATE.md, FINDINGS.md,
     evidence_and_reasoning/research_statement.md, problem_statement.md,
     research_result.md, public_record_tensions.md;

@@ -29,7 +29,9 @@ in several files, takes checksums, they go in a checksum list,
 `<key>_short_title_sha256.txt` in this folder, tracked even where the
 copy is not: one line per file, its SHA-256 checksum and then its path
 inside the folder or the copy. The row links the list and records the
-list's own checksum.
+list's own checksum. Nothing in this folder has its line endings
+converted on checkout (`.gitattributes`), so every checksum recorded
+here holds on every system.
 
 | Key | What | File or folder, or locator | License note, or access conditions | Form consulted |
 |---|---|---|---|---|

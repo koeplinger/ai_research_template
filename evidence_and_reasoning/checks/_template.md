@@ -32,9 +32,7 @@ By: <!-- who produced this record: researcher | assistant, then the AI model and
                                  or the identifier or URL of the protocol's
                                  registration with a third party, or the
                                  two, comma-separated, as
-                                 evidence_and_reasoning/notes/README.md says.
-                                 A program check with a protocol carries
-                                 both. -->
+                                 evidence_and_reasoning/notes/README.md says. -->
 
 ## 1. What is checked
 
@@ -94,5 +92,5 @@ By: <!-- who produced this record: researcher | assistant, then the AI model and
 <!-- Results, discrepancies, and verdict for this execution, parts 4 to 6
      of CHECK_METHODOLOGY.md section 8. Which planted alteration from
      Mutation was caught; which Robustness perturbations the claim
-     survived; the second pass, its route, who took it, and whether it
+     survived, and which it failed; the second pass, its route, who took it, and whether it
      agreed. -->

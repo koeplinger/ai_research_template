@@ -12,8 +12,9 @@ table.
 ## Conventions
 
 - **One living copy of the main write-up at a time.** A released version
-  freezes with what is released with it, save what an open plan owns,
-  which freezes when that plan closes. The version, in every form it is
+  freezes on release, whatever the status of a plan that owns it, and
+  with it what is released with it that no open plan owns; what an open
+  plan owns freezes when that plan closes. The version, in every form it is
   released in (its source, a typeset or rendered copy, a filed document),
   is succeeded by the next, never corrected; what else is released with
   it, such as its data, code, or transcriptions, is corrected as its own

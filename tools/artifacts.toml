@@ -115,7 +115,7 @@ derived = ["Genre", "Tier", "Live", "Frozen"]
 [fields.roles]
 # The name this project writes for each header field, by the ROLE the field
 # plays.  Every tool reads the name from here, so a project whose discipline
-# has taken one of these words renames it in this table alone, and the checks
+# has taken one of these words renames it in this table, and the checks
 # follow (GLOSSARY.md, "Renaming a word this methodology uses").  A name has
 # the form ONTOLOGY.md, section 1.1, gives a field's name: a capital
 # letter, then letters and hyphens, each from A to Z, opening with none of
@@ -265,8 +265,8 @@ cite = ""           # a regular expression whose first group is the keys at a ci
 #           line
 #   ruling  the log entry that records the ruling
 # An entry accepts every finding of its tag on that line, left out of the
-# report and counted; a change to the words it quotes brings the finding
-# back.  An entry that matches nothing, lacks a part, cites no log entry,
+# report and counted; a change to the words it quotes, or a re-wrap that
+# moves their start off that line, brings the finding back.  An entry that matches nothing, lacks a part, cites no log entry,
 # or names a tag the list does not cover is reported.  The assistant adds
 # an entry only at the researcher's ruling.
 # [[accepted]]
@@ -618,6 +618,12 @@ header = "none"
 [[artifact]]
 kind = "non-prose"
 glob = ".gitignore"
+genre = "exempt"
+header = "none"
+
+[[artifact]]
+kind = "non-prose"
+glob = ".gitattributes"
 genre = "exempt"
 header = "none"
 

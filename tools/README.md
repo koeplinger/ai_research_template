@@ -37,7 +37,8 @@ the file, the first words of the passage, and the log entry of the ruling
 (`MANIFESTO.md` §16, *A ruled matter stays ruled*). The linter, the round
 check, the residue check, and the session brief's findings gate leave out
 every finding of that tag on the line where the passage begins, and count
-it; a change to the quoted words brings the finding back, and an entry
+it; a change to the quoted words, or a re-wrap that moves their start
+off that line, brings the finding back, and an entry
 that no longer matches, or cannot match, is reported. The probe's and the
 concordance check's findings are not accepted through the list. A row's
 `skip`, which silences a check for a whole kind of file, is the wider

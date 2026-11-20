@@ -164,7 +164,8 @@ Nothing beyond what `CHECK_METHODOLOGY.md` checks for registers, what
 `DOCUMENT_GENRES.md` checks for current-state documents, and what
 `ONTOLOGY.md` §5 checks, of citation tokens, among them that every
 `[tension T###]` resolves to a row of the ledger, and of a claim another
-claim or a check record cites, that it says what it does not claim;
+claim or a check record cites, or another claim's `Depends-on` names,
+that it has a *What is not claimed* section holding more than a comment;
 together they cover this file and the ledger.
 
 Whether a divergence has been recorded at all, whether a caution is still

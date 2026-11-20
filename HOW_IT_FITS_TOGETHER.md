@@ -189,7 +189,8 @@ ruling's prompt, and not proposed
 `python3 tools/session_brief.py`: it prints the reading order, every plan
 with its status and the count engaged, and the reminders the record can
 compute; where the harness can run a command at session start, it prints
-this for you. Then read the latest log entry: a resume point says where
+this for you. Then read the manifesto in full, and the latest log
+entry: a resume point says where
 to start, and an entry still open is closed first or, if it is
 committed, left for this round's entry to complete (`ONBOARDING.md`,
 *The first minutes*; `MANIFESTO.md` §8). Then open the round's log entry,
@@ -332,8 +333,8 @@ available proof that the check is connected to the claim.
 Because declaring a claim established is the judgment the work exists to
 produce. The assistant proposes one with its evidence and stops. This is
 also why the four documents `MANIFESTO.md` §12 names, the findings file,
-the keystone, the research statement, and the manifesto itself, need your
-authorization to change substantively.
+the keystone, the research statement, and the manifesto itself, change
+only at your direction, down to a word or a pointer.
 
 **Why is everything advisory?** A mechanism that blocked work would be
 routed around within a week, and routing around it would leave no trace.
