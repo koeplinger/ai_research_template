@@ -24,11 +24,16 @@ never neither (`ONTOLOGY.md` §2.1, `held` and `consulted-at`). Where the
 origin publishes a checksum for a held file, the row records that file's
 SHA-256 checksum beside it; where the form consulted is a working copy
 kept outside version control (*Rules*, below), the row records the
-working copy's beside the locator.
+working copy's beside the locator. Where a held folder, or a working copy
+in several files, takes checksums, they go in a checksum list,
+`<key>_short_title_sha256.txt` in this folder, tracked even where the
+copy is not: one line per file, its SHA-256 checksum and then its path
+inside the folder or the copy. The row links the list and records the
+list's own checksum.
 
 | Key | What | File or folder, or locator | License note, or access conditions | Form consulted |
 |---|---|---|---|---|
-| <!-- [ShortKey] --> | <!-- one line --> | <!-- `Key_short_title.pdf` \| shelfmark, release and version, or URL; then the SHA-256 checksum, where the paragraph above asks for one --> | <!-- the license that permits holding it, with the date retrieved \| the archive's terms, the data license, the closure period --> | <!-- original, facsimile, microfilm, digital surrogate, printed table, data release --> |
+| <!-- [ShortKey] --> | <!-- one line --> | <!-- `Key_short_title.pdf` \| shelfmark, release and version, or URL; then the SHA-256 checksum, or a link to the checksum list and the list's checksum, where the paragraph above asks for one --> | <!-- the license that permits holding it, with the date retrieved \| the archive's terms, the data license, the closure period --> | <!-- original, facsimile, microfilm, digital surrogate, printed table, data release --> |
 
 ## Rules
 

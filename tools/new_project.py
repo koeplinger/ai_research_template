@@ -44,7 +44,7 @@ What it does, printing each step and what it could not do:
      for it, so that what the project changes in its own configuration
      leaves them as they are (tools/README.md);
   7. renames any header field whose name the project's discipline has
-     taken ([fields.roles]; GLOSSARY.md, "Renaming a word this template
+     taken ([fields.roles]; GLOSSARY.md, "Renaming a word this methodology
      uses"), in the configuration, the templates, and the rulebooks,
      never in the tools' own sources, which read the name from the
      configuration and test themselves with the shipped one; a
@@ -1071,7 +1071,7 @@ registry_required = ["Authors", "Title", "Where", "Year", "Identifier", "Keyword
 
 [rename]
 # A header field whose name this project's discipline has taken
-# (GLOSSARY.md, "Renaming a word this template uses").  Cheap now, dear
+# (GLOSSARY.md, "Renaming a word this methodology uses").  Cheap now, dear
 # later.  Leave empty to keep the shipped names.  A new name is a capital
 # letter, then letters and hyphens, each from A to Z, opening with none of
 # Created, Released, Reserved, and Pre-registered (ONTOLOGY.md section
@@ -1690,6 +1690,10 @@ def selftest() -> int:
     check("each slot's question and owner are GETTING_STARTED.md section 3's, word for word", not drift, str(drift))
     check("the answers file prints the tokens it names", "{{DELIVERABLE}}" in answers_template()
           and "{{REFERENCE_FIELDS}}" in answers_template())
+    cited = re.search(r'GLOSSARY\.md, "([^"]+)"', answers_template())
+    check("the answers file names a section of GLOSSARY.md by its heading",
+          bool(cited) and re.search(rf"^## {re.escape(cited.group(1))}$", read(ROOT / "GLOSSARY.md"), re.M) is not None,
+          cited.group(1) if cited else "no citation")
     check("the closing message points to sections 1 and 4, and names no first prompt",
           "section 4" in NEXT and "section 1" in NEXT and "first prompt" not in NEXT)
 

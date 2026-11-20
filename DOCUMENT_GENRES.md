@@ -56,7 +56,7 @@ admission register, a land register, register data, it calls them that, as
 the model prose in these files does, and disambiguates by naming the thing
 ("the register file", "the trust level") wherever both could be meant. A
 project whose sources are registers renames the field instead
-(`GLOSSARY.md`, *Renaming a word this template uses*). *Registry* is
+(`GLOSSARY.md`, *Renaming a word this methodology uses*). *Registry* is
 a different word and keeps its ordinary sense of a catalogue, as in the
 reference registry. A **sweep** is a pass over many
 documents at once (`MANIFESTO.md` §14). The **public record** is the
@@ -101,7 +101,7 @@ reader who finds the one finds the other.
 
 | Artifact | Frozen when |
 |---|---|
-| a released version of the main write-up, together with what is released with it (the deliverable, Slots below) | released by the researcher: a `Released <date>` header line on the version, and a row in the changelog; a first version has no changelog, and its stamp alone releases it |
+| a released version of the main write-up, together with what is released with it that no open plan owns (the deliverable, Slots below) | released by the researcher: a `Released <date>` header line on the version, and a row in the changelog; a first version has no changelog, and its stamp alone releases it |
 | a standalone note or write-up under `paper/` not owned by an open plan | on release, the same way |
 | a review under `paper/reviews/` not owned by an open plan | when the round that acts on it closes: a review is written across that round, and freezes with its last column filled |
 | a version changelog under `paper/` | on release of the later version |

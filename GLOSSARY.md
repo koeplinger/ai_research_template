@@ -1,4 +1,4 @@
-# Glossary: the words this template uses in its own sense
+# Glossary: the words this methodology uses in its own sense
 
 *Created 8 September 2026; updated 19 November 2026.*
 
@@ -22,7 +22,7 @@ should look first.
 
 ## The method's words
 
-| Word | In this template | Not to be confused with |
+| Word | In this methodology | Not to be confused with |
 |---|---|---|
 | **register** | how far a statement may be trusted: one of six levels a claim carries (`CHECK_METHODOLOGY.md` §1) | the primary source itself, in archival and administrative work (an admission register, a parish register, register data); a public record in law; a level of formality in linguistics; an entry in a catalogue |
 | **registry** | the project's catalogue of references, one entry per work (`evidence_and_reasoning/references/`); a work *registered* is entered there, as the `registered` predicate records (`ONTOLOGY.md` §2.1) | a public register of companies, land, or trials; a container registry; a claim *registered* `VERIFIED`, which carries that register (`CHECK_METHODOLOGY.md` §1) |
@@ -78,10 +78,12 @@ should look first.
 | **phantom** | a bare numeric citation that resolves to nothing, or a "Section N", "Table N", "Figure N", or "Equation (N)" pointer numbered beyond what the draft has | anything in the perceptual sense |
 | **echo** | a sentence with eight words or more outside its quotations, appearing twice in a draft or across the live drafts | an echo in acoustics |
 | **live** | of an artifact: not yet frozen, since what freezes it (`DOCUMENT_GENRES.md` §2) has not happened; derived, never written as a field (`ONTOLOGY.md` §3). A *live draft* is a draft under the write-up folder that is not yet frozen | a caution in the tension ledger that is *live*, still standing, as against one closed on a date (`PRECEDENCE.md`); a live process, one still running (`MANIFESTO.md` §16) |
+| **frozen** | of an artifact: a dated record of what was true, known, or decided at a point in time, corrected only with the researcher's authorization, in its running text, and never moved or deleted (`DOCUMENT_GENRES.md` §2, which names what freezes each kind of artifact, such as its owning plan's closing or a release; `MANIFESTO.md` §12); derived, never written as a field (`ONTOLOGY.md` §3) | an environment or a package directory frozen at its versions, which here is *pinned* (*pinned environment*, below); frozen weights or layers in machine learning; a code freeze; a frozen sample or a frozen section in the laboratory; *immutable*, the prompt log's genre, never edited once committed, with authorization or without; *released*, below |
+| **released** | of a version of the write-up, or of a standalone note: carrying the researcher's `Released <date>` stamp and, for a version after the first, its release row in the changelog (`ONTOLOGY.md` §2.6). A released version of a versioned write-up is never corrected, by anyone, in any form it is released in, whether or not it has left the repository, and is succeeded instead; what is released with it is corrected as its own genre allows, unless the researcher directs for that release that it never is (`MANIFESTO.md` §12); `DOCUMENT_GENRES.md` §2 says what a release freezes | published or made public, which a release need not be, and which releases nothing; a release of a dataset or of software, which is its producer's edition (*vintage*, below); *frozen*, above: a frozen artifact is corrected with the researcher's authorization, a released version never |
 | **mark**, **markup** | a mark is one annotation a reader made on a copy of a write-up: a comment, a highlight, a strike-through, a margin note; a copy's markup is all of its marks, each accounted for in a markup ledger (`paper/_template_changelog.md`) | a grade; a trademark; a label or a sign in the everyday sense, as in a version marked `superseded by <path>` or one that marks itself on the page as a draft, or a quotation mark; markup in the sense of a markup language or of text formatting, as in the status block's rule against markup around a label (`MANIFESTO.md` §16) |
 | **accepted finding** | a finding of a check, or a findings-gate reminder, that the researcher has ruled to leave, entered in the `[[accepted]]` list of `tools/artifacts.toml` with the log entry of the ruling, so the tools stop raising it (`MANIFESTO.md` §16) | a finding entered in `FINDINGS.md`; a claim accepted as established |
 
-## Words this template borrows from one discipline
+## Words this methodology borrows from one discipline
 
 The rulebooks draw examples from several fields, and a few borrowed terms
 appear in rule text rather than in an example. They are glossed here so
@@ -115,7 +117,7 @@ lists the items it reports; the families are:
 | `ROUND-n` | the round's own items, which `tools/check_round.py` numbers: the log's, from `MANIFESTO.md` §8, and the build's and the bibliography's, from `paper/README.md`, *Conventions* |
 | `RESIDUE-n` | `tools/check_residue.py`, the rebuild residue it looks for |
 
-## Renaming a word this template uses
+## Renaming a word this methodology uses
 
 **If one of these words is a term of art in your field, rename it before
 the record exists.** The cost of renaming rises with every claim, check,

@@ -41,7 +41,7 @@ reported or to enter in the list of accepted findings (`MANIFESTO.md`
 ### 2. A name
 
 A word this methodology uses in its own sense, which your field has taken.
-`GLOSSARY.md`, *Renaming a word this template uses*, is the procedure:
+`GLOSSARY.md`, *Renaming a word this methodology uses*, is the procedure:
 prose is yours to change freely; a header field name is configured in
 `[fields.roles]` and every tool follows; a kind or a verdict is
 configured under `[vocab]`, while the registers and the plan statuses

@@ -133,7 +133,11 @@ Report, before editing anything:
 10. [this project's own documentation items, listed here]
 
 With the findings, name by path every file read in full. Where the
-reading is split among readers, each reader names the files it read in
+reading is split among readers, an item that compares what one document
+states with what another states goes to readers by item, each reading
+every document on the list for its items, so that one reader reads both
+sides of each comparison; an item a document answers alone may go to
+readers by share of the documents. Each reader names the files it read in
 full, the main thread compares the names with what this sweep was to
 read in full, and a file no reader names is read before the sweep is
 reported complete.

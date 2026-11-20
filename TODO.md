@@ -95,19 +95,19 @@ sit and read. The shortest honest path from a fork to a first round is a
 conversation, and the assistant is already there. It would also make the
 setup round self-documenting: the answers are the log entry.
 
-**What it touches.** `tools/new_project.py` already asks these questions
-in a terminal and writes both halves of every value but `[publication]`
-and `[registry.by_kind]`, left to be filled by hand, so the machinery
-exists; what is missing is the conversational front and the standing
-prompt that starts it. That means: a role or a prompt under
-`governance/roles/` with the questions in order, what each decides, and
-what a good answer looks like in several fields; a way for the assistant
-to hand the answers to the tool rather than editing files by hand; the
-first round's log entry written from the conversation; and a line in
-`GETTING_STARTED.md` and `HOW_IT_FITS_TOGETHER.md`'s list of suggested
-prompts naming it. The hard part is not the questions but stopping at each
-one: the value is the researcher's, and a guided setup that suggests
-answers will get agreement rather than decisions.
+**What it touches.** Most of it exists. `GETTING_STARTED.md` §3 puts
+each slot's question in plain words, with filled examples from five
+fields, and `tools/new_project.py` asks the same words in a terminal; the
+three slots that wait for a write-up come last, and may stay open by
+decision. An assistant asked in a clone to make a project runs setup as
+one pass (`GETTING_STARTED.md`, *Setup at a prompt, as one pass*): it
+puts the questions one at a time, writes the answers to a file and runs
+the tool once, and records the whole exchange as the project's entry
+001. What is missing is the standing prompt that starts it: its words,
+and its row in `HOW_IT_FITS_TOGETHER.md`'s list of suggested prompts.
+Each question stops for the researcher's answer, with the assistant's
+recommendation, where it has one, after the options and labeled as its
+own (`MANIFESTO.md` §16, *Putting a decision*).
 
 ---
 

@@ -28,7 +28,16 @@ like this one (`DOCUMENT_GENRES.md`, *What the checker verifies*, item 5).
 Where the origin publishes a checksum for the file, or the copy is kept
 outside version control, git-ignored or outside the tree, the row records
 the copy's SHA-256 checksum in its *Imported to* cell, after the path or
-after *by locator only*.
+after *by locator only*. Where the copy is several files, the checksums
+go in a checksum list, `<copy>_sha256.txt` in this folder, tracked even
+where the copy is not: one line per file, its SHA-256 checksum and then
+its path inside the copy. The row links the list and records the list's
+own checksum.
+
+Where the row records a checksum and the copy is corrected at the
+researcher's direction, the row keeps the checksum of the copy as
+imported and adds the corrected copy's after it, marked *as imported*
+and *as held*.
 
 A **candidate list** may be kept here at the researcher's direction
 (`MANIFESTO.md` §10): each item by locator and access conditions as §6
@@ -40,7 +49,7 @@ tier and never cited as a result.
 
 | Origin | Imported to | Date at the origin | Imported on | Re-verified by | Notes |
 |---|---|---|---|---|---|
-| <!-- author or holder; the origin's identifier as a second reader could reach it: repository and commit, collection and shelfmark, or a release; never a local path; its license --> | <!-- [path](path) under inherited/, or: by locator only; then the copy's SHA-256 checksum, where the policy above asks for one --> | <!-- the date the copied revision bears --> | <!-- D Month YYYY --> | <!-- [check NNN], or: not yet, nothing builds on it --> | <!-- one line; where the copy departs from the origin by a correction made at the researcher's direction: what was corrected, and the prompt, or: by the researcher's hand --> |
+| <!-- author or holder; the origin's identifier as a second reader could reach it: repository and commit, collection and shelfmark, or a release; never a local path; its license --> | <!-- [path](path) under inherited/, or: by locator only; then the copy's SHA-256 checksum, or a link to its checksum list and the list's checksum, where the policy above asks for one --> | <!-- the date the copied revision bears --> | <!-- D Month YYYY --> | <!-- [check NNN], or: not yet, nothing builds on it --> | <!-- one line; where the copy departs from the origin by a correction made at the researcher's direction: what was corrected, and the prompt, or: by the researcher's hand --> |
 
 ## Candidates
 

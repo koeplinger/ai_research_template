@@ -78,7 +78,7 @@ def construct():
 
     The name is the tools' contract, not a word about the subject matter:
     the probe calls this to build the object it then alters (GLOSSARY.md,
-    "Renaming a word this template uses").  Say in one line here what this
+    "Renaming a word this methodology uses").  Say in one line here what this
     particular check builds.
     """
     raise NotImplementedError("part 2: construction")

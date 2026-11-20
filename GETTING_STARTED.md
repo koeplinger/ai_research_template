@@ -313,7 +313,7 @@ it now**: the field names the tools read are configured in one table,
 `[fields.roles]` in `tools/artifacts.toml`, and the cost of renaming rises
 with every claim, check, and log entry written under the old name. On the
 first day it costs only the edits `GLOSSARY.md`, *Renaming a word this
-template uses*, lists.
+methodology uses*, lists.
 
 The commonest case is *register*, which this methodology uses for a
 claim's trust level and which several fields use for a primary source.
@@ -606,7 +606,7 @@ every rule. If no check of yours is a program and you keep no other
 program, `python_project/` can go.
 
 **What if my field's word for something clashes?** Rename it. See
-`GLOSSARY.md`, *Renaming a word this template uses*. Do it before the
+`GLOSSARY.md`, *Renaming a word this methodology uses*. Do it before the
 record exists.
 
 **My subject matter keeps tripping a check.** Two answers, in this order.

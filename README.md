@@ -60,7 +60,7 @@ pace it sets out.
 
 | If you want to | Read |
 |---|---|
-| get a project running | [GETTING_STARTED.md](GETTING_STARTED.md): clone to first commit, in one sitting |
+| get a project running | [GETTING_STARTED.md](GETTING_STARTED.md): clone to first commit, in one sitting; or ask the assistant, in your clone, to make the project, and it puts each setup question to you in plain words, one at a time, then runs the setup tool once |
 | know why the parts are shaped this way | [HOW_IT_FITS_TOGETHER.md](HOW_IT_FITS_TOGETHER.md): the system, the round, and **the prompts this methodology suggests** |
 | change or remove a mechanism | [FORKING.md](FORKING.md): the repository is yours, and how to change it legibly |
 | see it working | [example/](example/): a small complete project, every gate passing |

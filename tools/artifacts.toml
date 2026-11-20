@@ -116,7 +116,7 @@ derived = ["Genre", "Tier", "Live", "Frozen"]
 # The name this project writes for each header field, by the ROLE the field
 # plays.  Every tool reads the name from here, so a project whose discipline
 # has taken one of these words renames it in this table alone, and the checks
-# follow (GLOSSARY.md, "Renaming a word this template uses").  A name has
+# follow (GLOSSARY.md, "Renaming a word this methodology uses").  A name has
 # the form ONTOLOGY.md, section 1.1, gives a field's name: a capital
 # letter, then letters and hyphens, each from A to Z, opening with none of
 # Created, Released, Reserved, and Pre-registered; the linter reports a
@@ -154,7 +154,7 @@ produced-from = "Produced-from"
 # 1).  The tools apply further rules to the six by name, so a project
 # renames one only by editing every tool that names it, and one added
 # here is treated by those rules as none of the six (GLOSSARY.md,
-# "Renaming a word this template uses").  The plan statuses, DRAFT,
+# "Renaming a word this methodology uses").  The plan statuses, DRAFT,
 # ENGAGED, and CLOSED, are fixed in the tools and not configured here
 # (DOCUMENT_GENRES.md, Words used here).
 registers = ["VERIFIED", "DERIVED", "ATTESTED", "SPECULATIVE", "RULED_OUT", "OPEN"]

@@ -53,7 +53,7 @@ written where the slot's owner defines it; the setup decisions that are
 not slots, listed at the end of its §1; and any field name the project's
 own discipline has taken, renamed in `tools/artifacts.toml` under
 `[fields.roles]` before any artifact carries it (`GLOSSARY.md`, *Renaming
-a word this template uses*). Setup proposes no plan, and of the write-up
+a word this methodology uses*). Setup proposes no plan, and of the write-up
 puts only its three slots' questions, each of which may wait
 (`GETTING_STARTED.md` §3), never what it will say. The rounds after
 setup, and their order, are `GETTING_STARTED.md` §4.

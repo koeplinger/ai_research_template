@@ -342,7 +342,7 @@ def report_unread() -> None:
 # Header field names by the ROLE each plays, so that a project which must
 # rename one (its discipline having taken the word) edits [fields.roles] in
 # tools/artifacts.toml and every tool follows (GLOSSARY.md, "Renaming a word
-# this template uses"; ONTOLOGY.md section 1.1).  F() is the name in force.
+# this methodology uses"; ONTOLOGY.md section 1.1).  F() is the name in force.
 ROLES: dict[str, str] = {
     "register": "Register", "kind": "Kind", "verdict": "Verdict", "plan": "Plan",
     "depends-on": "Depends-on", "backed-by": "Backed-by", "backs": "Backs",
@@ -1716,7 +1716,7 @@ def selftest() -> int:
 
     # A project whose discipline has taken one of the field names renames it
     # in [fields.roles] and the tools follow (GLOSSARY.md, "Renaming a word
-    # this template uses").  Two cases: the renamed tree is clean, and a
+    # this methodology uses").  Two cases: the renamed tree is clean, and a
     # check still fires under the new name.
     def renamed(tmp: Path, extra=None) -> None:
         files = {rel: (body.replace("Register:", "Trust:").replace("Mutation:", "Planted-fault:")
