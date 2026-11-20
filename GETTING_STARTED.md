@@ -139,8 +139,10 @@ Typical entries: a local path prefix; the name of a private project, a
 dataset the work draws on, or a collaborator who is not to be named; an
 address the assistant may give an outside service. A party the record
 credits by name is not an entry, since `MANIFESTO.md` §6 allows that name.
-*None* is a valid answer. The list is not cloned, any more than the hooks
-are, so every clone arms it again.
+*None* is a valid answer, given by writing no list: one that exists and
+holds no pattern, comments alone, refuses every commit until it holds one
+or is removed. The list is not cloned, any more than the hooks are, so
+every clone arms it again.
 
 **The setup decisions that are not slots**, settled in setup (§4), each
 where it is stated; the privacy list comes first, before the first

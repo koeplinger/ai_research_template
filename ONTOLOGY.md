@@ -63,8 +63,11 @@ A to Z, and opens with none of the words `Created`, `Released`,
 `Reserved`, and `Pre-registered`, however capitalized, which open four
 of the stamps of §1.2. A line whose name has any other shape is read as
 no field, and the header block ends at it; a line that opens with one of
-those four words is read as a stamp. Where a document italicizes its
-header, the surrounding emphasis marks are not part of the value.
+those four words is read as a stamp. The `Created` stamp alone may be
+set in italics, as the artifact templates set it. A field line set in
+italics is read as no field, the header block ending at it, and is
+reported (§5, check 1); any other stamp so set matches none of the five
+forms.
 
 ```
 Register: VERIFIED
@@ -159,10 +162,10 @@ assistant's under the consistency sweep (`CHECK_METHODOLOGY.md` §7).
 | Predicate | Relates | Written as | Owner | Checked by | Answers |
 |---|---|---|---|---|---|
 | `cites` | any artifact to a work | `[ShortKey]` | `MANIFESTO.md` §2 | ontology 2 | what does this rest on outside the project? |
-| `cites-at` | a claim or check to the exact place in a work | `[ShortKey, locus]` | `MANIFESTO.md` §2 | ontology 2; an `ATTESTED` claim citing without a locus is reported | where exactly does the source say it? |
+| `cites-at` | a claim or check to the exact place in a work | `[ShortKey, locus]` | `MANIFESTO.md` §2 | ontology 2, which reports a claim registered `ATTESTED` that cites no work at a locus | where exactly does the source say it? |
 | `registered` | a work to its registry entry | an entry at the registry path | `MANIFESTO.md` §2 | ontology 3, against `[registry] required` | is every work we lean on written down? |
 | `held` | a source of record to its local copy | a row in the source index naming the file | `MANIFESTO.md` §6 | `DOCUMENT_GENRES.md` checker 7 | do we have it, or only its locator? |
-| `consulted-at` | a source of record to its locator, where access conditions keep it out of the repository | the same row, giving shelfmark, release, or version, and access conditions | `MANIFESTO.md` §6 | ontology 3: the row has one of `held` or `consulted-at` | how would a second reader reach it? |
+| `consulted-at` | a source of record to its locator, where access conditions keep it out of the repository | the same row, giving shelfmark, release, or version, and access conditions | `MANIFESTO.md` §6 | reading: the row has one of `held` or `consulted-at`, never neither (`source_documents/README.md`) | how would a second reader reach it? |
 | `witness-of` | one record of a work to the work: a manuscript, edition, facsimile, release, or vintage | `Witness of: [ShortKey]` in the registry entry | `MANIFESTO.md` §2 | ontology 2 | which of these are the same work? |
 | `standing-disputed` | a work to a dispute about its authorship, dating, authenticity, priority, replication, or currency, or to the search that found none, or to the reason no search was made | `Disputed: <what>, <source>` in the registry entry; `Standing: searched <where>, <date>; none found`, or `...; found, see Disputed`, or `Standing: not searched, <date>; <why>` | `MANIFESTO.md` §3 | reading | is this source contested, and was that checked? |
 
@@ -174,14 +177,14 @@ assistant's under the consistency sweep (`CHECK_METHODOLOGY.md` §7).
 | `register` | a claim to its trust level | `Register:` | `CHECK_METHODOLOGY.md` §1 | `CHECK_METHODOLOGY.md` mechanical 1 | how far may this be trusted? |
 | `kind` | a claim to its claim kind | `Kind:`, lower case, spaces hyphenated (`internal-consistency`) | `CHECK_METHODOLOGY.md` §2 | `CHECK_METHODOLOGY.md` mechanical 1 | what would settle it? |
 | `verdict` | a claim to the conclusion reached | `Verdict:` with a value from the declared kind's vocabulary, the Inferential vocabulary taking two, comma-separated; `none` while the register is `OPEN` or `SPECULATIVE` | `CHECK_METHODOLOGY.md` §2 | `CHECK_METHODOLOGY.md` mechanical 1 | what did the work conclude? |
-| `not-claimed` | a claim to what it explicitly does not assert | a `What is not claimed` section | `PRECEDENCE.md` ("tier 1 does not inflate") | reading; a claim relied on elsewhere that has none is reported by ontology 3 | where does this claim stop? |
-| `original` | a claim to the fact that it has no external source | `Original: <pointer to the evidence here>` | `MANIFESTO.md` §2 | ontology 3 | is this ours, and what backs it? |
+| `not-claimed` | a claim to what it explicitly does not assert | a `What is not claimed` section | `PRECEDENCE.md` ("tier 1 does not inflate") | ontology 3: a claim another claim or a check record cites, or another claim's `Depends-on` names, has the section, holding more than a comment; reading: whether it says where the claim stops | where does this claim stop? |
+| `original` | a claim to the fact that it has no external source | `Original: <pointer to the evidence here>` | `MANIFESTO.md` §2 | ontology 3: filled where written; reading: whether a claim with no external source carries it | is this ours, and what backs it? |
 | `depends-on` | a claim to a claim it rests on | `Depends-on: NNN[, NNN]` | this file: no rulebook fixes how one claim rests on another | ontology 4 | what falls if this falls? |
 | `derives-from` | a claim to the claim, source, or construction it was obtained from | the inputs named in the claim body with their tokens | `CHECK_METHODOLOGY.md` §4 | reading | how was this reached? |
 | `assumes` | a claim to an input it takes | the input named in the claim, with its `input-kind` | `CHECK_METHODOLOGY.md` §4 | reading | what is taken for granted? |
 | `input-kind` | an input to *derived*, *imposed*, or *conjectured* | the word beside the input | `CHECK_METHODOLOGY.md` §4 | reading | was this forced, or chosen? |
 | `measured-against` | an empirical or inferential claim to what it is compared with | the comparison named in the claim, with its range | `CHECK_METHODOLOGY.md` §2 | reading | compared to what? |
-| `frame` | a claim, check, or derived artifact to the frame its quantities are expressed in: units, encoding, edition, sample definition, variable coding | `Frame: <the fixing assertion or the artifact that defines it>` | `CHECK_METHODOLOGY.md` §5 | ontology 3 on a check | in what terms is this stated? |
+| `frame` | a claim, check, or derived artifact to the frame its quantities are expressed in: units, encoding, edition, sample definition, variable coding | `Frame: <the fixing assertion or the artifact that defines it>` | `CHECK_METHODOLOGY.md` §5 | ontology 3: filled where written; reading: whether an artifact whose quantities are in a frame carries it | in what terms is this stated? |
 
 ### 2.3 Verification
 
@@ -196,7 +199,7 @@ assistant's under the consistency sweep (`CHECK_METHODOLOGY.md` §7).
 | `robustness` | a check to a perturbation the claim asserts independence *from* | `Robustness: <name>[, <name>]`, names disjoint from `Mutation:` | `CHECK_METHODOLOGY.md` §5 | ontology 3: the two lists are disjoint. Survival is the intended result here, and a failure is a result to report, not a defect in the check | what does this not depend on? |
 | `verification-status` | a claim to who checked it and how | `Verified-by: researcher \| assistant, <route> \| deferred, <instrument> \| unchecked \| <party>, <route>` | `MANIFESTO.md` §5 | ontology 3 | who actually checked this? |
 | `deferred-to` | a claim to an instrument or party the researcher chose not to check behind | the `deferred` form of `Verified-by:` | `MANIFESTO.md` §5; `VISION.md` | ontology query 3 | what did we take on trust? |
-| `pre-registered` | a check or claim to a protocol fixed before the evidence was consulted | `Pre-registered <D Month YYYY>, <locator>` | `evidence_and_reasoning/notes/README.md`, which defines the protocol note | ontology 3: the date precedes the earliest record's date, and the locator resolves | was this confirmatory, or exploratory? |
+| `pre-registered` | a check or claim to a protocol fixed before the evidence was consulted | `Pre-registered <D Month YYYY>, <locator>` | `evidence_and_reasoning/notes/README.md`, which defines the protocol note | ontology 2: the locator resolves where it is a path in the repository, an identifier or a URL left alone; reading: that the date precedes the evidence, which the protocol note's commit or the outside registration bears out | was this confirmatory, or exploratory? |
 | `performed-by` | a check record, written check procedure, check program, transcription, coding pass, derived artifact, log entry, or review to the party that produced it, and, where that party is the assistant, to the AI model that did the work | `By: researcher \| assistant, <AI model> \| <party from the roster>` (Slots below), the AI model with its version as the harness reports them, or `not reported`; a review names its reviewer the same way, in its identity line, or names an outside reader as the report's conditions allow (`paper/reviews/README.md`) | `MANIFESTO.md` §5, and §8 for the AI model | ontology 3: the party, the text before any comma, resolves to the roster; the round check: a log entry not yet committed carries the line, with an AI model or `not reported` after the comma where the party is the assistant; reading: whether an AI model or `not reported` follows the comma on any other artifact that names the assistant, whether the AI model named is right, and a review's identity line | whose work is this, and which AI model did it? |
 
 ### 2.4 Derived material
@@ -211,7 +214,7 @@ assistant's under the consistency sweep (`CHECK_METHODOLOGY.md` §7).
 |---|---|---|---|---|---|
 | `owned-by` | an artifact to its plan | `Plan: NNN[, task M]` | `DOCUMENT_GENRES.md` | `DOCUMENT_GENRES.md` checker 4 | is this live or frozen? |
 | `status` | a plan to its lifecycle state | `Status:` in the form `DOCUMENT_GENRES.md` fixes | `DOCUMENT_GENRES.md` | `DOCUMENT_GENRES.md` checker 6 | what is open? |
-| `prerequisite` | a plan to a plan or claim it builds on | `Prerequisites: NNN[, NNN][, [claim NNN]]` or `none`: plans by bare number, claims by token | this file: no rulebook fixes plan structure | ontology 3 | what must land first? |
+| `prerequisite` | a plan to a plan or claim it builds on | `Prerequisites: NNN[, NNN][, [claim NNN]]` or `none`: plans by bare number, claims by token | this file: no rulebook fixes plan structure | ontology 3; ontology 2: each plan it numbers exists | what must land first? |
 | `serves` | a plan to a keystone hypothesis | `Serves: <hypothesis>` or `Serves: none, <reason>` | `DOCUMENT_GENRES.md` | ontology 3 | why are we doing this? |
 | `reserved-by` | a claim to the plan holding a deferred question | `Reserved <date>, plan NNN` | `CHECK_METHODOLOGY.md` §6 | ontology query 4 | what is waiting on an unanswered question? |
 | `finding` | a stable key to what the record has established | a row in `FINDINGS.md` whose first cell is its key, `F###`, which `[finding F###]` cites | `MANIFESTO.md` §12 | reading; additions are the researcher's | what has this project established? |
@@ -221,7 +224,7 @@ assistant's under the consistency sweep (`CHECK_METHODOLOGY.md` §7).
 | Predicate | Relates | Written as | Owner | Checked by | Answers |
 |---|---|---|---|---|---|
 | `created`, `updated` | an artifact to its dates | the `Created` stamp | `DOCUMENT_GENRES.md` | `DOCUMENT_GENRES.md` checkers 1 and 3 | how current is this? |
-| `released` | a version to its release | the `Released` stamp, and a changelog row where a previous version exists | `DOCUMENT_GENRES.md` | ontology 3: both or neither, the first version excepted | is this out? |
+| `released` | a version to its release | the `Released` stamp, and a changelog row where a previous version exists | `DOCUMENT_GENRES.md` | ontology 3: both or neither, the first version excepted, the changelog `vN_to_vM` paired with the version named `_vM` beside it | is this out? |
 | `superseded-by` | an artifact to the one that replaces it | the `superseded by` stamp on the **replaced** artifact, holding the path to its replacement | `DOCUMENT_GENRES.md` | ontology 2 | am I reading the current one? |
 | `logged` | a prompt to its entry | a numbered file at the log path | `MANIFESTO.md` §8 | `DOCUMENT_GENRES.md` checker 2 | what was asked, and when? |
 | `authorized` | a change to the prompt that authorized it | named in the log entry | `MANIFESTO.md` §12 | reading | who said to do this? |
@@ -285,19 +288,32 @@ are the ontology's own:
 1. **Fields are known.** Every field line's name is one of the catalogue's,
    spelled as there, at most once per artifact. An unrecognized field is
    reported rather than ignored, so a typo does not silently drop a
-   predicate. A stamp is matched against the five forms of §1.2, and a
+   predicate; a field line set in italics, read as no field, is reported
+   too. A stamp is matched against the five forms of §1.2, and a
    stamp written with a colon is reported. In `tools/artifacts.toml`, a
    role `[fields.roles]` names that the tools do not know, and a name
    there or in `[fields] names` not of the form §1.1 gives, are reported
    at the configuration.
-2. **Tokens resolve.** Every citation token of §1.3 resolves to an
-   existing entry, claim, check, finding, tension row, or plan.
+2. **Tokens and header pointers resolve.** Each plan number of a
+   `Prerequisites` line names a plan, and the path of a `superseded by`
+   stamp, or of a `Pre-registered` stamp whose locator is a path in the
+   repository, exists. Every citation token of §1.3 resolves to an
+   existing entry, claim, check, finding, tension row, or plan. A claim
+   registered `ATTESTED` cites at least one work at a locus.
 3. **Required fields are present**, per artifact kind, from the
    configuration of §7, and filled: a value that is only an artifact
-   template's comment is empty. A registry entry is read by its heading
+   template's comment is empty. A `Frame` or `Original` line, which no
+   row requires, is filled where it is written. A registry entry is
+   read by its heading
    (§1.4), so in a registry file a level-three heading that opens a
    bracket and carries no key the grammar of §1.3 reads is reported: no
-   token can cite that entry, and its bullets go unchecked.
+   token can cite that entry, and its bullets go unchecked. An entry's
+   required bullets are present and filled, as a field is.
+   A claim another claim or a check record cites, or another claim's
+   `Depends-on` names, has a `What is not claimed` section holding more
+   than a comment.
+   A version's `Released` stamp and its changelog's release row are
+   written both or neither, the first version excepted.
 4. **The dependency graph is walkable**: every `Depends-on` number
    resolves, and cycles are reported.
 5. **Backing is two-way**: every `Backed-by` token resolves, the named
@@ -389,13 +405,20 @@ start as `Plan`, `Backs`, `Instrument`, `Mutation` and `By` and are
 reported when missing; and `Frame` where the check has quantities in a
 frame.
 
+**Mandatory on every plan and every derived file in prose**: the fields
+their rows of `tools/artifacts.toml` require, which start as `Status`,
+`Serves`, and `Prerequisites` on a plan, the last two written even where
+their value is `none` (§2.5), and as `Plan`, `Produced-from`, and `By`
+on a derived file, and are reported when missing; and `Frame` where the
+derivation imposed a convention.
+
 **Mandatory on every log entry**, and reported when missing on an entry
 not yet committed: `By`, naming who did the work and, for the assistant,
 the AI model (`MANIFESTO.md` §8).
 
 **Written when they apply**, and their absence is not a defect:
 everything else. `Robustness`, `Pre-registered`, `Reserved`, `Original`,
-`Serves`, `Witness of`, `Disputed`, and the prose relations of §2.8 are
+`Witness of`, `Disputed`, and the prose relations of §2.8 are
 written where they are true and omitted where they are not.
 
 **Every predicate written as a header field, a stamp, or a registry

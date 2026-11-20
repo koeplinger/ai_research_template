@@ -41,10 +41,14 @@ draft in these forms has nothing for it to read.  It honors a row's
              restatement not fewer than before, an added sentence not in
              the draft, a stated net word delta that does not match the
              body words of the two versions; the versions are found by
-             `_vN` before the extension, as paper/README.md fixes
+             `_vN` before the extension, as paper/README.md fixes, among
+             the files of the version row, markdown directly under the
+             write-up folder as shipped, so a changelog whose version is
+             in another form is listed as having none to read against
 
 A markdown draft is read through the linter's prose view (comments,
-fences, and backtick spans blank); a LaTeX source (.tex) named by the
+fences, and backtick spans blank), save that the net word delta counts
+the words of a backtick span; a LaTeX source (.tex) named by the
 [publication] sources is read from the linter's file walk with its %
 comments blank, every source the globs match, since a typeset file
 carries no header from which live or frozen could be derived.  The
@@ -322,7 +326,10 @@ def normalize(s: str) -> str:
 
 
 def body_words(t: lint_docs.Tree, f: str) -> int:
-    lines = t.prose(f).splitlines()[t.headers[f][1] - 1:]
+    """The words of a version's body as the changelog template counts them
+    (paper/_template_changelog.md): headings and tables aside, comments and
+    fences excluded, and the words of a backtick span counted."""
+    lines = t.prose(f, keep_backticks=True).splitlines()[t.headers[f][1] - 1:]
     return sum(len(re.findall(r"\w+", l)) for l in lines if not re.match(r"^\s*(#|\|)", l))
 
 
@@ -340,7 +347,7 @@ def check_ledgers(t: lint_docs.Tree) -> None:
 
         old, new = version(m.group(1)), version(m.group(2))
         if not new:
-            lint_docs.report("RESIDUE-7", f, 1, f"no version named *_v{m.group(2)}.<ext> under {paper}/ to read the ledgers against")
+            lint_docs.report("RESIDUE-7", f, 1, f"no version named *_v{m.group(2)}.<ext> under {paper}/ that the version row reads, to read the ledgers against")
             continue
         draft = normalize(t.prose(new))
         old_text = normalize(t.prose(old)) if old else ""
@@ -372,7 +379,7 @@ def check_ledgers(t: lint_docs.Tree) -> None:
         if d and old:
             actual = body_words(t, new) - body_words(t, old)
             if int(d.group(1)) != actual:
-                lint_docs.report("RESIDUE-7", f, text[:d.start()].count("\n") + 1, f"stated net word delta {d.group(1)}; counting body words of the prose view, headings and tables aside, {new} has {actual:+d} against {old}")
+                lint_docs.report("RESIDUE-7", f, text[:d.start()].count("\n") + 1, f"stated net word delta {d.group(1)}; counting body words, headings and tables aside, comments and fences excluded, {new} has {actual:+d} against {old}")
 
 
 ITEMS = [f"RESIDUE-{i}" for i in range(1, 8)]
@@ -454,6 +461,8 @@ def selftest() -> int:
     planted("a line opening on a semicolon inside a paragraph, at that line", "RESIDUE-1", V2, "opens on a comma or a semicolon", add(V2, "\nThe first clause stands\n; the second was moved here.\n"), line=18)
     case("a comma after a code span, or one opening a line of fenced code, is not a seam",
          not any(x[0] == "RESIDUE-1" for x in run_on(add(V2, "\nThe value is read from\n`base`, which is the module.\n\n```\nfirst\n, second\n```\n"))))
+    case("a comma opening a line of code fenced with tildes is not a seam",
+         not any(x[0] == "RESIDUE-1" for x in run_on(add(V2, "\nThe value is read here.\n\n~~~\nfirst\n, second\n~~~\n"))))
     case("a sentence starting in lower case inside a paragraph is not a seam",
          not any(x[0] == "RESIDUE-1" for x in run_on(add(V2, "\nThe count was taken twice. n is the larger of the two.\n"))))
     planted("a link to a heading that does not exist", "RESIDUE-2", V2, "does not exist: #gone", add(V2, "\nSee [above](#gone).\n"))
@@ -514,7 +523,7 @@ def selftest() -> int:
 
     def ok_ledger(files):
         def words(text):
-            body = lint_docs.strip_unread(text).splitlines()[lint_docs.header_block(text, "stamp")[1] - 1:]
+            body = lint_docs.strip_unread(text, True).splitlines()[lint_docs.header_block(text, "stamp")[1] - 1:]
             return sum(len(re.findall(r"\w+", l)) for l in body if not re.match(r"^\s*(#|\|)", l))
         files[V2] = files[V2].replace("It holds. It holds.", "It holds.")
         files["paper/main_v1.md"] = files["paper/main_v1.md"].replace("The write-up [claim 002].", "The write-up [claim 002]. The write-up [claim 002].")
@@ -522,9 +531,25 @@ def selftest() -> int:
         files[CL] += f"\n## The deletion ledger\n\n| Cut sentence or display | Class | Where the statement now lives |\n|---|---|---|\n| Gone for good. | decoration | nowhere |\n| The write-up | restatement | section 1 |\n\n## The additions ledger\n\nNet word delta: {delta:+d}\n\n| Section | Sentence added | Why |\n|---|---|---|\n| 2 | It holds. | review |\n"
     f = run_on(ok_ledger)
     case("ledgers that agree with the draft list nothing (a restatement fewer than before)", not any(x[0] == "RESIDUE-7" for x in f), str(f))
+    # A word in a backtick span is a word of the body and counts toward the
+    # net word delta (paper/_template_changelog.md), pinned from both sides.
+    def ticked(count_ticks: bool):
+        def go(files):
+            files[V2] = files[V2].replace("Of it.", "Of it, read by `the_module` here.")
+            body = lambda text: lint_docs.strip_unread(text, count_ticks).splitlines()[lint_docs.header_block(text, "stamp")[1] - 1:]
+            words = lambda text: sum(len(re.findall(r"\w+", l)) for l in body(text) if not re.match(r"^\s*(#|\|)", l))
+            files[CL] += f"\n## Additions ledger\n\nNet word delta: {words(files[V2]) - words(files['paper/main_v1.md']):+d}\n"
+        return go
+    f = run_on(ticked(True))
+    case("a net word delta that counts a backtick span's words matches", not any(x[0] == "RESIDUE-7" for x in f), str(f))
+    planted("a net word delta that leaves a backtick span's words out does not match", "RESIDUE-7", CL, "stated net word delta", ticked(False))
     planted("a changelog with no version to read against", "RESIDUE-7", "paper/v2_to_v3_changelog.md", "no version named *_v3",
             lambda files: (files.__setitem__("paper/v2_to_v3_changelog.md", f"# Changelog: v2 to v3\n\n{S}\n\n| Where in vN | What changed in vM | Why | Backed by |\n|---|---|---|---|\n"),
                            files.__setitem__("paper/README.md", files["paper/README.md"] + "| [v2_to_v3_changelog.md](v2_to_v3_changelog.md) |\n")))
+    planted("a changelog whose version is typeset, not markdown, has none the version row reads", "RESIDUE-7", "paper/v2_to_v3_changelog.md", "that the version row reads",
+            lambda files: (files.__setitem__("paper/v2_to_v3_changelog.md", f"# Changelog: v2 to v3\n\n{S}\n\n| Where in vN | What changed in vM | Why | Backed by |\n|---|---|---|---|\n"),
+                           files.__setitem__("paper/main_v3.tex", "\\section{One}\nText.\n"),
+                           files.__setitem__("paper/README.md", files["paper/README.md"] + "| [v2_to_v3_changelog.md](v2_to_v3_changelog.md) |\n| [main_v3.tex](main_v3.tex) |\n")))
     companion_cfg = lint_docs.scratch_config().replace('# [[artifact]]\n# kind = "companion"\n# glob = "paper/reading_companion.md"\n# genre = "current-state"',
                                                         '[[artifact]]\nkind = "companion"\nglob = "paper/reading_companion.md"\ngenre = "current-state"')
     assert companion_cfg != lint_docs.scratch_config()

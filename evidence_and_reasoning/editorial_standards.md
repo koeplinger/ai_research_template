@@ -306,7 +306,7 @@ in the list of accepted findings in `tools/artifacts.toml` (`MANIFESTO.md`
    the spelling variant, by the word list `[editorial] spelling` selects.
    A file whose row in `tools/artifacts.toml` gives it no header, such as
    a typeset source, an imported file, an attachment, or `VISION.md`, is
-   not read.
+   not read, and neither is a committed log entry, which is immutable.
 2. On every unfrozen markdown draft, note, changelog, and companion under
    `paper/`, skipping quoted text and block quotes: the phrases the
    project lists under `[editorial] paper_phrases` in

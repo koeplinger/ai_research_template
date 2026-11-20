@@ -43,12 +43,15 @@ evidence is consulted, its commit evidencing the date, and named as the
 locator of a check's `Pre-registered` stamp. Where the discipline lodges
 its pre-registrations with a third party, that registration is the
 stronger evidence of the date, and the stamp's locator is its identifier
-or URL instead of, or beside, the note; the note then carries the
-registered text verbatim so that a reader of this repository can see what
-was fixed without leaving it. The checker resolves a locator that looks
-like a path and leaves an identifier or a URL alone. It carries no `Plan:` line,
-so it is frozen on writing; the check that names it is the plan-owned
-artifact.
+or URL instead of, or beside, the note's path, the two comma-separated;
+the note then carries the registered text verbatim so that a reader of
+this repository can see what was fixed without leaving it. The checker
+splits the locator at each comma and reads a part with a slash in it, or
+a dot in its last segment, as a path and resolves it, and leaves alone a
+URL that opens with its scheme, such as `https://`, and any other
+identifier; a DOI is therefore written as its resolver's URL. The note
+carries no `Plan:` line, so it is frozen on writing; the check that names
+the protocol is the plan-owned artifact.
 
 ## Contents
 

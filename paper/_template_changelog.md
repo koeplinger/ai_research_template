@@ -69,9 +69,9 @@ Marks in the file: <!-- N, and the route that counted them -->; marks read: <!--
 ## Additions ledger
 
 <!-- For a rebuilt section: every sentence added, with where it entered,
-     and the round's net word delta (CHECK_METHODOLOGY.md section 7).
-     Corrections replace; they do not append. Delete where nothing was
-     rebuilt. -->
+     and, on the line below, the version's net word delta, the rebuilding
+     round reporting its own (CHECK_METHODOLOGY.md section 7). Corrections
+     replace; they do not append. Delete where nothing was rebuilt. -->
 
 Net word delta: <!-- +N or -N: words of the body of vM less those of vN, headings and tables aside, comments and fences excluded; tools/check_residue.py recounts it -->
 

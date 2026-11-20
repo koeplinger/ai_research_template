@@ -28,8 +28,13 @@ By: <!-- who produced this record: researcher | assistant, then the AI model and
                                  the locator a dated note under
                                  evidence_and_reasoning/notes/ holding the
                                  protocol as written before the evidence was
-                                 consulted; its commit evidences the date. A
-                                 program check with a protocol carries both. -->
+                                 consulted, its commit evidencing the date;
+                                 or the identifier or URL of the protocol's
+                                 registration with a third party, or the
+                                 two, comma-separated, as
+                                 evidence_and_reasoning/notes/README.md says.
+                                 A program check with a protocol carries
+                                 both. -->
 
 ## 1. What is checked
 

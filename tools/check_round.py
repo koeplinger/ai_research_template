@@ -122,7 +122,7 @@ def uncommitted_entries(t: lint_docs.Tree) -> set[str]:
         return set()
     if not lint_docs.git(t.root, "rev-parse", "--verify", "HEAD"):
         return set(log_entries(t))
-    staged = lint_docs.git(t.root, "diff", "--name-only", "-z", "--diff-filter=A", "HEAD", "--", d + "/")
+    staged = lint_docs.git(t.root, "diff", "--name-only", "-z", "--no-renames", "--diff-filter=A", "HEAD", "--", d + "/")
     new = lint_docs.git(t.root, "ls-files", "--others", "--exclude-standard", "-z", "--", d + "/")
     return {f for f in (staged + new).split("\0") if f}
 
@@ -512,6 +512,10 @@ def selftest() -> int:
              lambda t, f: second(t, f, entry(2, "next", closing="RUNNING: the build")))
     run_case("a closing status in a tilde fence is read", "ROUND-2", LOG2, "not a status line",
              lambda t, f: second(t, f, entry(2, "next", closing="Done: x").replace("```", "~~~")))
+    run_case("a staged new entry is read though git would pair it with the committed one it replaces", "ROUND-2", LOG2, "not a status line",
+             lambda t, f: (lint_docs.git(t, "mv", "prompt_logs/001_setup.md", LOG2),
+                           w(t, LOG2, f["prompt_logs/001_setup.md"].replace("Prompt 001: setup", "Prompt 002: next").replace("DONE: setup", "Done: setup")),
+                           lint_docs.git(t, "add", LOG2)))
     run_case("an output older than a source", "ROUND-3", "paper/out/main.pdf", "older than",
              lambda t, f: enable_publication(t, f, stale_output=True))
     run_case("a build log older than a source", "ROUND-3", "paper/out/main.log", "older than",

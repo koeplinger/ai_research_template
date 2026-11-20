@@ -463,7 +463,8 @@ matter stays ruled*).
    followed by a date and a colon, in every genre.
 
    The last group, a stamp word followed by a date and a colon, is about
-   the *document*, and is checked in every genre. The rest is a phrase
+   the *document*, and is checked in every genre and every section, the
+   italicized examples of the two files included. The rest is a phrase
    list, and a phrase list cannot tell a document narrating its own past
    from a subject matter whose sentences take the same shape: a source
    that ceased to record something after a date, a parameter a search

@@ -4,15 +4,17 @@
 # .privacy/stopwords.txt, the privacy scan over what is staged, and then the
 # round check, tools/check_round.py, over the whole working tree, staged or
 # not.  commit-msg runs the privacy scan over the message.  The privacy scan
-# refuses the commit on a finding, since a leak into the history is hard to
-# undo; the round check reports its findings and lets the commit proceed,
+# refuses the commit on a finding, and where its list holds no pattern,
+# since a leak into the history is hard to undo; the round check reports
+# its findings and lets the commit proceed,
 # as MANIFESTO.md section 13 has every check inform and the researcher
 # decide, unless the hooks were installed with --strict.  A refusal names
 # the override, git commit --no-verify, and asks that the commit message
 # say why, as MANIFESTO.md section 12 has it for a correction made by hand.
 # A hook this script did not write is left alone unless --force is given;
 # a hooks directory shared beyond this
-# repository (core.hooksPath) is never written without --force.
+# repository (core.hooksPath) is never written, nor a hook removed from
+# it, without --force.
 #
 # Created 5 September 2026; updated 19 November 2026.
 #
@@ -20,7 +22,8 @@
 #   tools/install_hooks.sh              install pre-commit and commit-msg
 #   tools/install_hooks.sh --strict     the round check refuses the commit too
 #   tools/install_hooks.sh --force      replace hooks written by hand, or write
-#                                       into a shared hooks directory
+#                                       into a shared hooks directory, or with
+#                                       --uninstall remove from one
 #   tools/install_hooks.sh --uninstall  remove the hooks this script wrote
 #   tools/install_hooks.sh --selftest   in a throwaway repository: a clean
 #                                       commit passes; a staged stop word and
@@ -71,7 +74,7 @@ if ! python3 tools/check_round.py; then
   fi
 fi
 if [ "\$status" -ne 0 ]; then
-  echo "pre-commit: refused on the findings above; fix and retry, or commit with --no-verify and say why in the commit message (MANIFESTO.md sections 12 and 13)" >&2
+  echo "pre-commit: refused on the report above; fix and retry, or commit with --no-verify and say why in the commit message (MANIFESTO.md sections 12 and 13)" >&2
 fi
 exit "\$status"
 EOF
@@ -87,7 +90,7 @@ cd "\$ROOT" || exit 2
 [ -r .privacy/stopwords.txt ] || exit 0
 command -v python3 >/dev/null || { echo "commit-msg: python3 not on PATH; the scan did not run" >&2; exit 2; }
 if ! python3 tools/privacy_scan.py --message "\$1"; then
-  echo "commit-msg: refused on the findings above; reword, or commit with --no-verify and say why in the commit message (MANIFESTO.md sections 12 and 13)" >&2
+  echo "commit-msg: refused on the report above; reword or fix the list, or commit with --no-verify and say why in the commit message (MANIFESTO.md sections 12 and 13)" >&2
   exit 1
 fi
 EOF
@@ -117,8 +120,12 @@ install() {
 }
 
 uninstall() {
-  local root="$1" dir name target
+  local root="$1" force="$2" dir name target
   dir="$(hook_dir "$root")" || { echo "install_hooks: $root is not a git repository" >&2; return 2; }
+  if shared_hook_dir "$root" && [ "$force" != "yes" ]; then
+    echo "install_hooks: hooks for this repository live at $dir (core.hooksPath), shared beyond it; nothing removed (use --force to remove this script's hooks there anyway)"
+    return 1
+  fi
   for name in pre-commit commit-msg; do
     target="$dir/$name"
     if ours "$target"; then rm -f "$target"; echo "install_hooks: removed $target"
@@ -168,6 +175,13 @@ selftest() {
   elif grep -q "in commit message" "$tmp/out"; then echo "  [PASS] a stop word in the commit message is refused"
   else echo "  [FAIL] refused, but not by the message scan:"; sed 's/^/         /' "$tmp/out"; fails=$((fails+1)); fi
   reset_in
+
+  printf '# none yet\n' > "$repo/.privacy/stopwords.txt"
+  printf '\nA third line.\n' >> "$repo/CURRENT_STATE.md"; add_all
+  if commit_in "a change"; then echo "  [FAIL] a list holding no pattern let a commit through"; fails=$((fails+1))
+  elif grep -q "holds no pattern" "$tmp/out" && grep -q "refused on the report above" "$tmp/out"; then echo "  [PASS] a list holding no pattern refuses the commit, and says why"
+  else echo "  [FAIL] refused, but not for the list:"; sed 's/^/         /' "$tmp/out"; fails=$((fails+1)); fi
+  reset_in
   rm -rf "$repo/.privacy"
 
   printf '# M\n\nRules.\n' > "$repo/MANIFESTO.md"; add_all
@@ -191,8 +205,12 @@ selftest() {
   git -C "$repo" config core.hooksPath "$tmp/shared"
   if install "$repo" no no > /dev/null; then echo "  [FAIL] a shared hooks directory was written without --force"; fails=$((fails+1))
   else echo "  [PASS] a shared hooks directory (core.hooksPath) is left alone without --force"; fi
+  install "$repo" yes no > /dev/null
+  if uninstall "$repo" no > /dev/null || [ ! -f "$tmp/shared/pre-commit" ]; then echo "  [FAIL] this script's hooks were removed from a shared hooks directory without --force"; fails=$((fails+1))
+  else echo "  [PASS] --uninstall leaves a shared hooks directory alone without --force"; fi
+  uninstall "$repo" yes > /dev/null
   git -C "$repo" config --unset core.hooksPath
-  uninstall "$repo" > /dev/null
+  uninstall "$repo" no > /dev/null
   [ ! -f "$d/pre-commit" ] && [ ! -f "$d/commit-msg" ] && echo "  [PASS] --uninstall removes what it wrote" \
     || { echo "  [FAIL] --uninstall left a hook"; fails=$((fails+1)); }
 
@@ -213,6 +231,6 @@ for arg in "$@"; do
 done
 case "$mode" in
   selftest) selftest; exit $? ;;
-  uninstall) [ -n "$ROOT" ] || { echo "install_hooks: not inside a git repository" >&2; exit 2; }; uninstall "$ROOT"; exit $? ;;
+  uninstall) [ -n "$ROOT" ] || { echo "install_hooks: not inside a git repository" >&2; exit 2; }; uninstall "$ROOT" "$force"; exit $? ;;
   install) [ -n "$ROOT" ] || { echo "install_hooks: not inside a git repository" >&2; exit 2; }; install "$ROOT" "$force" "$strict"; exit $? ;;
 esac

@@ -21,7 +21,14 @@ The template presumes a Python interpreter for its tools and ships this
 suite in Python. A project that writes its checks in another language
 keeps the same layout and the same contract (a printed verdict, a nonzero
 exit on failure, a `RESULT:` summary line) and records the language in the check form
-`CHECK_METHODOLOGY.md` names in its Slots table.
+`CHECK_METHODOLOGY.md` names in its Slots table. The tools do not read
+such a program as a check: they take a check program's header from a
+Python docstring and run it with Python, and no row of
+`tools/artifacts.toml` matches a file under `src/` whose name does not
+end in .py, so such a file is reported until the project gives it a row.
+Its header, its concordance with its record, and its mutations are then
+read by hand, as a written procedure's are (`CHECK_METHODOLOGY.md`,
+*What is checked mechanically*).
 
 Removing this folder is more than deleting it: the root `README.md` lists
 it, `tools/artifacts.toml` carries its `[[artifact]]` and `[[index]]`

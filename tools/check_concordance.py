@@ -26,8 +26,9 @@ differ, never a finding: who assigns the register is
 CHECK_METHODOLOGY.md section 1's.  Single-sourcing a figure across
 documents, and the wrong value stated in a passage about the right
 subject, are reading duties of the sweep (CHECK_METHODOLOGY.md section
-7, item 1).  A program that exits nonzero, prints more than one RESULT
-line, or prints a RESULT part without "=" is noted and still compared.
+7, item 1).  A program that exits nonzero, is stopped at the timeout
+after printing its RESULT line, prints more than one RESULT line, or
+prints a RESULT part without "=" is noted and still compared.
 
 Usage
     .venv/bin/python tools/check_concordance.py                run every check program, compare
@@ -210,6 +211,8 @@ def selftest() -> int:
     case("a name printed and not stated is reported at the part-4 heading", any(x[2] == 14 and "n: program prints '5', record states nothing" in x[3] for x in f), str(f))
     f, _, _, _ = run_on(sub(K2, "count = 1\n", "count = 1\n\n```\ncount = 9\n```\n\n<!--\ncount = 8\n-->\n"))
     case("a value inside a fence or a comment under part 4 is not read", not f, str(f))
+    f, _, _, _ = run_on(sub(K2, "count = 1\n", "count = 1\n\n~~~\ncount = 9\n~~~\n"))
+    case("a value inside a fence of tildes under part 4 is not read", not f, str(f))
     f, _, _, _ = run_on(sub(P2, PRINT, 'pass'))
     case("a program printing no RESULT line is reported", any(x[1] == P2 and "prints no RESULT line on standard output" in x[3] for x in f), str(f))
     f, _, _, _ = run_on(sub(P2, PRINT, PRINT.replace('print(', 'print(file=sys.stderr, *[')[:-1] + '])'))

@@ -3,13 +3,14 @@
 
 Created 4 September 2026; updated 19 November 2026.
 
-Reads tools/artifacts.toml, the single source of every path pattern and
-vocabulary (ONTOLOGY.md section 7), walks every tracked or untracked-but-
-not-ignored file, and reports.  Nothing here blocks the researcher: a
-finding names the rulebook item it implements, and the researcher decides
-(MANIFESTO.md section 13).  No dependency beyond the standard library;
-Python 3.11 or later for its TOML reader; git to list the files it walks
-and for the two history checks.
+Reads tools/artifacts.toml, the single source of every path pattern
+(ONTOLOGY.md section 7) and of the closed vocabularies a project may
+change, walks every tracked or untracked-but-not-ignored file, and
+reports.  Nothing here blocks the researcher: a finding names the
+rulebook item it implements, and the researcher decides (MANIFESTO.md
+section 13).  No dependency beyond the standard library; Python 3.11 or
+later for its TOML reader; git to list the files it walks and for the
+two history checks.
 
 WHAT EACH TAG IMPLEMENTS
   GENRES-1..8   DOCUMENT_GENRES.md, What the checker verifies, items 1 to 8
@@ -40,8 +41,9 @@ configuration names a tag, the file a finding names, the first words of
 the passage beginning on the line the finding names, and the log entry
 recording the ruling (MANIFESTO.md section 16, "A ruled matter stays
 ruled").  It accepts every finding of its tag on that line, left out and
-counted in the summary; only a change to the words it quotes brings a
-finding back.  An entry that matches nothing, lacks a part, cites no log
+counted in the summary; a change to the words it quotes brings a finding
+back, and so does a re-wrap that moves their start off the line the
+finding names.  An entry that matches nothing, lacks a part, cites no log
 entry, or names a tag the list does not cover is reported at its line of
 the configuration.  The linter covers its own tags, the static half of
 CHECK-3 included and not the probe's; the round check, the residue check,
@@ -50,7 +52,8 @@ and the session brief cover theirs.
 WHAT IT DOES NOT DECIDE: whether a mutation actually breaks a check (the
 probe, CHECK_METHODOLOGY.md item 3, dynamic half); whether a check record's
 values agree with its program's RESULT line (the concordance tool, item 4);
-which version a changelog's release row belongs to (read, not checked);
+which version a changelog's release row belongs to where its name does
+not pair it, as vN_to_vM pairs it with the version named _vM (ONT-3);
 whether a file last written on a day was changed that day or only
 rewritten, as a stash or an edit to its header rewrites it (GENRES-3;
 DOCUMENT_GENRES.md, What the checker verifies, item 3); whether a section
@@ -460,6 +463,7 @@ def strip_unread(text: str, keep_backticks: bool = False) -> str:
     are read, except where the narrative check says otherwise."""
     text = re.sub(r"<!--.*?-->", _blank, text, flags=re.S)
     text = re.sub(r"```.*?```", _blank, text, flags=re.S)
+    text = re.sub(r"^ {0,3}(~{3,})[^\n]*\n.*?^ {0,3}\1[^\n]*$", _blank, text, flags=re.S | re.M)
     if not keep_backticks:
         text = re.sub(r"`[^`]+`", _blank, text, flags=re.S)
     text = re.sub(r"\*\*([^*]+?)\*\*", r"\1", text, flags=re.S)
@@ -474,9 +478,11 @@ def blank_italics(text: str) -> str:
 
 
 def blank_quoted(text: str) -> str:
-    """Quoted text and block quotes, which the editorial checks skip."""
-    text = re.sub(r'"[^"\n]+"', _blank, text)
-    text = re.sub(r"“[^”\n]+”", _blank, text)
+    """Quoted text and block quotes, which the editorial checks skip.  A
+    quotation may run across lines, though not past a blank line, so that
+    a stray mark hides no more than the rest of its paragraph."""
+    text = re.sub(r'"(?:[^"\n]|\n(?![ \t]*\n))+"', _blank, text)
+    text = re.sub(r"“(?:[^”\n]|\n(?![ \t]*\n))+”", _blank, text)
     return "\n".join(re.sub(r"[^\n]", " ", l) if l.startswith(">") else l for l in text.splitlines())
 
 
@@ -1018,6 +1024,10 @@ def check_edit_1(t: Tree) -> None:
     for f, row in t.rows.items():
         if not row or row.get("header", "stamp") == "none":
             continue
+        # A committed log entry is immutable: the standards apply to an entry
+        # only while it is uncommitted (editorial_standards.md, its opening).
+        if row["kind"] == "log-entry" and f in t.head_paths():
+            continue
         clean = blank_quoted(t.prose(f))
         for i, line in enumerate(clean.splitlines(), 1):
             if dashes in ("no-em-dash", "en-dash-asides") and "—" in line:
@@ -1099,6 +1109,14 @@ def check_ont_1_fields(t: Tree) -> None:
             elif name in seen:
                 report("ONT-1", f, ln, f"field repeated: {name}")
             seen.add(name)
+        # A field line set in italics is read as no field, and the header
+        # block ends at it (ONTOLOGY.md section 1.1): reported, so that the
+        # field it was meant to write is not dropped without a word.
+        lines = t.text[f].splitlines()
+        hdr, nxt = t.headers[f]
+        it = re.match(r"^[*_]([A-Z][A-Za-z-]*):", lines[nxt - 1].strip()) if hdr and row.get("header", "stamp") == "stamp" and nxt <= len(lines) else None
+        if it and it.group(1) in names:
+            report("ONT-1", f, nxt, f"a field line set in italics is read as no field: {it.group(1)}")
 
 
 def check_ont_2_tokens(t: Tree) -> None:
@@ -1138,15 +1156,16 @@ def check_ont_2_tokens(t: Tree) -> None:
         for ln, s in t.headers[f][0]:
             m = re.match(rf"^superseded by (\S.*)$|^Pre-registered {ANYDATE}, (\S.*)$", s)
             if m:
-                p = (m.group(1) or m.group(2)).strip()
                 # A Pre-registered locator may be an external registry
-                # identifier or a URL rather than a path in this repository
-                # (evidence_and_reasoning/notes/README.md); only a locator
-                # that looks like a path is resolved.
-                looks_like_path = "/" in p or "." in p.rsplit("/", 1)[-1]
-                external = re.match(r"^[A-Za-z][A-Za-z0-9+.-]*://", p) or not looks_like_path
-                if not external and not ((base / p).exists() or (t.root / p).exists()):
-                    report("ONT-2", f, ln, f"stamp names a path that does not exist: {p}")
+                # identifier or a URL rather than a path in this repository,
+                # or one of each, comma-separated
+                # (evidence_and_reasoning/notes/README.md); only a part that
+                # looks like a path is resolved.
+                for p in [m.group(1).strip()] if m.group(1) else [x.strip() for x in m.group(2).split(", ")]:
+                    looks_like_path = "/" in p or "." in p.rsplit("/", 1)[-1]
+                    external = re.match(r"^[A-Za-z][A-Za-z0-9+.-]*://", p) or not looks_like_path
+                    if not external and not ((base / p).exists() or (t.root / p).exists()):
+                        report("ONT-2", f, ln, f"stamp names a path that does not exist: {p}")
         if row["kind"] == "plan":
             pre = fields_of(t.headers[f][0]).get(F("prerequisites"))
             if pre and pre[1] and pre[1].strip() != "none":
@@ -1154,6 +1173,13 @@ def check_ont_2_tokens(t: Tree) -> None:
                 for n in re.findall(rf"\b({NUM})\b", bare):
                     if n not in t.plans:
                         report("ONT-2", f, pre[0], f"{F('prerequisites')} names no plan: {n}")
+        # A claim registered ATTESTED says what a source of record says, at
+        # a place in it (CHECK_METHODOLOGY.md section 1): it cites at least
+        # one work at a locus, its key and the locus in one bracket.
+        reg = fields_of(t.headers[f][0]).get(F("register"))
+        if row["kind"] == "claim" and reg and reg[1] == "ATTESTED" and not any(
+                "," in k.group(0) for line in clean.splitlines() for k in TOKEN_KEY.finditer(LINK_RE.sub(" ", line))):
+            report("ONT-2", f, reg[0], "a claim registered ATTESTED cites no work at a locus, [ShortKey, locus]")
 
 
 def key_problem(key: str, closed: bool = True) -> str:
@@ -1184,6 +1210,31 @@ def check_ont_3_required(t: Tree) -> None:
         report("ONT-3", "tools/artifacts.toml", 1, '[parties] names lists "none" beside other names; "none" stands '
                "alone, recording that no one beyond the researcher and the assistant appears")
     saw_party, warned_party = False, False
+    # A release writes the version's Released stamp and its changelog's
+    # release row, the first version its stamp alone (DOCUMENT_GENRES.md
+    # section 2): both or neither, the changelog vN_to_vM paired with the
+    # version named _vM in its folder, as paper/README.md names them.
+    def vnum(g: str) -> int | None:
+        v = re.search(r"_v(\d+)\.[^./]+$", g)
+        return int(v.group(1)) if v and t.kind(g) == "version" else None
+    stamped = {g for g in t.files if vnum(g) is not None and any(s.startswith("Released ") for _, s in t.headers[g][0])}
+    paired: set[str] = set()
+    for g in t.files:
+        cl = re.search(r"v(\d+)_to_v(\d+)", Path(g).name)
+        if t.kind(g) != "changelog" or not cl:
+            continue
+        ver = next((h for h in t.files if vnum(h) == int(cl.group(2)) and posixpath.dirname(h) == posixpath.dirname(g)), None)
+        paired.add(ver or "")
+        written = bool(re.search(r"^\| \(release\) \|[ \t]*[^|\s]", strip_unread(t.text[g], True), re.M))
+        if written and not ver:
+            report("ONT-3", g, 1, f"its release row is written, and no version named *_v{cl.group(2)} stands beside it")
+        elif written and ver not in stamped:
+            report("ONT-3", g, 1, f"its release row is written, and {ver} carries no Released stamp")
+        elif ver in stamped and not written:
+            report("ONT-3", ver, 1, f"Released, and the release row of {g} is not written")
+    for g in sorted(stamped - paired):
+        if any(vnum(h) is not None and vnum(h) < vnum(g) and posixpath.dirname(h) == posixpath.dirname(g) for h in t.files):
+            report("ONT-3", g, 1, "Released, with an earlier version beside it and no changelog to it")
     for f, row in t.rows.items():
         if not row or t.is_template(f) or row.get("header", "stamp") == "none":
             continue
@@ -1194,7 +1245,7 @@ def check_ont_3_required(t: Tree) -> None:
         # A By: line, where written, is filled (ONTOLOGY.md, performed-by),
         # save a log entry's, which is the round check's while the entry is not
         # yet committed (ROUND-2) and is never touched after.
-        filled = {F(r) for r in ("register", "kind", "verdict", "status", "serves", "prerequisites", "backs", "mutation")}
+        filled = {F(r) for r in ("register", "kind", "verdict", "status", "serves", "prerequisites", "backs", "mutation", "frame", "original")}
         if row["kind"] != "log-entry":
             filled.add(F("by"))
         for name in sorted(set(row.get("required", [])) | filled):
@@ -1254,8 +1305,38 @@ def check_ont_3_required(t: Tree) -> None:
                                f"entry [{key}] declares a kind no [registry.by_kind] table names: {ekind!r}")
                     need = need + [x for x in per_kind.get(ekind, []) if x not in need]
                 for name in need:
-                    if not re.search(rf"^- {re.escape(name)}:", body, re.M):
+                    # Present and filled, as a field is: the view is blank
+                    # where a comment stood, so a value that is only the
+                    # template's comment is empty; a value may run onto the
+                    # indented lines below its bullet.
+                    b = re.search(rf"^- {re.escape(name)}:(.*(?:\n[ \t]+(?!- )\S.*)*)", body, re.M)
+                    if not b:
                         report("ONT-3", f, t.text[f][:m.start()].count("\n") + 1, f"entry [{key}] lacks the bullet {name}")
+                    elif not b.group(1).strip():
+                        report("ONT-3", f, t.text[f][:m.start()].count("\n") + 1, f"entry [{key}] has the bullet {name} empty")
+    # A claim another claim or a check record cites, or another claim's
+    # Depends-on names, says where it stops: its What is not claimed section
+    # is present and holds more than a comment (ONTOLOGY.md, not-claimed;
+    # PRECEDENCE.md, "tier 1 does not inflate").
+    relied: dict[str, str] = {}
+    for g in t.files:
+        if t.kind(g) not in ("claim", "check") or t.is_template(g):
+            continue
+        own = t.num(g) if t.kind(g) == "claim" else None
+        for i, line in enumerate(t.prose(g).splitlines(), 1):
+            for n in TOKEN_CLAIM.findall(LINK_RE.sub(" ", line)):
+                if n != own:
+                    relied.setdefault(n, f"{g}:{i}")
+        dep = fields_of(t.headers[g][0]).get(F("depends-on")) if t.kind(g) == "claim" else None
+        for d in [x.strip() for x in (dep[1] if dep else "").split(",") if x.strip()]:
+            if d != own:
+                relied.setdefault(d, g)
+    for n, where in sorted(relied.items()):
+        cf = t.claims.get(n)
+        fence = re.search(r"^## What is not claimed[^\n]*\n(.*?)(?=^## |\Z)", t.prose(cf), re.S | re.M) if cf else None
+        if cf and not (fence and fence.group(1).strip()):
+            report("ONT-3", cf, t.prose(cf)[:fence.start()].count("\n") + 1 if fence else 1,
+                   f"a claim relied on at {where} has {'an empty' if fence else 'no'} What is not claimed section")
     if saw_party and not decided and not warned_party:
         report("ONT-3", "tools/artifacts.toml", 1, "roster unfilled ({{PARTIES}}); roster check skipped")
 
@@ -1485,8 +1566,8 @@ def fixture() -> dict[str, str]:
         "evidence_and_reasoning/editorial_standards.md": f"# Ed\n\n{S}\n\n",
         "evidence_and_reasoning/public_record_tensions.md": f"# T\n\n{S}\n\n| # | What this project establishes | What the public record says | The caution that survives | Caution (live, or closed D Month YYYY) |\n|---|---|---|---|---|\n| T001 | [claim 002] | [Key1] | x | live |\n",
         "evidence_and_reasoning/claims/README.md": f"# Claims\n\n{S}\n\n| Claim |\n|---|\n| [001](001_a.md) |\n| [002](002_b.md) |\n",
-        "evidence_and_reasoning/claims/001_a.md": f"# Claim 001: a\n\n{S}\nRegister: OPEN\nKind: documentary\nVerdict: none\nPlan: 001, task 1\nVerified-by: unchecked\nBacked-by: [check 001]\n\n## Claim\n\nSays so [Key1, p. 2].\n",
-        "evidence_and_reasoning/claims/002_b.md": f"# Claim 002: b\n\n{S}\nRegister: VERIFIED\nKind: documentary\nVerdict: confirmed\nPlan: 002, task 1\nVerified-by: researcher\nBacked-by: [check 002]\n\n## Claim\n\nHolds [Key1, f. 3r].\n",
+        "evidence_and_reasoning/claims/001_a.md": f"# Claim 001: a\n\n{S}\nRegister: OPEN\nKind: documentary\nVerdict: none\nPlan: 001, task 1\nVerified-by: unchecked\nBacked-by: [check 001]\n\n## Claim\n\nSays so [Key1, p. 2].\n\n## What is not claimed\n\nNothing more.\n",
+        "evidence_and_reasoning/claims/002_b.md": f"# Claim 002: b\n\n{S}\nRegister: VERIFIED\nKind: documentary\nVerdict: confirmed\nPlan: 002, task 1\nVerified-by: researcher\nBacked-by: [check 002]\n\n## Claim\n\nHolds [Key1, f. 3r].\n\n## What is not claimed\n\nNothing more.\n",
         "evidence_and_reasoning/checks/README.md": f"# Checks\n\n{S}\n\n| Check |\n|---|\n| [001](001_a.md) |\n| [002](002_b.md) |\n",
         "evidence_and_reasoning/checks/001_a.md": f"# Check 001: a\n\n{S}\nPlan: 001, task 1\nBacks: [claim 001]\nInstrument: the edition\nMutation: variant-reading\nBy: researcher\n\n## 1\n\nx\n",
         "evidence_and_reasoning/checks/002_b.md": f"# Check 002: b\n\n{S}\nPlan: 002, task 1\nBacks: [claim 002]\nInstrument: the edition\nMutation: variant-reading\nBy: assistant, not reported\n\n## 1. What is checked\n\ny\n\n## 4. Results\n\ncount = 1\n",
@@ -1694,6 +1775,11 @@ def selftest() -> int:
     run_case("a rulebook with no stamp", "GENRES-1", "MANIFESTO.md", "no header stamp", lambda t, f: w(t, "MANIFESTO.md", "# M\n\nRules.\n"))
     run_case("a stamp with trailing text", "GENRES-1", "MANIFESTO.md", "exact form", sub("MANIFESTO.md", STAMP, "*Created 1 January 2026; updated 1 January 2026 (typo).*"))
     run_case("a committed log entry edited", "GENRES-2", "prompt_logs/001_setup.md", "modified", add("prompt_logs/001_setup.md", "\nafterthought\n"))
+    clean_case("an em-dash in a committed log entry is not read: the entry is immutable", lambda t, f: None,
+               before_commit=lambda f: f.__setitem__("prompt_logs/001_setup.md", f["prompt_logs/001_setup.md"].replace("Setup.\n", "Setup " + chr(0x2014) + " done.\n")))
+    run_case("an em-dash in a log entry not yet committed is read", "EDIT-1", "prompt_logs/002_next.md", "em-dash",
+             lambda t, f: (w(t, "prompt_logs/002_next.md", f["prompt_logs/001_setup.md"].replace("Prompt 001: setup", "Prompt 002: next").replace("Setup.\n", "Setup " + chr(0x2014) + " done.\n")),
+                           w(t, "prompt_logs/README.md", dated(f["prompt_logs/README.md"]) + "| [002](002_next.md) |\n")))
     absent_case("a new entry staged for its first commit is not a committed one", "GENRES-2", "prompt_logs/002_next.md", "",
                 lambda t, f: (w(t, "prompt_logs/002_next.md", f["prompt_logs/001_setup.md"].replace("Prompt 001: setup", "Prompt 002: next")),
                               subprocess.run(["git", "add", "prompt_logs/002_next.md"], cwd=t, capture_output=True)))
@@ -1775,6 +1861,8 @@ def selftest() -> int:
     run_case("a plan whose Status: is malformed", "GENRES-4", "evidence_and_reasoning/research_plans/001_a.md", "three forms", sub("evidence_and_reasoning/research_plans/001_a.md", "Status: ENGAGED 1 January 2026", "Status: Engaged"))
     run_case("historical voice in a rulebook", "GENRES-5", "MANIFESTO.md", "previously", add("MANIFESTO.md", "\nThis section previously read otherwise.\n"))
     run_case("a stamp with a colon narrative", "GENRES-5", "MANIFESTO.md", "change narrative", add("MANIFESTO.md", "\nUpdated 2 January 2026: clause tightened.\n"))
+    run_case("a stamp with a colon is read in the italicized examples the phrase list skips", "GENRES-5", "DOCUMENT_GENRES.md", "change narrative",
+             add("DOCUMENT_GENRES.md", "\nNever *Updated 2 January 2026: tightened*.\n"))
     # A changelog's release row is written once its second cell names the
     # release: the row its template pre-prints, comments for cells, leaves
     # the changelog live, and the checks of a live file still read it.
@@ -1783,6 +1871,20 @@ def selftest() -> int:
              add(CL, "| (release) | <!-- vM released D Month YYYY --> | <!-- the researcher's direction, prompt NNN --> | |\n\nThe heading previously read otherwise.\n"))
     absent_case("and one whose release row names the release is frozen", "GENRES-5", CL, "previously",
                 add(CL, "| (release) | v2 released 3 January 2026 | the researcher's direction, prompt 001 | |\n\nThe heading previously read otherwise.\n"))
+    V2 = "paper/main_v2.md"
+
+    def second_version(stamp: bool, row: bool):
+        def go(t, f):
+            w(t, V2, f"# Main\n\n{STAMP}\n" + ("Released 4 January 2026\n" if stamp else "") + "\nThe write-up [claim 002].\n")
+            w(t, "paper/README.md", f["paper/README.md"] + "| [main_v2.md](main_v2.md) |\n")
+            if row:
+                w(t, CL, f[CL] + "| (release) | v2 released 4 January 2026 | the researcher's direction, prompt 001 | |\n")
+        return go
+    run_case("a version released with its changelog's release row unwritten", "ONT-3", V2, "is not written", second_version(True, False))
+    run_case("a changelog's release row written with its version unreleased", "ONT-3", CL, "carries no Released stamp", second_version(False, True))
+    absent_case("a release that writes both is not reported", "ONT-3", V2, "", second_version(True, True))
+    run_case("a version released with an earlier one beside it and no changelog to it", "ONT-3", V2, "no changelog to it",
+             lambda t, f: (second_version(True, False)(t, f), (t / CL).unlink()))
     run_case("index status disagreeing with the plan", "GENRES-6", "evidence_and_reasoning/research_plans/ROADMAP.md", "status column", sub("evidence_and_reasoning/research_plans/ROADMAP.md", "| ENGAGED |", "| DRAFT |"))
     run_case("a plan with no index row", "GENRES-6", "evidence_and_reasoning/research_plans/ROADMAP.md", "no row for plan", sub("evidence_and_reasoning/research_plans/ROADMAP.md", "| [002](002_b.md) | b | CLOSED |\n", ""))
     run_case("a named path that does not exist", "GENRES-7", "MANIFESTO.md", "does not exist", add("MANIFESTO.md", "\nSee `tools/nothing.py`.\n"))
@@ -1830,18 +1932,33 @@ def selftest() -> int:
     run_case("a claim missing from its index", "GENRES-8", "evidence_and_reasoning/claims/README.md", "not listed", sub("evidence_and_reasoning/claims/README.md", "| [002](002_b.md) |\n", ""))
     run_case("an em-dash", "EDIT-1", "MANIFESTO.md", "em-dash", add("MANIFESTO.md", "\nOne — two.\n"))
     run_case("a UK spelling", "EDIT-1", "MANIFESTO.md", "spelling variant", add("MANIFESTO.md", "\nIt is labelled.\n"))
+    absent_case("a UK spelling in a quotation wrapped across a line break", "EDIT-1", "MANIFESTO.md", "",
+                add("MANIFESTO.md", '\nThe source has "the column is\nlabelled by year" in its notes.\n'))
+    run_case("a quotation mark left open hides nothing past its paragraph", "EDIT-1", "MANIFESTO.md", "spelling variant",
+             add("MANIFESTO.md", '\nA stray mark: 12".\n\nIt is labelled.\n'))
     run_case("an advocacy word in a live draft", "EDIT-2", "paper/main_v2.md", "ban in a live draft", lambda t, f: (w(t, "paper/main_v2.md", f"# P2\n\n{STAMP}\n\nA remarkable result.\n"), w(t, "paper/README.md", f["paper/README.md"] + "| [main_v2.md](main_v2.md) |\n")))
     run_case("a heading ending in a question mark", "EDIT-2", "paper/main_v2.md", "question mark", lambda t, f: (w(t, "paper/main_v2.md", f"# P2\n\n{STAMP}\n\n## Does it hold?\n\nYes.\n"), w(t, "paper/README.md", f["paper/README.md"] + "| [main_v2.md](main_v2.md) |\n")))
     run_case("an unknown header field", "ONT-1", C1, "unrecognized", sub(C1, "Kind: documentary", "Kind: documentary\nProgram: x"))
     run_case("a repeated field", "ONT-1", C1, "repeated", sub(C1, "Kind: documentary", "Kind: documentary\nKind: formal"))
     run_case("a stamp with a colon", "ONT-1", C1, "with a colon", sub(C1, "Verified-by: unchecked", "Verified-by: unchecked\nReserved: 1 January 2026, plan 001"))
     run_case("a stamp matching no form", "ONT-1", C1, "none of the five", sub(C1, "Verified-by: unchecked", "Verified-by: unchecked\nReserved 1 January 2026 plan 001"))
+    run_case("a field line set in italics is reported, not dropped", "ONT-1", C1, "set in italics is read as no field: Depends-on",
+             sub(C1, "Backed-by: [check 001]", "Backed-by: [check 001]\n*Depends-on: 002*"))
     run_case("a claim token resolving to nothing", "ONT-2", "CURRENT_STATE.md", "[claim 042]", add("CURRENT_STATE.md", "\nSee [claim 042].\n"))
     run_case("a registry key resolving to nothing", "ONT-2", "CURRENT_STATE.md", "[Nope99]", add("CURRENT_STATE.md", "\nSee [Nope99].\n"))
     run_case("a plan token resolving to nothing", "ONT-2", "CURRENT_STATE.md", "plan 042", add("CURRENT_STATE.md", "\nSee plan 042.\n"))
     run_case("a number carried by two claims", "ONT-2", "evidence_and_reasoning/claims/002_zz.md", "is also", lambda t, f: (w(t, "evidence_and_reasoning/claims/002_zz.md", f[C2]), w(t, "evidence_and_reasoning/claims/README.md", f["evidence_and_reasoning/claims/README.md"] + "| [002](002_zz.md) |\n")))
     run_case("a superseded-by path that does not exist", "ONT-2", "paper/main_v1.md", "stamp names a path", sub("paper/main_v1.md", "Released 3 January 2026", "Released 3 January 2026\nsuperseded by paper/gone.md"))
+    run_case("a Pre-registered stamp naming a URL beside a protocol note that does not exist", "ONT-2", K1,
+             "does not exist: evidence_and_reasoning/notes/gone.md",
+             sub(K1, "By: researcher\n", "By: researcher\nPre-registered 1 January 2026, https://example.org/registration/abcde, evidence_and_reasoning/notes/gone.md\n"))
+    clean_case("a Pre-registered stamp naming the protocol note beside a URL is clean",
+               sub(K1, "By: researcher\n", "By: researcher\nPre-registered 1 January 2026, evidence_and_reasoning/notes/2026-01-02_x.md, https://example.org/registration/abcde\n"))
     run_case("a prerequisite naming no plan", "ONT-2", "evidence_and_reasoning/research_plans/002_b.md", "Prerequisites names no plan", sub("evidence_and_reasoning/research_plans/002_b.md", "Prerequisites: 001", "Prerequisites: 009"))
+    run_case("an ATTESTED claim citing no work at a locus", "ONT-2", C1, "cites no work at a locus",
+             lambda t, f: w(t, C1, f[C1].replace("Register: OPEN", "Register: ATTESTED").replace("Verdict: none", "Verdict: confirmed").replace("[Key1, p. 2]", "[Key1]")))
+    absent_case("and one citing its source at a locus", "ONT-2", C1, "at a locus",
+                lambda t, f: w(t, C1, f[C1].replace("Register: OPEN", "Register: ATTESTED").replace("Verdict: none", "Verdict: confirmed")))
     run_case("a missing required field", "ONT-3", C1, "required field missing", sub(C1, "Verified-by: unchecked\n", ""))
     run_case("an empty field", "ONT-3", C1, "present but empty", sub(C1, "Verified-by: unchecked", "Verified-by:"))
     run_case("a field holding only the artifact template's comment is empty", "ONT-3", C1, "present but empty",
@@ -1852,6 +1969,10 @@ def selftest() -> int:
              "present but empty: By", sub("evidence_and_reasoning/notes/2026-01-02_x.md", STAMP + "\n", STAMP + "\nBy: <!-- who made the note -->\n"))
     run_case("a check record with no By: line", "ONT-3", K1, "required field missing: By", sub(K1, "By: researcher\n", ""))
     run_case("a check program with no By: line", "ONT-3", P2, "required field missing: By", sub(P2, "By: assistant, not reported\n", ""))
+    run_case("a Frame: line still holding the artifact template's comment is empty", "ONT-3", K1, "present but empty: Frame",
+             sub(K1, "By: researcher", "By: researcher\nFrame: <!-- what the quantities are stated in, and what fixes it; delete the line where there are none -->"))
+    run_case("and an Original: line naming no evidence", "ONT-3", C1, "present but empty: Original",
+             sub(C1, "Verified-by: unchecked", "Verified-by: unchecked\nOriginal:"))
     # A name written into [fields.roles] by hand is held to three of the
     # setup tool's refusals: a role the tools do not know, a name of a shape
     # no tool reads as a field, and one that opens with a stamp's word are
@@ -1868,6 +1989,12 @@ def selftest() -> int:
              lambda t, f: w(t, "tools/artifacts.toml", dated(cfg_text.replace('"By", "Produced-from"]', '"By", "Produced-from", "Sample_size"]', 1))))
     run_case("a comment running past its header line is still a comment", "ONT-3", C1, "present but empty",
              sub(C1, "Verified-by: unchecked", "Verified-by: <!-- unchecked, or the\n     check that backs it -->"))
+    run_case("a claim a check record cites, with no What is not claimed section", "ONT-3", C1, "has no What is not claimed section",
+             sub(C1, "\n## What is not claimed\n\nNothing more.\n", ""))
+    run_case("and one whose section holds only the artifact template's comment", "ONT-3", C1, "has an empty What is not claimed section",
+             sub(C1, "Nothing more.", "<!-- The scope fence: what a reader might take this claim to say that it does not. -->"))
+    absent_case("a claim no claim or check record relies on may leave the section to be written", "ONT-3", C1, "What is not claimed",
+                lambda t, f: (w(t, C1, f[C1].replace("\n## What is not claimed\n\nNothing more.\n", "")), w(t, K1, f[K1].replace("Backs: [claim 001]", "Backs: [claim 002]"))))
     run_case("a registry entry lacking a bullet", "ONT-3", "evidence_and_reasoning/references/topic.md", "lacks the bullet", sub("evidence_and_reasoning/references/topic.md", "- Standing: searched x, 1 January 2026; none found\n", ""))
     # A registry that declares entry kinds enforces each kind's own bullets
     # rather than their intersection.
@@ -1938,6 +2065,11 @@ def selftest() -> int:
     absent_case("and a token citing an entry whose heading carries words after its key resolves", "ONT-2", C1, "[Key1] resolves",
                 sub(R, "### [Key1]", "### [Key1] a first work"))
     run_case("and a heading that ends the file, with no line break after it, is an entry whose bullets are asked for", "ONT-3", R, "entry [Key9] lacks the bullet Authors", add(R, "\n### [Key9]"))
+    run_case("a registry entry whose required bullet is empty", "ONT-3", R, "entry [Key2] has the bullet Title empty", sub(R, "- Title: U\n", "- Title:\n"))
+    run_case("and one holding only the artifact template's comment", "ONT-3", R, "entry [Key2] has the bullet Title empty",
+             sub(R, "- Title: U\n", "- Title: <!-- as the work gives it -->\n"))
+    absent_case("a bullet whose value runs onto the line below is filled", "ONT-3", R, "has the bullet Title empty",
+                sub(R, "- Title: U\n", "- Title:\n  U, on the line below\n"))
     run_case("Mutation and Robustness sharing a name", "ONT-3", K2, "share names", sub(K2, "Mutation: variant-reading", "Mutation: variant-reading\nRobustness: variant-reading"))
     run_case("a dependency naming no claim", "ONT-4", C1, "names no claim", sub(C1, "Verified-by: unchecked", "Verified-by: unchecked\nDepends-on: 042"))
     run_case("a dependency cycle", "ONT-4", C1, "cycle", sub(C1, "Verified-by: unchecked", "Verified-by: unchecked\nDepends-on: 001"))
@@ -1956,6 +2088,7 @@ def selftest() -> int:
     run_case("a mutation outside the project's set", "CHECK-3", K2, "not in the project's set", sub(K2, "Mutation: variant-reading", "Mutation: bogus"))
     run_case("the mutation set left unfilled", "CHECK-3", "tools/artifacts.toml", "unfilled", lambda t, f: w(t, "tools/artifacts.toml", cfg_text.replace('mutations = ["variant-reading"]', "mutations = []")))
     run_case("the dash convention left unfilled", "EDIT-1", "tools/artifacts.toml", "unfilled", lambda t, f: w(t, "tools/artifacts.toml", cfg_text.replace('dashes = "no-em-dash"', 'dashes = ""')))
+    absent_case("an em-dash inside a fence of tildes", "EDIT-1", "MANIFESTO.md", "", add("MANIFESTO.md", "\n~~~\nOne " + chr(0x2014) + " two.\n~~~\n"))
     run_case("a party off the roster, roster unfilled", "ONT-3", "tools/artifacts.toml", "roster unfilled", sub(C2, "Verified-by: researcher", "Verified-by: an outsider"))
     # [parties] names = ["none"] decides that no one beyond the researcher and
     # the assistant appears: the check runs, and "none" is not a party.
@@ -2016,6 +2149,8 @@ def selftest() -> int:
     accepted_case("a finding accepted at the researcher's ruling is left out and counted", entry(), narrated(), [], 1)
     accepted_case("an accepted passage wrapped across lines still matches", entry(text="This section previously read otherwise"),
                   narrated("This section previously read\notherwise."), [], 1)
+    accepted_case("a re-wrap that moves an accepted passage's start to the line above brings its finding back", entry(),
+                  narrated("So it is. This section\npreviously read otherwise."), [N5, ("GENRES-5", CONFIG, "now matches nothing")], 0)
     accepted_case("an accepted passage that changed brings its finding back, and the entry is reported stale", entry(),
                   narrated("This clause previously read otherwise."), [N5, ("GENRES-5", CONFIG, "now matches nothing")], 0)
     accepted_case("an entry whose ruling is not a log entry accepts nothing and is reported", entry(ruling="MANIFESTO.md"),

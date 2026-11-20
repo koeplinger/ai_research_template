@@ -15,8 +15,10 @@ from the narrative rule (`DOCUMENT_GENRES.md`, *Dated records*); it is
 written across the round that acts on it. When it freezes is
 `DOCUMENT_GENRES.md` §2's: a review no plan owns freezes when that round
 closes, its *Refuted?* and *Outcome* columns and its last section filled;
-a review a plan owns freezes with that plan. Copy [`_template.md`](_template.md)
-to start one.
+a review a plan owns freezes with that plan. The tools see no round: a
+review no plan owns, committed before that round closes and filled
+after, raises the session brief's sweep-after-correction reminder, which
+is read and left. Copy [`_template.md`](_template.md) to start one.
 
 A review whose findings will be ruled on over several rounds is owned by
 the plan under which the version is prepared: its `Plan:` line, written

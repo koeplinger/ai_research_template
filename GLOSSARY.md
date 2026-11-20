@@ -154,10 +154,16 @@ Three kinds of name, with three costs:
    is renamed with that field.
 
 3. **A value in a closed vocabulary** (`VERIFIED`, `reproduced`, and the
-   rest). Configured under `[vocab]` in the same file. A project may
-   rename a value or add one its discipline needs; what a value *means*
-   is `CHECK_METHODOLOGY.md`'s, and a project that changes the meaning
-   amends that file and says so.
+   rest). A kind, a kind's verdict, and a plan's verdict are configured
+   under `[vocab]` in the same file, and a project may rename one there
+   or add one its discipline needs. The six registers and the plan
+   statuses `DRAFT`, `ENGAGED`, and `CLOSED` are fixed, because the tools
+   apply rules to each by name: renaming one means editing every tool
+   that names it, and a register added to `[vocab] registers` passes the
+   vocabulary check and is treated by every other rule as none of the
+   six. What a value *means* is `CHECK_METHODOLOGY.md`'s, or for a plan's
+   `DOCUMENT_GENRES.md`'s, and a project that changes the meaning amends
+   that file and says so.
 
 A fourth kind of name is **fixed**: the symbols the tools resolve inside a
 check program, `construct`, `main`, `report`, `MUTATIONS`, `BASIS`,

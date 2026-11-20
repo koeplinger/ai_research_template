@@ -1,12 +1,13 @@
 # tools/artifacts.toml
 #
 # The single source of every path pattern, artifact kind, genre default,
-# required field, and closed vocabulary the tools read (ONTOLOGY.md,
-# section 7).  A project that files its artifacts elsewhere edits this one
-# file, and every tool follows: the tools locate the log, the plan index,
-# the registry, the findings file, the tension ledger, and the write-up
-# folder by the KIND of the row that names them, never by a second copy
-# of the path.  Current state; indexed in tools/README.md.
+# and required field the tools read (ONTOLOGY.md, section 7), and of the
+# closed vocabularies a project may change ([vocab] below).  A project
+# that files its artifacts elsewhere edits this one file, and every tool
+# follows: the tools locate the log, the plan index, the registry, the
+# findings file, the tension ledger, and the write-up folder by the KIND
+# of the row that names them, never by a second copy of the path.
+# Current state; indexed in tools/README.md.
 #
 # Created 4 September 2026; updated 19 November 2026.
 #
@@ -22,9 +23,11 @@
 #   frozen         a dated record; frozen on writing
 #   plan-owned     follows the owning plan's Status: line
 #   self           a plan: follows its own Status: line
-#   dated-record   frozen on writing, or with the plan its Plan: line
-#                  names; exempt from the narrative check's phrase list,
-#                  and path-checked only while a plan keeps it live
+#   dated-record   frozen on writing, a review when the round that acts on
+#                  it closes, or with the plan its Plan: line names (the
+#                  tools see no round, and read a review as frozen on
+#                  writing); exempt from the narrative check's phrase
+#                  list, and path-checked only while a plan keeps it live
 #   release        live until its Released stamp (a version) or its
 #                  (release) row (a changelog); a Plan: line overrides,
 #                  save on a version named _vN once it is released
@@ -146,9 +149,15 @@ by = "By"
 produced-from = "Produced-from"
 
 [vocab]
+# The registers the vocabulary check admits (CHECK_METHODOLOGY.md, section
+# 1).  The tools apply further rules to the six by name, so a project
+# renames one only by editing every tool that names it, and one added
+# here is treated by those rules as none of the six (GLOSSARY.md,
+# "Renaming a word this template uses").  The plan statuses, DRAFT,
+# ENGAGED, and CLOSED, are fixed in the tools and not configured here
+# (DOCUMENT_GENRES.md, Words used here).
 registers = ["VERIFIED", "DERIVED", "ATTESTED", "SPECULATIVE", "RULED_OUT", "OPEN"]
 kinds = ["formal", "computational", "empirical", "inferential", "documentary", "interpretive", "internal-consistency"]
-plan_status = ["DRAFT", "ENGAGED", "CLOSED"]
 plan_verdicts = ["CONFIRMED", "REFUTED", "COMPLETE", "INCONCLUSIVE", "ABANDONED"]
 # {{MUTATION_SET}}: the names a Mutation: line may carry.  Empty means
 # unfilled; the name check is skipped and reported once, when a check

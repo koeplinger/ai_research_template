@@ -656,7 +656,8 @@ def write_machine_halves(root: Path, machine: dict, rename: dict) -> list[str]:
 
 def rename_fields(root: Path, rename: dict) -> tuple[int, list[str]]:
     """Step 7, in the prose: the field at the head of a form, indented or
-    not, and every mention of it as `Name:` in a rulebook or a legend."""
+    not, and every mention of it as `Name:` in a rulebook, a legend, or a
+    comment line of the configuration, whose values step 6 writes."""
     pairs = [(FIELD_DEFAULTS[r], n) for r, n in (rename or {}).items() if FIELD_DEFAULTS.get(r) != n]
     if not pairs:
         return 0, []
@@ -677,11 +678,29 @@ def rename_fields(root: Path, rename: dict) -> tuple[int, list[str]]:
         if out != s:
             p.write_text(out, encoding="utf-8")
             n_files += 1
+    # The configuration's comment lines are prose that names the fields as
+    # well; its values are step 6's, and its shipped copy, like the tools'
+    # sources, keeps the shipped names.
+    config = root / "tools" / "artifacts.toml"
+    if config.is_file():
+        s = read(config)
+        lines = s.split("\n")
+        for k, line in enumerate(lines):
+            if line.lstrip().startswith("#"):
+                for old, new in pairs:
+                    line = re.sub(rf"(?<![\w-]){re.escape(old)}:", f"{new}:", line)
+                lines[k] = line
+        if "\n".join(lines) != s:
+            config.write_text("\n".join(lines), encoding="utf-8")
+            n_files += 1
     # Where the old word is still used without its colon, the sentence is
-    # prose about the field and is the researcher's to reword.
+    # prose about the field and is the researcher's to reword, the
+    # configuration's comment lines included.
     for old, _ in pairs:
-        for p in walk(root, (".md",)):
+        for p in walk(root, (".md",)) + ([config] if config.is_file() else []):
             for i, line in enumerate(read(p).split("\n"), 1):
+                if p == config and not line.lstrip().startswith("#"):
+                    continue
                 if re.search(rf"(?<![\w-]){re.escape(old)}(?![\w-]):?", line) and f"{old}:" not in line:
                     left.append(f"{p.relative_to(root)}:{i} still says {old!r}")
                     break
@@ -689,9 +708,9 @@ def rename_fields(root: Path, rename: dict) -> tuple[int, list[str]]:
 
 
 # What the spelling check does not read, and so what the conversion leaves:
-# comments, fenced code, backtick spans, double-quoted text on one line,
-# and block quotes (lint_docs.strip_unread and blank_quoted).
-UNREAD = re.compile(r"<!--.*?-->|```.*?```|`[^`]+`|\"[^\"\n]+\"|\u201c[^\u201d\n]+\u201d|^>[^\n]*$", re.S | re.M)
+# comments, fenced code, backtick spans, double-quoted text within a
+# paragraph, and block quotes (lint_docs.strip_unread and blank_quoted).
+UNREAD = re.compile(r"<!--.*?-->|```.*?```|^ {0,3}(~{3,})[^\n]*\n.*?^ {0,3}\1[^\n]*$|`[^`]+`|\"(?:[^\"\n]|\n(?![ \t]*\n))+\"|\u201c[^\u201d\n]+\u201d|“(?:[^”\n]|\n(?![ \t]*\n))+”|^>[^\n]*$", re.S | re.M)
 
 
 def convert_spelling(root: Path, want: str, shipped: str, words: dict) -> int:
@@ -1528,6 +1547,18 @@ def selftest() -> int:
                              cwd=dst, capture_output=True, text=True)
         check("and its linter still tests itself with two fields renamed", sel.returncode == 0,
               (sel.stdout or sel.stderr).strip().split("\n")[-1][:110])
+
+    with tempfile.TemporaryDirectory() as d:
+        r = Path(d)
+        (r / "tools").mkdir()
+        for name in ("artifacts.toml", "artifacts_shipped.toml"):
+            (r / "tools" / name).write_text('# a Mutation: line names the faults; the Mutation line\nmutation = "Mutation"\n')
+        _, also = rename_fields(r, {"mutation": "Planted-fault"})
+        cfg = read(r / "tools" / "artifacts.toml")
+        check("a renamed field is renamed in the configuration's comments, never in its values or its shipped copy, and a mention left there is listed",
+              cfg.startswith("# a Planted-fault: line") and 'mutation = "Mutation"' in cfg
+              and read(r / "tools" / "artifacts_shipped.toml").startswith("# a Mutation: line")
+              and any(x.startswith("tools/artifacts.toml:1 ") for x in also), f"{cfg!r} {also}")
 
     with tempfile.TemporaryDirectory() as d:
         a, b = Path(d) / "a", Path(d) / "b"

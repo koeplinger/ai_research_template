@@ -14,14 +14,19 @@ installs call it only where the list exists.
 
 The list: one pattern per line.  Blank lines and lines beginning with #
 are ignored.  A plain line matches as a whole word or phrase, without
-regard to case: in contents, letters, digits, and the underscore are the
-word characters, so foo_bar is one token; in a path, the underscore, the
-hyphen, the dot, and the slash separate words, since file names join words
-that way.  A line beginning with ~ matches as a substring anywhere, inside
+regard to case: in contents, the ASCII letters and digits and the
+underscore are the word characters, so foo_bar is one token; in a path,
+the ASCII letters and digits alone, so the underscore, the hyphen, the
+dot, and the slash separate words, since file names join words that way.
+Any other character separates words in both, a letter outside ASCII
+included, so a pattern is found inside a longer word such a letter
+continues, and inside a run of a script written without spaces.  A line
+beginning with ~ matches as a substring anywhere, inside
 a longer token included.  A bare ~ or an empty pattern is reported and
 ignored.  A file whose first bytes contain a NUL is taken as binary and
-its contents are not read; its path still is.  In a commit message, the
-lines git strips (those beginning with #) are not read.
+its contents are not read; its path still is.  A commit message is read
+whole, its lines beginning with # included: git strips those only from a
+message written in its editor, and keeps them in one given with -m or -F.
 
 Usage
     python3 tools/privacy_scan.py                 the working tree: every tracked or
@@ -90,14 +95,12 @@ def git(root: Path, *args: str) -> bytes | None:
         return None
 
 
-def scan_text(label: str, data: bytes, pats: Patterns, skip_comments: bool = False) -> list[tuple[str, str, int, str]]:
+def scan_text(label: str, data: bytes, pats: Patterns) -> list[tuple[str, str, int, str]]:
     """One tuple per hit: ("CONTENT", label, line, text)."""
     if b"\0" in data[:8192]:
         return []
     out = []
     for i, line in enumerate(data.decode("utf-8", errors="replace").splitlines(), 1):
-        if skip_comments and line.startswith("#"):
-            continue
         if any(p.search(line) for p in pats.content):
             out.append(("CONTENT", label, i, line.strip()[:120]))
     return out
@@ -205,9 +208,12 @@ def selftest() -> int:
         case("the staged scan sees the same hits", {x[1] for x in f2} == hits, str(f2))
         msg = tmp / "msg"
         msg.write_text(f"add the {word} note\n")
-        case("a commit message is caught", bool(scan_text("commit message", msg.read_bytes(), pats, skip_comments=True)))
-        msg.write_text(f"add the note\n# Changes to be committed:\n#\tnew file: {word}.md\n")
-        case("git's comment lines in a message are not read", not scan_text("commit message", msg.read_bytes(), pats, skip_comments=True))
+        case("a commit message is caught", bool(scan_text("commit message", msg.read_bytes(), pats)))
+        msg.write_text(f"add the note\n# {word}, on a line git keeps in a message given with -m or -F\n")
+        (tmp / "tools").mkdir()
+        (tmp / "tools" / "privacy_scan.py").write_bytes(Path(__file__).read_bytes())
+        r = subprocess.run([sys.executable, "-B", "tools/privacy_scan.py", "--message", str(msg)], cwd=tmp, capture_output=True, text=True)
+        case("a line of a message beginning with # is read", r.returncode == 1 and "in commit message" in r.stdout, r.stdout + r.stderr)
     with tempfile.TemporaryDirectory() as d:
         tmp = Path(d)
         (tmp / "x.md").write_text(word)
@@ -263,7 +269,7 @@ def main(argv: list[str]) -> int:
         if not Path(argv[1]).is_file():
             print("privacy scan: --message needs a readable file", file=sys.stderr)
             return 2
-        return report(scan_text("commit message", Path(argv[1]).read_bytes(), pats, skip_comments=True), "commit message")
+        return report(scan_text("commit message", Path(argv[1]).read_bytes(), pats), "commit message")
     if findings is None:
         print("privacy scan: git could not list the tree (not a repository, or git absent); nothing scanned")
         return 2

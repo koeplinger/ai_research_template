@@ -109,7 +109,9 @@ def closure(t: lint_docs.Tree, num: str) -> list[tuple[int, str, str, str]]:
 
 
 def rests_on(t: lint_docs.Tree, num: str) -> list[str]:
-    out = [f"[claim {num}]  {register(t, num)}  rests on:"]
+    reg = register(t, num)
+    note = "" if reg in STRENGTH else f"   ({lint_docs.F('register')} {reg!r} is not one section 4 orders: no member is flagged as weaker)"
+    out = [f"[claim {num}]  {reg}  rests on:{note}"]
     members = closure(t, num)
     for depth, kind, n, note in members:
         reg = f"  {register(t, n)}" if kind == "claim" and n in t.claims else ""
@@ -168,14 +170,19 @@ def literature(t: lint_docs.Tree) -> list[str]:
     if not g:
         out.append("  (no file matches the configured ledger row)")
         return out
-    labels, rows = None, 0
+    labels, rows, above = None, 0, None
     for line in t.prose(g).splitlines():
         if not line.startswith("|"):
+            above = None
             continue
         cells = _cells(line)
+        # A table's header is the row its delimiter row stands under,
+        # whatever its columns are called.
+        if above and all(re.fullmatch(r":?-+:?", c) for c in cells):
+            labels, above = above, None
+            continue
+        above = cells
         if labels is None:
-            if any("Caution" in c for c in cells):
-                labels = cells
             continue
         m = re.match(r"^(T[0-9]{3,})$", cells[0])
         if not m:
@@ -313,8 +320,8 @@ def selftest() -> int:
     base["evidence_and_reasoning/claims/005_e.md"] = claim("005", "e", "RULED_OUT", "not confirmed", "002", "researcher",
         "Backed-by: [check 005]\n", "Not e.", "\n\n## What is not claimed\n\nThat e never held.\n")
     base["evidence_and_reasoning/claims/006_f.md"] = claim("006", "f", "DERIVED", "confirmed", "002", "researcher",
-        "Depends-on: 002\n", "Follows from [claim 002].", "")
-    base["evidence_and_reasoning/claims/007_g.md"] = claim("007", "g", "SPECULATIVE", "none", "001", "deferred, the edition", "", "Perhaps g.", "")
+        "Depends-on: 002\n", "Follows from [claim 002].")
+    base["evidence_and_reasoning/claims/007_g.md"] = claim("007", "g", "SPECULATIVE", "none", "001", "deferred, the edition", "", "Perhaps g.")
     base["evidence_and_reasoning/checks/003_c.md"] = check("003", "c", "001")
     base["evidence_and_reasoning/checks/005_e.md"] = check("005", "e", "002")
     base["evidence_and_reasoning/claims/README.md"] += "".join(f"| [{n}]({n}_{s}.md) |\n" for n, s in (("003", "c"), ("004", "d"), ("005", "e"), ("006", "f"), ("007", "g")))
@@ -363,7 +370,6 @@ def selftest() -> int:
     r = "\n".join(answer(t, "sites", None))
     case("sites lists a claim citing a claim with both registers", "claims/003_c.md:" in r and "[VERIFIED] cites [claim 001] [OPEN]" in r, r)
     case("sites quotes the cited claim's What is not claimed in full", "not claimed: That e never held." in r, r)
-    case("sites says when the cited claim has no such section", "cites [claim 001] [OPEN]\n      citing: This claim" in r and "has no What is not claimed section" in r, r)
     case("sites says when the section is present and empty", "cites [claim 004] [ATTESTED]" not in r or "(the section is present and empty)" in r, r)
     case("sites lists a check record's header and body citations and marks the claim it backs",
          "checks/003_c.md:5  [check] cites [claim 003] [VERIFIED]  (the claim it backs)" in r and "checks/003_c.md:12  [check] cites [claim 003]" in r, r)
@@ -386,7 +392,7 @@ def selftest() -> int:
     rejected["evidence_and_reasoning/claims/003_c.md"] = claim("003", "c", "PROVEN", "confirmed", "001", "researcher",
         "Backed-by: [check 042]\nDepends-on: 001, 003, 042\n", "x.", "")
     rejected["evidence_and_reasoning/claims/004_d.md"] = claim("004", "d", "VERIFIED", "confirmed", "001", "researcher",
-        "Backed-by: [check 002]\nDepends-on: 003\n", "Cites [claim 004] itself.", "\n\n## What is not claimed\n\nSection kept.\n")
+        "Backed-by: [check 002]\nDepends-on: 003\n", "Cites [claim 004] itself, and [claim 003].", "\n\n## What is not claimed\n\nSection kept.\n")
     rejected["evidence_and_reasoning/claims/README.md"] += "| [003](003_c.md) |\n| [004](004_d.md) |\n"
     rejected["evidence_and_reasoning/public_record_tensions.md"] = base["evidence_and_reasoning/public_record_tensions.md"].replace(
         "| T001 | [claim 002] | [Key1] | x | live |", "| T001 | [claim 002](../claims/002_b.md) | [Key1] | x | |")
@@ -398,8 +404,13 @@ def selftest() -> int:
     case("on a tree with linter findings: a cycle names itself", "[claim 003]" in r and "(listed above)" in r, r)
     r = "\n".join(answer(t, "rests-on", "003"))
     case("on a tree with linter findings: a self-dependency is a cycle", "(the claim itself: a cycle)" in r, r)
+    case("on a tree with linter findings: a claim whose own register section 4 does not order says so, and flags no member as weaker",
+         "[claim 003]  PROVEN  rests on:   (Register 'PROVEN' is not one section 4 orders: no member is flagged as weaker)" in r
+         and "FLAG: weaker" not in r, r)
     r = "\n".join(answer(t, "unverified", "004"))
     case("on a tree with linter findings: unverified lists the unresolved dependency", "[claim 042]  (resolves to no claim)" in r, r)
+    r = "\n".join(answer(t, "sites", None))
+    case("sites says when the cited claim has no such section", "cites [claim 003] [PROVEN]" in r and "has no What is not claimed section" in r, r)
     r = "\n".join(answer(t, "literature", None))
     case("a linked token in a ledger row is not read, and an empty caution is said", "(no claim token)" in r and "): (empty)" in r, r)
     r = "\n".join(answer(t, "unfinished", None))
@@ -409,6 +420,11 @@ def selftest() -> int:
     t = scratch(empty, lint=False)
     r = "\n".join(answer(t, "literature", None))
     case("an empty ledger says so", "(no row: the ledger is empty)" in r, r)
+    named = lint_docs.fixture()
+    named["evidence_and_reasoning/public_record_tensions.md"] = named["evidence_and_reasoning/public_record_tensions.md"].replace(
+        "Caution (live, or closed D Month YYYY)", "Standing")
+    r = "\n".join(answer(scratch(named, lint=False), "literature", None))
+    case("a ledger whose last column is named otherwise still lists its rows", "[tension T001]  [claim 002]" in r and "Standing: live" in r, r)
     r = "\n".join(answer(t, "rests-on", "001"))
     case("a claim with nothing under it says so", "(nothing: no Depends-on, no Backed-by)" in r or "[check 001]" in r, r)
     # A project that renames a field: the queries read it, and name it, as the
