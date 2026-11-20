@@ -12,7 +12,7 @@ names them and says what each does not decide):
   log-the-prompt-first      the log holds no uncommitted entry, so this
                             round's is not yet written (section 8)
   more-than-one-plan-engaged  more than one plan's Status: line reads
-                            ENGAGED: the reply says so while it is true
+                            ENGAGED: the reply says so, once
                             (evidence_and_reasoning/research_plans/README.md)
   plan-closure-checklist    an ENGAGED plan whose execution ledger has
                             every task done or dropped: it stays ENGAGED
@@ -185,7 +185,7 @@ def reminders(t: lint_docs.Tree) -> list[str]:
     engaged = [n for n, f in sorted(t.plans.items()) if (t.plan_status.get(f) or "").startswith("ENGAGED")]
     if len(engaged) > 1:
         out.append("REMINDER  more-than-one-plan-engaged: " + ", ".join(f"plan {n}" for n in engaged)
-                   + f" ({t.dir_of_kind('plan')}/README.md: say so in the reply while it is true)")
+                   + f" ({t.dir_of_kind('plan')}/README.md: say so in the reply, once)")
     for n in engaged:
         states = ledger_states(t, t.plans[n])
         if states and all(re.fullmatch(r"(done|dropped)(,.*)?", s) for s in states):
@@ -286,6 +286,7 @@ def selftest() -> int:
         t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
         r = "\n".join(reminders(t))
         case("two engaged plans are named", "more-than-one-plan-engaged: plan 001, plan 003" in r, r)
+        case("and the reply is asked to say so once (MANIFESTO.md section 16)", "say so in the reply, once)" in r, r)
         case("an engaged plan with every task done or dropped is reported ready to close", "plan-closure-checklist: plan 001" in r, r)
         p3 = "evidence_and_reasoning/research_plans/003_c.md"
         w(tmp, p3, files[p1].replace("Plan 001: a", "Plan 003: c").replace("| Task | State |\n|---|---|\n| 1 | done |\n| 2 | not started |", "| Task | Date | State |\n|---|---|---|\n| 1 | | done |\n| 2 | | dropped |"))

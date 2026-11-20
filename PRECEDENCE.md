@@ -106,8 +106,10 @@ prose, and stops.
 ## The rule runs in both directions
 
 **Tier 4 is never promoted silently.** A public-record statement becomes
-established fact here only by being gated by a check of this project,
-which yields a claim. Otherwise it is used at its tier: collated and cited
+established fact here only through a claim of this project registered
+`VERIFIED` or `DERIVED`: gated by a check, or established by a derivation
+or reading with an independent cross-check (`CHECK_METHODOLOGY.md` §1).
+Otherwise it is used at its tier: collated and cited
 `ATTESTED` (tier 2), cited as a registered reference (tier 3), or carried
 in prose as context with its hedge (tier 4). The tell of a silent
 promotion is a sentence that states a borrowed fact flatly, with no

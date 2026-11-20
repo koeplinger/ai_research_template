@@ -82,7 +82,8 @@ The project's choices, recorded once and used throughout.
   narrates how the text got there; `DOCUMENT_GENRES.md` §3 lists what that
   excludes, what is content rather than narrative, and which artifacts are
   exempt because their subject is history. Where provenance needs a date,
-  the standard header is the whole of it.
+  the standard header is the whole of it, save in the progress ledgers
+  that section names.
 - **Body headings name subjects, not verdicts**, and carry no rhetorical
   tag line. A heading does not announce a result or pose a question the
   paragraph then answers. Where a point is substantial enough to need

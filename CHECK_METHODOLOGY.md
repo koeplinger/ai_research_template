@@ -271,8 +271,10 @@ each closing a way a check can pass while testing nothing.
   **A perturbation the claim says it does not depend on is a robustness
   check, not a mutation.** It is recorded too, and there survival is the
   intended result. The two are never confused: a mutation that a claim
-  survives is a defect, and a robustness check that a claim survives is a
-  finding.
+  survives is a defect, and a robustness check that a claim survives is
+  its intended result. A robustness check that a claim fails is recorded
+  too, and is a result to report, not a defect in the check: the claim
+  depends on what it says it does not.
 - **An empty search is not a proof of absence.** A tool that returns
   nothing returns nothing both for "there is none" and for "nothing was
   asked". A negative resting on an empty return passes exactly in the case

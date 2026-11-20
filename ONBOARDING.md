@@ -25,11 +25,11 @@ This file points; the rulebooks govern:
 ## The first minutes
 
     ONBOARDING.md (this file)
+      -> MANIFESTO.md, read in full
       -> prompt_logs/: read the latest entry, and the paragraph below if
                        it is still open; then open this round's entry
                        from _template.md, the first act of the round
                        (MANIFESTO.md section 8)
-      -> MANIFESTO.md, read in full
       -> CURRENT_STATE.md            the state of the research as a whole
       -> FINDINGS.md                 what the record has established
       -> evidence_and_reasoning/README.md, and its reading order

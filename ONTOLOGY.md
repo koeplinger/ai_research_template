@@ -164,6 +164,7 @@ assistant's under the consistency sweep (`CHECK_METHODOLOGY.md` §7).
 | `cites` | any artifact to a work | `[ShortKey]` | `MANIFESTO.md` §2 | ontology 2 | what does this rest on outside the project? |
 | `cites-at` | a claim or check to the exact place in a work | `[ShortKey, locus]` | `MANIFESTO.md` §2 | ontology 2, which reports a claim registered `ATTESTED` that cites no work at a locus | where exactly does the source say it? |
 | `registered` | a work to its registry entry | an entry at the registry path | `MANIFESTO.md` §2 | ontology 3, against `[registry] required` | is every work we lean on written down? |
+| `work-kind` | a work to the kind of work its registry entry records, where the registry holds several kinds and each owes bullets of its own | `Kind: <name>` in the registry entry, the name a key of `[registry.by_kind]` and the bullet taking the name `[fields.roles]` gives the kind role | `evidence_and_reasoning/references/README.md`, which defines the entry format | ontology 3, against `[registry.by_kind]` once it names a kind: the entry carries that kind's bullets besides `[registry] required`, and a kind no table names is reported | what must an entry for this kind of work record? |
 | `held` | a source of record to its local copy | a row in the source index naming the file | `MANIFESTO.md` §6 | `DOCUMENT_GENRES.md` checker 7 | do we have it, or only its locator? |
 | `consulted-at` | a source of record to its locator, where access conditions keep it out of the repository | the same row, giving shelfmark, release, or version, and access conditions | `MANIFESTO.md` §6 | reading: the row has one of `held` or `consulted-at`, never neither (`source_documents/README.md`) | how would a second reader reach it? |
 | `witness-of` | one record of a work to the work: a manuscript, edition, facsimile, release, or vintage | `Witness of: [ShortKey]` in the registry entry | `MANIFESTO.md` §2 | ontology 2 | which of these are the same work? |
@@ -418,8 +419,9 @@ the AI model (`MANIFESTO.md` §8).
 
 **Written when they apply**, and their absence is not a defect:
 everything else. `Robustness`, `Pre-registered`, `Reserved`, `Original`,
-`Witness of`, `Disputed`, and the prose relations of §2.8 are
-written where they are true and omitted where they are not.
+`Witness of`, `Disputed`, a registry entry's `Kind`, and the prose
+relations of §2.8 are written where they are true and omitted where they
+are not.
 
 **Every predicate written as a header field, a stamp, or a registry
 bullet names the artifact template that pre-prints it**, save `Released`

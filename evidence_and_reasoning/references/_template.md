@@ -18,3 +18,4 @@
 - Notes: <!-- optional: relevance to this project; the form consulted -->
 <!-- - Disputed: <what: authorship, dating, authenticity, priority, replication, a published correction, or a superseding release>, [ShortKey of the source]     add only where a dispute exists -->
 <!-- - Witness of: [ShortKey]     add only where this is one record of a work registered under another key -->
+<!-- - Kind: <name>     add only where the registry holds several kinds of work and [registry.by_kind] in tools/artifacts.toml names this one; the entry then carries that kind's bullets as well -->

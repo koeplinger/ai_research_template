@@ -871,7 +871,7 @@ def check_genres_5_narrative(t: Tree) -> None:
         skip = False
         for i, line in enumerate(clean.splitlines(), 1):
             if re.match(r"^## ", line):
-                skip = bool(re.match(r"^## (Execution status|Executions)\b", line))
+                skip = bool(re.match(r"^## (Execution status|Executions" + ("|Provenance" if row.get("kind") == "derived" else "") + r")\b", line))
             if skip:
                 continue
             for rx, name in NARRATIVE:
@@ -1861,6 +1861,18 @@ def selftest() -> int:
     run_case("a plan whose Status: is malformed", "GENRES-4", "evidence_and_reasoning/research_plans/001_a.md", "three forms", sub("evidence_and_reasoning/research_plans/001_a.md", "Status: ENGAGED 1 January 2026", "Status: Engaged"))
     run_case("historical voice in a rulebook", "GENRES-5", "MANIFESTO.md", "previously", add("MANIFESTO.md", "\nThis section previously read otherwise.\n"))
     run_case("a stamp with a colon narrative", "GENRES-5", "MANIFESTO.md", "change narrative", add("MANIFESTO.md", "\nUpdated 2 January 2026: clause tightened.\n"))
+    # A derived file's Provenance section is a progress ledger, like a
+    # plan's Execution status: narration there is not reported; it is
+    # under the heading after it, and under a Provenance heading anywhere
+    # but derived material.
+    DV = "evidence_and_reasoning/derived/001_t.md"
+    DERIVED = (f"# Derived 001: t\n\n{STAMP}\nPlan: 001, task 1\nProduced-from: [Key1, f. 1r], by hand, researcher\nBy: researcher\n\n"
+               "## Provenance\n\n| Date | By | What was done |\n|---|---|---|\n| 1 January 2026 | researcher | f. 1r re-read: it previously read otherwise |\n")
+    absent_case("narration in a derived file's Provenance ledger", "GENRES-5", DV, "previously", lambda t, f: w(t, DV, DERIVED))
+    run_case("narration in a derived file under the heading after its Provenance ledger", "GENRES-5", DV, "previously",
+             lambda t, f: w(t, DV, DERIVED + "\n## What was imposed\n\nThe foliation previously read otherwise.\n"))
+    run_case("narration under a Provenance heading outside derived material", "GENRES-5", "MANIFESTO.md", "previously",
+             add("MANIFESTO.md", "\n## Provenance\n\nThis section previously read otherwise.\n"))
     run_case("a stamp with a colon is read in the italicized examples the phrase list skips", "GENRES-5", "DOCUMENT_GENRES.md", "change narrative",
              add("DOCUMENT_GENRES.md", "\nNever *Updated 2 January 2026: tightened*.\n"))
     # A changelog's release row is written once its second cell names the

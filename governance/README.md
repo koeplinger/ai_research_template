@@ -69,6 +69,6 @@ without a section are those under *What is checked mechanically*.
 
 Every mechanism here can be modified, replaced, or deleted
 (`VISION.md`, *The repository is the researcher's*). A removal is
-deliberate and legible: the row above is struck with the reason, the
-rule it served is amended or its enforcement declared by hand, and the
-prompt log records the round.
+deliberate and legible: the row above is deleted, the rule it served
+is amended or its enforcement declared by hand, and the prompt log
+records the round and the reason.

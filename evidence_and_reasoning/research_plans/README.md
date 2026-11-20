@@ -27,9 +27,10 @@ of an open plan*); on closure it freezes, with any verdict.
 
 ## Rules
 
-- **More than one plan may be `ENGAGED`.** The plan index shows which,
-  and the assistant says so in its reply while it is true
-  (`MANIFESTO.md` §16). Where two engaged plans touch the same material,
+- **More than one plan may be `ENGAGED`.** The plan index shows which;
+  the assistant says so in its reply, once, as it says every reminder
+  (`MANIFESTO.md` §16), and the session brief repeats it at each session
+  start while it holds. Where two engaged plans touch the same material,
   each plan's *Out of scope* section names which plan owns what.
 - A plan states its hypothesis precisely enough that evidence could count
   against it, names its prerequisites, says which keystone hypothesis it

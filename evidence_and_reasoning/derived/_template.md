@@ -57,10 +57,10 @@ Frame: <!-- the conventions this derivation imposed, which every claim leaning o
 
 ## Provenance
 
-<!-- One dated line per sitting or run, newest last: date, party, what was
-     done, and what changed. While the owning plan is open this is
-     corrected in place as the material is revised; when the plan closes
-     it freezes with the file. -->
+<!-- A progress ledger (DOCUMENT_GENRES.md section 3, Dated records):
+     one dated line per sitting or run, newest last: date, party, and what
+     it did. Each line is corrected as its genre allows; when the plan
+     closes it freezes with the file. -->
 
 | Date | By | What was done |
 |---|---|---|

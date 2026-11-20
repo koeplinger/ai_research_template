@@ -212,7 +212,7 @@ copied into the artifacts it describes:
 
 | What | Where it lives |
 |---|---|
-| what the record has **established as findings** | `FINDINGS.md`: current state; what counts as a finding is the researcher's decision |
+| what the record has **established as findings** | `FINDINGS.md`: current state; what counts as a finding is the researcher's decision. Its register column is a deliberate copy of each backing claim's `Register:` line, kept for the reader and checked against the claim by the consistency sweep of the record (`CHECK_METHODOLOGY.md` §7, item 3); the claim is the source of truth |
 | the state of the research as a whole | `CURRENT_STATE.md`: the top-level entry point |
 | the status of every plan | the `Status:` line of the plan; `evidence_and_reasoning/research_plans/ROADMAP.md` is an index of plans, one line and a link each, whose status column the checker compares with each plan's line |
 | what a plan established, and what it left open | that plan's own execution status |
@@ -370,8 +370,10 @@ header and nothing else about itself. What the sweep, audit, or referee
 pass found on its day stays; how the note's own sentences came to read as
 they do is the version history's and the prompt log's.
 
-**A plan's `## Execution status` section, and a check's `## Executions`
-section, are progress ledgers**, and are exempt on the same ground: it records which task was done and when, which
+**A plan's `## Execution status` section, a check's `## Executions`
+section, and a derived file's `## Provenance` section are progress
+ledgers**, and are exempt on the same ground: each records what was done
+and when, which
 is exactly what lets a later reader, or a later session, resume the plan
 from the repository alone. The exemption stops there. The plan's **body**,
 its aspect, its directives, its task descriptions, states what is, like
@@ -452,8 +454,9 @@ matter stays ruled*).
    forms of *Words used here*, a `Plan:` line naming no plan file, and an
    owning plan with no `Status:` line.
 5. **Narrative.** On current-state paths, outside the two dated-record
-   patterns and outside any `## Execution status` or `## Executions`
-   section, the following are matched case-insensitively as whole
+   patterns, outside any `## Execution status` or `## Executions`
+   section, and outside a derived file's `## Provenance` section, the
+   following are matched case-insensitively as whole
    phrases within one line, skipping text inside
    backticks and the italicized examples in this file and the editorial
    standards: *previously* followed by *read*, *said*, *stated*,

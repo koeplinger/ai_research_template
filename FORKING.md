@@ -85,12 +85,12 @@ the harness wiring.
 `governance/README.md`, *Removing a mechanism*, states the rule: a removal
 is deliberate and legible. In practice, four steps.
 
-1. **Strike the row with the reason.** A mechanism the governance map
+1. **Delete the row.** A mechanism the governance map
    lists has a row in `governance/README.md` giving what it enforces,
    when it fires, and what it does not decide, and a tool has a second in
    `tools/README.md`; a folder or a ledger has the row of the index that
-   lists it. Strike each and say why, in one line. The map's row is where
-   a later reader looks first.
+   lists it. Delete each: an index says what is there, and the reason a
+   mechanism is gone goes in the round's log entry (step 4).
 2. **Amend or retire the rule it served.** A mechanism enforces a rule
    that lives in a rulebook. Either amend the rule, or keep it and say in
    the rulebook that its enforcement is now by hand. What you must not do

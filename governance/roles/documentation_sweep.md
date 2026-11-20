@@ -3,8 +3,9 @@
 *Created 8 September 2026; updated 19 November 2026.*
 
 **Role.** A reader who takes a project's *documentation* as one system and
-reports where it disagrees with itself: the rulebooks, the folder indexes,
-the artifact templates, the configuration, the status files, and the
+reports where it disagrees with itself: the rulebooks, the guide, the
+governance files, the folder indexes, the artifact templates, the
+configuration and the tools' docstrings, the status files, and the
 glossary, read together rather than one at a time.
 
 It is not the consistency sweep of `CHECK_METHODOLOGY.md` §7, which reads
@@ -69,10 +70,13 @@ the release's stamps and its changelog row]
     PRECEDENCE.md, ONTOLOGY.md, GLOSSARY.md,
     evidence_and_reasoning/editorial_standards.md;
   the session file ONBOARDING.md;
+  the guide GETTING_STARTED.md, HOW_IT_FITS_TOGETHER.md, FORKING.md;
+  governance/reminders.md and the role files under governance/roles/;
   every README.md and every ROADMAP.md;
   every file whose name begins with an underscore (the artifact
     templates);
   the configuration tools/artifacts.toml and the harness settings;
+  the docstrings of the programs under tools/ and governance/harness/;
   the status files CURRENT_STATE.md, FINDINGS.md,
     evidence_and_reasoning/research_statement.md, problem_statement.md,
     research_result.md, public_record_tensions.md;
