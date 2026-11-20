@@ -129,8 +129,9 @@ claim starts at `OPEN`.
 **Register and verification status are different questions**, and both are
 recorded. The register says **how far the statement may be trusted**; the
 verification status of `MANIFESTO.md` §5 says **who checked it and by what
-route**: the researcher, the assistant, deferred to a named instrument, or
-unchecked. A claim carrying a researcher-assigned `VERIFIED` whose check
+route**: the researcher, the assistant, another party on the roster,
+deferred to a named instrument, or unchecked. A claim carrying a
+researcher-assigned `VERIFIED` whose check
 only the assistant has run says exactly that, and `PRECEDENCE.md` says
 what may be done with it.
 

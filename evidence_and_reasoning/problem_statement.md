@@ -1,27 +1,26 @@
 # Problem statement
 
-*Created 3 September 2026; updated 3 September 2026.*
+*Created 3 September 2026; updated 19 November 2026.*
 
 <!-- THE KEYSTONE. The researcher's thesis, stated as questions or
      hypotheses precise enough that evidence could count against them,
      from which research plans are drawn. Register: SPECULATIVE except
      where a claim is cited. Nothing here may be cited as a result; its
      role is to be the ground plans are drawn from. Maintained: changed at
-     the researcher's direction, in place. Substantive change requires the
-     researcher's authorization (MANIFESTO.md section 12). Every plan
-     states which hypothesis here it serves, or why it serves none, in its
-     Serves line; a plan opened while this file is empty says so
-     (DOCUMENT_GENRES.md). -->
+     the researcher's direction, in place, a correction of wording or a
+     pointer included. Every plan states which hypothesis here it serves,
+     or why it serves none, in its Serves line; a plan opened while this
+     file is empty says so (DOCUMENT_GENRES.md). -->
 
-**Register: SPECULATIVE.** Everything below that carries a claim token is
-established at that claim's register; everything else is the researcher's
+**Register: SPECULATIVE.** Everything below that carries a claim token
+stands at that claim's register; everything else is the researcher's
 thesis, held as hypothesis and being tested.
 
 ## 0. How to read this, and what it sits on
 
 <!-- One paragraph: what the project has established so far that the
-     thesis rests on, cited by claim token, and the compressed reading
-     order for a session arriving cold. -->
+     thesis rests on, cited by claim token, in the order to read it; the
+     reading order for a session arriving cold is the folder index's. -->
 
 ## 1. The hypotheses
 

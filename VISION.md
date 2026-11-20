@@ -152,7 +152,9 @@ four kinds:
 These are advisory by design. They fire, they inform, and they leave the decision
 with the researcher. A mechanism that blocked work would be routed around within a
 week, and routing around it would leave no trace. One that speaks up and records
-what it said keeps the record honest either way.
+what it said keeps the record honest either way. The one exception guards against
+a leak, which no later decision can undo: where a project sets it up, it refuses
+the commit that carries one, and overriding it takes a stated reason.
 
 ---
 

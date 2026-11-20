@@ -1,6 +1,6 @@
 # Manifesto: operating rules for AI assistance
 
-*Created 2 September 2026; updated 18 November 2026.*
+*Created 2 September 2026; updated 19 November 2026.*
 
 This document defines the operating rules for an AI assistant working in
 this research repository. The rules are **binding on the assistant**
@@ -55,9 +55,10 @@ and is corrected in place.
 
 This repository presumes git for version history and a Python
 interpreter for its tools; both are infrastructure, not slots. Slots a
-project fills are written in double braces and are listed at the end of
-this file. Every file and directory named in this document is part of this
-repository:
+project fills are written in double braces; the ones this file relies on
+are listed at the end of it, and `GETTING_STARTED.md` §3 lists every slot
+with the file that owns it. Every file and directory named in this
+document is part of this repository:
 
 | Named here | What it holds |
 |---|---|
@@ -77,8 +78,9 @@ repository:
 | `CURRENT_STATE.md` | the state of the research as a whole |
 | `evidence_and_reasoning/` | the record: statements, claims, check records, notes, plans, the tension ledger |
 | `paper/` | the write-ups and their reviews |
-| `source_documents/` | the sources held locally, each with its license note |
+| `source_documents/` | the sources of record: those held, each with its license note, and the index of every one, held or consulted at its locator |
 | `tools/` | the mechanical checks named in §11, §13, and §16 |
+| `governance/` | the mechanisms that are not tools: the standing reminders, the opposition roles with the documentation sweep, and the harness wirings |
 
 Each directory's indexing `README.md` lists its files.
 
@@ -197,7 +199,9 @@ never holds the opinion the work exists to reach.
   instruments may be used where they fit better; a load-bearing result
   obtained elsewhere is cross-checked in the instrument of record.
 - Every recorded claim carries its verification status: checked by the
-  researcher; checked by the assistant, by which route; deferred to
+  researcher; checked by the assistant, by which route; checked by
+  another party on the roster, the people and agents whose work the
+  record attributes (`ONTOLOGY.md`, *Slots*), by which route; deferred to
   the instrument of record or another named instrument; or unchecked. It also
   carries a register, its trust level (`CHECK_METHODOLOGY.md` §1). The
   assistant proposes a register with its evidence and stops; the researcher
@@ -331,8 +335,8 @@ never holds the opinion the work exists to reach.
 - The threshold for inclusion is a term a reader needs in order to follow
   the checks and the reasoning. Terms may be added or removed when the
   documentation is tidied.
-- Relations between claims, sources, checks, and plans (cites, verifies,
-  supersedes, depends on, deferred to, and the rest) are expressed in the
+- Relations between claims, sources, checks, and plans (cites, backed by,
+  superseded by, depends on, deferred to, and the rest) are expressed in the
   predicates of `ONTOLOGY.md`. The assistant uses that vocabulary when it
   records such a relation, so that it can be checked and queried.
 
@@ -464,8 +468,9 @@ the project's own subject-matter terms and starts empty.
   ready for the researcher to commit, the assistant runs the round check,
   `tools/check_round.py`. It runs the genre checker, `tools/lint_docs.py`,
   together with every other check a round must pass. What is checked
-  mechanically: for §8, that numbering is contiguous, every entry carries
-  its fields, and no committed entry differs from its committed version;
+  mechanically: for §8, that numbering is contiguous, every entry not
+  yet committed carries its parts and its `By:` line, and no committed
+  entry differs from its committed version;
   for §11, the rules `evidence_and_reasoning/editorial_standards.md` lists
   under *What is checked mechanically*; for §12 and this section, the
   items `DOCUMENT_GENRES.md` lists under *What the checker verifies*.
@@ -573,8 +578,9 @@ the project's own subject-matter terms and starts empty.
   a review that runs against a ruling is reported as such, with the
   ruling's prompt, and not proposed; a mechanical finding the researcher
   has ruled to leave is entered, with the log entry of that ruling, in the
-  list of accepted findings in `tools/artifacts.toml`, and the tools stop
-  raising it. The exception is what the ruling did not have before it: new
+  list of accepted findings in `tools/artifacts.toml`, and the tools that
+  read the list, which `tools/README.md` names, stop raising it. The
+  exception is what the ruling did not have before it: new
   evidence that a ruled statement is false, or a later change in the
   record that the ruled text now contradicts. Either is brought once, with
   that evidence (§17).
@@ -590,7 +596,7 @@ the project's own subject-matter terms and starts empty.
   upper case, a colon, a space, and at least one further character; no
   markup around the label, and no blank line inside the block. Several
   forms can hold at once, and then the block carries a line for each;
-  `IDLE` appears only alone, never beside `RUNNING` or `WAITING ON YOU`.
+  `IDLE` appears only alone, as the block's single line.
   The researcher must be able to tell in five seconds whether to wait,
   answer, or walk away.
 - **"Running" names a live process and nothing else**; a subagent still
@@ -603,14 +609,15 @@ the project's own subject-matter terms and starts empty.
   but not brought to the researcher, a correction batch not followed by its
   consistency sweep, more than one plan engaged), the assistant says so in
   its reply, once. It records nothing beyond the reminder and acts on it
-  only with direction.
+  only with direction. `governance/reminders.md` names each reminder, what
+  fires it, and what computes it.
 - **Enforcement of the form is mechanical where the harness allows it.**
   Where the harness can run a check after each reply, that check is
   `tools/check_status_reply.py`; the wiring is the one the Slots table
   below names, recorded where the harness configuration lives. A reply whose status block does
   not conform is bounced back to the assistant, which answers again in the
   same turn. The researcher sees both the bounced reply and the one that
-  replaces it: the bounce produces the conforming follow-up, it does not
+  replaces it: the bounce asks for a conforming follow-up, it does not
   withhold the first. Without such a hook the form is the assistant's duty
   alone. The hook
   checks form; the truth of every line remains the assistant's duty under
@@ -622,8 +629,7 @@ the project's own subject-matter terms and starts empty.
   mechanism costs to remove*, for the checker and the log's closing
   status, which the round check reads with it.
 
-> **Build lens.** In force, with the hook installed; the reminders are read
-> from `governance/reminders.md` like any project's.
+> **Build lens.** In force, with the hook installed.
 
 ---
 
@@ -670,7 +676,7 @@ unenforced, and the prompt log records why.
 |---|---|---|
 | opening | a standing direction written into the file that owns its subject, or into `ONBOARDING.md` with its prompt | into the rulebook it concerns, or the commit message; the list of accepted findings stays empty |
 | 1 | the assistant works as `{{PERSONA}}` | as a research methodologist and tool author |
-| 2 | every claim referenced or pointed at its check; registry filled | no research claims; registry ships empty; lineage attributed to `leech_alg` only |
+| 2 | every claim referenced or pointed at its check; registry filled | no research claims; registry ships empty; lineage attributed to `leech_alg` by name, later projects unnamed |
 | 5 | second pass in the instrument or procedure of record; verification status on every claim | self-tests, whole-tree scan, end-to-end tests, adversarial read-only review |
 | 6 | no personal data; restricted sources by locator only; import policy | nothing project-specific from any source; `leech_alg` the only name; local stop-word scanner |
 | 8 | **every prompt logged**, immutably | **no prompt logged**; the version history is the record |
@@ -678,9 +684,9 @@ unenforced, and the prompt log records why.
 | 10 | reads what its task names and what the researcher points at | source projects only when named, main thread only |
 | 11 | the researcher's voice | plain, generic, discipline-neutral |
 | 12 | three genres; frozen artifacts; reasons in the prompt log | `VISION.md` at the researcher's direction; everything else current state; reasons in the commit message |
-| 13 | round check before handing back | privacy scan until step 9; then both |
+| 13 | round check before handing back | round check and privacy scan, both over the whole tree |
 | 14 | subagents find, do not write | additionally: never given the source projects |
-| 16 | hook-enforced status block; reminders from the stage of work | by hand until step 10; reminders from the plan's tracker |
+| 16 | hook-enforced status block; reminders from the stage of work | in force, with the hook installed; reminders as in a project |
 | 17 | opposition to the researcher's claims | adversarial review of each governance document |
 
 Sections 3, 4, 7, and 15 apply identically under both lenses.

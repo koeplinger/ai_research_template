@@ -39,8 +39,9 @@ is git-ignored.
 The stop hook checks the form of the status block and nothing else: that
 `RUNNING` names a live process and `DONE` something finished is the
 assistant's duty (§16). The researcher sees the reply that was bounced as
-well as the one that replaces it: the bounce produces the conforming
-follow-up, it does not withhold the first. The session-start brief
+well as the one that replaces it: the bounce asks for a conforming
+follow-up, it does not withhold the first, and the follow-up is not
+checked again, so that no reply is bounced twice. The session-start brief
 prints; the reminders it cannot compute (a tension row brought and not
 yet entered, a finding proposed and not yet brought) remain the
 assistant's by reading, as `governance/reminders.md` says.

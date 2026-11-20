@@ -1,12 +1,12 @@
 # Research statement
 
-*Created 3 September 2026; updated 16 November 2026.*
+*Created 3 September 2026; updated 19 November 2026.*
 
 <!-- Maintained: changed only on a significant deviation of the question,
      not on every finding (DOCUMENT_GENRES.md). States the question as it
      now stands; how it came to be sharpened is in the log and the version
-     history. Substantive change requires the researcher's authorization
-     (MANIFESTO.md section 12). -->
+     history. Every change, a correction of wording or a pointer
+     included, is made at the researcher's direction. -->
 
 ## The question
 
@@ -30,18 +30,20 @@ dataset by its release, a paper by its registered key. -->
 
 See `CURRENT_STATE.md`. <!-- State is recorded once (DOCUMENT_GENRES.md).
      If the question as posed now differs from the question at inception,
-     say how, here, in one paragraph. -->
+     say what differs, here, in one paragraph; how it came to differ is in
+     the log and the version history. -->
 
 ## Scope and what is not claimed
 
 - No new result is claimed at inception.
-- Anything from outside this repository that the work builds on is
-  imported and re-verified (`MANIFESTO.md` §6); nothing else is assumed.
+- Material from another repository, a private collection, or unpublished
+  work is imported and re-verified before anything builds on it
+  (`MANIFESTO.md` §6).
 - <!-- The boundary of the subject, stated so a reader knows what the
      project does not claim. -->
 
 ## Method
 
-Per `MANIFESTO.md` and `CHECK_METHODOLOGY.md`. The unit of work is the
-check; a negative result is a result; no claim is worded stronger than its
-evidence.
+Per `MANIFESTO.md` and `CHECK_METHODOLOGY.md`. The unit of verification is
+the check; a negative result is a result; no claim is worded stronger than
+its evidence.
