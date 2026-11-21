@@ -1,6 +1,6 @@
 # Opposition roles
 
-*Created 5 September 2026; updated 5 September 2026.*
+*Created 5 September 2026; updated 19 November 2026.*
 
 Structured argument against the researcher's own position, as
 `MANIFESTO.md` §17 and `VISION.md` require: a reader instructed to find
@@ -8,22 +8,40 @@ what is wrong, given a standard prompt so that the role is played the
 same way each time and its output has a fixed form. Each role is played
 by a fresh session or a subagent (a reader with no access to the first
 pass's reasoning, §5, §14) or by a human; the prompt is the same. A
-subagent playing a role writes no tracked file: it returns its output to
-the main thread, which records it where the role says (§14).
+subagent playing a role writes nothing into the working tree: it returns
+its output to the main thread, which records it where the role says
+(§14). A role that returns nothing has not been played: work the main
+thread does in its place is recorded as the main thread's own, not as
+the role's (§14). An opposition role is not given the researcher's
+rulings, so that it stays blind; the main thread compares what it
+returns with them before bringing it (`MANIFESTO.md` §16, *A ruled
+matter stays ruled*).
 
 | Role | Fires | Reads | Returns |
 |---|---|---|---|
-| [refuter.md](refuter.md) | on every sweep or review finding | the finding, the passage, and what it cites | stands, refuted with the reason, or narrowed |
-| [blind_referee.md](blind_referee.md) | before a version freezes | the write-up alone | a review record |
+| [refuter.md](refuter.md) | on every sweep or review finding, and every gap the coverage auditor reports | the finding, or several resting on the same passages; the passages; and what they cite | stands, refuted with the reason, or narrowed, for each finding |
+| [documentation_sweep.md](documentation_sweep.md) | at the moments its *Fires* list names | the project's documentation, as one system, and the log's prompts since the last documentation sweep | the findings, ranked, each with its file, line, problem, and fix, and the files read in full |
+| [blind_referee.md](blind_referee.md) | before a version freezes | the write-up alone, or with what is released with it | a review record |
 | [structure_census.md](structure_census.md) | at the head of a review, and before a review patches a section | the section and the sections it refers to | the census table |
 | [deletion_ledger.md](deletion_ledger.md) | on every rebuild | the section before and after, and the census where one was | the two ledgers and the net word delta |
-| [coverage_auditor.md](coverage_auditor.md) | before a check backs an established claim | the check, its record, the claim, and a source at a locus | every assertion classified |
-| [falsifiability_probe.md](falsifiability_probe.md) | when a check is written | the check, its record, the claim, and the mutation set | the matrix, and the check's named mutations judged against what the claim depends on |
+| [coverage_auditor.md](coverage_auditor.md) | before a check backs a claim registered `VERIFIED` or `RULED_OUT`, and before a plan closes on its checks | the check, its record, the claim, and a source at a locus | every assertion classified |
+| [falsifiability_probe.md](falsifiability_probe.md) | when a check is written, before it is relied on, and before a plan closes on it | the check, its record, the claim, and the mutation set | the matrix, and the check's named mutations judged against what the claim depends on |
+
+The documentation sweep is not opposition but a reading pass, and it is
+kept here because it is played the same way: a standard prompt, a fixed
+output, and every finding handed to the refuter.
 
 Each file states the role, when it fires, what the reader may read
 (`MANIFESTO.md` §10: what the task names and what those files point to
 inside the repository; each prompt narrows that further), the prompt
 verbatim, the form of the output, what the role does not decide, and a
 worked example. The prompts are generic: a project fills the bracketed
-slots and changes nothing else, so that a departure from the standard
-prompt is visible.
+placeholders and changes nothing else, so that a departure from the
+standard prompt is visible. Those placeholders are not slots in this
+methodology's sense (`GLOSSARY.md`): they are filled afresh at each use,
+not once per project. The documentation sweep's prompt is the
+exception: its file list, edited to the project's files, and its
+item 10, the project's own documentation items, are written once and
+kept (`documentation_sweep.md`, *Item 10 is the project's own*).
+Neither is a slot: no double-brace token marks it, no Slots table lists
+it, and setup does not ask for it.

@@ -1,124 +1,120 @@
 # Market days in a synthetic market roll
 
-*Created 6 September 2026; updated 6 September 2026.*
+*Created 2 September 2026; updated 21 November 2026.*
 
-A worked example of the research template: a small, complete project
-instantiated from the template, taken through its first plan from the
-research statement to a released note, and then through a review of the
-whole. Everything in it is synthetic by design: the market roll under
-`source_documents/` is produced by a program shipped beside it, the
-"published" note it is compared with was written for the exercise, and
-nothing here is a claim about the world. What the example shows is the
-process: the artifacts, the rounds, the checks, the registers (a claim's
-trust level), and the mechanical checks that gate a round, all passing.
+This project asks whether the market roll of a fictional town supports
+what a fictional note states of the market days of 1851: their count, and
+the days of the week they fell on. Both are synthetic files made for the
+project, so nothing here is a claim about the world. A count of the
+roll's rows for 1851, by a check that would fail were it otherwise, set
+against the note's figure as collated against the note, answers the
+first; the weekday of each row of 1851, set against what the note says of
+them, answers the second. The long form is
+[evidence_and_reasoning/research_statement.md](evidence_and_reasoning/research_statement.md).
 
-## The fence
+## About this example
 
-This example is a snapshot. It was instantiated from the template at
-commit `a460878` on 6 September 2026, by the steps its first log entry
-records, and its rulebooks and tools are copies as of that commit.
-Changes to the template's methodology after that commit do not propagate
-here: the example may fall out of step with the refined rulebooks and
-the guide, and where it does, it is flagged for deletion or a complete
-re-do at the researcher's word, never patched into the shape of every
-later rule. A small incremental update (a re-copied tool, a corrected
-sentence) is allowed and is recorded in this example's own log; the whole
-example is not re-run because a rule changed. Nothing in this example is
-ground truth for the template: where the two disagree, the template's
-rulebooks govern. Files copied from the template keep the template's
-Created date; their updated date is the day the example last changed
-them. The licenses are the template's own, since the example is part of
-the template's repository; a project replaces them as `LICENSE.md` says.
+This project is a worked example of the methodology template: an
+illustration to browse, not a project to run or to start from. What it
+offers is its prompt log, the working files its rounds left behind, and
+the write-up they led to. To start a project of your own, use the setup
+tool in the `tools/` folder of the template's repository, rather than a
+copy of this folder.
 
-To see what the template has changed since the snapshot, from the
-template's root:
+- **One session played both parties.** A single assistant session wrote
+  every prompt in the researcher's role and carried out each round, so
+  every ruling in its rounds is that session's, not a person's. The second
+  passes, audits, refutations, and blind review the log records were made
+  by subagents, further sessions it started.
+- **It was committed once.** Its rounds ran on 20 and 21 November 2026,
+  and nothing was committed until the example was complete. An entry that
+  speaks of something as not yet committed was accurate when written.
+- **The AI model is withheld.** Every `By:` line says so, where a project
+  of your own names the model.
+- **It was made from the template at commit `73ca267`.** Its rulebooks
+  and tools began as copies from that commit. Setup and the rounds logged
+  here changed some of them, and the template may have moved on since.
+- **Its tools are not kept working here.** They ran while the project
+  stood in a repository of its own, and the commands on this page may not
+  run from this subfolder of the template's repository.
 
-```bash
-git diff a460878 HEAD --stat -- MANIFESTO.md DOCUMENT_GENRES.md CHECK_METHODOLOGY.md PRECEDENCE.md ONTOLOGY.md ONBOARDING.md tools/ governance/
-```
+The first three are the departures from the rules that
+`prompt_logs/001_setup.md`, *Corrections and departures*, records.
 
-## Two roles, who played them
+Three ways to read it:
 
-The rulebooks name two parties, the researcher and the assistant. In
-this example both were played by one assistant session, the one that
-built the template, at the template researcher's direction to produce
-the example: it wrote every prompt in the researcher's voice and
-executed it. So every act the rulebooks reserve to the researcher
-(engaging and closing the plan, assigning registers, directing the
-release, entering the tension rows and the findings) was performed by
-the assistant in the researcher's role, and the record says so where the
-label carries weight: a second pass recorded as the researcher's role is
-not an independent party's, and a reader should not take it as one. The
-log's "I" is that role's voice.
+- **As it happened.** [prompt_logs/](prompt_logs/) holds every round in
+  order: what was asked, what was done, and what was left for the
+  researcher to decide.
+- **From a result back to its evidence.** Take a line of
+  [FINDINGS.md](FINDINGS.md) to its claim, the claim to its check, and
+  the check to the log entry that records it. A token such as
+  `[claim 001]` or `[check 001]` names the file with that number under
+  [evidence_and_reasoning/claims/](evidence_and_reasoning/claims/) or
+  [evidence_and_reasoning/checks/](evidence_and_reasoning/checks/).
+- **For the end product.** The write-up is
+  [paper/2026-11-20_market_days_1851.md](paper/2026-11-20_market_days_1851.md),
+  and its review, with what the review changed, is in
+  [paper/reviews/](paper/reviews/).
 
-## Reading it
+## Where to start
 
-A newcomer's path, about an hour. `ONBOARDING.md` is the assistant's
-session file, read afterwards to see what a session sees.
+| To see | Read |
+|---|---|
+| where the project stands | [CURRENT_STATE.md](CURRENT_STATE.md) |
+| what the record has established | [FINDINGS.md](FINDINGS.md) |
+| the question and the thesis | [evidence_and_reasoning/research_statement.md](evidence_and_reasoning/research_statement.md), [problem_statement.md](evidence_and_reasoning/problem_statement.md) |
+| the project's own terms, in its glossary | [evidence_and_reasoning/terminology.md](evidence_and_reasoning/terminology.md) |
+| what is open | [CURRENT_STATE.md](CURRENT_STATE.md), *What is open* |
+| every plan, what it settles, and its status | [evidence_and_reasoning/research_plans/ROADMAP.md](evidence_and_reasoning/research_plans/ROADMAP.md) |
+| the record itself | [evidence_and_reasoning/](evidence_and_reasoning/) |
+| what was asked, and when | [prompt_logs/](prompt_logs/) |
 
-1. This file (5 minutes).
-2. `MANIFESTO.md`, *Words used throughout* and sections 5, 8, 12, and
-   16 (15 minutes): the parties, verification, the log, corrections, the
-   status block.
-3. `CHECK_METHODOLOGY.md` sections 1, 2, and 8, and `DOCUMENT_GENRES.md`,
-   *Words used here* (10 minutes): registers, claim kinds, the shape of
-   a check, the plan lifecycle.
-4. The log, the entries under [prompt_logs/](prompt_logs/) in order
-   (10 minutes): what was asked and done in each round, and what the
-   last entry corrected.
-5. The record (15 minutes): the research statement and the keystone
-   under [evidence_and_reasoning/](evidence_and_reasoning/); plan 001;
-   claim 001 with check 001 and its program; claim 002 with check 002,
-   the procedure form; claim 004 with check 003, a check that fails by
-   design; the tension ledger; `FINDINGS.md` and `CURRENT_STATE.md`.
-6. The note under [paper/](paper/) and its review (10 minutes): in the
-   review's findings table, row 4 is a finding that needed a check the
-   record lacked, row 7 one the refuter refuted, row 9 a content cut the
-   researcher's role approved; the deletion ledger is what a rebuild
-   owes.
+## How this project works
 
-Keys the record uses: a claim token names a file under
-`evidence_and_reasoning/claims/`, a check token one under
-`evidence_and_reasoning/checks/`; [Roll1851] and [Note1] are the two
-sources registered in `evidence_and_reasoning/references/sources.md`; a
-finding key is a row of `FINDINGS.md` and a tension key a row of the
-tension ledger. The tools resolve them, so they are written bare. H-A is
-the keystone's one hypothesis, that the roll and the note disagree on
-1851. A slot is a project-specific value in a rulebook's Slots table. The
-reminder that log entry 005 mentions is the findings-gate reminder of
-`governance/reminders.md`, printed by `tools/session_brief.py` at the
-start of a session.
+It is built from a methodology template, whose rules travel with it:
+[MANIFESTO.md](MANIFESTO.md) for who does what and what the record is,
+[HOW_IT_FITS_TOGETHER.md](HOW_IT_FITS_TOGETHER.md) for the system as one
+thing and the prompts worth making, [GLOSSARY.md](GLOSSARY.md) for the
+words it uses in its own sense, [GETTING_STARTED.md](GETTING_STARTED.md)
+for how this project was set up. A session reads
+[ONBOARDING.md](ONBOARDING.md) before it works. This project's written
+material is adapted from that template under CC BY 4.0, which
+[LICENSE.md](LICENSE.md) names.
 
-## Running it
-
-From this folder, each of these runs clean:
+Before handing work back, and on every commit:
 
 ```bash
-python3 tools/check_round.py            # the round check: every mechanical gate, one command
-python3 tools/check_concordance.py      # each check program's RESULT line against its record
-python3 tools/falsifiability_probe.py   # each program under the mutations it names
-python3 tools/check_residue.py          # what a rebuild left in the live drafts
-python3 tools/session_brief.py          # the reading order, the plans, the reminders
-python3 tools/run_ledger.py status      # what is stale
-cd python_project && python3 -m pytest -q tests && python3 src/check_001_count_1851.py
+python3 tools/check_round.py
 ```
-
-Check 003 fails by design: its failing verdict is the result, backing a
-claim registered RULED_OUT; the probe does not judge its mutation for
-that reason, and its record states what the mutation does.
 
 ## The files at the root
 
 | File | What it is |
 |---|---|
-| [MANIFESTO.md](MANIFESTO.md) | the operating rules, with this project's slots filled in its Slots table |
-| [DOCUMENT_GENRES.md](DOCUMENT_GENRES.md) | the three genres and what the checker verifies |
-| [CHECK_METHODOLOGY.md](CHECK_METHODOLOGY.md) | registers, claim kinds, the shape of a check |
-| [PRECEDENCE.md](PRECEDENCE.md) | which artifact wins when two disagree |
-| [ONTOLOGY.md](ONTOLOGY.md) | the predicates and their surface syntax |
-| [ONBOARDING.md](ONBOARDING.md) | the reading order for a session, and the standing directions |
-| [VISION.md](VISION.md) | the template's statement of intent, carried over because the rulebooks cite it (log entry 008) |
+| [CHECK_METHODOLOGY.md](CHECK_METHODOLOGY.md) | trust levels, claim kinds, and the shape of a check |
 | [CURRENT_STATE.md](CURRENT_STATE.md) | where the project stands |
+| [DOCUMENT_GENRES.md](DOCUMENT_GENRES.md) | the three genres of artifact and what the checker verifies |
 | [FINDINGS.md](FINDINGS.md) | what the record has established |
-| [LICENSE.md](LICENSE.md), [LICENSE-CODE](LICENSE-CODE) | the licenses, the template's own |
-| [tools/](tools/), [governance/](governance/), [evidence_and_reasoning/](evidence_and_reasoning/), [paper/](paper/), [prompt_logs/](prompt_logs/), [python_project/](python_project/), [inherited/](inherited/), [source_documents/](source_documents/) | the folders, each with its own README |
+| [FORKING.md](FORKING.md) | how to change or remove a mechanism, legibly |
+| [GETTING_STARTED.md](GETTING_STARTED.md) | how this project was set up, and which rounds come first |
+| [GLOSSARY.md](GLOSSARY.md) | the method's own words, and what each will be mistaken for |
+| [HOW_IT_FITS_TOGETHER.md](HOW_IT_FITS_TOGETHER.md) | the system as one thing, and the prompts worth making |
+| [LICENSE-CODE](LICENSE-CODE) | the license for code |
+| [LICENSE.md](LICENSE.md) | the license for written material, and the citations |
+| [MANIFESTO.md](MANIFESTO.md) | the operating rules: who does what, and what the record is |
+| [ONBOARDING.md](ONBOARDING.md) | what every session reads before it works |
+| [ONTOLOGY.md](ONTOLOGY.md) | the predicates the tools read, and their surface syntax |
+| [PRECEDENCE.md](PRECEDENCE.md) | which statement governs when two disagree |
+| [VISION.md](VISION.md) | the template's statement of intent, which the rulebooks cite |
+| [evidence_and_reasoning/](evidence_and_reasoning/), [governance/](governance/), [inherited/](inherited/), [paper/](paper/), [prompt_logs/](prompt_logs/), [python_project/](python_project/), [source_documents/](source_documents/), [tools/](tools/) | the folders, each with its own README |
+
+## Licensing
+
+Written material is under Creative Commons Attribution 4.0 International
+and code under the MIT License, except the held sources under
+`source_documents/`, the imports under `inherited/`, the attachments under
+`prompt_logs/attachments/`, and what the project quotes or derives from
+them, which keep their own terms as far as those terms reach.
+[LICENSE.md](LICENSE.md) and [LICENSE-CODE](LICENSE-CODE) carry both
+licenses and the citation of the template this project is adapted from.

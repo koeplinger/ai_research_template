@@ -1,14 +1,15 @@
 # tools/artifacts.toml
 #
 # The single source of every path pattern, artifact kind, genre default,
-# required field, and closed vocabulary the tools read (ONTOLOGY.md,
-# section 7).  A project that files its artifacts elsewhere edits this one
-# file, and every tool follows: the tools locate the log, the plan index,
-# the registry, the findings file, the tension ledger, and the write-up
-# folder by the KIND of the row that names them, never by a second copy
-# of the path.  Current state; indexed in tools/README.md.
+# and required field the tools read (ONTOLOGY.md, section 7), and of the
+# closed vocabularies a project may change ([vocab] below).  A project
+# that files its artifacts elsewhere edits this one file, and every tool
+# follows: the tools locate the log, the plan index, the registry, the
+# findings file, the tension ledger, and the write-up folder by the KIND
+# of the row that names them, never by a second copy of the path.
+# Current state; indexed in tools/README.md.
 #
-# Created 4 September 2026; updated 6 September 2026.
+# Created 4 September 2026; updated 21 November 2026.
 #
 # Rows are matched top to bottom and the FIRST matching glob wins, so a
 # specific row (a template, an index) stands above the general row for
@@ -17,27 +18,50 @@
 # numbered form excludes README.md and the _template files.
 #
 # genre, the default the linter derives from (ONTOLOGY.md, section 3):
-#   current-state  described what is; corrected in place
+#   current-state  describes what is; corrected in place
 #   immutable      never edited once committed
 #   frozen         a dated record; frozen on writing
 #   plan-owned     follows the owning plan's Status: line
 #   self           a plan: follows its own Status: line
-#   dated-record   frozen on writing, or with the plan its Plan: line
-#                  names; exempt from the narrative and path checks
+#   dated-record   frozen on writing, a review when the round that acts on
+#                  it closes, or with the plan its Plan: line names (the
+#                  tools see no round, and read a review as frozen on
+#                  writing); exempt from the narrative check's phrase
+#                  list, and path-checked only while a plan keeps it live
 #   release        live until its Released stamp (a version) or its
-#                  (release) row (a changelog); a Plan: line overrides
-#   exempt         no header, no genre check: non-prose, imported, or the
-#                  template's own statement of intent
-# A Plan: header line overrides any default but immutable, self, and
-# exempt: live while that plan is DRAFT or ENGAGED, frozen when CLOSED.
+#                  (release) row (a changelog); a Plan: line overrides,
+#                  save on a version named _vN once it is released
+#   exempt         no header, no genre check: non-prose, imported, a held
+#                  source, a license text, a typeset source, the statement
+#                  of intent, or the configuration as shipped that a
+#                  project keeps for the tools' self-tests
+# A Plan: header line overrides any default but immutable, frozen, self,
+# and exempt, and a released version named _vN: live while that plan is
+# DRAFT or ENGAGED, frozen when CLOSED.
 # header: stamp (a markdown artifact) | docstring (a program) |
 #         comment (a configuration file or a shell script: its comment lines
 #         are its prose) | none
 # required: field lines that must be present (ONTOLOGY.md, section 8)
 # skip: check identifiers this row is exempt from, honored by every check
-#       in one place; an escape hatch, each use with its reason beside it
+#       in one place; an escape hatch, each use with its reason beside it.
+#       Where an item enforces two separable rules, one half is named after
+#       a slash and skipped alone: "GENRES-5/narrative" silences the
+#       phrase list, which in some subject matter matches ordinary
+#       sentences about the thing studied rather than about the document,
+#       while the stamp half keeps watching for a stamp that opens a
+#       change narrative; the reverse skip is "GENRES-5/stamp".  For
+#       one finding the researcher has ruled to leave, the [[accepted]]
+#       list below is the narrower tool.
 
 [template]
+# The oldest Python the tools run under, which their TOML reader sets: the
+# tools' floor, stated for the reader and read by no tool.  It is not the
+# instrument of record.  The version and the pinned environment a check
+# runs in are the project's to record (CHECK_METHODOLOGY.md, section 3),
+# and a check program runs under that environment's interpreter, never
+# under whichever Python meets this floor.  The three tools that execute
+# check programs run under that interpreter as well (tools/README.md),
+# so this floor binds it too.
 python = "3.11"
 
 [editorial]
@@ -45,14 +69,37 @@ python = "3.11"
 # (editorial_standards.md, What is checked mechanically, item 1).  An empty
 # value means unfilled: the check is skipped and reported once.
 #   spelling: "us" | "uk" | "none" (no variant list applies) | ""
-#   dashes:   "no-em-dash" | "spaced-em-dash" | "none" | ""
+#   dashes:   "no-em-dash"       an em-dash anywhere is reported
+#             "spaced-em-dash"   an em-dash without spaces around it
+#             "unspaced-em-dash" an em-dash with a space beside it
+#             "en-dash-asides"   an em-dash anywhere, the house style
+#                                setting asides with spaced en-dashes
+#             "none"             no dash check applies
+#             ""                 unfilled: skipped, and reported once
 spelling = "us"
 dashes = "no-em-dash"
+# The phrases the standards ban in an unfrozen draft, note, changelog, or
+# companion under the write-up folder
+# (editorial_standards.md, What is checked mechanically, item 2).  A project
+# edits this list, because a phrase banned as advocacy in one field is
+# another's precise sentence: "robust to <perturbation>" is the honest
+# result of a robustness check, and "scholars agree" with the works cited
+# beside it is a literature review doing its job.  An empty list turns the
+# phrase half of that item off, its heading rule running on; removing
+# the key leaves the shipped list in force.  One hit
+# the researcher has ruled to leave goes in the [[accepted]] list below.
+paper_phrases = ["without loss of generality", "clearly", "it is easy to see",
+                 "it follows immediately", "as is well known", "it is well established that",
+                 "scholars agree", "robust to", "remarkable", "striking", "beautiful",
+                 "the point at issue"]
 # Starter word lists, keyed by the convention they are WRONG under; the
-# project extends them.
+# project extends them.  Pairs that differ by part of speech rather than by
+# variant are left out on purpose: licence and license, practice and
+# practise, are both correct in UK usage, the first the noun and the second
+# the verb, so neither list can carry either.
 [editorial.wrong_words]
-us = ["labelled", "labelling", "organise", "organised", "organises", "organisation", "recognise", "recognised", "summarise", "summarised", "colour", "colours", "behaviour", "centre", "analyse", "analysed", "modelling", "modelled", "travelling", "fulfil", "licence"]
-uk = ["labeled", "labeling", "organize", "organized", "organizes", "organization", "recognize", "recognized", "summarize", "summarized", "color", "colors", "behavior", "center", "analyze", "analyzed", "modeling", "modeled", "traveling", "fulfill", "license"]
+us = ["labelled", "labelling", "organise", "organised", "organises", "organisation", "recognise", "recognised", "summarise", "summarised", "colour", "colours", "behaviour", "centre", "analyse", "analysed", "modelling", "modelled", "travelling", "fulfil"]
+uk = ["labeled", "labeling", "organize", "organized", "organizes", "organization", "recognize", "recognized", "summarize", "summarized", "color", "colors", "behavior", "center", "analyze", "analyzed", "modeling", "modeled", "traveling", "fulfill"]
 
 [narrative]
 # The two files whose italicized examples the narrative check skips
@@ -66,19 +113,62 @@ names = ["Register", "Kind", "Verdict", "Plan", "Depends-on", "Backed-by", "Back
 # A header field that writes derived state is reported (ontology check 6).
 derived = ["Genre", "Tier", "Live", "Frozen"]
 
+[fields.roles]
+# The name this project writes for each header field, by the ROLE the field
+# plays.  Every tool reads the name from here, so a project whose discipline
+# has taken one of these words renames it in this table, and the checks
+# follow (GLOSSARY.md, "Renaming a word this methodology uses").  A name has
+# the form ONTOLOGY.md, section 1.1, gives a field's name: a capital
+# letter, then letters and hyphens, each from A to Z, opening with none of
+# Created, Released, Reserved, and Pre-registered; the linter reports a
+# name of any other form written here.  Nor is it a name another field
+# carries, or one of [fields] derived.  Rename before any artifact carries
+# the field: the log is immutable and a frozen artifact keeps its wording,
+# so the cost rises with every round.  The artifact templates under
+# evidence_and_reasoning/, python_project/src/, paper/reviews/, and
+# prompt_logs/ are edited to match by hand, since they are prose.
+#   register: how far a statement may be trusted   (Trust, Warrant, Grade)
+#   instrument: the tool or procedure of record    (Instrument-of-record)
+#   mutation: the planted alteration a check must fail under  (Planted-fault)
+#   frame: what fixes the quantities stated        (Stated-in)
+register = "Register"
+kind = "Kind"
+verdict = "Verdict"
+plan = "Plan"
+depends-on = "Depends-on"
+backed-by = "Backed-by"
+backs = "Backs"
+verified-by = "Verified-by"
+instrument = "Instrument"
+frame = "Frame"
+mutation = "Mutation"
+robustness = "Robustness"
+original = "Original"
+prerequisites = "Prerequisites"
+serves = "Serves"
+status = "Status"
+by = "By"
+produced-from = "Produced-from"
+
 [vocab]
+# The registers the vocabulary check admits (CHECK_METHODOLOGY.md, section
+# 1).  The tools apply further rules to the six by name, so a project
+# renames one only by editing every tool that names it, and one added
+# here is treated by those rules as none of the six (GLOSSARY.md,
+# "Renaming a word this methodology uses").  The plan statuses, DRAFT,
+# ENGAGED, and CLOSED, are fixed in the tools and not configured here
+# (DOCUMENT_GENRES.md, Words used here).
 registers = ["VERIFIED", "DERIVED", "ATTESTED", "SPECULATIVE", "RULED_OUT", "OPEN"]
 kinds = ["formal", "computational", "empirical", "inferential", "documentary", "interpretive", "internal-consistency"]
-plan_status = ["DRAFT", "ENGAGED", "CLOSED"]
-plan_verdicts = ["CONFIRMED", "REFUTED", "COMPLETE", "ABANDONED"]
+plan_verdicts = ["CONFIRMED", "REFUTED", "COMPLETE", "INCONCLUSIVE", "ABANDONED"]
 # {{MUTATION_SET}}: the names a Mutation: line may carry.  Empty means
 # unfilled; the name check is skipped and reported once, when a check
-# exists to apply it to.
-mutations = ["shift-year", "drop-month", "duplicate-entry", "alter-figure"]
+# carries a filled Mutation: line.
+mutations = ["shift-year", "drop-month", "duplicate-entry", "alter-figure", "relabel-kind", "alter-wording"]
 [vocab.verdicts]
 formal = ["proved", "disproved"]
 computational = ["reproduced", "not reproduced"]
-empirical = ["compatible", "in tension", "refuted"]
+empirical = ["compatible", "in tension", "refuted", "inconclusive"]
 # Two values, one from each pair, comma-separated.
 inferential = [["identified as stated", "assumption unsupported"], ["replicated", "not replicated"]]
 documentary = ["confirmed", "not confirmed"]
@@ -88,28 +178,47 @@ internal-consistency = ["consistent", "inconsistent"]
 [parties]
 # {{PARTIES}}: the roster By: and Verified-by: may name, beyond the
 # researcher and the assistant.  Empty means unfilled; the roster check is
-# skipped and reported once, when a By: line exists to apply it to.
-names = []
+# skipped and reported once, when a By: or Verified-by: line names a
+# party beyond them.
+# ["none"] records by decision that there is no one beyond them: the check
+# runs, and any other name, "none" included, is reported.  Unlike "none"
+# for the spelling and the dashes, which turns a check off, this "none"
+# turns it on.
+names = ["none"]
 
 [log]
 # The parts of a log entry the round check looks for (prompt_logs/README.md):
-# the first two delimit the verbatim region, which no check reads; the last
-# is the closing status, whose fenced block the round check reads.
+# the first two delimit the verbatim region, which no prose check reads;
+# the last is the closing status, whose fenced block the round check reads.
 parts = ["--- PROMPT START ---", "--- PROMPT END ---", "## What was done", "## Corrections and departures", "## Closing status"]
 
 [registry]
-# {{REFERENCE_FIELDS}}: the bullets a registry entry must carry.
+# {{REFERENCE_FIELDS}}: the bullets EVERY registry entry must carry.
 required = ["Authors", "Title", "Where", "Year", "Identifier", "Keywords", "Standing"]
+# Further bullets required of an entry that declares "- Kind: <name>", the
+# bullet taking the name [fields.roles] gives the kind role, so that a
+# registry holding several kinds of work enforces more than their
+# intersection rather than dropping to it.  Empty means every entry is
+# checked against `required` alone and that bullet is optional prose.
+# A project fills this with its own kinds; the names below are examples of
+# the shape, commented out.
+[registry.by_kind]
+# archival = ["Repository", "Collection", "Reference", "Form consulted", "Access conditions"]
+# dataset  = ["Producer", "Release", "Retrieved"]
+# software = ["Version", "Repository"]
+# case     = ["Court", "Judgment date", "Jurisdiction", "Currency"]
 
 [publication]
 # The mechanical part of {{DELIVERABLE}}: the pipeline the round check gates
 # (tools/check_round.py, ROUND-3 and ROUND-4), as paper/README.md,
 # Conventions, says.  Disabled in the template.  A project that builds its
 # deliverable fills this in; a project that publishes otherwise leaves it
-# disabled.  The build itself is the researcher's to run: the check never
-# runs it, it names the command.  Freshness is by modification time, which
-# a checkout does not preserve: build once after a clone or a branch switch
-# before the gate is meaningful.
+# disabled.  The check never runs the build: it names the command, which
+# the main thread may run within a round (paper/README.md, Conventions).
+# Freshness is by modification time, which a checkout does not preserve:
+# build once after a clone or a branch switch before the gate is
+# meaningful.  While the table is enabled, the residue check also reads
+# the .tex files its sources match (tools/check_residue.py).
 enabled = false
 build = ""          # the command that builds the deliverable, named in a finding
 sources = []        # globs of what the build reads, in reading order: first-citation order follows it, alphabetically within a glob
@@ -119,16 +228,53 @@ log_errors = []     # regular expressions, one per error marker
 bibliography = ""   # the bibliography source, if the deliverable has one; empty skips ROUND-4
 entry = ""          # a regular expression whose first group is an entry's key, matched line by line in the bibliography
 cite = ""           # a regular expression whose first group is the keys at a citation site, comma-separated, matched line by line in the sources, comments included
-# A LaTeX deliverable with its bibliography in first-citation order:
+# A LaTeX deliverable with its bibliography in first-citation order.  The
+# last three error markers are two forms of the log's request for another
+# pass and its report of a label defined twice.  The build command shown
+# runs until nothing changes; a build of a fixed number of passes needs
+# both forms, or an output whose cross-references are one pass behind
+# passes the gate.  The two forms do not cover all that such a build
+# leaves behind: LaTeX itself asks for another pass when a label or a
+# citation changed, not when the table of contents did, and a package may
+# word its request otherwise ("Rerun LaTeX."), so a project adds the
+# forms its packages print, or builds until nothing changes:
 # enabled = true
-# build = "latexmk -pdf paper/main.tex"
+# build = "latexmk -pdf -cd paper/main.tex"
 # sources = ["paper/*.tex", "paper/*.bib"]
 # outputs = ["paper/main.pdf"]
 # log = "paper/main.log"
-# log_errors = ['^! ', 'Undefined control sequence', 'Citation .* undefined', 'Reference .* undefined']
+# log_errors = ['^! ', 'Undefined control sequence', 'Citation .* undefined', 'Reference .* undefined', 'Rerun to get', 'Please .?re.?run', 'multiply[- ]defined']
 # bibliography = "paper/references.bib"
 # entry = '^@\w+\{([^,\s]+),'
 # cite = '\\cite[a-z]*\*?(?:\[[^\]]*\])*\{([^}]*)\}'
+
+# ---------------------------------------------------------------- rulings
+# Findings accepted at the researcher's ruling (MANIFESTO.md section 16,
+# "A ruled matter stays ruled").  A finding the researcher has seen and
+# ruled to leave, such as a phrase that is a sentence about the subject
+# matter, a sentence repeated on purpose, or a claim declined as a
+# finding, is entered here in the round whose log entry records the
+# ruling, so that the tools stop raising it.  Each entry names:
+#   tag     the finding's tag, or findings-gate for the session brief's
+#           reminder; the linter, the round check, and the residue check
+#           read their own tags; a finding of the probe or the concordance
+#           check cannot be accepted
+#   path    the file the finding names
+#   text    the first words of the passage beginning on the line the
+#           finding names, as they stand there, quoted through the words
+#           the finding is about; for the findings gate, the claim's title
+#           line
+#   ruling  the log entry that records the ruling
+# An entry accepts every finding of its tag on that line, left out of the
+# report and counted; a change to the words it quotes, or a re-wrap that
+# moves their start off that line, brings the finding back.  An entry that matches nothing, lacks a part, cites no log entry,
+# or names a tag the list does not cover is reported.  The assistant adds
+# an entry only at the researcher's ruling.
+# [[accepted]]
+# tag = "RESIDUE-5"
+# path = "paper/main_v2.md"
+# text = "The estimate holds in every region"
+# ruling = "prompt_logs/014_read_the_draft.md"
 
 # ---------------------------------------------------------------- artifacts
 
@@ -137,8 +283,9 @@ kind = "vision"
 glob = "VISION.md"
 genre = "exempt"
 header = "none"
-# The template's statement of intent, kept with the project since the
-# rulebooks name it; it keeps its own dash convention.
+# The statement of intent, changed only at the researcher's direction and
+# kept with the project, because the rulebooks and the governance map cite
+# it (ONTOLOGY.md, governance/README.md); it keeps its own dash convention.
 
 [[artifact]]
 kind = "license-text"
@@ -169,6 +316,22 @@ genre = "current-state"
 [[artifact]]
 kind = "rulebook"
 glob = "evidence_and_reasoning/editorial_standards.md"
+genre = "current-state"
+[[artifact]]
+kind = "rulebook"
+glob = "GLOSSARY.md"
+genre = "current-state"
+[[artifact]]
+kind = "guide"
+glob = "GETTING_STARTED.md"
+genre = "current-state"
+[[artifact]]
+kind = "guide"
+glob = "HOW_IT_FITS_TOGETHER.md"
+genre = "current-state"
+[[artifact]]
+kind = "guide"
+glob = "FORKING.md"
 genre = "current-state"
 
 [[artifact]]
@@ -240,7 +403,7 @@ required = ["Register", "Kind", "Verdict", "Plan", "Verified-by"]
 kind = "check"
 glob = "evidence_and_reasoning/checks/[0-9]*.md"
 genre = "plan-owned"
-required = ["Plan", "Backs", "Instrument", "Mutation"]
+required = ["Plan", "Backs", "Instrument", "Mutation", "By"]
 
 [[artifact]]
 kind = "plan"
@@ -257,6 +420,27 @@ genre = "current-state"
 kind = "note"
 glob = "evidence_and_reasoning/notes/20[0-9][0-9]-*.md"
 genre = "dated-record"
+
+[[artifact]]
+kind = "derived"
+glob = "evidence_and_reasoning/derived/[0-9]*.md"
+genre = "plan-owned"
+required = ["Plan", "Produced-from", "By"]
+# What a plan makes from a source before anything is released: a
+# transcription, a collation, a coding scheme.  Prose, so it carries the
+# stamp and the fields; it freezes with the plan that owns it
+# (DOCUMENT_GENRES.md section 2).
+[[artifact]]
+kind = "derived-nonprose"
+glob = "evidence_and_reasoning/derived/*"
+genre = "exempt"
+header = "none"
+# The non-prose forms of the same thing: a table, a figure, an alignment,
+# an extract.  No header; dated by the row that lists it in the folder's
+# index and by the check that produced it.  This row stands below the
+# prose row, so a numbered .md there matches the prose row first; one not
+# numbered, against the folder's naming, falls to this row: no header, no
+# genre check.
 
 [[artifact]]
 kind = "registry"
@@ -313,7 +497,8 @@ glob = "paper/**/*.tex"
 genre = "exempt"
 header = "none"
 # A typeset source is out of the linter's reach: the editorial checks read
-# markdown, and the header check reads a stamp.  Its prose is the sweep's.
+# markdown, and the header check reads a stamp.  Its prose is read in the
+# consistency sweep of the record (CHECK_METHODOLOGY.md, section 7).
 [[artifact]]
 kind = "bibliography"
 glob = "paper/**/*.bib"
@@ -326,11 +511,23 @@ glob = "prompt_logs/[0-9]*.md"
 genre = "immutable"
 
 [[artifact]]
+kind = "attachment"
+glob = "prompt_logs/attachments/[0-9]*"
+genre = "immutable"
+header = "none"
+# What a round received and keeps as received, named after the entry that
+# received it (prompt_logs/attachments/README.md): no header, since it is
+# kept as received, and never edited once committed, which GENRES-2
+# reports.  The numbered form leaves the folder's README.md to the index
+# row; a file there whose name does not begin with a number matches no
+# row and is reported.
+
+[[artifact]]
 kind = "check-program"
 glob = "python_project/src/check_[0-9]*.py"
 genre = "plan-owned"
 header = "docstring"
-required = ["Plan", "Backs", "Instrument", "Mutation"]
+required = ["Plan", "Backs", "Instrument", "Mutation", "By"]
 
 [[artifact]]
 kind = "program"
@@ -371,6 +568,16 @@ header = "none"
 # deletes the folder and this row.
 
 [[artifact]]
+kind = "shipped-config"
+glob = "tools/artifacts_shipped.toml"
+genre = "exempt"
+header = "none"
+# In a project, the template's configuration as it shipped, which the
+# setup tool keeps unchanged for the tools' self-tests (tools/README.md);
+# never edited by hand, and not the project's configuration.  The template
+# itself has no such file.
+
+[[artifact]]
 kind = "config"
 glob = "tools/*.toml"
 genre = "current-state"
@@ -396,6 +603,12 @@ header = "none"
 [[artifact]]
 kind = "non-prose"
 glob = ".gitignore"
+genre = "exempt"
+header = "none"
+
+[[artifact]]
+kind = "non-prose"
+glob = ".gitattributes"
 genre = "exempt"
 header = "none"
 
@@ -425,6 +638,9 @@ lists = "evidence_and_reasoning/notes/*"
 readme = "evidence_and_reasoning/references/README.md"
 lists = "evidence_and_reasoning/references/*"
 [[index]]
+readme = "evidence_and_reasoning/derived/README.md"
+lists = "evidence_and_reasoning/derived/*"
+[[index]]
 readme = "paper/README.md"
 lists = "paper/*"
 [[index]]
@@ -433,6 +649,9 @@ lists = "paper/reviews/*"
 [[index]]
 readme = "prompt_logs/README.md"
 lists = "prompt_logs/*"
+[[index]]
+readme = "prompt_logs/attachments/README.md"
+lists = "prompt_logs/attachments/*"
 [[index]]
 readme = "python_project/README.md"
 lists = "python_project/*"

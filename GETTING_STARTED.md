@@ -1,6 +1,6 @@
 # Getting started: from a clone to a first commit
 
-*Created 8 September 2026; updated 19 November 2026.*
+*Created 8 September 2026; updated 21 November 2026.*
 
 This is the walkthrough. It takes a clone of the template and leaves you
 with a project whose first plan is engaged, whose first claim is checked,
@@ -77,11 +77,27 @@ sitting, and the round that states the question is the longest part.
 Copy the template into a new repository of your own, then remove what
 belongs to the template's own construction rather than to your project.
 
+**First, keep the configuration as it shipped.** The tools' self-tests
+read a copy of the template's `tools/artifacts.toml`, so that what you
+rename, remove, or fill in your own leaves them as they are; with no
+copy they read yours, and can fail once it changes. While the file is
+still the template's, make the copy, and add its row to
+`tools/README.md`, under that of the configuration. Where the copy is
+there already, as in a project the setup tool made, leave it.
+
+```bash
+cp tools/artifacts.toml tools/artifacts_shipped.toml
+```
+
+```
+| [artifacts_shipped.toml](artifacts_shipped.toml) | The template's configuration as it shipped, read by the tools' self-tests; never edited by hand. |
+```
+
 | Leave behind | And also |
 |---|---|
 | the worked example, the example folder | its rows in `README.md` and `governance/README.md`, its row in `tools/artifacts.toml`, and its mention under *Support* in `HOW_IT_FITS_TOGETHER.md` |
 | the template's own work list, TODO.md | its rows in `README.md` and `tools/artifacts.toml`; your project's open work is its plans and its roadmap |
-| the template's setup tool, under `tools/` | its rows in `tools/README.md` and `governance/README.md` |
+| the template's setup tool, under `tools/` | its rows in `tools/README.md` and `governance/README.md`, and the whole passage before §1 on running it |
 | `.review/`, interim review records, if present | nothing; add it to `.gitignore` if you keep the folder for your own reviews |
 
 Removing a folder means removing the pointers to it as well, or the path
@@ -129,7 +145,10 @@ bash tools/install_hooks.sh
 
 That puts the round check on pre-commit, advisory: it reports and lets the
 commit through. `--strict` makes it refuse instead, which you can change
-at any time.
+at any time. **Install Python 3.11 or later before your first commit, if
+it is missing:** without it the round check cannot run at a commit, and
+with no python3 at all neither can the privacy scan; the pre-commit hook
+says so each time.
 
 **Arm the privacy scan.** Decide, before the first commit, what must never
 reach this repository, and write it to `.privacy/stopwords.txt`, one entry
@@ -248,7 +267,7 @@ yourself outside a round and its commit is the provenance, and the stage
 that ends it:
 
    ```
-   open     | `{{VOICE}}`: open by decision (prompt 001); filled when a write-up is opened | The recorded voice rules for unfrozen drafts | ... |
+   open     | `{{VOICE}}`: open by decision (prompt 001); filled when a write-up is opened | The recorded voice rules for what *Writing for publication* covers | ... |
    ```
 
 The marker is written in the owner row itself, never given to the tool
@@ -297,13 +316,14 @@ only in the prose is not in force:
 | `{{SPELLING}}` | `[editorial] spelling` | `"us"`: **enforced against your prose until you change it** |
 | `{{DASH_CONVENTION}}` | `[editorial] dashes` | `"no-em-dash"`: likewise enforced |
 | `{{REFERENCE_FIELDS}}` | `[registry] required`, and `[registry.by_kind]` | the seven defaults, **required of every entry** until you change them |
-| `{{MUTATION_SET}}` | `[vocab] mutations` | empty: the name check is skipped, and says so |
-| `{{PARTIES}}` | `[parties] names` | empty: the roster check is skipped, and says so; `["none"]` records by decision that no one beyond you and the assistant appears, and the check runs |
+| `{{MUTATION_SET}}` | `[vocab] mutations` | empty: the name check is skipped, and says so once a check has a filled `Mutation:` line |
+| `{{PARTIES}}` | `[parties] names` | empty: the roster check is skipped, and says so once a `By:` or `Verified-by:` line names someone other than you or the assistant; `["none"]` records by decision that no one beyond you and the assistant appears, and the check runs |
 | `{{DELIVERABLE}}` | `[publication]` | disabled: the build and bibliography gates do not run |
 
-The distinction matters. An empty value means the check is skipped and
-reports that it was; a shipped default means the check runs, against you,
-with the template's answer. All of them are in `tools/artifacts.toml`.
+The distinction matters. An empty value above means the check is skipped,
+and the skip is reported once a line carries a name it would check; a
+shipped default means the check runs, against you, with the template's
+answer. All of them are in `tools/artifacts.toml`.
 
 ### While you are in there: rename what your field has taken
 
@@ -463,8 +483,8 @@ points here:
    the front page's paragraph on the question (§2).
 3. **The documentation consistency sweep**, made with the prompt *Make a
    documentation consistency sweep*. It catches what setup left behind: a
-   slot value that does not read where it was substituted, a pointer the
-   tool could not reach, a file still speaking in the template's voice
+   slot value that does not read where it was substituted, a pointer
+   setup did not reach, a file still speaking in the template's voice
    (`governance/roles/documentation_sweep.md`).
 
 Nothing else yet. You commit at the end of each round, once you have
@@ -568,9 +588,11 @@ commit. A commit made before a round closes leaves its entry committed
 open, which the round check run at that commit shows as a closing status
 not written; the next round's entry completes it (`MANIFESTO.md` §8).
 
-If you removed the worked example without removing the pointers to it, the
-path check reports those pointers, naming the file and the line. That is
-the check working, and §1 says what to strike.
+If you remove a file or folder and leave pointers to it, the path check
+reports those written as a link or a backticked path, each path once in a
+file, naming the file and the line. It does not report a row of the
+configuration, a pointer in plain words, or a file name written as a
+pattern, so search as well for the name of what you removed.
 
 Where §1's privacy list exists, `tools/privacy_scan.py` runs beside the
 round check at every commit. It is the one mechanism that refuses by
@@ -629,7 +651,7 @@ silently is worse than one you delete on purpose.
 wait for a write-up (§3), and the rounds §4 lists. Everything else
 arrives when the work needs it: a plan when you are ready to execute, a check when there is something
 to verify, the tension ledger when something you find disagrees with what
-is published.
+is published or with registered material that is not.
 
 **Where does the record end and the paper begin?** The repository is the
 primary artifact and the paper is a projection of it. Anything the paper

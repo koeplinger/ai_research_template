@@ -3,10 +3,10 @@
 # cloned.  pre-commit runs, where a stop-word list exists at
 # .privacy/stopwords.txt, the privacy scan over what is staged, and then the
 # round check, tools/check_round.py, over the whole working tree, staged or
-# not.  commit-msg runs the privacy scan over the message.  The privacy scan
-# refuses the commit on a finding, and where its list holds no pattern,
-# since a leak into the history is hard to undo; the round check reports
-# its findings and lets the commit proceed,
+# not.  commit-msg runs the privacy scan over the message, where the list
+# exists.  The privacy scan refuses the commit on a finding, and where its
+# list holds no pattern, since a leak into the history is hard to undo; the
+# round check reports its findings and lets the commit proceed,
 # as MANIFESTO.md's opening has every check inform and the researcher
 # decide, unless the hooks were installed with --strict.  A refusal names
 # the override, git commit --no-verify, and asks that the commit message
@@ -16,7 +16,7 @@
 # repository (core.hooksPath) is never written, nor a hook removed from
 # it, without --force.
 #
-# Created 5 September 2026; updated 19 November 2026.
+# Created 5 September 2026; updated 21 November 2026.
 #
 # Usage
 #   tools/install_hooks.sh              install pre-commit and commit-msg
@@ -34,8 +34,11 @@
 #
 # Exit status: 0 done; 1 refused, or a failed self-test; 2 not a repository,
 # or an unknown argument.  Without python3 on PATH it installs the hooks
-# and warns; the pre-commit hook then refuses every commit until python3
-# is found.
+# and urges installing python3; the pre-commit hook then runs no check,
+# urges the same at every commit, and refuses a commit only where a
+# stop-word list exists or the hooks were installed --strict.  On a python3
+# older than 3.11 the scan still runs, the round check cannot, and the
+# pre-commit hook says so.
 set -u
 
 MARK="# installed by tools/install_hooks.sh"
@@ -61,12 +64,22 @@ $MARK
 # the round check over the whole working tree, staged or not.
 ROOT="\$(git rev-parse --show-toplevel)" || exit 2
 cd "\$ROOT" || exit 2
-command -v python3 >/dev/null || { echo "pre-commit: python3 not on PATH; no gate ran" >&2; exit 2; }
+if ! command -v python3 >/dev/null; then
+  if [ -r .privacy/stopwords.txt ] || [ "$strict" = "yes" ]; then
+    echo "pre-commit: URGENT: install python3 (3.11 or later) or put it on PATH. Without it the privacy scan or the strict round check cannot run, so this commit is refused; install it and retry, or commit with --no-verify and say why in the commit message (MANIFESTO.md sections 12 and 13)" >&2
+    exit 2
+  fi
+  echo "pre-commit: URGENT: install python3 (3.11 or later) or put it on PATH. Without it no check runs: the round check did not run on this commit. The commit proceeds, and the decision is the researcher's (MANIFESTO.md section 13)" >&2
+  exit 0
+fi
 status=0
 if [ -r .privacy/stopwords.txt ]; then
   python3 tools/privacy_scan.py --staged || status=1
 fi
-if ! python3 tools/check_round.py; then
+if ! python3 -c 'import tomllib' 2>/dev/null; then
+  echo "pre-commit: URGENT: install python3 (3.11 or later) or put it on PATH. The round check needs it and did not run on this commit (MANIFESTO.md section 13)" >&2
+  if [ "$strict" = "yes" ]; then status=1; fi
+elif ! python3 tools/check_round.py; then
   if [ "$strict" = "yes" ]; then
     status=1
   else
@@ -88,7 +101,7 @@ $MARK
 ROOT="\$(git rev-parse --show-toplevel)" || exit 2
 cd "\$ROOT" || exit 2
 [ -r .privacy/stopwords.txt ] || exit 0
-command -v python3 >/dev/null || { echo "commit-msg: python3 not on PATH; the scan did not run" >&2; exit 2; }
+command -v python3 >/dev/null || { echo "commit-msg: URGENT: install python3 (3.11 or later) or put it on PATH. Without it the message scan cannot run, so this commit is refused; install it and retry, or commit with --no-verify and say why in the commit message (MANIFESTO.md sections 12 and 13)" >&2; exit 2; }
 # git sets GIT_EDITOR=: for its hooks when no editor opens; from a message
 # written in its editor, git strips the lines beginning with #.
 edited=--edited; [ "\${GIT_EDITOR-}" = ":" ] && edited=
@@ -108,7 +121,7 @@ install() {
     echo "install_hooks: hooks for this repository live at $dir (core.hooksPath), shared beyond it; not written (use --force to write there anyway)"
     return 1
   fi
-  command -v python3 >/dev/null || echo "install_hooks: python3 is not on PATH; until it is, the pre-commit hook refuses every commit" >&2
+  command -v python3 >/dev/null || echo "install_hooks: URGENT: install python3 (3.11 or later) or put it on PATH. Until then no check runs at a commit, and the pre-commit hook refuses one only where a stop-word list exists or the hooks are strict" >&2
   mkdir -p "$dir"
   for name in pre-commit commit-msg; do
     target="$dir/$name"
@@ -210,12 +223,60 @@ selftest() {
   else echo "  [FAIL] committed, but the finding was not reported:"; sed 's/^/         /' "$tmp/out"; fails=$((fails+1)); fi
   git -C "$repo" reset -q --hard HEAD~1
 
+  # Without python3 on PATH no check can run.  Git and bash are reached from
+  # a folder of their own, which holds no python3.
+  local nopy="$tmp/nopy"; mkdir -p "$nopy"
+  local c; for c in git bash mkdir cat chmod grep; do ln -s "$(command -v "$c")" "$nopy/$c"; done
+  nopy_case() {   # $1 proceeds or refused; $2 the case; $3 what the output must say
+    local got
+    printf '\nA line with no python3.\n' >> "$repo/CURRENT_STATE.md"; add_all
+    if PATH="$nopy" "$nopy/git" -C "$repo" -c user.name=t -c user.email=t@t -c commit.gpgsign=false commit -q -m "a change" >"$tmp/out" 2>&1; then
+      got=proceeds; git -C "$repo" reset -q --hard HEAD~1
+    else got=refused; reset_in; fi
+    if [ "$got" = "$1" ] && grep -q "$3" "$tmp/out" && grep -q "URGENT: install python3" "$tmp/out"; then echo "  [PASS] without python3, $2: the commit $got, says why, and urges installing it"
+    else echo "  [FAIL] without python3, $2: the commit $got:"; sed 's/^/         /' "$tmp/out"; fails=$((fails+1)); fi
+  }
+  nopy_case proceeds "no list, not strict" "did not run"
+  mkdir -p "$repo/.privacy"; printf '%s\n' "$word" > "$repo/.privacy/stopwords.txt"
+  nopy_case refused "a stop-word list" "no-verify"
+  printf 'a change\n' > "$tmp/msg"
+  if (cd "$repo" && PATH="$nopy" "$d/commit-msg" "$tmp/msg") >"$tmp/out" 2>&1; then echo "  [FAIL] without python3, the commit-message hook let a message go unscanned"; fails=$((fails+1))
+  elif grep -q "URGENT: install python3" "$tmp/out" && grep -q "no-verify" "$tmp/out"; then echo "  [PASS] without python3, the commit-message hook refuses, says why, and urges installing it"
+  else echo "  [FAIL] without python3, the commit-message hook:"; sed 's/^/         /' "$tmp/out"; fails=$((fails+1)); fi
+  rm -rf "$repo/.privacy"
+  if (PATH="$nopy"; install "$repo" yes no) 2>"$tmp/out" >/dev/null && grep -q "URGENT: install python3" "$tmp/out"; then echo "  [PASS] without python3, the installer writes the hooks and urges installing it"
+  else echo "  [FAIL] without python3, the installer:"; sed 's/^/         /' "$tmp/out"; fails=$((fails+1)); fi
+
+  # A python3 older than 3.11 has no tomllib, so the round check dies on import.
+  local oldpy="$tmp/oldpy"; mkdir -p "$oldpy"
+  cat > "$oldpy/python3" <<PY
+#!/bin/sh
+case "\$1" in
+  -c) [ "\$2" = "import tomllib" ] && exit 1 ;;
+  tools/check_round.py) echo "ModuleNotFoundError: No module named 'tomllib'" >&2; exit 1 ;;
+esac
+exec "$(command -v python3)" "\$@"
+PY
+  chmod +x "$oldpy/python3"
+  old_case() {   # $1 proceeds or refused; $2 the case
+    local got
+    printf '\nA line on an older python3.\n' >> "$repo/CURRENT_STATE.md"; add_all
+    if PATH="$oldpy:$PATH" git -C "$repo" -c user.name=t -c user.email=t@t -c commit.gpgsign=false commit -q -m "a change" >"$tmp/out" 2>&1; then
+      got=proceeds; git -C "$repo" reset -q --hard HEAD~1
+    else got=refused; reset_in; fi
+    if [ "$got" = "$1" ] && grep -q "URGENT: install python3" "$tmp/out" && ! grep -q "reports the findings above" "$tmp/out"; then echo "  [PASS] on a python3 older than 3.11, $2: the commit $got, and says why"
+    else echo "  [FAIL] on a python3 older than 3.11, $2: the commit $got:"; sed 's/^/         /' "$tmp/out"; fails=$((fails+1)); fi
+  }
+  old_case proceeds "not strict"
+
   install "$repo" yes yes > /dev/null
   printf '# M\n\nRules.\n' > "$repo/MANIFESTO.md"; add_all
   if commit_in "drop a stamp"; then echo "  [FAIL] a linter finding was committed under --strict"; fails=$((fails+1))
   elif grep -q "GENRES-1" "$tmp/out"; then echo "  [PASS] under --strict a linter finding is refused"
   else echo "  [FAIL] refused, but not by the linter:"; sed 's/^/         /' "$tmp/out"; fails=$((fails+1)); fi
   reset_in
+  nopy_case refused "under --strict" "no-verify"
+  old_case refused "under --strict"
 
   printf '#!/bin/sh\nexit 0\n' > "$d/pre-commit"
   if install "$repo" no no > /dev/null; then echo "  [FAIL] a foreign hook was replaced without --force"; fails=$((fails+1))

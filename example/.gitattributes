@@ -1,0 +1,6 @@
+# The held sources and the imported copies are kept byte for byte as
+# committed: git converts no line endings in them on checkout, so every
+# checksum their ledgers record holds on every system
+# (source_documents/README.md, inherited/README.md).
+source_documents/** -text
+inherited/** -text

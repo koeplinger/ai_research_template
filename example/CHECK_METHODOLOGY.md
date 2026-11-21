@@ -1,20 +1,20 @@
 # Check methodology
 
-*Created 2 September 2026; updated 6 September 2026.*
+*Created 2 September 2026; updated 21 November 2026.*
 
-This file defines the unit of verification in a repository built from this
+This file defines the unit of verification in a repository built from the
 template: the **check**. It owns four things the other rulebooks point to:
 the **register** vocabulary, in which every claim's trust level is stated;
 the **instrument or procedure of record**; the discipline that makes a
-passing check mean something; and the **standing reservation**, the
-instrument for a question the project has deliberately deferred. It also
+passing check mean something; and the **standing reservation**, which
+records a question the project has deliberately deferred. It also
 treats a **written check procedure** as a check in every rule below.
 
 A check is one self-contained investigation of one claim, question, or
 construction. It carries no status of its own: it is live while the plan
 that owns it is open, and frozen once that plan closes
-(`DOCUMENT_GENRES.md`). Its form, this project's check form, is a program with a printed
-verdict or a written collation procedure against the source of record. Nothing below assumes the form.
+(`DOCUMENT_GENRES.md`). Nothing below assumes its form, which this
+project fixes once in the Slots table below: a program with a printed verdict for a count or a calendar fact read off the roll; a written procedure with dated executions, a collation for what the note states or a derivation for a quantity derived from a count.
 
 ## Words used here
 
@@ -30,14 +30,37 @@ Beyond the words `MANIFESTO.md` and `DOCUMENT_GENRES.md` define:
   that assertion were false. An assertion so covered is **gated**, and a
   **gated check** is one whose verdict rests only on gated assertions.
 - A **verdict** is a check's conclusion in the vocabulary of its claim
-  kind (§2).
+  kind (§2). Five of those words are used here in senses a discipline may
+  not expect, and are fixed once:
+  - **reproduced**: the same result is reached again from the same data
+    and the same procedure, on the instrument of record. Some fields call
+    this *reproduction* and reserve *replication* for a new sample or an
+    independent implementation; this file does not, and a project that
+    needs the distinction adds a kind or a verdict and says so here.
+  - **replicated**: for an inferential claim, the estimate is reached
+    again by the route the claim states. Where a project means the
+    stronger, new-sample sense, it says so in the claim's *Evidence and
+    route* and names what was independent of what.
+  - **identified as stated**: the assumptions the estimate needs are the
+    ones the claim declares, and what is testable about them was tested;
+    it is never a finding that the assumptions are true, which no check
+    reaches. The untestable remainder is an *imposed* input (§4), stated
+    as a choice.
+  - **compatible**: the statement and the evidence can both hold; it is
+    weaker than *supported* and asserts no agreement beyond that.
+  - **inconclusive**: the evidence gathered decides neither way, and the
+    check says what it would have taken to decide: the coverage the search
+    reached, the interval the estimate left, the effect the design could
+    have detected. It is a result, and it is recorded as one.
 - A **check record** is the dated entry recording one execution of a
   check: the date, who ran it, the verdict, and the second pass. For a
   program it is the check's file under `evidence_and_reasoning/checks/`;
   for a written procedure it is one dated entry under that file's
   `## Executions`, and a check executed more than once has more than one.
 - A **mutation** is a named alteration to something an assertion claims to
-  depend on, made to confirm that the check notices.
+  depend on, made to confirm that the check notices. The project's
+  alterations, each with a short name the header carries and a gloss
+  saying what it alters, are its mutation set: shift-year, every date of the roll moved one year later; drop-month, one month's rows removed; duplicate-entry, rows of the roll repeated; alter-figure, a figure in a transcribed passage changed; relabel-kind, one row's kind changed between ordinary and fair; alter-wording, a phrase of a transcribed passage changed.
 - The **docket** of a plan is its list of items deferred to its closure.
 
 ## Header lines
@@ -47,13 +70,16 @@ can be implemented:
 
 ```
 Register: VERIFIED          one of VERIFIED, DERIVED, ATTESTED, SPECULATIVE, RULED_OUT, OPEN
-Kind: documentary           one of the kinds of §2
+Kind: documentary           one of the kinds of §2, as [vocab] kinds writes it
 Verdict: confirmed          a value from that kind's vocabulary; none while OPEN or SPECULATIVE
 Plan: 003, task 2           the owning plan (DOCUMENT_GENRES.md)
 ```
 
-A check's header adds `Mutation: <name>`, naming one or more members of
-`shift-year` (every entry's year moved forward by one), `drop-month` (one month's entries removed), `duplicate-entry` (one entry repeated), `alter-figure` (a stated figure changed by one). A claim inside a standing reservation (§5) also carries
+A check's header carries no `Register:`, `Kind:`, or `Verdict:` line,
+but the lines `ONTOLOGY.md` §8 requires of a check, among them
+`Mutation: <name>`, which names one or more members of the mutation set
+(Slots below) by the short names `[vocab] mutations` lists. A claim
+inside a standing reservation (§6) also carries
 `Reserved <D Month YYYY>, plan NNN`: a comma after the date and never a
 colon, so the line is a stamp and not a change narrative
 (`DOCUMENT_GENRES.md`).
@@ -74,6 +100,19 @@ repository states trust in, and `PRECEDENCE.md` assigns authority by it.
 | `RULED_OUT` | shown not to hold | a gated check, or a complete argument with an independent cross-check recorded |
 | `OPEN` | stated precisely, not settled | nothing yet |
 
+**A measured or estimated quantity carries its tolerance, and the
+registers are read at it.** Where a claim states a number that a
+measurement, a sample, or a computation reaches only within a margin, the
+claim states the margin with it: the interval, the precision, the seed or
+replicate count, and the decision rule where one was pre-registered. Then
+`VERIFIED` means a check would fail if the statement were false *at that
+tolerance*, and `RULED_OUT` means the pre-registered rule rejected it,
+with the rule and its level stated in the claim. A number stated without
+its tolerance where one applies is a claim stronger than its backing
+(§5, rule six), whatever its register. This is not a program's rule: it
+holds for a written procedure whose reading has a margin, an estimate
+with a standard error, and a measurement with a replicate count alike.
+
 **Who assigns a register.** The assistant proposes a register together
 with the check, the second pass, and the verification status, and stops.
 The researcher assigns it, or directs that it be assigned; `VERIFIED` and
@@ -85,8 +124,9 @@ claim starts at `OPEN`.
 **Register and verification status are different questions**, and both are
 recorded. The register says **how far the statement may be trusted**; the
 verification status of `MANIFESTO.md` §5 says **who checked it and by what
-route**: the researcher, the assistant, deferred to a named instrument, or
-unchecked. A claim carrying a researcher-assigned `VERIFIED` whose check
+route**: the researcher, the assistant, another party on the roster,
+deferred to a named instrument, or unchecked. A claim carrying a
+researcher-assigned `VERIFIED` whose check
 only the assistant has run says exactly that, and `PRECEDENCE.md` says
 what may be done with it.
 
@@ -103,7 +143,7 @@ several.
 |---|---|---|
 | Formal | provable from definitions or axioms | proved / disproved |
 | Computational | the output of a calculation or a pipeline | reproduced / not reproduced |
-| Empirical | a statement about the world that measurement or observation can bear on | compatible / in tension / refuted |
+| Empirical | a statement about the world that measurement, observation, or the surviving record can bear on | compatible / in tension / refuted / inconclusive |
 | Inferential | a quantity estimated from data under stated assumptions | identified as stated / assumption unsupported, and replicated / not replicated |
 | Documentary | what a source of record says, or whether it says it | confirmed / not confirmed |
 | Interpretive | a reading a body of evidence supports | supported / underdetermined / contradicted |
@@ -113,7 +153,7 @@ several.
 independent measurements, estimates, or readings where more than one
 exists, never to a single reported figure**, and any disagreement is
 recorded plainly. The verdict *in tension* is the same word
-`PRECEDENCE.md` uses for a divergence from the public record, and
+`PRECEDENCE.md` uses for a divergence, and
 deliberately so. An interpretive claim states what would count against it
 before the evidence is assembled.
 
@@ -124,10 +164,9 @@ check gates it.
 
 ## 3. The instrument or procedure of record
 
-The instrument or procedure of record for this project is the roll
-file as shipped under `source_documents/`, read with the Python standard
-library (3.11 or later) at its committed revision: the thing a second
-reader returns to in order to repeat a verification (`MANIFESTO.md` §5). It is identified by whatever
+The instrument or procedure of record for this project, the thing a
+second reader returns to in order to repeat a verification (`MANIFESTO.md`
+§5), is the shipped source file at the SHA-256 checksum its row in the source index records: the roll read with the Python standard library at a stated version, the note read at its page marks. It is identified by whatever
 makes that return possible: for software, the version and the pinned
 environment; for a source, the edition or shelfmark and the form consulted
 (original, facsimile, microfilm, digital surrogate); for a dataset, the
@@ -141,10 +180,15 @@ check records both routes.
 
 ## 4. Philosophy
 
-1. **Re-derive, do not transcribe.** A claim of a source counts as
-   verified only when it has been established independently from the
-   definitions, the data, or the document, not reproduced from the
-   source's own text (`MANIFESTO.md` §5).
+1. **Re-derive; do not copy the source's own summary.** A claim of a
+   source counts as verified only when it has been established
+   independently from the definitions, the data, or the document, not
+   taken over from the source's own account of itself: an abstract, a
+   headnote, an editor's apparatus, a reported figure, a summary table
+   (`MANIFESTO.md` §5). Where the source's words *are* the fact, as in a
+   documentary claim, re-deriving is reading the passage itself at its
+   locus and collating it, which is what the transcription and the
+   collation exist for; *transcribe* is not the thing forbidden here.
 2. **Understand the anatomy of a mismatch.** When an independent pass
    disagrees with the source, the disagreement is diagnosed precisely,
    which definition, which step, which convention, which edition, which
@@ -165,13 +209,16 @@ check records both routes.
 ## 5. A passing check is not a true claim
 
 A check whose verdict depends on real work can still certify nothing, if
-the work answers a different question. Six rules follow, each closing a
-way a check can pass while testing nothing.
+the work answers a different question. Six rules follow, one to a bullet,
+each closing a way a check can pass while testing nothing.
 
-- **Fix the frame of reference.** A quantity is expressed in some frame:
-  a basis, a coordinate system, a set of units, a text encoding, an
-  edition, a sample definition, a variable coding. Used alongside objects
-  in another frame, it silently tests nothing. Every such object is either
+- **Fix the frame of reference.** A quantity, and equally a reading, a
+  sequence, a category, or a date, is expressed in some frame: a basis, a
+  coordinate system, a set of units, a text encoding, an edition, a
+  foliation, a calendar and where its year begins, a sample definition, a
+  variable coding, a reference assembly and its annotation release, a
+  classification scheme and its vintage. Anything compared with something
+  in another frame silently tests nothing. Every such object is either
   accompanied by an assertion that fixes its frame, or obtained a second
   way and asserted to agree.
 - **Give every negative a positive control.** An assertion of the form "no
@@ -179,27 +226,63 @@ way a check can pass while testing nothing.
   re-running it never reveals that. Each negative needs a control the same
   search *must* find: a planted instance, a known positive case, a source
   known to contain what is being looked for.
+  **Pin a boundary from both sides.** Where an assertion turns on a
+  boundary (a threshold, a cutoff, either end of a window, a minimum
+  count), a control placed well inside one side of it comes out the same
+  for a whole range of boundaries, and re-running it never reveals which
+  one the check enforces. Such an assertion has two controls at the
+  boundary itself, the last value that must pass and the first that must
+  fail, both taken through the same code or procedure as the check, since
+  a control run through a copy of the condition pins the copy. The two
+  values come from the claim and are written out, never computed from the
+  limit the check itself holds, since a control computed from that limit
+  moves with it. For a counted quantity the two are adjacent values. For a
+  continuous one they are one step apart at the precision the claim
+  asserts (§1), the smallest difference the claim distinguishes. A floor
+  of thirty cases is controlled at thirty and at twenty-nine; a limit of
+  2.5 on a quantity stated to one decimal, at 2.5 and at 2.6.
 - **Show every assertion falsifiable.** Alter something the assertion
   claims to *depend on*, and confirm the check reaches a failing verdict.
   An assertion that cannot fail is not an assertion. Each check names its
-  mutations in its header, from `shift-year` (every entry's year moved forward by one), `drop-month` (one month's entries removed), `duplicate-entry` (one entry repeated), `alter-figure` (a stated figure changed by one); a check that survives
+  mutations in its header, from the mutation set; a check that survives
   the mutations it names is gated on nothing. For a check that executes,
   the alteration is applied to a scratch copy and the check re-run; for a
   written check procedure, the alteration is planted in the transcription,
   extract, or figure the procedure examines, a reader follows the
-  procedure, and the record states that it was caught.
+  procedure, and the record states that it was caught. Where the procedure
+  examines something the project cannot alter (a published authority at
+  its locus, a specimen, an instrument's output), it is planted on the
+  project's own side of the comparison instead: in the claim's statement,
+  quotation, or pinpoint, so that a reader following the procedure to the
+  unaltered source must notice the disagreement. Where the procedure is an
+  experiment, the planted alteration is the run's own controls, a known
+  positive and a known negative carried through beside it, and the record
+  states what each returned.
+  Where the assertion carries a tolerance, *failing* means the
+  mutation moves the value outside it: a named mutation is one whose
+  expected effect exceeds the tolerance, and one that could land inside it
+  by chance is too weak to be the check's mutation, which the record says
+  when it names the mutation.
   **A perturbation the claim says it does not depend on is a robustness
   check, not a mutation.** It is recorded too, and there survival is the
   intended result. The two are never confused: a mutation that a claim
-  survives is a defect, and a robustness check that a claim survives is a
-  finding.
+  survives is a defect, and a robustness check that a claim survives is
+  its intended result. A robustness check that a claim fails is recorded
+  too, and is a result to report, not a defect in the check: the claim
+  depends on what it says it does not.
 - **An empty search is not a proof of absence.** A tool that returns
   nothing returns nothing both for "there is none" and for "nothing was
   asked". A negative resting on an empty return passes exactly in the case
   it claims cannot happen. Decide absence by a construction that means one
   thing: an exhaustive enumeration over a stated domain, a bound that
   excludes the possibility, or a search whose coverage is itself
-  established and stated.
+  established and stated. In estimation the same three take their own
+  shapes: the enumeration is the sample frame, stated; the bound is an
+  interval or an equivalence test at a margin fixed in advance; and the
+  coverage is the effect the design could have detected, which is the
+  positive control the negative needs, so that "no effect was found" is
+  reported as the interval and the detectable effect rather than as an
+  absence.
 - **One result may stand for many.** A solver returning one solution, a
   query returning one row, a search returning one hit, a catalogue
   returning one entry: each may stand for a family. If the claim is about
@@ -256,7 +339,10 @@ Everything else a sweep finds is repaired as usual.
 
 **A consistency sweep closes every correction batch.** The assistant
 proposes it when a batch has been applied and runs it at the researcher's
-direction (`MANIFESTO.md` §16).
+direction (`MANIFESTO.md` §16). Its recount of the top-level documents,
+item 3, is also made at the first step of a release, and again at its
+last step, of each of those documents the release wrote into
+(`paper/README.md`, *Releasing a version*).
 
 The sweep exists because of a defect class no check can see on its own:
 **prose in one document restating a fact established in another.** A
@@ -279,23 +365,48 @@ What a sweep covers, at minimum:
 4. **The plans and the plan index**
    (`evidence_and_reasoning/research_plans/ROADMAP.md`), including that
    every open plan's execution ledger lists every unstarted task.
-5. **The dated records** for *accuracy*, never for voice: a note that
-   records a finding later contradicted, or a correction the note proposed
-   that a later round adopted.
-6. **The write-ups against each other**: any fact stated in two of them
-   must be stated compatibly.
+5. **The dated records** for *accuracy*, never for voice: for a note or a
+   review that records a finding a later round contradicted, or a
+   correction it proposed that a later round adopted, a later record says
+   so (a later note or review, or that round's log entry), and the
+   sweep's own log entry says so where none does. The earlier record is
+   never rewritten for it: it says what was found on its day. The one
+   exception is the *Outcome* column of a review a plan keeps live, where
+   a finding brought to the researcher takes the ruling when it is given
+   (`paper/reviews/README.md`).
+6. **The write-ups against each other**: any fact stated in two of
+   them must be stated compatibly. A released version, and the changelog
+   to it, is never brought into line with a later version
+   (`DOCUMENT_GENRES.md`, *Versioned write-ups*).
 7. **The checks against their records and claims.**
 8. **The tension ledger against the claims and the references**
    (`PRECEDENCE.md`): every divergence has a row, every row's caution is
    still live, and no public-record statement stands in prose without the
    hedge its tier requires.
 
+While the researcher has asked for a fixed list to be finished and nothing
+new looked for, the sweep that closes a batch of that list's edits covers
+propagation alone (item 1), for each fact those edits changed
+(`HOW_IT_FITS_TOGETHER.md`, *Finishing a version or a plan*).
+
 **Every finding is then handed to a reader instructed to refute it**
-(`MANIFESTO.md` §17). The sweep then reports its findings and the files it
-would touch before editing anything (`MANIFESTO.md` §14). A fix to a
-current-state artifact that is neither maintained nor one of the four
-`MANIFESTO.md` §12 names may be applied; every other fix is brought with
-its proposed wording, and the assistant stops.
+(`MANIFESTO.md` §17). The sweep then reports its findings, the files it
+would touch, and its edits, listed as `MANIFESTO.md` §14 sets out, before
+editing anything. A finding that
+runs against a ruling of the researcher's is reported as such, with the
+ruling's prompt, and not proposed (`MANIFESTO.md` §16, *A ruled matter
+stays ruled*). Of the rest, a fix to a current-state artifact that is
+neither maintained nor one of the four `MANIFESTO.md` §12 names may be
+applied, unless it amends a rule (`FORKING.md`, *A rule*); every other fix
+is brought with its proposed wording, and the assistant stops.
+
+**This sweep reads the record.** Its counterpart over the *documentation*,
+which asks whether the rulebooks, the indexes, the artifact templates, and
+the configuration still agree with each other, is a standing prompt of its
+own: `governance/roles/documentation_sweep.md`, made at the moments its
+*Fires* list names. Neither
+replaces the other, and a project holding a third thing its own field calls
+a sweep names all three rather than writing bare *the sweep* (`GLOSSARY.md`).
 
 ### The structure lens, and what a rebuild owes
 
@@ -321,7 +432,9 @@ hold.
   count: a cross-reference whose target lay inside the replaced range, a
   sentence's antecedent, a phrase that reads as a citation and resolves to
   nothing. A rebuild round therefore ends with a reading of the whole
-  file.
+  file. The rebuilt section is also read as its intended reader would
+  read it (`evidence_and_reasoning/editorial_standards.md`,
+  *How to apply*).
 
 ---
 
@@ -358,7 +471,7 @@ and naming who followed it.
 **Cost is measurement, never a gate.** A check is judged by its verdict; a
 slow or expensive check is not a failing one. Where cost is recorded, it
 is recorded so the expensive checks can be examined for avoidable work,
-and a check that is expensive of necessity says so in its header, so the
+and a check that is expensive of necessity says so in its part 1, so the
 next reader does not go looking.
 
 ---
@@ -370,25 +483,35 @@ The tools check the following and report what they find (`MANIFESTO.md`
 
 1. **Register.** Every file matching the configured claim pattern carries
    exactly one `Register:` line, one `Kind:` line, and one `Verdict:`
-   line, each holding a value from the vocabularies of §1 and §2. A file
-   with none, or more than one, is reported.
+   line, each holding a value from the vocabularies of §1 and §2, as
+   `[vocab]` in `tools/artifacts.toml` lists them. A file with none, or
+   more than one, is reported.
 2. **No unfalsifiable assertion.** In a check program, no reported
    assertion has a syntactically constant condition. Such an assertion
    passes whatever the work does.
 3. **Mutation coverage.** Every check carries a `Mutation:` line naming
-   members of `shift-year` (every entry's year moved forward by one), `drop-month` (one month's entries removed), `duplicate-entry` (one entry repeated), `alter-figure` (a stated figure changed by one). For a check that executes, the probe
-   applies exactly the mutations that check names to a scratch copy,
-   re-runs it, and reports it if it still passes. For a written check
-   procedure the probe reports only an absent or unrecognized `Mutation:`
+   members of the mutation set, as `[vocab] mutations` in
+   `tools/artifacts.toml` lists them; while that list is empty the name
+   check is skipped, and the linter reports the skip once, at the
+   configuration, if a check carries a filled `Mutation:` line. For a
+   check that executes, the probe applies exactly the mutations that
+   check names to a scratch copy, re-runs it, and reports it if it still
+   passes. For a written check
+   procedure the tools report only an absent or unrecognized `Mutation:`
    line; whether the planted alteration was caught is read from the check
    record.
 4. **Concordance.** A check program prints a summary line
    `RESULT: <verdict>; <name>=<value>; ...`; its check record states the
-   same named values, and the tool reports any disagreement.
+   same named values, and the tool reports any disagreement. A value is
+   printed at the precision the claim asserts and no finer, so that the
+   comparison survives a re-run: a quantity the instrument reproduces only
+   to a tolerance is printed rounded to it, or as the interval and the
+   seed count the claim states. A program that prints every digit it has
+   makes its own record disagree with it on the next machine.
 5. **Index.** Every check appears in the index that lists it.
-6. **Citation sites.** Every place where a claim cites another claim is
-   listed, so that rule six of §5 can be applied by reading. This is a
-   report, not a verdict.
+6. **Citation sites.** Every place where a claim or a check record cites
+   a claim is listed, so that rule six of §5 can be applied by reading.
+   This is a report, not a verdict.
 
 Single-sourcing a figure, and finding the wrong value stated in a passage
 about the right subject, are reading duties and belong to the sweep
@@ -398,6 +521,6 @@ about the right subject, are reading duties and belong to the sweep
 
 | Slot | Meaning | Examples |
 |---|---|---|
-| `{{CHECK_FORM}}`: an executable program with a printed verdict, or a written collation procedure against the source of record | What a check is in this project | an executable program with a printed verdict; a written collation protocol against the source of record; an estimation script plus a pre-registered analysis protocol; a proof written out and cross-checked by a second reader |
-| `{{VERIFICATION_TOOL}}`: the roll file as shipped under `source_documents/`, read with the Python standard library (3.11 or later) at its committed revision | The instrument or procedure of record (§3), identified so a second reader can return to it | a computer-algebra system at a stated version; a statistics environment pinned to exact package versions, holding the raw data at a named release; the manuscript at its shelfmark, consulted as a digital surrogate; a printed edition, named and dated |
-| `{{MUTATION_SET}}`: `shift-year` (every entry's year moved forward by one), `drop-month` (one month's entries removed), `duplicate-entry` (one entry repeated), `alter-figure` (a stated figure changed by one) | Named alterations to things claims *depend on*, kept where the checker can apply them. Never a perturbation a claim asserts independence from: that is a robustness check | reverse one structural convention, flip one defining sign, drop one axiom; corrupt one linked identifier, mis-key one variable's coding, drop one stratum from the frame; substitute a variant reading, swap the base manuscript, alter one date in the chronology |
+| `{{CHECK_FORM}}`: a program with a printed verdict for a count or a calendar fact read off the roll; a written procedure with dated executions, a collation for what the note states or a derivation for a quantity derived from a count | What a check is in this project | an executable program with a printed verdict; a written collation protocol against the source of record; an estimation script plus a pre-registered analysis protocol; a proof written out and cross-checked by a second reader |
+| `{{VERIFICATION_TOOL}}`: the shipped source file at the SHA-256 checksum its row in the source index records: the roll read with the Python standard library at a stated version, the note read at its page marks | The instrument or procedure of record (§3), identified so a second reader can return to it | a computer-algebra system at a stated version; a statistics environment pinned to exact package versions, holding the raw data at a named release; the manuscript at its shelfmark, consulted as a digital surrogate; a printed edition, named and dated |
+| `{{MUTATION_SET}}`: shift-year, every date of the roll moved one year later; drop-month, one month's rows removed; duplicate-entry, rows of the roll repeated; alter-figure, a figure in a transcribed passage changed; relabel-kind, one row's kind changed between ordinary and fair; alter-wording, a phrase of a transcribed passage changed | Named alterations to things claims *depend on*, their short names listed in `[vocab] mutations`. Never a perturbation a claim asserts independence from: that is a robustness check | reverse one structural convention, flip one defining sign, drop one axiom; corrupt one linked identifier, mis-key one variable's coding, drop one stratum from the sample frame; substitute a variant reading, swap the base manuscript, alter one date in the chronology |

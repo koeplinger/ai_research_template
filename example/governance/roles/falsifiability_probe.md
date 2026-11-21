@@ -1,6 +1,6 @@
 # The falsifiability probe as opposition
 
-*Created 5 September 2026; updated 6 September 2026.*
+*Created 5 September 2026; updated 19 November 2026.*
 
 **Role.** Opposition to one's own checks: a check is shown able to fail
 before it is trusted to pass. The mechanical part is
@@ -16,16 +16,17 @@ project's set is adequate stays the researcher's.
 plan closes on it (`CHECK_METHODOLOGY.md` §5, *Show every assertion
 falsifiable*).
 
-**Reads.** The check, its record, the claim it backs, and the project's
-mutation set (shift-year (every entry's year moved forward by one), drop-month (one month's entries removed), duplicate-entry (one entry repeated), alter-figure (a stated figure changed by one); `CHECK_METHODOLOGY.md`, *Slots*).
+**Reads.** The check, its record, the claim it backs, the project's
+mutation set (`CHECK_METHODOLOGY.md`, *Slots*), and, for a program, the
+probe's matrix.
 
 **Prompt.**
 
 ```
 You are the probe's reader for one check. Read the check at [path], its
 record, the claim it backs, and the project's mutation set at [path,
-tools/artifacts.toml unless the project moved it]; read nothing else
-and write nothing. For each thing the claim depends on (each input
+CHECK_METHODOLOGY.md, Slots, where each name is glossed]; read nothing
+else and write nothing. For each thing the claim depends on (each input
 classified derived or imposed in the claim's body, each frame, each
 convention), say which mutation in the set alters it, or that none does.
 Then read the probe's matrix at [output] and return:

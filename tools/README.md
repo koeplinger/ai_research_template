@@ -1,6 +1,6 @@
 # Tools
 
-*Created 4 September 2026; updated 19 November 2026.*
+*Created 4 September 2026; updated 21 November 2026.*
 
 Project scaffolding: the programs that keep the record honest. Nothing
 here is part of the research. Every tool needs nothing beyond the Python
@@ -19,17 +19,18 @@ into the history is hard to undo; the researcher overrides it with
 The scratch project a self-test builds carries the template's
 configuration as it shipped, since the files the self-test plants are
 written for it, never the project's own. In the template that is
-`artifacts.toml` itself. In a project, the setup tool keeps a copy of
-the template's beside the project's own, unchanged, so that what the
+`artifacts.toml` itself. In a project, a copy of the template's,
+made by the setup tool or by hand (`GETTING_STARTED.md` §1), stands
+beside the project's own, unchanged, so that what the
 project renames, removes, or fills in its configuration leaves the
 self-tests as they are; the round check reads the project's own. A
 project that takes newer tools from the template copies the newer
-template's `tools/artifacts.toml` over that copy as well; one made
-before the setup tool kept the copy makes it the same way, named
-artifacts_shipped.toml beside the configuration, and gives it the row
-the newer template's configuration gives it, above the configuration's
-own row, which would otherwise match it first, and a row of its own in
-this index, under that of the configuration.
+template's `tools/artifacts.toml` over that copy as well; one without
+the copy makes it the same way, at the path the `shipped-config` row
+of the newer template's configuration names, and gives it that row,
+above the configuration's own row, which would
+otherwise match it first, and a row in the project's tools index,
+under that of the configuration.
 
 A finding the researcher has seen and ruled to leave is entered in the
 list of accepted findings in `artifacts.toml`, each entry naming the tag,

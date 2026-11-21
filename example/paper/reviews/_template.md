@@ -3,12 +3,12 @@
 *Created D Month YYYY; updated D Month YYYY.*
 Plan: <!-- NNN, where a plan owns this review; otherwise delete the line and the review freezes with the round that acts on it -->
 
-A referee pass by <!-- reviewer: a party from the roster, or an outside reader as the report's conditions allow --> of `<!-- path -->` at <!-- version or commit -->; blind: <!-- yes, no access to the project's claims and checks | no -->.
+A referee pass by <!-- reviewer: a party from the roster, written as a By: line writes it, so the assistant with its AI model (ONTOLOGY.md, performed-by); or an outside reader as the report's conditions allow --> of `<!-- path -->` at <!-- version or commit -->; blind: <!-- yes, no access to the project's claims and checks | no -->.
 
 <!-- Keep the line above; it is the record's identity. The record is
-     written across the round that acts on it, and freezes when the
-     Outcome column and the last section are filled. Delete these
-     comments in the instance. -->
+     written across the round that acts on it; when it freezes is
+     DOCUMENT_GENRES.md section 2's, by whether a plan owns it. Delete
+     these comments in the instance. -->
 
 ## Structure lens
 
@@ -28,7 +28,7 @@ A referee pass by <!-- reviewer: a party from the roster, or an outside reader a
 
 | # | Where | Finding | Fix proposed | Refuted? | Outcome |
 |---|---|---|---|---|---|
-| 1 | | | | <!-- stands / refuted, why / narrowed, the finding as it survives --> | <!-- applied, see changelog / brought to the researcher, prompt NNN --> |
+| 1 | | | | <!-- stands / refuted, why / narrowed, the finding as it survives; a refuter that returned nothing gave no verdict: play the role again, or enter the main thread's own verdict, marked as such (MANIFESTO.md section 14) --> | <!-- applied, see changelog / brought to the researcher, prompt NNN / runs against a ruling, prompt NNN; not proposed / outside the list being finished, left for the next version, prompt NNN. In a review a plan keeps live, a finding brought takes its ruling when given: applied at the researcher's ruling, prompt NNN, see changelog / not applied, at the researcher's ruling, prompt NNN / left for the next version, prompt NNN --> |
 
 ## What the released document rests on
 

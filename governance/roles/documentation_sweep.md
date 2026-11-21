@@ -1,6 +1,6 @@
 # The documentation consistency sweep
 
-*Created 8 September 2026; updated 19 November 2026.*
+*Created 8 September 2026; updated 21 November 2026.*
 
 **Role.** A reader who takes a project's *documentation* as one system and
 reports where it disagrees with itself: the rulebooks, the guide, the
@@ -158,8 +158,9 @@ problem, and the fix, and with them the files read in full, named by
 path, reported before any edit and recorded in the round's log entry;
 each finding then goes to the refuter, and the outcome is recorded
 beside it. A fix to a current-state document that is neither maintained
-nor one of the four `MANIFESTO.md` §12 names may be applied; every other
-fix is brought with its wording (`CHECK_METHODOLOGY.md` §7). Every edit,
+nor one of the four `MANIFESTO.md` §12 names may be applied, unless it
+amends a rule (`FORKING.md`, *A rule*); every other fix is brought with
+its wording (`CHECK_METHODOLOGY.md` §7). Every edit,
 applied or brought, is listed as `MANIFESTO.md` §14 sets out for a sweep,
 after the files it would touch. What is brought is numbered once, in the
 round's log entry or, where the list is long, in a dated working note the
@@ -214,9 +215,9 @@ The refuter is given the finding, the two passages, and the ontology's
 version rather than contradicting the folder index, and the folder index
 is the only statement under which a first version can release at all.
 
-The fix, one clause where `released` is defined, could be applied under
-the Output rule above, since the rulebook is neither maintained nor one of
-the four `MANIFESTO.md` §12 names. It is brought instead, because a sweep
-that rewrites the rule it was reading has stopped being a sweep. The
+The fix, one clause where `released` is defined, amends a rule rather
+than bringing a restatement into line with it, and an amendment is made at
+the researcher's direction (`FORKING.md`, *A rule*), so it is brought: a
+sweep that rewrites the rule it was reading has stopped being a sweep. The
 researcher directs it. The round's log entry records the sweep, the
 files it read in full, the finding, the verdict, and the change.

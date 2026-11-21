@@ -1,6 +1,6 @@
 # The structure census
 
-*Created 5 September 2026; updated 5 September 2026.*
+*Created 5 September 2026; updated 19 November 2026.*
 
 **Role.** A reader who takes the structure lens of `CHECK_METHODOLOGY.md`
 §7 to one section before anyone edits a sentence in it: what the
@@ -30,8 +30,8 @@ order, with these columns:
 
 Kind: statement, display, transition, cross-reference, or decoration.
 Carries: the load-bearing fact, if any, in a few words.
-Home: where that fact is established (this sentence; a section; a claim
-  by token; a display).
+Home: where that fact is established (this sentence; a
+  section; a display).
 Restates: the earlier place that says the same thing, if any.
 References: for a cross-reference, what the target says and whether the
   reference is load-bearing (the reader must look) or decorative.
@@ -47,16 +47,16 @@ where no review was opened.
 **Does not decide.** Whether to rebuild the section, which sentence to
 cut, or what a restatement should become: those are the reviewer's and
 the researcher's, after the census. A census that finds a fact with two
-homes reports both; the sweep decides which stays (`editorial_standards.md`,
-*One fact, one home*).
+homes reports both; the consistency sweep of the record decides which
+stays (`editorial_standards.md`, *One fact, one home*).
 
 ## Worked example
 
 ```
  # | Kind            | Carries                     | Home            | Restates | References
- 1 | statement       | the count is twelve         | [claim 004]     |          |
+ 1 | statement       | the count is twelve         | this sentence   |          |
  2 | display         | the table of twelve         | this display    |          |
- 3 | statement       | the count is twelve         | [claim 004]     | 1        |
+ 3 | statement       | the count is twelve         | this sentence   | 1        |
  4 | cross-reference |                             |                 |          | Section 2: fixes the frame; load-bearing
  5 | transition      |                             |                 |          |
  6 | decoration      |                             |                 |          |

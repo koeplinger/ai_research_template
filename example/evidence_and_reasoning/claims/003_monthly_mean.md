@@ -1,32 +1,36 @@
-# Claim 003: the mean monthly count for 1851 is 4.25
+# Claim 003: the mean number of market days a month in 1851 is 4.25
 
-*Created 6 September 2026; updated 6 September 2026.*
+*Created 20 November 2026; updated 20 November 2026.*
 Register: DERIVED
 Kind: formal
 Verdict: proved
 Plan: 001, task 3
-Verified-by: assistant, arithmetic from [claim 001] and the monthly sums of [check 001]
+Verified-by: assistant, a re-derivation from the held CSV by a reader without the first pass's reasoning
+Backed-by: [check 003]
 Depends-on: 001
+Frame: the calendar year and its twelve calendar months, fixed in [check 001]
 
 ## Claim
 
-The mean number of market days held per calendar month in 1851 is
-51 divided by 12, which is 4.25. The count is derived from [claim 001];
-the divisor is imposed (twelve calendar months).
+The mean number of market days held a month in 1851 is 51 divided by
+12, which is 4.25. The count, of the roll's rows [Roll1851] as
+[claim 001] counts them, is derived from that claim; the divisor, twelve
+calendar months, is imposed with the year's boundary.
 
 ## What is not claimed
 
-Nothing about the spread across months, which the monthly sums of
-[check 001] show to run from 3 to 5; nothing about 1852.
+Nothing about how the market days spread across the months, which run
+from 3 to 5; nothing about 1852; nothing about the note [Note1851].
 
 ## Evidence and route
 
-Arithmetic: 51 / 12 = 4.25; read back, 4.25 x 12 = 51, the count of
-[claim 001], which checks the division. The twelve monthly sums of
-[check 001] (4, 3, 4, 5, 5, 4, 5, 3, 5, 5, 4, 4) add to 51, which checks
-the numerator; the second route covers the count, and the read-back the
-division.
+A written derivation, [check 003]: the count of [claim 001] divided by
+the twelve months, read back to the count, and cross-checked by the
+twelve monthly counts [check 001] gates against the held file's own
+lines; audited for coverage. The second pass, a re-derivation of the mean from the held CSV by
+a reader without the first pass's reasoning, gave the same 17/4; it is
+recorded in [check 003], in its first execution.
 
 ## References
 
-[Roll1851].
+[Roll1851], [Note1851].

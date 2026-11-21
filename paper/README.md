@@ -1,6 +1,6 @@
 # Paper
 
-*Created 4 September 2026; updated 19 November 2026.*
+*Created 4 September 2026; updated 21 November 2026.*
 
 The write-ups: the main write-up in its versions, standalone notes, and
 the reviews of both. `paper/` is the template's name for the
@@ -25,7 +25,8 @@ table.
   the version, and a row in the changelog. The first version has no
   changelog, and its stamp alone releases it (`DOCUMENT_GENRES.md` §2).
 - **Changes between versions go in a changelog**, `vN_to_vM_changelog.md`,
-  which is live until vM releases and freezes then. Copy
+  which is live until vM releases and freezes then, or, where a plan
+  owns it, when that plan closes. Copy
   [`_template_changelog.md`](_template_changelog.md). The ledgers of a
   rebuild live there, or in a review where the version is the first. A
   version's filename ends in `_vN` before its
@@ -37,7 +38,7 @@ table.
 - **Standalone notes carry their date first in the filename**,
   `YYYY-MM-DD_short_topic.<ext>`, like every dated record; a note is
   released by the researcher's `Released` stamp, with no changelog, and
-  freezes then, or, where an open plan owns it, when that plan closes
+  freezes then, or, where a plan owns it, when that plan closes
   (`DOCUMENT_GENRES.md` §2).
 - **Every version has a blind referee review before it freezes**
   (`MANIFESTO.md` §17), under [`reviews/`](reviews/).
@@ -101,7 +102,8 @@ table.
    its own, as the attachments are, and given a row in
    `tools/artifacts.toml` where none matches it.
 8. The previous version is marked `superseded by <path>`.
-9. The changelog freezes with its release row (step 6). A review no plan
+9. The changelog freezes with its release row (step 6), or, where a
+   plan owns it, when that plan closes. A review no plan
    owns freezes when the round that acts on it closes, which may be a
    round before the release, and a review a plan owns freezes with that
    plan (`reviews/README.md`).

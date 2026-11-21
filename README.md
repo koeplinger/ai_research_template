@@ -1,6 +1,6 @@
 # A research template for AI-assisted work
 
-*Created 2 September 2026; updated 19 November 2026.*
+*Created 2 September 2026; updated 21 November 2026.*
 
 A repository structure, a shared vocabulary, and a set of advisory checks
 for research done with an AI assistant. It is a *template*: you clone it,
@@ -17,8 +17,9 @@ cannot detect self-deception or motivated reasoning, and does not try. It
 is not a compliance system, not a substitute for peer review, not a
 guarantee of correctness, and not a way to make an assistant trustworthy;
 every mechanism informs and records, and none blocks but the opt-in
-privacy scan, which refuses a commit on a stop word, and every commit
-while its list holds no pattern. `VISION.md` states
+privacy scan, which refuses a commit on a stop word, and, where it has a
+list, every commit while that list holds no pattern or python3 is
+missing. `VISION.md` states
 the precondition and the non-goals in full, and they are worth reading
 before adopting it.
 
@@ -64,7 +65,7 @@ pace it sets out.
 | get a project running | [GETTING_STARTED.md](GETTING_STARTED.md): clone to first commit, in one sitting; or ask the assistant, in your clone, to make the project, and it puts each setup question to you in plain words, one at a time, then runs the setup tool once |
 | know why the parts are shaped this way | [HOW_IT_FITS_TOGETHER.md](HOW_IT_FITS_TOGETHER.md): the system, the round, and **the prompts this methodology suggests** |
 | change or remove a mechanism | [FORKING.md](FORKING.md): the repository is yours, and how to change it legibly |
-| see it working | [example/](example/): a small complete project, every gate passing |
+| see it worked through | [example/](example/): a small complete project to browse, from its first prompt to its write-up |
 | know what a word means here | [GLOSSARY.md](GLOSSARY.md): each word, and what it will be mistaken for |
 | know what it is all for | [VISION.md](VISION.md): the durable statement of intent |
 
@@ -109,7 +110,7 @@ Three things meant to be one system, described in
 | [FINDINGS.md](FINDINGS.md) | The findings, one row each, by pointer to their claims |
 | [LICENSE.md](LICENSE.md), [LICENSE-CODE](LICENSE-CODE) | The licenses, documents and code |
 | [tools/](tools/), [governance/](governance/), [evidence_and_reasoning/](evidence_and_reasoning/), [paper/](paper/), [prompt_logs/](prompt_logs/), [python_project/](python_project/), [inherited/](inherited/), [source_documents/](source_documents/) | The folders, each with its own README |
-| [example/](example/) | A worked example: a small project instantiated from this template, with its own README, log, and fence |
+| [example/](example/) | A worked example to browse: a small project instantiated from this template, with its own README, log, and fence |
 
 ## Requirements
 
@@ -118,6 +119,10 @@ and Python 3.11 or later for the tools, which use the standard library
 alone. Both are infrastructure rather than slots. The shipped check
 programs are Python; a project whose checks are written procedures, or are
 programs in another language, keeps the same contract and says so.
+
+**Install Python 3.11 or later before your first commit.** Without it the
+round check cannot run at a commit, and with no python3 at all neither can
+the privacy scan; the pre-commit hook says so each time.
 
 ## Lineage
 

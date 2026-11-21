@@ -1,6 +1,6 @@
 # Editorial standards
 
-*Created 2 September 2026; updated 6 September 2026.*
+*Created 2 September 2026; updated 21 November 2026.*
 
 The five standards, the conventions, and the corollaries below govern every
 prose change to every **durable artifact** (`MANIFESTO.md`, *Words used
@@ -14,7 +14,12 @@ committed entry is immutable (`MANIFESTO.md` §8).
 The intended reader of any of these artifacts is an expert in the field,
 or a future investigator, human or assistant, who must reconstruct what
 was done and why. Their time is to be respected: every sentence earns its
-place, and the logic is followable on a first reading.
+place, and the logic is followable on a first reading. Where a human
+reader and an assistant reader would want different text, write for the
+human. A pointer, such as a path, a section number, or a table number,
+therefore accompanies prose that names what it points to, and never
+replaces it: *as the table of counts shows (Table 2)*, not
+*as Table 2 shows*.
 
 The examples in this file are written with *we* and in English; read them
 with the project's own conventions.
@@ -22,8 +27,9 @@ with the project's own conventions.
 ## The five standards
 
 1. **Lead with the claim, then develop.** State the finding or claim
-   first; build the apparatus that supports it afterwards. A paragraph
-   announces what it is about before it elaborates.
+   first; build the argument and the evidence that support it
+   afterwards. A paragraph announces what it is about before it
+   elaborates.
 
 2. **Introduce one thing at a time, each before what depends on it.**
    Never use a term before it is defined. Each sentence brings in at most
@@ -55,10 +61,10 @@ The project's choices, recorded once and used throughout.
 | Convention | This project's choice |
 |---|---|
 | Language and spelling | US English. Quoted titles and verbatim quotations keep their source spelling. |
-| Dashes | no em-dashes. |
-| The paper's agent | we, used consistently. It performs the paper's acts (*we fix*, *this article argues*, *I measure*), not bare imperatives and not agentless passives where the paper is the agent. |
-| Adequate references | a held source cited to its row or page for any claim about what a source says; a check for any count or derivation; no external literature is leaned on in this example (`MANIFESTO.md` §2). |
-| The deliverable | a short note in markdown under `paper/`, named `note_vN.md`, released as the file itself with nothing built. |
+| Dashes | no em-dashes; a range takes the word to. `VISION.md`, the template's statement of intent, keeps its own. |
+| The paper's agent | we, also for a single author. The paper's acts (the acts its argument performs, such as fixing a notation or measuring a quantity) take this agent throughout: never a bare imperative, and never an agentless passive where the paper is the agent. |
+| Adequate references | the shipped source file itself, at the checksum its row in the source index records, for any claim about what that file holds or states; nothing outside the project backs a claim here (`MANIFESTO.md` §2). |
+| The deliverable | a short standalone note in markdown under `paper/`, released as the file itself (`DOCUMENT_GENRES.md`, Slots). |
 | Names | The project's standard name for a thing, chosen once and used throughout. Where the source's own term is itself the object of study, or where its equivalence to a modern name is a claim the project has not established, the source's term is the standard name and the modern gloss is an annotation. Either way the mapping, or the fact that none is asserted, is recorded in the glossary. Frozen artifacts keep their own wording. |
 
 ## Corollaries
@@ -71,13 +77,14 @@ The project's choices, recorded once and used throughout.
   narrates how the text got there; `DOCUMENT_GENRES.md` §3 lists what that
   excludes, what is content rather than narrative, and which artifacts are
   exempt because their subject is history. Where provenance needs a date,
-  the standard header is the whole of it.
+  the standard header is the whole of it, save in the progress ledgers
+  that section names.
 - **Body headings name subjects, not verdicts**, and carry no rhetorical
   tag line. A heading does not announce a result or pose a question the
   paragraph then answers. Where a point is substantial enough to need
   marking, start a paragraph or a subsection; where it is not, state it in
   the prose. The title of a write-up follows its venue's convention, per
-  the deliverable's form (the Slots table below).
+  the deliverable's form (`DOCUMENT_GENRES.md`, Slots).
 - **Never assert what the project could have checked and did not.**
   Phrases that assert an equivalence, an immateriality, or a consensus the
   project could have verified are cut or replaced by the verification: in
@@ -87,15 +94,16 @@ The project's choices, recorded once and used throughout.
   known*, *it is well established that*, *scholars agree*, *the sources
   are silent*. Where a choice of frame, sample, edition, or labeling really
   is immaterial, say which relabeling or which argument carries the one
-  case to the other and cite the check that verifies it; where it has not
-  been verified, say that instead.
+  case to the other and cite the check that verifies it (a write-up leaves
+  that citation to the record); where it has not been verified, say that
+  instead.
 - **Use the project's standard names**, per the Conventions.
 
 ## Writing for publication
 
-*Scope: every artifact under `paper/` that is not frozen (`DOCUMENT_GENRES.md`
-§2 says when each freezes): drafts owned by an open plan, unreleased
-standalone notes and changelogs, and maintained companions. Frozen
+*Scope: every draft, standalone note, changelog, and maintained companion
+under `paper/` that is not frozen (`DOCUMENT_GENRES.md` §2 says when each
+freezes). Frozen
 `paper/` artifacts keep their own wording: a released version is succeeded
 by the next, and any other frozen artifact is corrected only under
 `MANIFESTO.md` §12. The mechanical part of this section is listed under
@@ -110,8 +118,8 @@ then recognize why it is relevant, and only then accept it. The standard
 is *gentle in each step, comprehensive over the material*: each move small
 enough to follow without effort, the sequence complete enough to leave
 nothing owed. The form of the write-up (whether it has a results section,
-a discussion, an appendix, or notes in their place) is the deliverable's:
-a short note in markdown, released as the file itself with nothing built.
+a discussion, an appendix, or notes in their place) is the deliverable's
+(`DOCUMENT_GENRES.md`, Slots).
 
 ### Evidence
 
@@ -140,6 +148,27 @@ a short note in markdown, released as the file itself with nothing built.
   in the claims.
 - **No advocacy.** Not *remarkable*, not *striking*, not *beautiful*, not
   *the point at issue*. The reader decides what is remarkable.
+- **One hedge, not two.** *May*, not *may perhaps*; *suggests*, not
+  *seems to suggest*. A doubled hedge reads as a doubt the author is
+  embarrassed by. A claim's bound is not a hedge, and borrowed material
+  keeps its attribution as its one hedge (`PRECEDENCE.md`, *Compliance*).
+- **A term used once is not coined.** Say the thing itself, and keep a
+  name for what the reader meets again.
+- **What the reader treats as standard is cited, not re-derived.** A
+  standard result, method, or definition enters with its reference
+  (`MANIFESTO.md` §2); a derivation the project made to check it stays
+  under `evidence_and_reasoning/`.
+
+The record's numbers and names stay out of a released write-up. Outside
+its header lines, no form the write-up is released in carries the number
+of a claim, a check, or a plan; the key of a finding or a tension; a
+trust level by its register name (`CHECK_METHODOLOGY.md` §1); a check by
+the name the record gives it; or a term coined for the record's
+bookkeeping. The draft's links to the claims are kept off the page, in
+the version changelog and in comments of a source that is not itself
+released, or else left to the record (`HOW_IT_FITS_TOGETHER.md`,
+*Opening a write-up*). Citations follow the venue's convention, with a
+locus or version qualifier only where that convention asks for one.
 
 ### Flow of an argument
 
@@ -169,7 +198,8 @@ follows that relation from beginning to end.
   appending is what compounds. And a cross-reference earns its place only
   where a reader must actually look something up: a fact established a
   paragraph earlier is not re-cited, and a reference must name something
-  the target actually says.
+  the target actually says. Showing a short display again where it is
+  used, rather than referring to it, is a matter for the project's voice.
 - **The summary inherits.** A results summary repeats claims the body
   establishes. Cutting a claim from the body cuts it from the summary in
   the same round, or the summary asserts what the paper no longer shows.
@@ -185,8 +215,7 @@ Conventions.
   *one may then ask*. An agentless motive is a motive with nobody behind
   it.
 - **Say the want once, and flatly.** *We would want X* rather than *we
-  hope X might one day*. A doubled hedge reads as a wish the author is
-  embarrassed by.
+  hope X might one day*.
 - **Concede in the flow.** Where a point is granted before it is
   qualified, the concession sits inside the sentence after its object:
   *the date is secure, yes, but the attribution rests on the editor's
@@ -197,15 +226,17 @@ Conventions.
   length is arguing rather than concluding; each paragraph ends on a
   sentence of one clause.
 - **The register** (the statement's trust level, `CHECK_METHODOLOGY.md`)
-  **is declared once**, at the head of the section. Individual paragraphs
-  do not re-announce that they are speculation.
+  **is declared once**, at the head of the section, and in the reader's
+  words: *what follows is our reading, which we do not test here*.
+  Individual paragraphs do not re-announce that they are speculation.
 
 ### Voice
 
-The project's voice is read off the researcher's own prior
-writing where it exists, and otherwise chosen and stated by the
-researcher; it is recorded here as a list of rules a proposed sentence can
-be tested against. Whatever the rules are, they serve four goals, and a
+The project's voice is read off the researcher's own prior writing where
+it exists, and otherwise chosen and stated by the researcher, as a list of
+rules a proposed sentence can be tested against. The voice row of the
+Slots table below records it, as rules that fit one line or by naming a
+record kept in this section. Whatever the rules are, they serve four goals, and a
 recorded voice is checked against them:
 
 1. **The reader can redo everything the access conditions allow**
@@ -221,40 +252,48 @@ recorded voice is checked against them:
 4. **The evidence carries the argument**, and the prose says what to read
    off it.
 
-This project's voice record, three rules:
-
-- **Name the file in the subject position.** "The roll holds 51 rows."
-  "The note states forty-eight." Never "the data shows", never a
-  citation standing in for the thing named.
-- **The roll's figures in digits, the note's in the note's own words**
-  (forty-eight), so that a reader never mistakes one for the other.
-- **State what a file says, and stop.** Whether it is right is a claim
-  of its own, with its own register.
-
 ## What is checked mechanically
 
 The genre checker (`tools/lint_docs.py`) checks the following and reports
 what it finds (`MANIFESTO.md` §13); everything else in this file is the
-assistant's duty.
+assistant's duty. A finding the researcher has ruled to leave is entered
+in the list of accepted findings in `tools/artifacts.toml` (`MANIFESTO.md`
+§16, *A ruled matter stays ruled*).
 
-1. On every durable artifact: the dash convention, as the character rule
-   no em-dashes names; the spelling variant, by a word list of the
-   common variants for US English, skipping quoted text.
-2. On every unfrozen artifact under `paper/`: the phrases *without loss of
-   generality*, *clearly*, *it is easy to see*, *it follows immediately*,
-   *as is well known*, *it is well established that*, *scholars agree*,
-   *robust to*, and the words *remarkable*, *striking*, *beautiful*, *the
-   point at issue*, matched case-insensitively as whole phrases, skipping
-   quoted text; and body headings that begin with an article or end in a
-   question mark.
+1. On every durable artifact, skipping quoted text and block quotes: the
+   dash convention, as the character rule `[editorial] dashes` names; and
+   the spelling variant, by the word list `[editorial] spelling` selects.
+   A file whose row in `tools/artifacts.toml` gives it no header, such as
+   a typeset source, an imported file, an attachment, or `VISION.md`, is
+   not read, and neither is a committed log entry, which is immutable.
+2. On every unfrozen markdown draft, note, changelog, and companion under
+   `paper/`, skipping quoted text and block quotes: the phrases the
+   project lists under `[editorial] paper_phrases` in
+   `tools/artifacts.toml`, matched case-insensitively as whole phrases;
+   and body headings that begin with an article or end in a question mark.
+   The list starts as *without loss of generality*, *clearly*, *it is easy
+   to see*, *it follows immediately*, *as is well known*, *it is well
+   established that*, *scholars agree*, *robust to*, *remarkable*,
+   *striking*, *beautiful*, *the point at issue*. It is the project's to
+   edit: a phrase that is advocacy in one field is another's precise
+   sentence, and a hit on a sentence whose evidence is on the page is
+   brought, not cut.
 3. The current-state narrative check of `DOCUMENT_GENRES.md`, on the scope
    stated there.
 
 ## How to apply
 
 Check every prose change against the five standards, the conventions, and
-the corollaries; and every change to an unfrozen `paper/` artifact against
-*Writing for publication*, including its *Voice*, as well.
+the corollaries; and every change to an artifact in the scope of
+*Writing for publication* against that section, including its *Voice*,
+as well.
+
+A new section, or one a round rebuilds rather than corrects, is then read
+once from start to finish, as its intended reader would read it, before
+work is handed back. It is read in the form that reader will have: the
+build output where the build has run since the section last changed, and
+otherwise the source (`paper/README.md`, *Conventions*, says who may run
+the build).
 
 A practical test for standard 2: read the paragraph as a first-time reader
 and, at each sentence, ask: *do I have every term used here, and is this
@@ -263,15 +302,17 @@ the logical order is wrong, or a side topic has intruded.
 
 A practical test for standard 5: for each sentence, ask what would change
 for the reader if it were deleted. A sentence whose deletion costs the
-reader nothing checkable is vague; cut it or make it concrete.
+reader nothing checkable is vague; cut it or make it concrete. One such
+sentence is *there is a further point to make here*: it announces a point
+and makes none.
 
 ## Slots
 
 | Slot | Meaning | Examples |
 |---|---|---|
 | `{{SPELLING}}`: US English | The language of project prose and its spelling variant | US English ("center", "labeled", the "-ize" ending); UK English ("centre", "labelled", the "-ise" ending); German, post-1996 orthography |
-| `{{DASH_CONVENTION}}`: no em-dashes | How asides and ranges are punctuated | no em-dashes, an aside moves to a comma, a colon, parentheses, or a second sentence, en-dashes for name joins and numeric ranges; spaced em-dashes for asides |
-| `{{PAPER_PRONOUN}}`: we | The agent that performs the paper's acts | *we*, also for a single author, as in mathematics and physics; *I* for a single author, as in history and law; the document as agent (*this article argues*), with no first-person pronoun, as some humanities venues require |
-| `{{REFERENCE_ADEQUACY}}`: a held source cited to its row or page for any claim about what a source says; a check for any count or derivation; no external literature is leaned on in this example | Which kind of reference is adequate for which kind of claim (`MANIFESTO.md` §2) | a journal article or monograph for any specialist claim, an archival document by shelfmark for any claim about what a source says, a dataset by release for any figure (history of medicine); a DOI-bearing source for every empirical claim, encyclopedic sources for background only (empirical economics) |
-| `{{DELIVERABLE}}`: a short note in markdown under `paper/`, named `note_vN.md`, released as the file itself with nothing built | The form of the write-up, its title convention, and what is released with it (also `DOCUMENT_GENRES.md` §2) | an article with results, discussion, and an appendix, descriptive title (mathematics); an empirical paper with a question or declarative title as the journal expects, and a replication package (economics); a monograph chapter with footnotes and no appendix (history) |
-| `{{VOICE}}`: the three rules recorded under *Voice* | The recorded voice rules for unfrozen drafts | the example record above (mathematics and history, mixed); a record read off a dissertation chapter and a first article; a house style the researcher adopts and names |
+| `{{DASH_CONVENTION}}`: no em-dashes; a range takes the word to | How asides and ranges are punctuated | no em-dashes, an aside moves to a comma, a colon, parentheses, or a second sentence, en-dashes for name joins and numeric ranges; spaced em-dashes for asides |
+| `{{PAPER_PRONOUN}}`: we, also for a single author | The agent that performs the paper's acts | *we*, also for a single author, as in mathematics and physics; *I* for a single author, as in history and law; the document as agent (*this article argues*), with no first-person pronoun, as some humanities venues require |
+| `{{REFERENCE_ADEQUACY}}`: the shipped source file itself, at the checksum its row in the source index records, for any claim about what that file holds or states; nothing outside the project backs a claim here | Which kind of reference is adequate for which kind of claim (`MANIFESTO.md` §2) | a journal article or monograph for any specialist claim, an archival document by shelfmark for any claim about what a source says, a dataset by release for any figure (history of medicine); a DOI-bearing source for every empirical claim, encyclopedic sources for background only (empirical economics) |
+| `{{DELIVERABLE}}` | Filled once in `DOCUMENT_GENRES.md`, which owns it (§2); this row points there | an article with results, discussion, and an appendix, descriptive title (mathematics); an empirical paper with a question or declarative title as the journal expects, and a replication package (economics); a monograph chapter with footnotes and no appendix (history) |
+| `{{VOICE}}`: three rules of our own: a sentence may have we as its subject, and any other subject is the roll, the note, or a count, never the data (the first rule as ruled at prompt 010); every figure is stated with where it is read; nothing is said of any real market | The recorded voice rules for what *Writing for publication* covers | a record read off a dissertation chapter and a first article; a house style the researcher adopts and names |

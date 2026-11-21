@@ -4,11 +4,11 @@
 Created D Month YYYY; updated D Month YYYY.
 Plan: NNN, task M
 Backs: [claim NNN]
-Instrument: <name, and version | edition | release>
+Instrument: <!-- name, and version | edition | release -->
 Frame: <what the quantities are stated in, and what fixes it; delete where there are none>
 Mutation: <name[, name], each a member of the project's mutation set, bound in MUTATIONS below>
 Robustness: <name[, name], disjoint from Mutation, or delete the line>
-By: <party from the roster>
+By: <!-- who produced this program: researcher | assistant, then the AI model and its version as the harness reports them, or "not reported" | a party from the roster (ONTOLOGY.md, performed-by; Slots) -->
 
 WHAT IS CHECKED: <one sentence>.  The full part 1, the construction, and
 the results are in the record, evidence_and_reasoning/checks/NNN_short_name.md;
@@ -24,8 +24,8 @@ import sys
 
 # ---------------------------------------------------------------------------
 # Reporting.  Every substantive assertion goes through report(); the linter
-# rejects a report whose condition is syntactically constant, because such
-# a report passes whatever the computation does (CHECK_METHODOLOGY.md,
+# reports one whose condition is syntactically constant, because such
+# an assertion passes whatever the computation does (CHECK_METHODOLOGY.md,
 # section 5, "Show every assertion falsifiable").
 # ---------------------------------------------------------------------------
 
@@ -74,7 +74,13 @@ BASIS: list[str] = []
 
 
 def construct():
-    """Build the object under test and return it."""
+    """Build the object under test and return it.
+
+    The name is the tools' contract, not a word about the subject matter:
+    the probe calls this to build the object it then alters (GLOSSARY.md,
+    "Renaming a word this methodology uses").  Say in one line here what this
+    particular check builds.
+    """
     raise NotImplementedError("part 2: construction")
 
 
@@ -93,8 +99,10 @@ def sanity(obj) -> None:
 # ---------------------------------------------------------------------------
 # Part 4: the verification itself.  Each assertion is a report() whose
 # boolean depends on the computation.  Every negative has a positive
-# control the same search must find.  Every frame is fixed or agreed by a
-# second route (CHECK_METHODOLOGY.md, section 5).
+# control the same search must find.  Every boundary has two controls at
+# it, the last value that must pass and the first that must fail, run
+# through what the assertion itself uses.  Every frame is fixed or agreed
+# by a second route (CHECK_METHODOLOGY.md, section 5).
 # ---------------------------------------------------------------------------
 
 
@@ -105,6 +113,13 @@ def verify(obj) -> None:
     # And a negative with its positive control (CHECK_METHODOLOGY.md, section 5):
     #   report("control: the search finds the planted instance", found(planted))
     #   report("negative: the search finds nothing else", not found(other))
+    # And a boundary pinned from both sides, through the function the
+    # assertion itself uses (the same section).  The two values are written
+    # out as the claim states them, here a limit of 2.5 on a quantity stated
+    # to one decimal: a control computed from the limit that function reads
+    # would pass whatever the limit.
+    #   report("control: the last value that must pass", admits(2.5))
+    #   report("control: the first that must fail", not admits(2.6))
     raise NotImplementedError("part 4: verification")
 
 
@@ -122,14 +137,15 @@ def discrepancies(obj) -> None:
 # Part 6: summary and the RESULT line.  The verdict is in the vocabulary of
 # the claim's kind (CHECK_METHODOLOGY.md, section 2):
 #   formal: proved | disproved            computational: reproduced | not reproduced
-#   empirical: compatible | in tension | refuted
+#   empirical: compatible | in tension | refuted | inconclusive
 #   inferential: identified as stated | assumption unsupported, and
 #                replicated | not replicated  (two values, comma-separated)
 #   documentary: confirmed | not confirmed
 #   interpretive: supported | underdetermined | contradicted
 #   internal-consistency: consistent | inconsistent
-# For a two-valued kind the default below suffices.  For a three-valued kind
-# set the verdict from WHICH assertions failed, not from how many.  The RESULT
+# For a two-valued kind the default below suffices.  For a kind with three
+# or four values, and for the inferential kind's two pairs, set the verdict
+# from WHICH assertions failed, not from how many.  The RESULT
 # line is the machine-readable summary the concordance check compares with
 # the record: RESULT: <verdict>; <name>=<value>; ...
 # ---------------------------------------------------------------------------

@@ -4,9 +4,9 @@
 Plan: NNN, task M
 Backs: [claim NNN]
 Instrument: <!-- name, and version | edition | shelfmark | release; for a source, the form consulted (original, facsimile, microfilm, digital surrogate) -->
-Mutation: <!-- name[, name], each a member of `shift-year` (every entry's year moved forward by one), `drop-month` (one month's entries removed), `duplicate-entry` (one entry repeated) (CHECK_METHODOLOGY.md, Slots) -->
+Mutation: <!-- name[, name], each a short name from the mutation set (CHECK_METHODOLOGY.md, Slots; [vocab] mutations) -->
 Frame: <!-- what the quantities are stated in, and what fixes it; delete the line where there are none -->
-By: <!-- who produced this record, from the researcher and the assistant; no other party (ONTOLOGY.md, Slots); for a written procedure, who wrote it, and each execution names its own party -->
+By: <!-- who produced this record: researcher | assistant, then the AI model and its version as the harness reports them, or "not reported" | a party from the roster (ONTOLOGY.md, performed-by; Slots); for a written procedure, who wrote it, and each execution names its own party the same way -->
 
 <!-- HEADER FIELDS. Delete these comments in the instance.
      Backs       the claim this check backs; it names this check in its own
@@ -28,8 +28,11 @@ By: <!-- who produced this record, from the researcher and the assistant; no oth
                                  the locator a dated note under
                                  evidence_and_reasoning/notes/ holding the
                                  protocol as written before the evidence was
-                                 consulted; its commit evidences the date. A
-                                 program check with a protocol carries both. -->
+                                 consulted, its commit evidencing the date;
+                                 or the identifier or URL of the protocol's
+                                 registration with a third party, or the
+                                 two, comma-separated, as
+                                 evidence_and_reasoning/notes/README.md says. -->
 
 ## 1. What is checked
 
@@ -57,8 +60,11 @@ By: <!-- who produced this record, from the researcher and the assistant; no oth
 
 <!-- Run D Month YYYY, by <party>. What the verification found. Every
      named value the program prints in its RESULT line, one per line as
-     `name = value`, exactly as printed; the concordance check compares
-     them. -->
+     `name = value`, exactly as printed and written bare: the concordance
+     check, which compares them, reads no backtick span. The program
+     prints at the precision the claim asserts, so that the comparison
+     survives a re-run (CHECK_METHODOLOGY.md, What is checked mechanically,
+     item 4). -->
 
 ## 5. Discrepancies
 
@@ -86,5 +92,5 @@ By: <!-- who produced this record, from the researcher and the assistant; no oth
 <!-- Results, discrepancies, and verdict for this execution, parts 4 to 6
      of CHECK_METHODOLOGY.md section 8. Which planted alteration from
      Mutation was caught; which Robustness perturbations the claim
-     survived; the second pass, its route, who took it, and whether it
+     survived, and which it failed; the second pass, its route, who took it, and whether it
      agreed. -->

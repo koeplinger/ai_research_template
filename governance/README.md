@@ -1,6 +1,6 @@
 # Governance: the mechanisms, each with the rule it serves and the moment it fires
 
-*Created 5 September 2026; updated 19 November 2026.*
+*Created 5 September 2026; updated 21 November 2026.*
 
 `VISION.md` promises four kinds of mechanism that keep the discipline
 running when attention lapses: reminders, checks, opposition, and
@@ -36,7 +36,7 @@ without a section are those under *What is checked mechanically*.
 | the concordance check, `tools/check_concordance.py` | `CHECK_METHODOLOGY.md` item 4 | when a check program has been run; before a plan closes on it | every named value that disagrees with its record, a program that prints no `RESULT:` line, and a program with no record | the verdict word: printed beside the claim's, never a finding |
 | the falsifiability probe, `tools/falsifiability_probe.py` | `CHECK_METHODOLOGY.md` item 3 (executing) and §5 | before a check is relied on; before a plan closes | the matrix, and a survival, or a program that cannot be probed, as a finding | whether the mutation set is adequate |
 | the status-block check, `tools/check_status_reply.py` | `MANIFESTO.md` §16 | after each reply, through the harness wiring; and inside the round check (ROUND-2), on the closing status of every log entry not yet committed | the reasons a block does not conform | the truth of any line |
-| the privacy scan, `tools/privacy_scan.py` | none; `MANIFESTO.md` §6 on what must not enter, and §8 on what a log entry leaves out; opt-in | where a stop-word list exists: beside the round check, and on every commit where the hooks are installed | every place a stop word appears | what belongs on the list: the researcher's. The one mechanism that refuses by default (a commit, on a finding, or while its list holds no pattern), overridden with `--no-verify` and the reason in the commit message (`GETTING_STARTED.md` §8) |
+| the privacy scan, `tools/privacy_scan.py` | none; `MANIFESTO.md` §6 on what must not enter, and §8 on what a log entry leaves out; opt-in | where a stop-word list exists: beside the round check, and on every commit where the hooks are installed | every place a stop word appears | what belongs on the list: the researcher's. The one mechanism that refuses by default (a commit, on a finding, while its list holds no pattern, or while python3 is missing), overridden with `--no-verify` and the reason in the commit message (`GETTING_STARTED.md` §8) |
 | the run ledger, `tools/run_ledger.py` | none; `CHECK_METHODOLOGY.md` §8 on cost | when a check *program*'s basis may have changed; a project whose checks are all written procedures never uses it | what is stale, and the cost of each run | anything: a cache |
 | the residue check, `tools/check_residue.py` | none; `CHECK_METHODOLOGY.md` §7 on a rebuild | after a rebuild or a correction batch to a live draft | candidates for the reading that closes the round | any of them: candidates |
 | the ontology queries, `tools/query_ontology.py`, and `tools/claim_sites.py` | `ONTOLOGY.md` §6 | when a question of §6 is asked; before a claim is revisited | the answer from the fields, flagged where §4 decides | what it says is reading |
@@ -63,7 +63,7 @@ without a section are those under *What is checked mechanically*.
 | the hook installer, `tools/install_hooks.sh` | `MANIFESTO.md` §13 and §6 | once per clone | the git hooks | whether to install strict |
 | the harness wirings, [harness/](harness/) | `MANIFESTO.md` §16 and its reply-hook slot | after each reply; at session start | the tools run at those moments | which harness: the researcher's |
 | the guide: [GETTING_STARTED.md](../GETTING_STARTED.md), [HOW_IT_FITS_TOGETHER.md](../HOW_IT_FITS_TOGETHER.md), [FORKING.md](../FORKING.md) | `VISION.md`, *Expectation*: clear guidance on how to begin, and as the project proceeds | when a project is instantiated; at each stage, by the list of prompts the second names | the walkthrough, the system with the round as its unit of time, the prompts to make and when, and how to change a mechanism legibly | any of it: the repository is the researcher's (`FORKING.md`) |
-| the worked example, [example/](../example/) | `VISION.md`, *Support*: the researcher's first model of a round | when the researcher starts, and whenever a form is in doubt | a complete small project, every gate passing, fenced as its README says | anything of the researcher's own: it is a model, never ground truth |
+| the worked example, [example/](../example/) | `VISION.md`, *Support*: the researcher's first model of a round | when the researcher starts, and whenever a form is in doubt | a complete small project, made to be read and not to be run, fenced as its README says | anything of the researcher's own: it is a model, never ground truth |
 
 ## Removing a mechanism
 

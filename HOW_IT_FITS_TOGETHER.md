@@ -1,6 +1,6 @@
 # How it fits together
 
-*Created 8 September 2026; updated 19 November 2026.*
+*Created 8 September 2026; updated 21 November 2026.*
 
 `GETTING_STARTED.md` gets a project moving. This file says what the parts
 are for, how they make one system rather than a folder of forms, and what
@@ -43,7 +43,7 @@ rule for how it may change, and, where the thing recurs, a template.
 | derived material | `evidence_and_reasoning/derived/` | what a plan made from a source: transcriptions, extracts, coded tables, figures |
 | sources | `source_documents/`, `evidence_and_reasoning/references/` | what claims are read against, held or indexed by locator |
 | notes | `evidence_and_reasoning/notes/` | dated working and analytical notes, including pre-registered protocols |
-| the ledgers | `FINDINGS.md`, `evidence_and_reasoning/public_record_tensions.md` | what is established, and where this project diverges from what is published |
+| the ledgers | `FINDINGS.md`, `evidence_and_reasoning/public_record_tensions.md` | what is established, and where this project diverges from what is published or from registered material that is not |
 | the result | `evidence_and_reasoning/research_result.md` | what has been established, condensed to the altitude of the write-up |
 | the project's terms | `evidence_and_reasoning/terminology.md` | the subject-matter glossary, and the names the sources use for each thing |
 | imported material | `inherited/` | anything brought in from elsewhere, at its original date, with attribution, re-verified here |
@@ -209,7 +209,8 @@ a plan written after the result is a summary, not a plan.
 backs. Propose the register with the evidence and stop; assigning it is
 yours. Probe every check before you lean on it.
 
-**When something disagrees with what is published.** A row in the tension
+**When something disagrees with what is published, or with registered
+material that is not.** A row in the tension
 ledger, in the same round as the work that found it, with the caution that
 survives; while a list is being finished, a divergence found outside it is
 kept and listed when the list is handed back. `PRECEDENCE.md` says what
@@ -232,10 +233,12 @@ which the linter and `tools/claim_sites.py` read; and in comments of a
 built source that is not itself released, where no tool resolves them.
 A first version, or a note, has no changelog: it keeps such links only in
 a source of that kind, and where it has none, its claims are reached
-through the record, from `FINDINGS.md` and
-`evidence_and_reasoning/research_result.md`. The prose standards apply to
-every unfrozen draft under the write-up folder, and the linter checks the
-part of them it can see.
+through the record, from `FINDINGS.md`,
+`evidence_and_reasoning/research_result.md`, and the claims index,
+`evidence_and_reasoning/claims/README.md`. The *Writing for publication*
+rules of `evidence_and_reasoning/editorial_standards.md` apply to every
+unfrozen draft, standalone note, changelog, and maintained companion under
+the write-up folder, and the linter checks the part of them it can see.
 
 **Releasing a version.** The documentation consistency sweep, then the
 blind referee, every finding refuted or not, the fixes applied where the
@@ -261,7 +264,7 @@ removed in the round the direction ends.
 
 While it holds, an edit uses the terms the text being finished already
 uses, and coins none the list does not ask for. Whatever is noticed
-outside the list, a divergence from the public record included, is kept,
+outside the list, a divergence included, is kept,
 in the plan's docket where the list is a plan's tasks and otherwise in the
 round's log entry, and is not acted on. Two things are still brought, in
 the reply of the round that finds them: a false statement in the text

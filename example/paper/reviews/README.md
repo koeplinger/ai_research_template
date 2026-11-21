@@ -1,18 +1,38 @@
 # Reviews
 
-*Created 4 September 2026; updated 6 September 2026.*
+*Created 4 September 2026; updated 21 November 2026.*
 
 Review records for the write-ups under `paper/`: dated records of what a
 referee pass found, against the document as it stood. Naming:
 `YYYY-MM-DD_<reviewer>_<topic>.md`, the reviewer a party from the roster,
 or an outside reader named as the report's conditions allow
-(`referee-2`). An outside report enters as this project's dated record of
+(`referee-2`); where the reviewer is the assistant, its AI model is named
+in the review's identity line, or withheld there, as this example's
+review withholds it, and never in the filename. An outside report
+enters as this project's dated record of
 what it found, verbatim only where its conditions permit (`MANIFESTO.md`
 §6). A review is a dated record: its subject is an event, so it is exempt
 from the narrative rule (`DOCUMENT_GENRES.md`, *Dated records*); it is
-written across the round that acts on it and freezes when that round
-closes, or with the plan that owns it. Copy [`_template.md`](_template.md)
-to start one.
+written across the round that acts on it. When it freezes is
+`DOCUMENT_GENRES.md` §2's: a review no plan owns freezes when that round
+closes, its *Refuted?* and *Outcome* columns and its last section filled;
+a review a plan owns freezes with that plan. The tools see no round: a
+review no plan owns, committed before that round closes and filled
+after, raises the session brief's sweep-after-correction reminder, which
+is read and left. Copy [`_template.md`](_template.md) to start one.
+
+A review whose findings will be ruled on over several rounds is owned by
+the plan under which the version is prepared: its `Plan:` line, written
+before the round that acts on it closes, keeps it live until that plan
+closes, and the *Outcome* of a finding brought to the researcher takes the
+ruling when it is given. Where no plan owns the review, the *Outcome* of a
+finding still waiting on a ruling records it as brought, with its prompt,
+and the review freezes when that round closes; the ruling is then recorded
+in its own round's log entry, never in the review. A plan's ownership
+keeps the review live, not a released version of a versioned write-up,
+which is never corrected even while a plan that owns it is open
+(`DOCUMENT_GENRES.md` §2): what a ruling given after the release asks of
+it goes into the next version.
 
 ## What a review is
 
@@ -20,21 +40,30 @@ A review opens with the structure lens of `CHECK_METHODOLOGY.md` §7
 before any sentence-level finding. Every finding is then handed to a
 reader instructed to refute it (`MANIFESTO.md` §17); a fix to a
 current-state target that is neither maintained nor one of the four
-`MANIFESTO.md` §12 names may be applied, and every other fix is brought
-with its proposed wording (`CHECK_METHODOLOGY.md` §7). The ledgers of a
-rebuild live in the version changelog, or in the review itself where the
-version is the first and has no changelog; the review points at them.
+`MANIFESTO.md` §12 names may be applied unless it amends a rule, and
+every other fix is brought
+with its proposed wording (`CHECK_METHODOLOGY.md` §7). While a direction
+to finish a list holds, a finding outside the list is left for the next
+version, a false statement in the version aside (`paper/README.md`,
+step 4). The ledgers of a rebuild live in the version changelog, or in
+the review itself where the version is the first and has no changelog;
+the review points at them. A reader's marked-up copy is accounted for in
+a markup ledger (`paper/_template_changelog.md`), kept in the changelog
+of the version its marks go into, or in a review of that version where
+it is the first.
 
 A **blind referee** review is taken before a version freezes
 (`MANIFESTO.md` §17): a reader with no access to the first pass's
 reasoning (§5), which for an assistant means a fresh session or a
-subagent given the write-up and nothing else (§14).
+subagent given the write-up, and what is released with it where that is
+to be read too, and nothing else (§14).
 
 ## Contents
 
 | File | What |
 |---|---|
-| [2026-09-06_assistant_note.md](2026-09-06_assistant_note.md) | `note_v1.md` at its draft of 6 September 2026, before release; a blind referee pass by the assistant, every finding refuted or not |
+| <!-- [YYYY-MM-DD_reviewer_topic.md](YYYY-MM-DD_reviewer_topic.md) --> | <!-- the document reviewed, at which version or commit; one line --> |
+| [2026-11-20_assistant_market_days_1851.md](2026-11-20_assistant_market_days_1851.md) | the blind review of the write-up on the market days of 1851, at its draft of 20 November 2026, which is not kept: its line numbers (L15 and so on) are the draft's, and its deletion ledger gives the sentences the rebuild cut |
 
 ## Not reviews
 

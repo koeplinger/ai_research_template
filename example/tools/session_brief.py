@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The session brief: the reading order, the plans by status, and the reminders the record can compute, printed at the start of a session and on demand.
 
-Created 5 September 2026; updated 5 September 2026.
+Created 5 September 2026; updated 19 November 2026.
 
 What every session reads first is ONBOARDING.md; this program prints its
 reading order verbatim, then every plan with its Status: line and the
@@ -9,10 +9,11 @@ count of those ENGAGED, then the standing reminders of MANIFESTO.md
 section 16 that the record itself can compute (governance/reminders.md
 names them and says what each does not decide):
 
-  log-the-prompt-first      no entry of this round is open under the log
-                            (section 8): the latest entry is committed
-  more-than-one-plan-engaged  the plan index shows more than one ENGAGED
-                            plan (research_plans/README.md)
+  log-the-prompt-first      the log holds no uncommitted entry, so this
+                            round's is not yet written (section 8)
+  more-than-one-plan-engaged  more than one plan's Status: line reads
+                            ENGAGED: the reply says so, once
+                            (evidence_and_reasoning/research_plans/README.md)
   plan-closure-checklist    an ENGAGED plan whose execution ledger has
                             every task done or dropped: it stays ENGAGED
                             until the researcher closes it
@@ -21,9 +22,17 @@ names them and says what each does not decide):
                             (CHECK_METHODOLOGY.md section 7)
   findings-gate             a claim registered VERIFIED or RULED_OUT that
                             no row of the findings file cites: bring the
-                            finding and its wording (section 12)
+                            finding and its wording (section 12); a claim
+                            the researcher has ruled is not a finding,
+                            entered in the configuration's [[accepted]]
+                            list with its title line, is left out and
+                            counted, and an entry matching no claim the
+                            gate names is reported
   verification-not-recorded  a claim registered beyond OPEN or SPECULATIVE
                             whose Verified-by is unchecked
+
+A claim is named by its token and its title, the subject its first
+heading gives (section 16, "Putting a decision").
 
 Advisory: it prints, and decides nothing.  A harness that can run a
 command at session start runs this one; the wiring is recorded under
@@ -37,8 +46,8 @@ Usage
     python3 tools/session_brief.py --reminders   the reminders alone
     python3 tools/session_brief.py --selftest
 
-Exit status: 0 the brief printed; 2 a usage error, or tools/artifacts.toml
-unreadable.
+Exit status: 0 the brief printed; 1 a failed self-test; 2 a usage error,
+or tools/artifacts.toml unreadable.
 """
 from __future__ import annotations
 
@@ -83,7 +92,7 @@ def reading_order(t: lint_docs.Tree) -> list[str]:
 def plans(t: lint_docs.Tree) -> tuple[list[str], int]:
     out, engaged = [], 0
     for n, f in sorted(t.plans.items()):
-        st = t.plan_status.get(f) or "(no Status)"
+        st = t.plan_status.get(f) or f"(no {lint_docs.F('status')})"
         engaged += st.startswith("ENGAGED")
         out.append(f"  plan {n}  {st}")
     return out or ["  (no plan)"], engaged
@@ -116,64 +125,74 @@ def ledger_states(t: lint_docs.Tree, f: str) -> list[str]:
 
 
 def gone_frozen(t: lint_docs.Tree, f: str, row: dict) -> bool:
-    """Whether a file gone from the tree was frozen, read from its committed
-    header the way the linter derives a genre (ONTOLOGY.md section 3)."""
-    if row["genre"] in ("frozen", "dated-record", "immutable"):
-        return True
-    old = lint_docs.git(t.root, "show", f"HEAD:{f}")
-    if not old:
-        return False
-    hdr, _ = lint_docs.header_block(old, row.get("header", "stamp"))
-    pl = lint_docs.fields_of(hdr).get("Plan")
-    if pl and pl[1]:
-        pf = t.plans.get(pl[1].split(",")[0].strip())
-        return bool(pf) and t.plan_status.get(pf, "").startswith("CLOSED")
-    return row["genre"] == "release" and any(s.startswith("Released ") for _, s in hdr)
+    """Whether a file gone from the tree was frozen as committed: the
+    linter's own derivation, from HEAD's text and the Status: line each
+    plan has at HEAD (lint_docs.committed_genre; ONTOLOGY.md section 3)."""
+    return lint_docs.committed_genre(t, f, row) == "frozen"
 
 
 def body_changed(t: lint_docs.Tree, f: str) -> bool:
-    """Whether a tracked artifact's body differs from its committed version;
-    a file gone from the tree (deleted, or renamed, which reads as a
-    deletion beside an untracked file) counts as changed."""
+    """Whether a tracked artifact's text other than its header lines
+    (lint_docs.body_of, as GENRES-3 reads it) differs from its committed
+    version; a file gone from the tree (deleted, or renamed, which reads as
+    a deletion beside an untracked file) counts as changed."""
     old = lint_docs.git(t.root, "show", f"HEAD:{f}")
     if f not in t.text:
         return bool(old)
     if not old or old == t.text[f]:
         return False
     hk = (t.rows[f] or {}).get("header", "stamp")
-    _, ob = lint_docs.header_block(old, hk)
-    _, nb = lint_docs.header_block(t.text[f], hk)
-    return "\n".join(old.splitlines()[ob - 1:]) != "\n".join(t.text[f].splitlines()[nb - 1:])
+    return lint_docs.body_of(old, lint_docs.header_block(old, hk)[0]) != lint_docs.body_of(t.text[f], t.headers[f][0])
+
+
+def titled(t: lint_docs.Tree, n: str) -> str:
+    """A claim's token with its subject, the title its first heading gives."""
+    f = t.claims.get(n)
+    m = re.match(r"#[^\n:]*:[ \t]*([^\n]*)", lint_docs.strip_unread(t.text.get(f, ""))) if f else None
+    title = m.group(1).strip() if m else ""
+    return f"[claim {n}] ({title})" if title else f"[claim {n}]"
+
+
+def declined(t: lint_docs.Tree, n: str) -> bool:
+    """Whether an [[accepted]] entry of the findings gate names claim n: its
+    file, and the first words of its title line (lint_docs.load_accepted)."""
+    f = t.claims[n]
+    for e in lint_docs.ACCEPTED:
+        if not e["problem"] and e.get("tag") == "findings-gate" and e.get("path") == f and lint_docs.passage_at(f, 1, e["text"]):
+            e["hits"] += 1
+            return True
+    return False
 
 
 def reminders(t: lint_docs.Tree) -> list[str]:
     out = []
     logdir = t.dir_of_kind("log-entry")
-    entries = sorted(f for f in t.files if t.kind(f) == "log-entry")
+    entries = sorted((f for f in t.files if t.kind(f) == "log-entry"),
+                     key=lambda f: (int(re.match(r"\d*", Path(f).name).group() or -1), f))
     if logdir:
         if lint_docs.git(t.root, "rev-parse", "--verify", "HEAD"):
-            # an entry is open while untracked or staged new; a committed entry edited is the linter's GENRES-2
-            staged = lint_docs.git(t.root, "diff", "--name-only", "-z", "--diff-filter=A", "HEAD", "--", logdir + "/")
+            # an entry untracked or staged new is taken for this round's; a committed entry edited is the linter's GENRES-2
+            staged = lint_docs.git(t.root, "diff", "--name-only", "-z", "--no-renames", "--diff-filter=A", "HEAD", "--", logdir + "/")
             new = lint_docs.git(t.root, "ls-files", "--others", "--exclude-standard", "-z", "--", logdir + "/")
-            open_entries = [f for f in (staged + new).split("\0") if f and t.kind(f) == "log-entry"]
+            uncommitted = [f for f in (staged + new).split("\0") if f and t.kind(f) == "log-entry"]
         else:
-            open_entries = entries
-        if not open_entries:
+            uncommitted = entries
+        if not uncommitted:
             latest = Path(entries[-1]).name if entries else None
-            out.append("REMINDER  log-the-prompt-first: no entry of this round is open under " + logdir + "/"
+            out.append("REMINDER  log-the-prompt-first: no entry of this round is written yet under " + logdir + "/"
                        + (f"; the latest, {latest}, is committed" if latest else "; the log is empty, so this round's entry is 001")
                        + " (MANIFESTO.md section 8: the entry is the first act of the round)")
     engaged = [n for n, f in sorted(t.plans.items()) if (t.plan_status.get(f) or "").startswith("ENGAGED")]
     if len(engaged) > 1:
         out.append("REMINDER  more-than-one-plan-engaged: " + ", ".join(f"plan {n}" for n in engaged)
-                   + " (research_plans/README.md: say so in the reply while it is true)")
+                   + f" ({t.dir_of_kind('plan')}/README.md: say so in the reply, once)")
     for n in engaged:
         states = ledger_states(t, t.plans[n])
         if states and all(re.fullmatch(r"(done|dropped)(,.*)?", s) for s in states):
             out.append(f"REMINDER  plan-closure-checklist: plan {n} has every task done or dropped; it stays ENGAGED until the researcher closes it, and the checklist is governance/reminders.md")
     frozen_changed = []
     if lint_docs.git(t.root, "rev-parse", "--verify", "HEAD"):
-        for f in [x for x in lint_docs.git(t.root, "diff", "--name-only", "-z", "HEAD").split("\0") if x]:
+        for f in [x for x in lint_docs.git(t.root, "diff", "--name-only", "-z", "--no-renames", "HEAD").split("\0") if x]:
             row = t.rows.get(f) if f in t.rows else lint_docs.classify(t.cfg, f)
             if not row or row.get("header", "stamp") == "none":
                 continue
@@ -186,18 +205,26 @@ def reminders(t: lint_docs.Tree) -> list[str]:
         out.append("REMINDER  sweep-after-correction: the body of a frozen artifact differs from its committed version: " + ", ".join(frozen_changed)
                    + " (CHECK_METHODOLOGY.md section 7: a consistency sweep closes every correction batch)")
     fnd = t.first_of_kind("findings")
-    cited = set(lint_docs.TOKEN_CLAIM.findall(lint_docs.LINK_RE.sub(" ", t.prose(fnd)))) if fnd else set()
-    established = [n for n, f in sorted(t.claims.items()) if fields(t, f).get("Register", (0, ""))[1] in ("VERIFIED", "RULED_OUT") and n not in cited]
-    if established:
-        out.append("REMINDER  findings-gate: established and cited by no findings row: " + ", ".join(f"[claim {n}]" for n in established)
+    rows = [l for l in t.prose(fnd).splitlines() if re.match(r"\|\s*F[0-9]{3,}\s*\|", l)] if fnd else []
+    cited = set(lint_docs.TOKEN_CLAIM.findall(lint_docs.LINK_RE.sub(" ", "\n".join(rows))))
+    established = [n for n, f in sorted(t.claims.items()) if fields(t, f).get(lint_docs.F("register"), (0, ""))[1] in ("VERIFIED", "RULED_OUT") and n not in cited]
+    left = [n for n in established if declined(t, n)]
+    gate = [n for n in established if n not in left]
+    if gate:
+        out.append("REMINDER  findings-gate: established and cited by no findings row: " + ", ".join(titled(t, n) for n in gate)
                    + " (MANIFESTO.md section 12: bring the finding and its wording, and stop)")
+    if left:
+        out.append(f"  ({len(left)} established claim(s) left out of the findings gate, declined at the researcher's ruling: "
+                   + ", ".join(titled(t, n) for n in left) + ")")
+    for e, msg in lint_docs.stale(["findings-gate"]):
+        out.append(f"REMINDER  findings-gate: {msg} ({lint_docs.CONFIG}:{e['line']})")
     unchecked = [n for n, f in sorted(t.claims.items())
-                 if fields(t, f).get("Register", (0, ""))[1] not in ("OPEN", "SPECULATIVE", "")
-                 and fields(t, f).get("Verified-by", (0, ""))[1].split(",")[0].strip() == "unchecked"]
+                 if fields(t, f).get(lint_docs.F("register"), (0, ""))[1] not in ("OPEN", "SPECULATIVE", "")
+                 and fields(t, f).get(lint_docs.F("verified-by"), (0, ""))[1].split(",")[0].strip() == "unchecked"]
     if unchecked:
-        out.append("REMINDER  verification-not-recorded: registered beyond OPEN yet Verified-by unchecked: " + ", ".join(f"[claim {n}]" for n in unchecked)
+        out.append(f"REMINDER  verification-not-recorded: registered beyond OPEN yet {lint_docs.F('verified-by')} unchecked: " + ", ".join(titled(t, n) for n in unchecked)
                    + " (MANIFESTO.md section 5)")
-    return out or ["  (no reminder the record can compute; the rest are the assistant's by reading)"]
+    return out or ["  (no reminder this brief computes; the linter reports an unresolved reference token, and the rest are the assistant's by reading)"]
 
 
 def brief(t: lint_docs.Tree) -> list[str]:
@@ -234,7 +261,7 @@ def selftest() -> int:
         r = "\n".join(brief(t))
         case("the reading order is the onboarding file's indented block, and nothing after it", "    ONBOARDING.md\n      -> MANIFESTO.md" in r and "not this" not in r, r)
         case("plans are listed by status with the count engaged", "Plans (1 engaged):" in r and "plan 001  ENGAGED 1 January 2026" in r and "plan 002  CLOSED" in r, r)
-        case("with the log committed, the round's entry is not yet open", "log-the-prompt-first" in r and "001_setup.md, is committed" in r, r)
+        case("with the log committed, the round's entry is not yet written", "log-the-prompt-first" in r and "001_setup.md, is committed" in r, r)
         case("one engaged plan raises no multiple-engagement reminder", "more-than-one-plan-engaged" not in r, r)
         case("a plan with an unstarted task is not ready to close", "plan-closure-checklist" not in r, r)
         w(tmp, "prompt_logs/002_next.md", f"# Prompt 002: next\n\n{S}\n\n--- PROMPT START ---\nx\n--- PROMPT END ---\n\n## What was done\n\n## Corrections and departures\n\n## Closing status\n\n```\nDONE: x\n```\n")
@@ -247,7 +274,7 @@ def selftest() -> int:
         (tmp / "prompt_logs" / "002_next.md").unlink()
         w(tmp, "prompt_logs/001_setup.md", files["prompt_logs/001_setup.md"] + "\nedited after commit\n")
         t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
-        case("a committed entry edited is the linter's, not an open entry", "log-the-prompt-first" in "\n".join(reminders(t)))
+        case("a committed entry edited is the linter's, not an uncommitted entry", "log-the-prompt-first" in "\n".join(reminders(t)))
         w(tmp, "prompt_logs/001_setup.md", files["prompt_logs/001_setup.md"])
         w(tmp, "ONBOARDING.md", f"# On\n\n{S}\n\n## The First Minutes, in short\n\n\tONBOARDING.md\n\n\t  -> MANIFESTO.md\nprose after\n\n    not this either\n")
         t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
@@ -259,6 +286,7 @@ def selftest() -> int:
         t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
         r = "\n".join(reminders(t))
         case("two engaged plans are named", "more-than-one-plan-engaged: plan 001, plan 003" in r, r)
+        case("and the reply is asked to say so once (MANIFESTO.md section 16)", "say so in the reply, once)" in r, r)
         case("an engaged plan with every task done or dropped is reported ready to close", "plan-closure-checklist: plan 001" in r, r)
         p3 = "evidence_and_reasoning/research_plans/003_c.md"
         w(tmp, p3, files[p1].replace("Plan 001: a", "Plan 003: c").replace("| Task | State |\n|---|---|\n| 1 | done |\n| 2 | not started |", "| Task | Date | State |\n|---|---|---|\n| 1 | | done |\n| 2 | | dropped |"))
@@ -294,6 +322,26 @@ def selftest() -> int:
         t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
         r = "\n".join(reminders(t))
         case("an established claim no findings row cites is the findings gate", "findings-gate: established and cited by no findings row: [claim 002]" in r, r)
+        case("a reminder names each claim with its title", "[claim 002] (b)" in r, r)
+        c2_text = (tmp / "evidence_and_reasoning/claims/002_b.md").read_text()
+        w(tmp, "evidence_and_reasoning/claims/002_b.md", c2_text.replace("# Claim 002: b", "# Claim 002: <!-- title -->", 1))
+        t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
+        case("a claim whose title is still a placeholder is named by its token alone", titled(t, "002") == "[claim 002]", titled(t, "002"))
+        w(tmp, "evidence_and_reasoning/claims/002_b.md", c2_text)
+        cfg0 = (tmp / "tools" / "artifacts.toml").read_text()
+        gate = ('\n[[accepted]]\ntag = "findings-gate"\npath = "evidence_and_reasoning/claims/002_b.md"\ntext = "Claim 002: b"\n'
+                'ruling = "prompt_logs/001_setup.md"\n')
+        w(tmp, "tools/artifacts.toml", cfg0 + gate)
+        t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
+        r = "\n".join(reminders(t))
+        case("a finding declined at the researcher's ruling leaves the gate, and is counted",
+             "findings-gate: established" not in r and "1 established claim(s) left out of the findings gate" in r and "now matches nothing" not in r, r)
+        w(tmp, "tools/artifacts.toml", cfg0 + gate.replace("002_b.md", "001_a.md").replace("Claim 002: b", "Claim 001: a"))
+        t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
+        r = "\n".join(reminders(t))
+        case("an entry naming a claim the gate does not name is reported stale, and the gate stands",
+             "findings-gate: established and cited by no findings row: [claim 002]" in r and "now matches nothing" in r, r)
+        w(tmp, "tools/artifacts.toml", cfg0)
         w(tmp, c2, files[c2].replace("Verified-by: researcher", "Verified-by: unchecked"))
         t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
         r = "\n".join(reminders(t))
@@ -313,10 +361,11 @@ def selftest() -> int:
     with tempfile.TemporaryDirectory() as d:
         tmp = Path(d)
         lint_docs.scratch_project(tmp, lint_docs.fixture(), lint_docs.scratch_config())
-        subprocess.run(["git", "init", "-q"], cwd=tmp, capture_output=True)
+        for args in (["init", "-q"], ["add", "-A"]):
+            subprocess.run(["git", *args], cwd=tmp, capture_output=True)
         t = lint_docs.use(lint_docs.Tree(tmp, lint_docs.load_config(tmp)))
         r = "\n".join(reminders(t))
-        case("a repository with no commit yet treats every entry as open and raises no log reminder", "log-the-prompt-first" not in r and "sweep-after-correction" not in r, r)
+        case("a repository with no commit yet, its files staged, treats every entry as uncommitted and raises no log reminder", "log-the-prompt-first" not in r and "sweep-after-correction" not in r, r)
     print(f"\n  VERDICT: {'every case decided as expected' if not failures else f'{failures} failure(s)'}")
     return 1 if failures else 0
 

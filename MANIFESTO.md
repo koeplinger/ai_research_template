@@ -1,6 +1,6 @@
 # Manifesto: operating rules for AI assistance
 
-*Created 2 September 2026; updated 19 November 2026.*
+*Created 2 September 2026; updated 21 November 2026.*
 
 This document defines the operating rules for an AI assistant working in
 this research repository. The rules are **binding on the assistant**
@@ -77,6 +77,7 @@ document is part of this repository:
 | `prompt_logs/` | the prompt log |
 | `FINDINGS.md` | what the record has established |
 | `PRECEDENCE.md` | what governs when sources disagree |
+| `VISION.md` | the template's statement of intent |
 | `ONBOARDING.md` | what every assistant session reads before it works |
 | `CURRENT_STATE.md` | the state of the research as a whole |
 | `evidence_and_reasoning/` | the record: statements, claims, check records, notes, plans, the tension ledger |

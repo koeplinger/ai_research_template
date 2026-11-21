@@ -1,6 +1,6 @@
 # The tension ledger
 
-*Created 3 September 2026; updated 18 November 2026.*
+*Created 3 September 2026; updated 21 November 2026.*
 
 <!-- Maintained (DOCUMENT_GENRES.md). One row per divergence, added as
      PRECEDENCE.md, How to add a row, says, at the researcher's
@@ -15,7 +15,7 @@
 
 | # | What this project establishes | What the public record says | The caution that survives | Caution (live, or closed D Month YYYY) |
 |---|---|---|---|---|
-<!-- | T001 | the claim, with its token [claim <NNN>] and its register | the published statement or consensus, plainly and without polemic, with where it is said: one or more [<key>, <locus>], each registered, or for an estimate the range across the works that report it | what remains live: most often, that no systematic search has been made, so the absence holds for what was searched | live -->
+<!-- | T001 | the claim, with its token [claim <NNN>] and its register | the statement or consensus, plainly and without polemic, with where it is said: one or more [<key>, <locus>], each registered, or for an estimate the range across the works that report it | what remains live: most often, that no systematic search has been made, so the absence holds for what was searched | live -->
 
 <!-- Key: the T### part of [tension T###], assigned once and never reused.
      Whether a caution is still live is reading, at sweep item 8

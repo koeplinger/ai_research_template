@@ -1,26 +1,28 @@
 # Roadmap
 
-*Created 3 September 2026; updated 6 September 2026.*
+*Created 3 September 2026; updated 21 November 2026.*
 
 The plan index: every plan, one line and a link each, with its status.
-The status column is a deliberate copy of each plan's `Status:` line, kept
-for navigation and compared by the checker (`DOCUMENT_GENRES.md`, *What
-the checker verifies*, item 6); the plan file is the source of truth.
+The status column holds the first word of each plan's `Status:` line,
+`DRAFT`, `ENGAGED`, or `CLOSED`: a deliberate copy, kept for navigation
+and compared by the checker (`DOCUMENT_GENRES.md`, *What the checker
+verifies*, item 6). The date and the verdict are read in the plan file,
+the source of truth.
 The lifecycle is [README.md](README.md). `CURRENT_STATE.md` points here
 for the state of the plans.
 
 ## The line of inquiry
 
-The question is `../research_statement.md`; the thesis is H-A of
-`../problem_statement.md`. Plan 001 settled the count; plan 002 holds
-what explains the difference.
+The question is [../research_statement.md](../research_statement.md)'s,
+and the thesis, one hypothesis, is
+[../problem_statement.md](../problem_statement.md)'s.
 
 ## Plans
 
 | Plan | Question it settles | Status |
 |---|---|---|
-| [001](001_count_against_note.md) | whether the roll's 1851 count equals the note's figure, for the hypothesis that the two disagree | CLOSED 6 September 2026, verdict CONFIRMED |
-| [002](002_counting_convention.md) | why the two figures differ, for the same hypothesis | DRAFT |
+| [001](001_count_against_note.md) | whether the roll's count for 1851 differs from the note's figure, as the thesis that the two disagree holds, what the roll's own rows can decide about a difference, and what the roll's weekdays of 1851 hold against what the note states of them | CLOSED |
+| [002](002_note_convention.md) | which, if any, of a stated list of counting conventions, applied to the roll, gives the note's forty-eight market days for 1851 | DRAFT |
 
 ## Not plans
 

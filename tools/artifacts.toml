@@ -9,7 +9,7 @@
 # of the row that names them, never by a second copy of the path.
 # Current state; indexed in tools/README.md.
 #
-# Created 4 September 2026; updated 19 November 2026.
+# Created 4 September 2026; updated 21 November 2026.
 #
 # Rows are matched top to bottom and the FIRST matching glob wins, so a
 # specific row (a template, an index) stands above the general row for
@@ -48,8 +48,8 @@
 #       a slash and skipped alone: "GENRES-5/narrative" silences the
 #       phrase list, which in some subject matter matches ordinary
 #       sentences about the thing studied rather than about the document,
-#       while "GENRES-5/stamp" keeps watching for a stamp that opens a
-#       change narrative; the reverse skip is the other way round.  For
+#       while the stamp half keeps watching for a stamp that opens a
+#       change narrative; the reverse skip is "GENRES-5/stamp".  For
 #       one finding the researcher has ruled to leave, the [[accepted]]
 #       list below is the narrower tool.
 
@@ -78,7 +78,8 @@ python = "3.11"
 #             ""                 unfilled: skipped, and reported once
 spelling = "us"
 dashes = "no-em-dash"
-# The phrases the standards ban in a live draft under the write-up folder
+# The phrases the standards ban in an unfrozen draft, note, changelog, or
+# companion under the write-up folder
 # (editorial_standards.md, What is checked mechanically, item 2).  A project
 # edits this list, because a phrase banned as advocacy in one field is
 # another's precise sentence: "robust to <perturbation>" is the honest
@@ -97,8 +98,8 @@ paper_phrases = ["without loss of generality", "clearly", "it is easy to see",
 # practise, are both correct in UK usage, the first the noun and the second
 # the verb, so neither list can carry either.
 [editorial.wrong_words]
-us = ["labelled", "labelling", "organise", "organised", "organises", "organisation", "recognise", "recognised", "summarise", "summarised", "colour", "colours", "behaviour", "centre", "analyse", "analysed", "modelling", "modelled", "travelling", "fulfil"]
-uk = ["labeled", "labeling", "organize", "organized", "organizes", "organization", "recognize", "recognized", "summarize", "summarized", "color", "colors", "behavior", "center", "analyze", "analyzed", "modeling", "modeled", "traveling", "fulfill"]
+us = ["labelled", "labelling", "organise", "organised", "organises", "organisation", "recognise", "recognised", "summarise", "summarised", "colour", "colours", "behaviour", "centre", "analyse", "analysed", "modelling", "modelled", "travelling", "fulfil", "relabelled", "relabelling", "cancelled", "cancelling"]
+uk = ["labeled", "labeling", "organize", "organized", "organizes", "organization", "recognize", "recognized", "summarize", "summarized", "color", "colors", "behavior", "center", "analyze", "analyzed", "modeling", "modeled", "traveling", "fulfill", "relabeled", "relabeling", "canceled", "canceling"]
 
 [narrative]
 # The two files whose italicized examples the narrative check skips
@@ -162,7 +163,7 @@ kinds = ["formal", "computational", "empirical", "inferential", "documentary", "
 plan_verdicts = ["CONFIRMED", "REFUTED", "COMPLETE", "INCONCLUSIVE", "ABANDONED"]
 # {{MUTATION_SET}}: the names a Mutation: line may carry.  Empty means
 # unfilled; the name check is skipped and reported once, when a check
-# exists to apply it to.
+# carries a filled Mutation: line.
 mutations = []
 [vocab.verdicts]
 formal = ["proved", "disproved"]
@@ -282,9 +283,11 @@ kind = "example"
 glob = "example/**"
 genre = "exempt"
 header = "none"
-# The worked example is a project of its own, instantiated from this
-# template and checked by its own copy of the tools from inside example/;
-# the template's tools do not read it.
+# The worked example is an illustration instantiated from this template.
+# Its own copy of the tools checked it while it stood in a repository of
+# its own and is not kept working from inside example/. The template's
+# round check holds it to no rule; the privacy scan reads it like any
+# other file.
 
 [[artifact]]
 kind = "vision"
@@ -588,7 +591,7 @@ glob = "tools/artifacts_shipped.toml"
 genre = "exempt"
 header = "none"
 # In a project, the template's configuration as it shipped, which the
-# setup tool keeps unchanged for the tools' self-tests (tools/README.md);
+# project keeps unchanged for the tools' self-tests (tools/README.md);
 # never edited by hand, and not the project's configuration.  The template
 # itself has no such file.
 

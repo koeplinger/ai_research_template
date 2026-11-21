@@ -1,6 +1,6 @@
 # Precedence: what governs when sources disagree
 
-*Created 2 September 2026; updated 6 September 2026.*
+*Created 2 September 2026; updated 21 November 2026.*
 
 A research project that verifies things independently will, sooner or
 later, establish something the published record does not say, or says
@@ -18,10 +18,11 @@ rulebook costs nothing: the tiers still apply, and the ledger is empty.
 ## Words used here
 
 - A **divergence** is a pair of statements, one a claim of this project
-  and one from the public record, that cannot both hold at the scope the
-  claim states. A different result on a different sample, edition, period,
-  or definition is not a divergence until the claim says it is. A
-  difference of emphasis is never one.
+  and one from the public record or from registered material that is not
+  published, that cannot both hold at the scope the claim states. A
+  different result on a different sample, edition, period, or definition
+  is not a divergence until the claim says it is. A difference of
+  emphasis is never one.
 - **Context** is prose that makes no claim of this project: borrowed
   material, carried at its tier with the hedge the writing discipline
   below requires. Context carries no register and is never cited as a
@@ -52,14 +53,21 @@ exactly this order.
    of the repository, consulted at its recorded locator, shelfmark, or
    release and indexed there (`MANIFESTO.md` §6). This is authority about
    what the source **says**, never about what is **true**. A claim of this
-   project resting on such a collation is `ATTESTED`.
+   project resting on such a collation is `ATTESTED`; where the collation
+   is itself gated, an alteration planted and caught and a second pass
+   recorded, the claim may be `VERIFIED` on the same evidence
+   (`CHECK_METHODOLOGY.md` §1, §2), and what is then verified is still
+   what the source says and not that it is right. The source stays at
+   tier 2, and the claim speaks from the tier its register earns; the
+   register says how far the reading of it may be trusted.
 3. **Registered references**: works cited but not collated here. Their
    canonical identity is authoritative; their content is not.
 4. **The public record at large**: published literature not registered
    here, reference works, and textbook knowledge. Lowest, always.
 
-**Which tier a statement speaks from is decided by its register**
-(`CHECK_METHODOLOGY.md` §1).
+**Which tier a claim speaks from is decided by its register**
+(`CHECK_METHODOLOGY.md` §1); any other statement speaks from the tier
+it is carried at.
 
 | The statement | Speaks from |
 |---|---|
@@ -96,8 +104,10 @@ prose, and stops.
 ## The rule runs in both directions
 
 **Tier 4 is never promoted silently.** A public-record statement becomes
-established fact here only by being gated by a check of this project,
-which yields a claim. Otherwise it is used at its tier: collated and cited
+established fact here only through a claim of this project registered
+`VERIFIED` or `DERIVED`: gated by a check, or established by a derivation
+or reading with an independent cross-check (`CHECK_METHODOLOGY.md` §1).
+Otherwise it is used at its tier: collated and cited
 `ATTESTED` (tier 2), cited as a registered reference (tier 3), or carried
 in prose as context with its hedge (tier 4). The tell of a silent
 promotion is a sentence that states a borrowed fact flatly, with no
@@ -129,12 +139,17 @@ erased by the result.
   any work that creates or discovers a divergence, and whenever registered
   material conflicts with a claim of this project; the row enters at the
   researcher's direction. A divergence brought and not yet entered is a
-  standing reminder (`MANIFESTO.md` §16).
+  standing reminder (`MANIFESTO.md` §16). While the researcher has asked
+  for a fixed list to be finished and nothing new looked for, a divergence
+  found outside the list is kept and listed when the list is handed back
+  (`HOW_IT_FITS_TOGETHER.md`, *Finishing a version or a plan*).
 - **Session onboarding** loads this rule into every assistant session at
   its start.
 - **Writing discipline.** A `VERIFIED` or `RULED_OUT` claim is stated as
-  what it is, with its claim citation, and is not softened merely because
-  the public record has not caught up. A `DERIVED` claim is stated at its
+  what it is, with its claim citation, or in a write-up with its evidence
+  on the page (`evidence_and_reasoning/editorial_standards.md`,
+  *Writing for publication*), and is not softened merely because the
+  public record has not caught up. A `DERIVED` claim is stated at its
   register, with its route. The scope, the uncertainty, and the statement
   of what is not claimed are part of the claim and are never a hedge. The
   inverse hedge is mandatory: public-record material used in prose carries
@@ -143,9 +158,13 @@ erased by the result.
 
 ## What is checked mechanically
 
-Nothing beyond what `CHECK_METHODOLOGY.md` checks for registers and what
-`DOCUMENT_GENRES.md` checks for current-state documents, which together
-cover this file and the ledger.
+Nothing beyond what `CHECK_METHODOLOGY.md` checks for registers, what
+`DOCUMENT_GENRES.md` checks for current-state documents, and what
+`ONTOLOGY.md` §5 checks, of citation tokens, among them that every
+`[tension T###]` resolves to a row of the ledger, and of a claim another
+claim or a check record cites, or another claim's `Depends-on` names,
+that it has a *What is not claimed* section holding more than a comment;
+together they cover this file and the ledger.
 
 Whether a divergence has been recorded at all, whether a caution is still
 live, and whether a tier 4 statement has been silently promoted are
@@ -156,7 +175,7 @@ touches a claim or a reference, and item 8 of the consistency sweep
 ## What this rulebook does not do
 
 It does not make this project infallible. A tier 1 claim is overturned by
-a **better verification**: a failing check, a mutation the probe catches,
+a **better verification**: a failing check, a mutation the check survives,
 a correction the researcher authorizes. It is never overturned by an
 appeal to the literature. If the public record one day supplies a
 demonstration that contradicts a claim here, the route is the same as for
@@ -179,7 +198,7 @@ ledger.
 
 | # | What this project establishes | What the public record says | The caution that survives | Caution |
 |---|---|---|---|---|
-| T001 | the claim, with its citation and its register | the published statement or consensus, plainly and without polemic, with where it is said | what remains live | live, or closed D Month YYYY |
+| T001 | the claim, with its citation and its register | the statement or consensus, plainly and without polemic, with where it is said | what remains live | live, or closed D Month YYYY |
 
 The key `T###` is assigned once and never reused; `[tension T###]`
 resolves to the row (`ONTOLOGY.md` §1.3). The last column is read as
@@ -188,9 +207,10 @@ recorded; whether a caution is *still* live is reading.
 ### How to add a row
 
 State this project's side with its claim citation and its register. State
-the public record's side plainly, without polemic, and name where it is
-said. Name the caution that survives. **A row whose caution column is
-empty is suspect**: almost every divergence leaves one, and the commonest
+the public record's side, or that of registered material that is not
+published, plainly, without polemic, and name where it is said. Name the
+caution that survives. **A row with no surviving caution is
+suspect**: almost every divergence leaves one, and the commonest
 is that no systematic search of the literature has been made, so the
 absence is established for what was searched and not for the record at
 large.

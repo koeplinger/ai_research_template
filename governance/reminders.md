@@ -1,6 +1,6 @@
 # Reminders: the standing instructions, each named and placed where it fires
 
-*Created 5 September 2026; updated 19 November 2026.*
+*Created 5 September 2026; updated 21 November 2026.*
 
 `MANIFESTO.md` §16 has the assistant say, once in its reply, what the
 stage of work calls for and has not been done. This file names each
@@ -62,10 +62,11 @@ rulebooks', gathered in one place.
    claims support has been brought with its wording and entered or
    declined at the researcher's direction (`MANIFESTO.md` §12: what counts
    as a finding is the researcher's).
-6. The docket is resolved in the closing round (`CHECK_METHODOLOGY.md`
-   §6), except what a plan that exists to finish a fixed list keeps there
-   from outside the list, which is left open: not acted on, and not put as
-   a decision (`HOW_IT_FITS_TOGETHER.md`, *Finishing a version or a plan*).
+6. The docket is resolved in the closing round (`CHECK_METHODOLOGY.md`,
+   *Words used here* and §6), except what a plan that exists to finish a
+   fixed list keeps there from outside the list, which is left open: not
+   acted on, and not put as a decision
+   (`HOW_IT_FITS_TOGETHER.md`, *Finishing a version or a plan*).
 7. Everything the plan owns is in its final wording, since it freezes on
    closure (`DOCUMENT_GENRES.md`, *Artifacts of an open plan*).
 8. The researcher writes the `CLOSED` line, or directs it, and the

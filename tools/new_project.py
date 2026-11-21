@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The setup tool: this template, made into a project (GETTING_STARTED.md, sections 1 to 3).
 
-Created 8 September 2026; updated 19 November 2026.
+Created 8 September 2026; updated 21 November 2026.
 
 What it does, printing each step and what it could not do:
 
@@ -233,9 +233,11 @@ kind = "example"
 glob = "example/**"
 genre = "exempt"
 header = "none"
-# The worked example is a project of its own, instantiated from this
-# template and checked by its own copy of the tools from inside example/;
-# the template's tools do not read it.
+# The worked example is an illustration instantiated from this template.
+# Its own copy of the tools checked it while it stood in a repository of
+# its own and is not kept working from inside example/. The template's
+# round check holds it to no rule; the privacy scan reads it like any
+# other file.
 
 ''', ""),
 ]
@@ -831,7 +833,7 @@ def write_licenses(root: Path, holder: str, citation: str, year: str) -> tuple[l
 
 PROJECT_README = """# {title}
 
-*Created {date}; updated {date}.*
+*Created {created}; updated {date}.*
 
 <!-- One paragraph: the question this project asks, and what would count
      as answering it. The long form is evidence_and_reasoning/research_statement.md. -->
@@ -843,7 +845,8 @@ PROJECT_README = """# {title}
 | where the project stands | [CURRENT_STATE.md](CURRENT_STATE.md) |
 | what the record has established | [FINDINGS.md](FINDINGS.md) |
 | the question and the thesis | [evidence_and_reasoning/research_statement.md](evidence_and_reasoning/research_statement.md), [problem_statement.md](evidence_and_reasoning/problem_statement.md) |
-| what is open, and what each plan settles | [evidence_and_reasoning/research_plans/ROADMAP.md](evidence_and_reasoning/research_plans/ROADMAP.md) |
+| what is open | [CURRENT_STATE.md](CURRENT_STATE.md), *What is open* |
+| every plan, what it settles, and its status | [evidence_and_reasoning/research_plans/ROADMAP.md](evidence_and_reasoning/research_plans/ROADMAP.md) |
 | the record itself | [evidence_and_reasoning/](evidence_and_reasoning/) |
 | what was asked, and when | [prompt_logs/](prompt_logs/) |
 
@@ -898,7 +901,12 @@ def write_project_readme(root: Path, title: str, date: str, cited: bool = False)
     links to what was left behind, never reaches a project; the title is
     {{PROJECT_TITLE}} where none was given.  The root table is generated
     from what is there, so that it is complete for the index check
-    (DOCUMENT_GENRES.md item 8)."""
+    (DOCUMENT_GENRES.md item 8).  The page's text is new, but the file is
+    the template's README.md rewritten, so it keeps that file's Created
+    date (DOCUMENT_GENRES.md section 3)."""
+    page = root / "README.md"
+    kept = STAMP.search(read(page)) if page.is_file() else None
+    created = kept.group(1).removeprefix("*Created ").removesuffix("; updated ") if kept else date
     rows = ["| File | What it is |", "|---|---|"]
     for p in sorted(root.iterdir()):
         if p.name == "README.md" or p.name.startswith("."):
@@ -909,7 +917,7 @@ def write_project_readme(root: Path, title: str, date: str, cited: bool = False)
     rows.append("| " + ", ".join(f"[{d}/]({d}/)" for d in folders)
                 + " | the folders, each with its own README |")
     (root / "README.md").write_text(
-        PROJECT_README.format(title=title, date=date, root_files="\n".join(rows), licensing=textwrap.fill(
+        PROJECT_README.format(title=title, created=created, date=date, root_files="\n".join(rows), licensing=textwrap.fill(
             "Written material is under Creative Commons Attribution 4.0 International and code under the MIT "
             f"License, {OWN_TERMS}. [LICENSE.md](LICENSE.md) and [LICENSE-CODE](LICENSE-CODE) carry both "
             "licenses and the citation of the template this project is adapted from"
@@ -1053,9 +1061,10 @@ date = ""            # the project's start date, "D Month YYYY": its year dates 
 # The half the tools read.  A value here is in force; the prose half alone
 # is not.  spelling, dashes and registry_required ship FILLED with the
 # template's answer and are enforced until changed; mutations and parties
-# ship empty, and an empty one skips its check and says so.  parties =
-# ["none"] records by decision that no one beyond the researcher and the
-# assistant appears, and the roster check then runs.
+# ship empty, and an empty one skips its check, saying so once a line
+# carries a name it would check.  parties = ["none"] records by decision
+# that no one beyond the researcher and the assistant appears, and the
+# roster check then runs.
 spelling = "us"                 # "us" | "uk" | "none" | ""
 dashes = "no-em-dash"           # no-em-dash | spaced-em-dash | unspaced-em-dash | en-dash-asides | none | ""
 mutations = []                  # the names a Mutation: line may carry, as a header writes them
@@ -1480,6 +1489,9 @@ def selftest() -> int:
               "{{PERSONA}}" in read(dst / "GETTING_STARTED.md"))
         check("the front page names the template the project is adapted from",
               "adapted from that template" in read(dst / "README.md"))
+        check("the front page keeps the template's Created date, with the day of the run as its updated date",
+              STAMP.search(read(dst / "README.md")).group(0)
+              == STAMP.search(read(ROOT / "README.md")).group(1) + today_day() + ".*")
         flat = lambda t: " ".join(t.split())
         check("the front page and both grants of the license carry the same clause on material under its own terms",
               OWN_TERMS in flat(read(dst / "README.md")) and flat(read(dst / "LICENSE.md")).count(OWN_TERMS) == 2)

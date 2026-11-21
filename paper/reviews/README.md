@@ -1,6 +1,6 @@
 # Reviews
 
-*Created 4 September 2026; updated 19 November 2026.*
+*Created 4 September 2026; updated 21 November 2026.*
 
 Review records for the write-ups under `paper/`: dated records of what a
 referee pass found, against the document as it stood. Naming:
@@ -39,7 +39,8 @@ A review opens with the structure lens of `CHECK_METHODOLOGY.md` §7
 before any sentence-level finding. Every finding is then handed to a
 reader instructed to refute it (`MANIFESTO.md` §17); a fix to a
 current-state target that is neither maintained nor one of the four
-`MANIFESTO.md` §12 names may be applied, and every other fix is brought
+`MANIFESTO.md` §12 names may be applied unless it amends a rule, and
+every other fix is brought
 with its proposed wording (`CHECK_METHODOLOGY.md` §7). While a direction
 to finish a list holds, a finding outside the list is left for the next
 version, a false statement in the version aside (`paper/README.md`,

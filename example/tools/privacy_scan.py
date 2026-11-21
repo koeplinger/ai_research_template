@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The privacy scan: a stop-word list that never enters version control, applied to every file, path, and commit message.
 
-Created 5 September 2026; updated 5 September 2026.
+Created 5 September 2026; updated 19 November 2026.
 
 Opt-in.  Many projects must keep something out of a public repository
 that no rulebook can name in advance: a collaborator, an embargoed topic,
@@ -14,14 +14,21 @@ installs call it only where the list exists.
 
 The list: one pattern per line.  Blank lines and lines beginning with #
 are ignored.  A plain line matches as a whole word or phrase, without
-regard to case: in contents, letters, digits, and the underscore are the
-word characters, so foo_bar is one token; in a path, the underscore, the
-hyphen, the dot, and the slash separate words, since file names join words
-that way.  A line beginning with ~ matches as a substring anywhere, inside
+regard to case: in contents, the ASCII letters and digits and the
+underscore are the word characters, so foo_bar is one token; in a path,
+the ASCII letters and digits alone, so the underscore, the hyphen, the
+dot, and the slash separate words, since file names join words that way.
+Any other character separates words in both, a letter outside ASCII
+included, so a pattern is found inside a longer word such a letter
+continues, and inside a run of a script written without spaces.  A line
+beginning with ~ matches as a substring anywhere, inside
 a longer token included.  A bare ~ or an empty pattern is reported and
 ignored.  A file whose first bytes contain a NUL is taken as binary and
-its contents are not read; its path still is.  In a commit message, the
-lines git strips (those beginning with #) are not read.
+its contents are not read; its path still is.  A commit message is read
+whole, its lines beginning with # included, as git keeps them in one
+given with -m or -F; with --edited, which the commit-msg hook passes when
+git opened its editor for the message, those lines, which git strips,
+are not read.
 
 Usage
     python3 tools/privacy_scan.py                 the working tree: every tracked or
@@ -29,15 +36,17 @@ Usage
     python3 tools/privacy_scan.py --staged        what is about to be committed: staged
                                                   contents and paths
     python3 tools/privacy_scan.py --message FILE  a commit message
+    python3 tools/privacy_scan.py --message FILE --edited
+                                                  one written in git's editor
     python3 tools/privacy_scan.py --selftest      a scratch list in a scratch repository,
                                                   every mode exercised; then the project's
                                                   own list, where present, pattern by pattern,
                                                   without printing any of it
 
-Exit status: 0 clean; 1 findings, or a failed self-test; 2 no list, no
-repository to list, or a usage error.  A verdict is never given over an
-empty listing: where git cannot list the tree, nothing is scanned and the
-exit status says so.
+Exit status: 0 clean; 1 findings, or a failed self-test; 2 no list, a
+list holding no pattern, no repository to list, or a usage error.  No
+verdict is given where git cannot list the tree: nothing is scanned, and
+the exit status says so.
 """
 from __future__ import annotations
 
@@ -91,7 +100,8 @@ def git(root: Path, *args: str) -> bytes | None:
 
 
 def scan_text(label: str, data: bytes, pats: Patterns, skip_comments: bool = False) -> list[tuple[str, str, int, str]]:
-    """One tuple per hit: ("CONTENT", label, line, text)."""
+    """One tuple per hit: ("CONTENT", label, line, text).  With skip_comments,
+    a line beginning with # is not read."""
     if b"\0" in data[:8192]:
         return []
     out = []
@@ -205,9 +215,16 @@ def selftest() -> int:
         case("the staged scan sees the same hits", {x[1] for x in f2} == hits, str(f2))
         msg = tmp / "msg"
         msg.write_text(f"add the {word} note\n")
-        case("a commit message is caught", bool(scan_text("commit message", msg.read_bytes(), pats, skip_comments=True)))
-        msg.write_text(f"add the note\n# Changes to be committed:\n#\tnew file: {word}.md\n")
-        case("git's comment lines in a message are not read", not scan_text("commit message", msg.read_bytes(), pats, skip_comments=True))
+        case("a commit message is caught", bool(scan_text("commit message", msg.read_bytes(), pats)))
+        msg.write_text(f"add the note\n# {word}, on a line git keeps in a message given with -m or -F\n")
+        (tmp / "tools").mkdir()
+        (tmp / "tools" / "privacy_scan.py").write_bytes(Path(__file__).read_bytes())
+        r = subprocess.run([sys.executable, "-B", "tools/privacy_scan.py", "--message", str(msg)], cwd=tmp, capture_output=True, text=True)
+        case("a line of a message beginning with # is read", r.returncode == 1 and "in commit message" in r.stdout, r.stdout + r.stderr)
+        msg.write_text(f"add the note\n# On branch {word}\n# Changes to be committed:\n#\tnew file: {word}.md\n")
+        r = subprocess.run([sys.executable, "-B", "tools/privacy_scan.py", "--message", str(msg), "--edited"], cwd=tmp,
+                           capture_output=True, text=True)
+        case("in a message written in git's editor, the lines git strips are not read", r.returncode == 0, r.stdout + r.stderr)
     with tempfile.TemporaryDirectory() as d:
         tmp = Path(d)
         (tmp / "x.md").write_text(word)
@@ -240,7 +257,7 @@ def selftest() -> int:
 def main(argv: list[str]) -> int:
     if argv == ["--selftest"]:
         return selftest()
-    if argv and not (argv == ["--staged"] or (len(argv) == 2 and argv[0] == "--message")):
+    if argv and not (argv == ["--staged"] or (len(argv) in (2, 3) and argv[0] == "--message" and argv[2:] in ([], ["--edited"]))):
         print(__doc__.split("Usage")[1], file=sys.stderr)
         return 2
     path = ROOT / LIST
@@ -263,7 +280,8 @@ def main(argv: list[str]) -> int:
         if not Path(argv[1]).is_file():
             print("privacy scan: --message needs a readable file", file=sys.stderr)
             return 2
-        return report(scan_text("commit message", Path(argv[1]).read_bytes(), pats, skip_comments=True), "commit message")
+        return report(scan_text("commit message", Path(argv[1]).read_bytes(), pats, skip_comments=argv[2:] == ["--edited"]),
+                      "commit message")
     if findings is None:
         print("privacy scan: git could not list the tree (not a repository, or git absent); nothing scanned")
         return 2

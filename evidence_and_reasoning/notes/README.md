@@ -1,6 +1,6 @@
 # Notes
 
-*Created 3 September 2026; updated 19 November 2026.*
+*Created 3 September 2026; updated 21 November 2026.*
 
 Dated notes: `YYYY-MM-DD_short_name.md`. A note is a dated record
 of what a sweep, an audit, a search, a reading, a day in the archive, a
@@ -22,8 +22,8 @@ first line after its header.
   cleaning or run log. Where the discipline keeps its day-to-day record
   outside this repository (in a laboratory notebook, a field book, an
   enclave's session log), the working note carries that record's locator
-  rather than copying it; once a claim is collated against that record,
-  the source index holds it as a source consulted at its locator
+  rather than copying it; once claims are to be read against that
+  record, the source index holds it as a source consulted at its locator
   (`source_documents/README.md`).
   Never cited as a result; what it records enters the record through a
   plan and its checks.

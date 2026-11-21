@@ -1,6 +1,6 @@
 # Ontology: the predicates the artifacts share
 
-*Created 3 September 2026; updated 19 November 2026.*
+*Created 3 September 2026; updated 21 November 2026.*
 
 The artifacts of a project built from the template are one system, not a
 folder of forms, because they share a vocabulary. This file is that
@@ -218,7 +218,7 @@ assistant's under the consistency sweep (`CHECK_METHODOLOGY.md` §7).
 | `prerequisite` | a plan to a plan or claim it builds on | `Prerequisites: NNN[, NNN][, [claim NNN]]` or `none`: plans by bare number, claims by token | this file: no rulebook fixes plan structure | ontology 3; ontology 2: each plan it numbers exists | what must land first? |
 | `serves` | a plan to a keystone hypothesis | `Serves: <hypothesis>` or `Serves: none, <reason>` | `DOCUMENT_GENRES.md` | ontology 3 | why are we doing this? |
 | `reserved-by` | a claim to the plan holding a deferred question | `Reserved <date>, plan NNN` | `CHECK_METHODOLOGY.md` §6 | ontology query 4 | what is waiting on an unanswered question? |
-| `finding` | a stable key to what the record has established | a row in `FINDINGS.md` whose first cell is its key, `F###`, which `[finding F###]` cites | `MANIFESTO.md` §12 | reading; additions are the researcher's | what has this project established? |
+| `finding` | a stable key to what the record has established | a row in `FINDINGS.md` whose first cell is its key, `F###`, which `[finding F###]` cites | `MANIFESTO.md` §12 | reading; every change is the researcher's | what has this project established? |
 
 ### 2.6 Genre and provenance
 
@@ -238,7 +238,7 @@ assistant's under the consistency sweep (`CHECK_METHODOLOGY.md` §7).
 | Predicate | Relates | Written as | Owner | Checked by | Answers |
 |---|---|---|---|---|---|
 | `tier` | a statement to its authority | **derived**, never stored as a field | `PRECEDENCE.md` | not stored, so nothing to check | what governs if these disagree? |
-| `diverges` | a claim to a public-record statement it contradicts | a row in the tension ledger: the claim, the published statement, the caution that survives, and a last column reading `live` or `closed <date>` | `PRECEDENCE.md` | reading, at item 8 of the consistency sweep of the record (`CHECK_METHODOLOGY.md` §7); the caution field is read as recorded, not judged | where do we stand against the literature? |
+| `diverges` | a claim to a statement of the public record, or of registered material that is not published, that it contradicts | a row in the tension ledger: the claim, the statement it contradicts, the caution that survives, and a last column reading `live` or `closed <date>` | `PRECEDENCE.md` | reading, at item 8 of the consistency sweep of the record (`CHECK_METHODOLOGY.md` §7); the caution field is read as recorded, not judged | where do we stand against the literature? |
 | `context` | prose to borrowed material it carries | an attributing hedge naming the tier | `PRECEDENCE.md` | reading | is this ours or theirs? |
 
 ### 2.8 Carried in prose, not in syntax
@@ -304,7 +304,14 @@ are the ontology's own:
 3. **Required fields are present**, per artifact kind, from the
    configuration of §7, and filled: a value that is only an artifact
    template's comment is empty. A `Frame` or `Original` line, which no
-   row requires, is filled where it is written. A registry entry is
+   row requires, is filled where it is written. A check's `Mutation:`
+   and `Robustness:` lines share no name. The party on a `By:` or
+   `Verified-by:` line, the text before any comma, is `researcher`,
+   `assistant`, a name in `[parties] names` other than `none`, which
+   stands alone there and names no one, or, on `Verified-by:`,
+   `deferred` or `unchecked`. While `[parties] names` is empty the
+   roster check is skipped, and the linter reports the skip once, at
+   the configuration, if a line names anyone else. A registry entry is
    read by its heading
    (§1.4), so in a registry file a level-three heading that opens a
    bracket and carries no key the grammar of §1.3 reads is reported: no

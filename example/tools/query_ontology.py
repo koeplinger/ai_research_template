@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The ontology queries: the questions ONTOLOGY.md section 6 says the record answers from its fields.
 
-Created 5 September 2026; updated 5 September 2026.
+Created 5 September 2026; updated 19 November 2026.
 
 Each query enumerates by reading fields and tokens.  Where a rulebook
 decides, the line is marked FLAG; where only reading can decide, the
@@ -64,7 +64,7 @@ def _flag(dep_reg: str, on_reg: str) -> str:
     if dep_reg == "RULED_OUT":
         return "   FLAG: RULED_OUT, reported always (ONTOLOGY.md section 4)"
     if dep_reg not in STRENGTH:
-        return f"   (Register {dep_reg!r} is not one section 4 orders)"
+        return f"   ({lint_docs.F('register')} {dep_reg!r} is not one section 4 orders)"
     if on_reg not in STRENGTH:
         return ""
     if STRENGTH[dep_reg] < STRENGTH[on_reg]:
@@ -83,13 +83,13 @@ def closure(t: lint_docs.Tree, num: str) -> list[tuple[int, str, str, str]]:
 
     def walk(n: str, depth: int) -> None:
         fl = fields(t, t.claims[n])
-        for c in lint_docs.TOKEN_CHECK.findall(fl.get("Backed-by", (0, ""))[1]):
+        for c in lint_docs.TOKEN_CHECK.findall(fl.get(lint_docs.F("backed-by"), (0, ""))[1]):
             note = "" if c in t.checks else "   (resolves to no check)"
             if ("check", c) in seen:
                 note += "   (listed above)"
             seen.add(("check", c))
             out.append((depth + 1, "check", c, note))
-        for d in [x.strip() for x in fl.get("Depends-on", (0, ""))[1].split(",") if x.strip()]:
+        for d in [x.strip() for x in fl.get(lint_docs.F("depends-on"), (0, ""))[1].split(",") if x.strip()]:
             if d not in t.claims:
                 out.append((depth + 1, "claim", d, "   (resolves to no claim)"))
                 continue
@@ -109,13 +109,15 @@ def closure(t: lint_docs.Tree, num: str) -> list[tuple[int, str, str, str]]:
 
 
 def rests_on(t: lint_docs.Tree, num: str) -> list[str]:
-    out = [f"[claim {num}]  {register(t, num)}  rests on:"]
+    reg = register(t, num)
+    note = "" if reg in STRENGTH else f"   ({lint_docs.F('register')} {reg!r} is not one section 4 orders: no claim it rests on directly is flagged as weaker)"
+    out = [f"[claim {num}]  {reg}  rests on:{note}"]
     members = closure(t, num)
     for depth, kind, n, note in members:
         reg = f"  {register(t, n)}" if kind == "claim" and n in t.claims else ""
         out.append("  " * depth + f"[{kind} {n}]{reg}{note}")
     if not members:
-        out.append("  (nothing: no Depends-on, no Backed-by)")
+        out.append(f"  (nothing: no {lint_docs.F('depends-on')}, no {lint_docs.F('backed-by')})")
     return out
 
 
@@ -130,14 +132,14 @@ def unverified(t: lint_docs.Tree, num: str) -> list[str]:
             out.append(f"  [claim {n}]  (resolves to no claim)")
             continue
         reg = register(t, n)
-        vb = fields(t, t.claims[n]).get("Verified-by", (0, ""))[1]
+        vb = fields(t, t.claims[n]).get(lint_docs.F("verified-by"), (0, ""))[1]
         why = []
         if reg in ("OPEN", "SPECULATIVE"):
             why.append(reg)
         if reg == "RULED_OUT":
             why.append("RULED_OUT, reported always (ONTOLOGY.md section 4)")
         if vb.split(",")[0].strip() in ("unchecked", "deferred"):
-            why.append(f"Verified-by: {vb}")
+            why.append(f"{lint_docs.F('verified-by')}: {vb}")
         if why:
             out.append(f"  [claim {n}]  " + "; ".join(why))
         else:
@@ -148,9 +150,9 @@ def unverified(t: lint_docs.Tree, num: str) -> list[str]:
 
 
 def deferred(t: lint_docs.Tree) -> list[str]:
-    out = ["Deferred to an instrument or party (Verified-by: deferred):"]
+    out = [f"Deferred to an instrument or party ({lint_docs.F('verified-by')}: deferred):"]
     for n, f in sorted(t.claims.items()):
-        vb = fields(t, f).get("Verified-by", (0, ""))[1]
+        vb = fields(t, f).get(lint_docs.F("verified-by"), (0, ""))[1]
         if vb.split(",")[0].strip() == "deferred":
             out.append(f"  [claim {n}]  {register(t, n)}  {vb}")
     if len(out) == 1:
@@ -168,14 +170,19 @@ def literature(t: lint_docs.Tree) -> list[str]:
     if not g:
         out.append("  (no file matches the configured ledger row)")
         return out
-    labels, rows = None, 0
+    labels, rows, above = None, 0, None
     for line in t.prose(g).splitlines():
         if not line.startswith("|"):
+            above = None
             continue
         cells = _cells(line)
+        # A table's header is the row its delimiter row stands under,
+        # whatever its columns are called.
+        if above and all(re.fullmatch(r":?-+:?", c) for c in cells):
+            labels, above = above, None
+            continue
+        above = cells
         if labels is None:
-            if any("Caution" in c for c in cells):
-                labels = cells
             continue
         m = re.match(r"^(T[0-9]{3,})$", cells[0])
         if not m:
@@ -187,14 +194,14 @@ def literature(t: lint_docs.Tree) -> list[str]:
             out.append(f"      {label}: {cell or '(empty)'}")
         if len(cells) < len(labels):
             out.append(f"      (the row has {len(cells)} cells; the header has {len(labels)})")
-    out.append("  (no row: the ledger is empty)" if not rows else "  Whether a caution is still live is reading (PRECEDENCE.md; sweep item 8).")
+    out.append("  (no row: the ledger is empty)" if not rows else "  Whether a caution is still live is reading (PRECEDENCE.md; CHECK_METHODOLOGY.md section 7, item 8).")
     return out
 
 
 def unfinished(t: lint_docs.Tree) -> list[str]:
-    out = ["Plans by Status:"]
+    out = [f"Plans by {lint_docs.F('status')}:"]
     for n, f in sorted(t.plans.items()):
-        out.append(f"  plan {n}  {t.plan_status.get(f) or '(no Status)'}")
+        out.append(f"  plan {n}  {t.plan_status.get(f) or '(no ' + lint_docs.F('status') + ')'}")
     if not t.plans:
         out.append("  (no plan)")
     out.append("Claims by register:")
@@ -222,13 +229,13 @@ def unfinished(t: lint_docs.Tree) -> list[str]:
         out.append(f"  plan {rp}: " + ", ".join(f"[claim {n}]" for n in ns))
     if not clusters:
         out.append("  (none)")
-    out.append("Plans serving no hypothesis (Serves: none):")
+    out.append(f"Plans serving no hypothesis ({lint_docs.F('serves')}: none):")
     n_found = 0
     for n, f in sorted(t.plans.items()):
-        sv = fields(t, f).get("Serves", (0, ""))[1]
+        sv = fields(t, f).get(lint_docs.F("serves"), (0, ""))[1]
         if sv.split(",")[0].strip() == "none":
             n_found += 1
-            out.append(f"  plan {n}  Serves: {sv}")
+            out.append(f"  plan {n}  {lint_docs.F('serves')}: {sv}")
     if not n_found:
         out.append("  (none)")
     return out
@@ -242,7 +249,7 @@ def not_claimed(t: lint_docs.Tree, f: str) -> str | None:
 
 
 def sites(t: lint_docs.Tree) -> list[str]:
-    out = ["Every place a claim or a check record cites a claim, in its header or its body (the comparison of rule six is reading):"]
+    out = ["Every place a claim or a check record cites a claim, in its header or its body (the comparison of rule six, CHECK_METHODOLOGY.md section 5, is reading):"]
     n_found = 0
     for f in sorted(t.files):
         kind = t.kind(f)
@@ -250,7 +257,7 @@ def sites(t: lint_docs.Tree) -> list[str]:
             continue
         own = t.num(f)
         own_reg = register(t, own) if kind == "claim" else "check"
-        backs = lint_docs.TOKEN_CLAIM.findall(fields(t, f).get("Backs", (0, ""))[1]) if kind == "check" else []
+        backs = lint_docs.TOKEN_CLAIM.findall(fields(t, f).get(lint_docs.F("backs"), (0, ""))[1]) if kind == "check" else []
         for i, line in enumerate(t.prose(f).splitlines(), 1):
             for n in lint_docs.TOKEN_CLAIM.findall(lint_docs.LINK_RE.sub(" ", line)):
                 if kind == "claim" and n == own:
@@ -301,7 +308,7 @@ def selftest() -> int:
                 f"Verified-by: {vb}\n{extra}\n## Claim\n\n{body}{fence}")
 
     def check(n, title, plan):
-        return f"# Check {n}: {title}\n\n{S}\nPlan: {plan}, task 1\nBacks: [claim {n}]\nInstrument: the edition\nMutation: variant-reading\n\n## 1\n\nThe claim [claim {n}] against [claim 002].\n"
+        return f"# Check {n}: {title}\n\n{S}\nPlan: {plan}, task 1\nBacks: [claim {n}]\nInstrument: the edition\nMutation: variant-reading\nBy: researcher\n\n## 1\n\nThe claim [claim {n}] against [claim 002].\n"
 
     base = lint_docs.fixture()
     base["evidence_and_reasoning/claims/003_c.md"] = claim("003", "c", "VERIFIED", "confirmed", "001", "researcher",
@@ -313,15 +320,19 @@ def selftest() -> int:
     base["evidence_and_reasoning/claims/005_e.md"] = claim("005", "e", "RULED_OUT", "not confirmed", "002", "researcher",
         "Backed-by: [check 005]\n", "Not e.", "\n\n## What is not claimed\n\nThat e never held.\n")
     base["evidence_and_reasoning/claims/006_f.md"] = claim("006", "f", "DERIVED", "confirmed", "002", "researcher",
-        "Depends-on: 002\n", "Follows from [claim 002].", "")
-    base["evidence_and_reasoning/claims/007_g.md"] = claim("007", "g", "SPECULATIVE", "none", "001", "deferred, the edition", "", "Perhaps g.", "")
+        "Depends-on: 002\n", "Follows from [claim 002].")
+    base["evidence_and_reasoning/claims/007_g.md"] = claim("007", "g", "SPECULATIVE", "none", "001", "deferred, the edition", "", "Perhaps g.")
     base["evidence_and_reasoning/checks/003_c.md"] = check("003", "c", "001")
     base["evidence_and_reasoning/checks/005_e.md"] = check("005", "e", "002")
     base["evidence_and_reasoning/claims/README.md"] += "".join(f"| [{n}]({n}_{s}.md) |\n" for n, s in (("003", "c"), ("004", "d"), ("005", "e"), ("006", "f"), ("007", "g")))
     base["evidence_and_reasoning/checks/README.md"] += "| [003](003_c.md) |\n| [005](005_e.md) |\n"
 
+    held = []
+
     def scratch(files, lint: bool):
-        tmp = Path(tempfile.mkdtemp())
+        # each tree is held until the self-test returns, and removed then
+        held.append(tempfile.TemporaryDirectory())
+        tmp = Path(held[-1].name)
         lint_docs.scratch_project(tmp, files, lint_docs.scratch_config())
         lint_docs.scratch_commit(tmp)
         if lint:
@@ -359,10 +370,9 @@ def selftest() -> int:
     r = "\n".join(answer(t, "sites", None))
     case("sites lists a claim citing a claim with both registers", "claims/003_c.md:" in r and "[VERIFIED] cites [claim 001] [OPEN]" in r, r)
     case("sites quotes the cited claim's What is not claimed in full", "not claimed: That e never held." in r, r)
-    case("sites says when the cited claim has no such section", "cites [claim 001] [OPEN]\n      citing: This claim" in r and "has no What is not claimed section" in r, r)
     case("sites says when the section is present and empty", "cites [claim 004] [ATTESTED]" not in r or "(the section is present and empty)" in r, r)
     case("sites lists a check record's header and body citations and marks the claim it backs",
-         "checks/003_c.md:5  [check] cites [claim 003] [VERIFIED]  (the claim it backs)" in r and "checks/003_c.md:11  [check] cites [claim 003]" in r, r)
+         "checks/003_c.md:5  [check] cites [claim 003] [VERIFIED]  (the claim it backs)" in r and "checks/003_c.md:12  [check] cites [claim 003]" in r, r)
     case("sites does not list a claim's own token", "[VERIFIED] cites [claim 003]" not in r and "[check] cites [claim 003] [VERIFIED]  (the claim it backs)" in r, r)
     r = "\n".join(answer(t, "all", None))
     case("all answers every question that takes no claim", all(k in r for k in ("Deferred", "Against the public record", "Plans by Status", "Every place")), r)
@@ -377,25 +387,30 @@ def selftest() -> int:
     except KeyError:
         case("an unknown question is refused", True)
 
-    # a second tree the linter rejects, for the branches a clean tree cannot reach
+    # a second tree with linter findings, for the branches a clean tree cannot reach
     rejected = lint_docs.fixture()
     rejected["evidence_and_reasoning/claims/003_c.md"] = claim("003", "c", "PROVEN", "confirmed", "001", "researcher",
         "Backed-by: [check 042]\nDepends-on: 001, 003, 042\n", "x.", "")
     rejected["evidence_and_reasoning/claims/004_d.md"] = claim("004", "d", "VERIFIED", "confirmed", "001", "researcher",
-        "Backed-by: [check 002]\nDepends-on: 003\n", "Cites [claim 004] itself.", "\n\n## What is not claimed\n\nSection kept.\n")
+        "Backed-by: [check 002]\nDepends-on: 003\n", "Cites [claim 004] itself, and [claim 003].", "\n\n## What is not claimed\n\nSection kept.\n")
     rejected["evidence_and_reasoning/claims/README.md"] += "| [003](003_c.md) |\n| [004](004_d.md) |\n"
     rejected["evidence_and_reasoning/public_record_tensions.md"] = base["evidence_and_reasoning/public_record_tensions.md"].replace(
         "| T001 | [claim 002] | [Key1] | x | live |", "| T001 | [claim 002](../claims/002_b.md) | [Key1] | x | |")
     t = scratch(rejected, lint=False)
     r = "\n".join(answer(t, "rests-on", "004"))
-    case("on a tree the linter rejects: a register outside the vocabulary is said to be unordered", "[claim 003]  PROVEN   (Register 'PROVEN' is not one section 4 orders)" in r, r)
-    case("on a tree the linter rejects: a Depends-on naming no claim is said so", "[claim 042]   (resolves to no claim)" in r, r)
-    case("on a tree the linter rejects: a Backed-by naming no check is said so", "[check 042]   (resolves to no check)" in r, r)
-    case("on a tree the linter rejects: a cycle names itself", "[claim 003]" in r and "(listed above)" in r, r)
+    case("on a tree with linter findings: a register outside the vocabulary is said to be unordered", "[claim 003]  PROVEN   (Register 'PROVEN' is not one section 4 orders)" in r, r)
+    case("on a tree with linter findings: a Depends-on naming no claim is said so", "[claim 042]   (resolves to no claim)" in r, r)
+    case("on a tree with linter findings: a Backed-by naming no check is said so", "[check 042]   (resolves to no check)" in r, r)
+    case("on a tree with linter findings: a cycle names itself", "[claim 003]" in r and "(listed above)" in r, r)
     r = "\n".join(answer(t, "rests-on", "003"))
-    case("on a tree the linter rejects: a self-dependency is a cycle", "(the claim itself: a cycle)" in r, r)
+    case("on a tree with linter findings: a self-dependency is a cycle", "(the claim itself: a cycle)" in r, r)
+    case("on a tree with linter findings: a claim whose own register section 4 does not order says so, and flags no claim it rests on directly as weaker",
+         "[claim 003]  PROVEN  rests on:   (Register 'PROVEN' is not one section 4 orders: no claim it rests on directly is flagged as weaker)" in r
+         and "FLAG: weaker" not in r, r)
     r = "\n".join(answer(t, "unverified", "004"))
-    case("on a tree the linter rejects: unverified lists the unresolved dependency", "[claim 042]  (resolves to no claim)" in r, r)
+    case("on a tree with linter findings: unverified lists the unresolved dependency", "[claim 042]  (resolves to no claim)" in r, r)
+    r = "\n".join(answer(t, "sites", None))
+    case("sites says when the cited claim has no such section", "cites [claim 003] [PROVEN]" in r and "has no What is not claimed section" in r, r)
     r = "\n".join(answer(t, "literature", None))
     case("a linked token in a ledger row is not read, and an empty caution is said", "(no claim token)" in r and "): (empty)" in r, r)
     r = "\n".join(answer(t, "unfinished", None))
@@ -405,8 +420,23 @@ def selftest() -> int:
     t = scratch(empty, lint=False)
     r = "\n".join(answer(t, "literature", None))
     case("an empty ledger says so", "(no row: the ledger is empty)" in r, r)
+    named = lint_docs.fixture()
+    named["evidence_and_reasoning/public_record_tensions.md"] = named["evidence_and_reasoning/public_record_tensions.md"].replace(
+        "Caution (live, or closed D Month YYYY)", "Standing")
+    r = "\n".join(answer(scratch(named, lint=False), "literature", None))
+    case("a ledger whose last column is named otherwise still lists its rows", "[tension T001]  [claim 002]" in r and "Standing: live" in r, r)
     r = "\n".join(answer(t, "rests-on", "001"))
     case("a claim with nothing under it says so", "(nothing: no Depends-on, no Backed-by)" in r or "[check 001]" in r, r)
+    # A project that renames a field: the queries read it, and name it, as the
+    # project writes it.
+    held.append(tempfile.TemporaryDirectory())
+    tmp = Path(held[-1].name)
+    lint_docs.scratch_project(tmp, {rel: body.replace("Serves:", "Hypothesis:") for rel, body in base.items()},
+                              lint_docs.scratch_config().replace('serves = "Serves"', 'serves = "Hypothesis"'))
+    lint_docs.scratch_commit(tmp)
+    r = "\n".join(answer(load(tmp), "unfinished", None))
+    case("a renamed field is read, and named, as the project writes it",
+         "plan 001  Hypothesis: none, setup" in r and "(Hypothesis: none)" in r, r)
     print(f"\n  VERDICT: {'every case decided as expected' if not failures else f'{failures} failure(s)'}")
     return 1 if failures else 0
 

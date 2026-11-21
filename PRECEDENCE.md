@@ -1,6 +1,6 @@
 # Precedence: what governs when sources disagree
 
-*Created 2 September 2026; updated 19 November 2026.*
+*Created 2 September 2026; updated 21 November 2026.*
 
 A research project that verifies things independently will, sooner or
 later, establish something the published record does not say, or says
@@ -21,10 +21,11 @@ rulebook costs nothing: the tiers still apply, and the ledger is empty.
 ## Words used here
 
 - A **divergence** is a pair of statements, one a claim of this project
-  and one from the public record, that cannot both hold at the scope the
-  claim states. A different result on a different sample, edition, period,
-  or definition is not a divergence until the claim says it is. A
-  difference of emphasis is never one.
+  and one from the public record or from registered material that is not
+  published, that cannot both hold at the scope the claim states. A
+  different result on a different sample, edition, period, or definition
+  is not a divergence until the claim says it is. A difference of
+  emphasis is never one.
 - **Context** is prose that makes no claim of this project: borrowed
   material, carried at its tier with the hedge the writing discipline
   below requires. Context carries no register and is never cited as a
@@ -200,7 +201,7 @@ ledger.
 
 | # | What this project establishes | What the public record says | The caution that survives | Caution |
 |---|---|---|---|---|
-| T001 | the claim, with its citation and its register | the published statement or consensus, plainly and without polemic, with where it is said | what remains live | live, or closed D Month YYYY |
+| T001 | the claim, with its citation and its register | the statement or consensus, plainly and without polemic, with where it is said | what remains live | live, or closed D Month YYYY |
 
 The key `T###` is assigned once and never reused; `[tension T###]`
 resolves to the row (`ONTOLOGY.md` §1.3). The last column is read as
@@ -209,8 +210,9 @@ recorded; whether a caution is *still* live is reading.
 ### How to add a row
 
 State this project's side with its claim citation and its register. State
-the public record's side plainly, without polemic, and name where it is
-said. Name the caution that survives. **A row with no surviving caution is
+the public record's side, or that of registered material that is not
+published, plainly, without polemic, and name where it is said. Name the
+caution that survives. **A row with no surviving caution is
 suspect**: almost every divergence leaves one, and the commonest
 is that no systematic search of the literature has been made, so the
 absence is established for what was searched and not for the record at

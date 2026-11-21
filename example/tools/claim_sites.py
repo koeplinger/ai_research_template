@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The blast radius of a claim (ONTOLOGY.md section 6, question 4): everything citing it by token, everything whose Depends-on names it, and the Reserved cluster if one holds it.
 
-Created 5 September 2026; updated 5 September 2026.
+Created 5 September 2026; updated 19 November 2026.
 
 For [claim NNN] the report lists, by reading fields and tokens only, the
 three things the question names: every artifact whose prose carries the
@@ -18,9 +18,9 @@ ONTOLOGY.md section 2.8, written nowhere by design), a derived table or
 figure that used the claim without naming it, a write-up's paraphrase;
 a token inside backticks, a fenced block, an HTML comment, or a markdown
 link, which no tool reads (ONTOLOGY.md section 1.3); a file whose
-configured row carries header = none, which no tool reads; and a claim
-that depends on this one only through another claim's Depends-on, which
-the rests-on query shows.  A report, not a gate.
+configured row carries header = none, where no tool reads a token; and
+a claim that depends on this one only through another claim's
+Depends-on, which the rests-on query shows.  A report, not a gate.
 
 Usage
     python3 tools/claim_sites.py NNN        the report for [claim NNN]
@@ -45,7 +45,7 @@ NOT_SEEN = ("Not seen here: a restatement in prose without the token, a derived 
             "the claim without naming it, a write-up's paraphrase (the sweep's, CHECK_METHODOLOGY.md section 7, "
             "item 1); a token inside backticks, a fenced block, an HTML comment, or a markdown link, which no tool "
             "reads (ONTOLOGY.md section 1.3); and a claim depending on this one through another claim's "
-            "Depends-on, which `query_ontology.py rests-on` on that claim shows.")
+            "{depends_on}, which `query_ontology.py rests-on` on that claim shows.")
 
 
 def load(root: Path) -> lint_docs.Tree:
@@ -59,7 +59,7 @@ def fields(t: lint_docs.Tree, f: str) -> dict[str, tuple[int, str]]:
 
 def register(t: lint_docs.Tree, num: str) -> str:
     f = t.claims.get(num)
-    return fields(t, f).get("Register", (0, "?"))[1] if f else "?"
+    return fields(t, f).get(lint_docs.F("register"), (0, "?"))[1] if f else "?"
 
 
 def unread_kinds(t: lint_docs.Tree) -> list[str]:
@@ -92,7 +92,7 @@ def sites(t: lint_docs.Tree, num: str) -> list[str]:
         raise KeyError(num)
     token = f"[claim {num}]"
     fl = fields(t, f)
-    out = [f"{token}  {fl.get('Register', (0, '?'))[1]}  {f}", ""]
+    out = [f"{token}  {fl.get(lint_docs.F('register'), (0, '?'))[1]}  {f}", ""]
     out.append("Cited by token:")
     hits = token_sites(t, token, exclude=f)
     for g, i, text in hits:
@@ -112,7 +112,7 @@ def sites(t: lint_docs.Tree, num: str) -> list[str]:
     out.append("")
     out.append("Depended on by:")
     deps = [(n, g) for n, g in sorted(t.claims.items())
-            if num in [x.strip() for x in fields(t, g).get("Depends-on", (0, ""))[1].split(",")]]
+            if num in [x.strip() for x in fields(t, g).get(lint_docs.F("depends-on"), (0, ""))[1].split(",")]]
     for n, g in deps:
         out.append(f"  [claim {n}]  {register(t, n)}  {g}")
     if not deps:
@@ -126,15 +126,16 @@ def sites(t: lint_docs.Tree, num: str) -> list[str]:
         out.append("Reserved cluster: none (no Reserved stamp)")
     out.append("")
     out.append("Beyond question 4, for the reader:")
-    backed = lint_docs.TOKEN_CHECK.findall(fl.get("Backed-by", (0, ""))[1])
+    backed = lint_docs.TOKEN_CHECK.findall(fl.get(lint_docs.F("backed-by"), (0, ""))[1])
     for n in backed:
-        out.append(f"  Backed-by names [check {n}]" + ("" if n in t.checks else "  (resolves to no check)"))
+        out.append(f"  {lint_docs.F('backed-by')} names [check {n}]" + ("" if n in t.checks else "  (resolves to no check)"))
     if not backed:
-        out.append("  Backed-by names no check")
+        out.append(f"  {lint_docs.F('backed-by')} names no check")
     pf, st = t.plan_of(f)
-    out.append(f"  owned by plan {t.num(pf)}, Status: {st or '(none)'}" if pf else "  owned by no plan (no Plan: line, or it resolves to no plan file)")
+    out.append(f"  owned by plan {t.num(pf)}, {lint_docs.F('status')}: {st or '(none)'}" if pf
+               else f"  owned by no plan (no {lint_docs.F('plan')}: line, or it resolves to no plan file)")
     out.append("")
-    out.append(NOT_SEEN)
+    out.append(NOT_SEEN.format(depends_on=lint_docs.F("depends-on")))
     out.append("Not searched: files whose configured row carries header = none (" + ", ".join(unread_kinds(t)) + ").")
     return out
 
@@ -159,7 +160,7 @@ def selftest() -> int:
             f"# Claim 004: d\n\n{S}\nRegister: ATTESTED\nKind: documentary\nVerdict: confirmed\nPlan: 001, task 1\n"
             f"Verified-by: deferred, the edition\nReserved 2 January 2026, plan 001\n\n## Claim\n\nSays d [Key1, p. 4].\n")
         files["evidence_and_reasoning/checks/003_c.md"] = (
-            f"# Check 003: c\n\n{S}\nPlan: 001, task 1\nBacks: [claim 003]\nInstrument: the edition\nMutation: variant-reading\n\n## 1\n\nz\n")
+            f"# Check 003: c\n\n{S}\nPlan: 001, task 1\nBacks: [claim 003]\nInstrument: the edition\nMutation: variant-reading\nBy: researcher\n\n## 1\n\nz\n")
         files["evidence_and_reasoning/claims/README.md"] += "| [003](003_c.md) |\n| [004](004_d.md) |\n"
         files["evidence_and_reasoning/checks/README.md"] += "| [003](003_c.md) |\n"
         files["FINDINGS.md"] += "| F002 | y [claim 001](evidence_and_reasoning/claims/001_a.md) |\n"
@@ -191,6 +192,18 @@ def selftest() -> int:
             case("an unknown claim is refused", False)
         except KeyError:
             case("an unknown claim is refused", True)
+    # A project that renames a field: the blast radius reads it, and names it,
+    # as the project writes it.
+    with tempfile.TemporaryDirectory() as d:
+        tmp = Path(d)
+        files = {rel: body.replace("Register:", "Trust:").replace("Backed-by:", "Rests-on-check:")
+                 for rel, body in lint_docs.fixture().items()}
+        lint_docs.scratch_project(tmp, files, lint_docs.scratch_config().replace('register = "Register"', 'register = "Trust"')
+                                  .replace('backed-by = "Backed-by"', 'backed-by = "Rests-on-check"'))
+        lint_docs.scratch_commit(tmp)
+        r = "\n".join(sites(load(tmp), "002"))
+        case("a renamed field is read, and named, as the project writes it",
+             r.startswith("[claim 002]  VERIFIED") and "Rests-on-check names [check 002]" in r, r)
     with tempfile.TemporaryDirectory() as d:
         try:
             load(Path(d))

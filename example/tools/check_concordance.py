@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The concordance check: a check program's RESULT line against its record (CHECK_METHODOLOGY.md, What is checked mechanically, item 4).
 
-Created 5 September 2026; updated 5 September 2026.
+Created 5 September 2026; updated 19 November 2026.
 
 A check program ends with one line on standard output,
 RESULT: <verdict>; <name>=<value>; ..., and its check record states the
@@ -14,23 +14,26 @@ line, and a program with no record.  It honors a row's `skip` list, every
 artifact the row matches, like the linter.  Each program runs with the
 interpreter running this tool, from the parent of the configured
 check-program directory, which is how python_project/README.md, Running,
-says a check is run.  Comments, fenced code, and backtick spans under
-part 4 are not read.
+says a check is run.  The tool is therefore run with the interpreter of
+the pinned environment, as that section says; which interpreter ran it
+is not checked.  Comments, fenced code, and backtick spans under part 4
+are not read.
 
 WHAT IT DOES NOT DECIDE.  A written check procedure has no program and
 nothing to run: it is listed as such and not compared.  The verdict word
 is printed beside the backed claim's Verdict, marked where the words
-differ, never a finding: who assigns the register and its verdict is
+differ, never a finding: who assigns the register is
 CHECK_METHODOLOGY.md section 1's.  Single-sourcing a figure across
 documents, and the wrong value stated in a passage about the right
 subject, are reading duties of the sweep (CHECK_METHODOLOGY.md section
-7, item 1).  A program that exits nonzero, prints more than one RESULT
-line, or prints a RESULT part without "=" is noted and still compared.
+7, item 1).  A program that exits nonzero, is stopped at the timeout
+after printing its RESULT line, prints more than one RESULT line, or
+prints a RESULT part without "=" is noted and still compared.
 
 Usage
-    python3 tools/check_concordance.py                run every check program, compare
-    python3 tools/check_concordance.py --only NNN     one check
-    python3 tools/check_concordance.py --timeout S    seconds per program (default 600)
+    .venv/bin/python tools/check_concordance.py                run every check program, compare
+    .venv/bin/python tools/check_concordance.py --only NNN     one check
+    .venv/bin/python tools/check_concordance.py --timeout S    seconds per program (default 600)
     python3 tools/check_concordance.py --selftest
 
 Exit status: 0 no disagreement; 1 a disagreement; 2 an unknown check
@@ -136,10 +139,10 @@ def concordance(t: lint_docs.Tree, timeout: float, only: str | None = None) -> t
         for k, (ln, v) in stated.items():
             if k not in printed:
                 lint_docs.report("CHECK-4", rec, ln, f"{k}: record states {v!r}, program prints nothing")
-        for cn in lint_docs.TOKEN_CLAIM.findall(lint_docs.fields_of(t.headers[prog][0]).get("Backs", (0, ""))[1]):
+        for cn in lint_docs.TOKEN_CLAIM.findall(lint_docs.fields_of(t.headers[prog][0]).get(lint_docs.F("backs"), (0, ""))[1]):
             cf = t.claims.get(cn)
-            cv = lint_docs.fields_of(t.headers[cf][0]).get("Verdict", (0, "?"))[1] if cf else "(no such claim)"
-            notes.append(f"NOTE      {prog}: verdict printed {verdict!r}; [claim {cn}] Verdict: {cv}" + ("" if cv == verdict else "   (the words differ; never a finding)"))
+            cv = lint_docs.fields_of(t.headers[cf][0]).get(lint_docs.F("verdict"), (0, "?"))[1] if cf else "(no such claim)"
+            notes.append(f"NOTE      {prog}: verdict printed {verdict!r}; [claim {cn}] {lint_docs.F('verdict')}: {cv}" + ("" if cv == verdict else "   (the words differ; never a finding)"))
     for num, rec in sorted(t.checks.items()):
         if num not in t.programs and (not only or num == only):
             written += 1
@@ -201,13 +204,15 @@ def selftest() -> int:
     case("the verdict is printed beside the claim's for reading", any("verdict printed 'confirmed'; [claim 002] Verdict: confirmed" in x for x in n), str(n))
     case("a written procedure is noted, not compared", any("001_a.md: no program; a written procedure" in x for x in n) and ran == 1 and written == 1, str(n))
     f, _, _, _ = run_on(sub(K2, "count = 1", "count = 2"))
-    case("a value that differs is reported at the value's line", any(x[0] == "CHECK-4" and x[1] == K2 and x[2] == 15 and "prints '1', record states '2'" in x[3] for x in f), str(f))
+    case("a value that differs is reported at the value's line", any(x[0] == "CHECK-4" and x[1] == K2 and x[2] == 16 and "prints '1', record states '2'" in x[3] for x in f), str(f))
     f, _, _, _ = run_on(sub(K2, "count = 1", "count = 1\nextra = 3"))
-    case("a name stated and not printed is reported at its line", any(x[2] == 16 and "extra: record states '3', program prints nothing" in x[3] for x in f), str(f))
+    case("a name stated and not printed is reported at its line", any(x[2] == 17 and "extra: record states '3', program prints nothing" in x[3] for x in f), str(f))
     f, _, _, _ = run_on(sub(P2, PRINT, PRINT[:-1] + ' + "; n=5")'))
-    case("a name printed and not stated is reported at the part-4 heading", any(x[2] == 13 and "n: program prints '5', record states nothing" in x[3] for x in f), str(f))
+    case("a name printed and not stated is reported at the part-4 heading", any(x[2] == 14 and "n: program prints '5', record states nothing" in x[3] for x in f), str(f))
     f, _, _, _ = run_on(sub(K2, "count = 1\n", "count = 1\n\n```\ncount = 9\n```\n\n<!--\ncount = 8\n-->\n"))
     case("a value inside a fence or a comment under part 4 is not read", not f, str(f))
+    f, _, _, _ = run_on(sub(K2, "count = 1\n", "count = 1\n\n~~~\ncount = 9\n~~~\n"))
+    case("a value inside a fence of tildes under part 4 is not read", not f, str(f))
     f, _, _, _ = run_on(sub(P2, PRINT, 'pass'))
     case("a program printing no RESULT line is reported", any(x[1] == P2 and "prints no RESULT line on standard output" in x[3] for x in f), str(f))
     f, _, _, _ = run_on(sub(P2, PRINT, PRINT.replace('print(', 'print(file=sys.stderr, *[')[:-1] + '])'))
@@ -224,6 +229,13 @@ def selftest() -> int:
     case("two RESULT lines are noted and the last compared", not f and any("prints 2 RESULT lines" in x for x in n), str((f, n)))
     f, n, _, _ = run_on(sub(P2, PRINT, 'print("RESULT: confirmed; count=" + str(obj) + "; range=1;2")'))
     case("a RESULT part without '=' is noted", any("carries no '='" in x for x in n), str((f, n)))
+    started, real_run = [], subprocess.run
+    subprocess.run = lambda argv, **kw: started.append(argv[0]) or real_run(argv, **kw)
+    try:
+        run_on(lambda files: None)
+    finally:
+        subprocess.run = real_run
+    case("a program is started with the interpreter running this tool", [a for a in started if a != "git"] == [sys.executable], str(started))
     f, _, _, _ = run_on(sub(P2, "import sys\n", "import sys, time\ntime.sleep(5)\n"), timeout=1)
     case("a program that exceeds the timeout is reported as unfinished", any("did not finish (timed out" in x[3] for x in f), str(f))
     f, n, _, _ = run_on(sub(P2, PRINT, PRINT + "\n    import time\n    time.sleep(5)"), timeout=1)

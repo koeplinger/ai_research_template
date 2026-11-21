@@ -1,14 +1,15 @@
 # Document genres
 
-*Created 2 September 2026; updated 6 September 2026.*
+*Created 2 September 2026; updated 21 November 2026.*
 
-Every artifact in a repository built from this template belongs to exactly
+Every artifact in a repository built from the template belongs to exactly
 one of three genres, and the genre determines how the artifact may be
 changed. This is the rule that keeps documentation from becoming a change
 log of itself, where it is followed. The genre checker, `tools/lint_docs.py`,
 checks it mechanically and reports what it finds (`MANIFESTO.md` §13); the
 section *What the checker verifies* below is the complete list of what it
-checks, and everything else in this file is the assistant's duty. This
+checks for this file, and everything else in this file is the
+assistant's duty. This
 file is the canonical statement of which artifact is in which genre and
 when its genre changes; `MANIFESTO.md` §12 is the canonical statement of
 how a correction is made, and this file points to it.
@@ -23,13 +24,21 @@ speculation; a current-state artifact can carry established fact.
 Beyond the words `MANIFESTO.md` defines: a **plan** is a numbered file
 under `evidence_and_reasoning/research_plans/` whose `Status:` header line
 holds exactly one of `DRAFT`, `ENGAGED <date>`, or `CLOSED <date>, verdict
-<VERDICT>`, the verdict one of CONFIRMED, REFUTED, COMPLETE, or ABANDONED.
+<VERDICT>`, the verdict one of CONFIRMED, REFUTED, COMPLETE, INCONCLUSIVE,
+or ABANDONED.
 A plan is **open** while its status is DRAFT or ENGAGED. The verdicts:
 CONFIRMED, the hypothesis held and the results are claims; REFUTED, it
 failed and the refutation is itself a claim; COMPLETE, a plan with no
-hypothesis met its pre-registered closure criterion; ABANDONED, execution
-stopped without a verdict, or the pre-registered criteria decided neither
-way, and the reason is recorded. **Both transitions are the researcher's**,
+hypothesis met its pre-registered closure criterion; INCONCLUSIVE, the
+plan was executed as designed and the pre-registered rule decided neither
+way, which is a result and is recorded as one, the interval or the
+coverage the design reached being the claim it leaves; ABANDONED,
+execution stopped, and the reason is recorded.
+
+The five are a closed vocabulary, configured in `tools/artifacts.toml`
+under `[vocab] plan_verdicts`. A project whose discipline closes a plan in
+a way none of them names adds a value there and defines it here, in the
+same round and with the reason in the log. **Both transitions are the researcher's**,
 DRAFT to ENGAGED and ENGAGED to CLOSED: the researcher writes the line or
 directs the assistant to write it, the round's log entry is the
 provenance, and the assistant never changes it on its own initiative. When
@@ -38,10 +47,18 @@ it ready to close. An artifact
 **owned** by a plan carries the header line `Plan: NNN` (optionally `,
 task M`), which resolves to `evidence_and_reasoning/research_plans/NNN_*.md`.
 A **maintained** artifact is current state, changed only at the
-researcher's direction. A **ledger** is a file that tracks status; the word
-*register* is reserved for a statement's trust level
-(`CHECK_METHODOLOGY.md`). *Registry* is a different word and keeps its
-ordinary sense of a catalogue, as in the reference registry. A **sweep** is a pass over many
+researcher's direction. A **ledger** is a running record; the word
+*register* names a statement's trust level (`CHECK_METHODOLOGY.md`)
+wherever these rulebooks use it of a statement, and a ledger is not called
+one. That reservation is over the method's own vocabulary and not over the
+language: where a project's subject matter has registers of its own, an
+admission register, a land register, register data, it calls them that, as
+the model prose in these files does, and disambiguates by naming the thing
+("the register file", "the trust level") wherever both could be meant. A
+project whose sources are registers renames the field instead
+(`GLOSSARY.md`, *Renaming a word this methodology uses*). *Registry* is
+a different word and keeps its ordinary sense of a catalogue, as in the
+reference registry. A **sweep** is a pass over many
 documents at once (`MANIFESTO.md` §14). The **public record** is the
 published literature, reference works, editions, and published estimates
 outside the repository. A **review** is a referee pass, internal or
@@ -57,15 +74,18 @@ YYYY`; dates in filenames are written `YYYY-MM-DD`.
 | Artifact | |
 |---|---|
 | the entries under `prompt_logs/` | every prompt, in order, with what was done in response; the folder's `README.md` and `_template.md` are current state |
+| the attachments under `prompt_logs/attachments/` | what a round received and keeps as received, never corrected (`prompt_logs/attachments/README.md`); that folder's `README.md` is current state |
 
 An entry is **immutable once the researcher has committed it**; its own
 status line does not change this. An entry may be edited only while it is
-uncommitted, in the round that wrote it. An entry committed before its
-round closed is completed by a later entry that points back to it. A
-statement in a committed entry that later turns out wrong is corrected in
-a later entry, never in the old one, and the log's index carries a pointer
-from the wrong entry's row to the entry that corrects it, so a reader who
-finds the one finds the other.
+uncommitted: in the round that wrote it, or to close it when the next
+prompt finds it still open, its closing status not written. An entry
+committed before its round closed is completed by the next round's entry,
+which points back to it (`MANIFESTO.md` §8). A statement in a committed
+entry that later turns out wrong is corrected in a later entry, never in
+the old one. In both cases the log's index carries a pointer from the
+earlier entry's row to the entry that completes or corrects it, so a
+reader who finds the one finds the other.
 
 ---
 
@@ -75,13 +95,13 @@ finds the one finds the other.
 
 | Artifact | Frozen when |
 |---|---|
-| a released version of the main write-up, together with what is released with it (the deliverable: a note in markdown, released as the file itself) | released by the researcher: a `Released <date>` header line on the version, and a row in the changelog; a first version has no changelog, and its stamp alone releases it |
-| a standalone note or write-up under `paper/` not owned by an open plan | on release, the same way |
-| a review under `paper/reviews/` not owned by an open plan | on writing |
-| a version changelog under `paper/` | on release of the later version |
-| **everything a plan owns**: the plan file, its claims, its check records, its check programs and written check procedures, its dated notes, its derived material (transcriptions, collations, extracts, tables, figures), and the write-ups and reviews it produces | **when the plan closes**, with any verdict |
+| a released version of the main write-up, together with what is released with it that no open plan owns (the deliverable, Slots below) | released by the researcher: a `Released <date>` header line on the version, and a row in the changelog; a first version has no changelog, and its stamp alone releases it |
+| a standalone note or write-up under `paper/` that no plan owns | on release, the same way |
+| a review under `paper/reviews/` that no plan owns | when the round that acts on it closes: a review is written across that round, and freezes with its last column filled |
+| a version changelog under `paper/` that no plan owns | on release of the later version |
+| **everything a plan owns**: the plan file, its claims, its check records, its check programs and written check procedures, its dated notes, its derived material (transcriptions, collations, extracts, tables, figures), which lives under `evidence_and_reasoning/derived/`, and the write-ups, changelogs, and reviews it produces | **when the plan closes**, with any verdict |
 | a dated note not owned by an open plan | on writing |
-| a check program or written check procedure not owned by an open plan | when a claim, record, note, or paper cites its path; the checker searches for the path, and the assistant judges the rest |
+| a check program or written check procedure that no plan owns | when a claim, record, note, or paper cites its path, which the assistant judges: no tool looks for the citation. The shipped configuration requires a `Plan:` line on every numbered check, so what this row describes has no filing home until a project gives it one: a row for the unowned form, or a plan that owns the shared machinery |
 | imported material under `inherited/` | on import, at its original date (`MANIFESTO.md` §6) |
 | CLOSING_NOTE.md, a file at the root present only once the project has closed | on writing: it records why the project was closed, on the day it closed |
 
@@ -90,11 +110,11 @@ deliverable's form: an article, an edition, a working paper with its
 replication package, a brief.
 
 **A frozen artifact is corrected only with the researcher's
-authorization** (`MANIFESTO.md` §12): the assistant brings the finding and
-the proposed wording, and stops. Once authorized, it is corrected as §12
-says: in its running text, the updated date the only change to the header,
-or marked `superseded by <path>`. The version history carries the
-predecessor.
+authorization**, and a released version of a versioned write-up is never
+corrected (*Versioned write-ups*, below); `MANIFESTO.md` §12 says how a
+correction is brought and made. A frozen artifact stays at its path: it is
+never moved or deleted, and one that is replaced is marked
+`superseded by <path>`.
 
 **The repository is current state in every genre.** Frozen artifacts are
 dated records of what is *true*, not of how the text got there: a frozen
@@ -119,26 +139,33 @@ correction, and takes the updated date.
 
 ### Versioned write-ups
 
-The main write-up has one living copy at a time. A released version is by
-default succeeded rather than corrected: a correction the researcher
-authorizes goes into the next version, and the released version is marked
-`superseded by <path>` when that version releases. It carries the standard
-header like every artifact. Changes between versions go in a changelog,
-which is a living document until its version releases.
+The main write-up has one living copy at a time. A released version is
+never corrected: it is succeeded by the next (`MANIFESTO.md` §12), and is marked
+`superseded by <path>` when that version releases. Each version carries
+the standard header like every artifact. Changes between versions go in a
+changelog, which is a living document until its version releases or,
+where a plan owns it, until that plan closes. A
+changelog from vN to vM records what changed between those two versions,
+with its ledgers, and nothing found after vM releases: a correction found
+then goes into the next changelog, with the version that makes it. A review, a note, a changelog
+row, or any other record that names a place in a version of a versioned
+write-up uses that version's numbering, and says which version wherever the record does
+not make it evident.
 
 ### Maintained artifacts under `paper/`
 
 An artifact under `paper/` that tracks something outside the plan cycle (a
 reading companion to an external source, a running comparison table, a
 commentary kept current against the project's claims) is listed in the
-checker's current-state configuration explicitly and is not frozen at its
-filename date. Its header carries the date it was last updated, and it says
-what is true now. It is in scope for *Writing for publication*
+checker's current-state configuration explicitly and is not frozen by a
+release, as a version is. Its header carries the date it was last updated,
+and it says what is true now. It is in scope for *Writing for publication*
 (`evidence_and_reasoning/editorial_standards.md`) like a live draft.
 
 ### Artifacts of an open plan
 
-**Nothing a plan owns freezes until the plan closes.** While a plan is
+**Nothing a plan owns freezes until the plan closes**, save a released
+version of a versioned write-up, which freezes on release. While a plan is
 open, its plan file, claims, check records, checks, and notes are
 current-state documents: edited freely in place, and **deleted when they
 turn out to be obsolete**.
@@ -151,7 +178,10 @@ reader time and invites them to mistake a superseded statement for a live
 one. So while the plan is open, **a correction is made by making the
 document say the right thing**: no dated addendum, no narration of its
 earlier text. The history lives in the prompt log and the version history.
-On closure the frozen rules above apply in full.
+On closure the frozen rules above apply in full. A released version of a
+versioned write-up is never corrected, even while a plan that owns it is
+open, and neither is anything released with it that the researcher has
+directed is never corrected (`MANIFESTO.md` §12).
 
 ### A standing reservation
 
@@ -165,8 +195,9 @@ records the deferred question once, in the plan that will resolve it, and
 each affected claim carries a `Reserved <D Month YYYY>, plan NNN` header
 line: a comma after the date and never a colon, so the line is a stamp and
 not a change narrative. It is bookkeeping and changes no genre; the checker
-does nothing with it. What a reservation says, what it licenses, and how a sweep
-treats a reserved claim are defined in `CHECK_METHODOLOGY.md`.
+checks only its form and that the plan it names exists. What a reservation
+says, what it licenses, and how a sweep treats a reserved claim are defined
+in `CHECK_METHODOLOGY.md`.
 
 ---
 
@@ -177,11 +208,11 @@ copied into the artifacts it describes:
 
 | What | Where it lives |
 |---|---|
-| what the record has **established as findings** | `FINDINGS.md`: current state; what counts as a finding is the researcher's decision |
+| what the record has **established as findings** | `FINDINGS.md`: current state; what counts as a finding is the researcher's decision. Its register column is a deliberate copy of each backing claim's `Register:` line, kept for the reader and checked against the claim by the consistency sweep of the record (`CHECK_METHODOLOGY.md` §7, item 3); the claim is the source of truth |
 | the state of the research as a whole | `CURRENT_STATE.md`: the top-level entry point |
 | the status of every plan | the `Status:` line of the plan; `evidence_and_reasoning/research_plans/ROADMAP.md` is an index of plans, one line and a link each, whose status column the checker compares with each plan's line |
 | what a plan established, and what it left open | that plan's own execution status |
-| whether a given artifact is live or frozen | **derived**: live while its owning plan is open, frozen once that plan closes |
+| whether a given artifact is live or frozen | **derived**: live while its owning plan is open, frozen once that plan closes; a released version frozen on release |
 | the rules that produce all of the above | `MANIFESTO.md`, this file, `CHECK_METHODOLOGY.md`, `PRECEDENCE.md` |
 
 An artifact **names its owning plan** in its header, `Plan: NNN`, and stops
@@ -203,18 +234,23 @@ altitude that owns it, and referred to from below by link.
 
 | Artifact | |
 |---|---|
-| `MANIFESTO.md` | the operating rules; substantive change requires the researcher's authorization |
+| `MANIFESTO.md` | the operating rules; every change at the researcher's direction (`MANIFESTO.md` §12) |
 | `DOCUMENT_GENRES.md` | this file |
 | `PRECEDENCE.md` | what governs when sources disagree |
 | `CHECK_METHODOLOGY.md` | how a check is written; where register is defined |
 | `ONTOLOGY.md` | the predicates |
 | `CURRENT_STATE.md` | the state of the research |
-| `FINDINGS.md` | what the record has established; adding, removing, or substantially changing a finding requires the researcher's authorization |
+| `FINDINGS.md` | what the record has established; every change at the researcher's direction, a correction of wording or a pointer included (`MANIFESTO.md` §12) |
 | `ONBOARDING.md` | the session-onboarding file: what every assistant session must know before it works |
+| `GLOSSARY.md` | the method's own words |
+| `GETTING_STARTED.md`, `HOW_IT_FITS_TOGETHER.md`, `FORKING.md` | the guide |
+| `governance/**` | the governance map, the reminders, the roles, and the harness wiring |
+| every artifact template | the form an artifact of its kind is started from |
+| every program under `python_project/` that is not a check program and that no plan owns | the shared modules the checks import, and their tests |
 | every indexing `README.md` | what is in this folder, and what each file does |
 | `evidence_and_reasoning/research_statement.md` | the question as posed; maintained, and changed only on a significant deviation of the question |
 | `evidence_and_reasoning/problem_statement.md` | the keystone: the researcher's thesis, stated as questions or hypotheses precise enough that evidence could count against them, from which plans are drawn; maintained; in the SPECULATIVE register, it orders the reading and trumps nothing. Every plan states which of its hypotheses it serves, or why it serves none; a plan opened while no keystone is designated says so |
-| `evidence_and_reasoning/public_record_tensions.md` | the tension ledger: one row per point where a result of the project diverges from the public record. The assistant brings the row in the same round as the work that creates it; the row enters at the researcher's direction (`PRECEDENCE.md`); maintained |
+| `evidence_and_reasoning/public_record_tensions.md` | the tension ledger: one row per point where a result of the project diverges from the public record or from registered material that is not published, each brought and entered as `PRECEDENCE.md`, *Compliance*, says; maintained |
 | `evidence_and_reasoning/research_result.md` | the condensed summary of `FINDINGS.md`, at the altitude of the write-up |
 | `evidence_and_reasoning/terminology.md` | the glossary |
 | `evidence_and_reasoning/editorial_standards.md` | the prose standards, including the recorded voice |
@@ -225,14 +261,37 @@ altitude that owns it, and referred to from below by link.
 | `LICENSE.md`, `LICENSE-CODE` | the licenses |
 
 **Every durable artifact opens with the same header line**, `Created D
-Month YYYY; updated D Month YYYY`, italicized in a document and in the
-leading comment of a program, so a reader knows how current it is. The
-date is the only thing a current-state artifact says about its own
-history. Non-prose files (data, images, rendered output, transcription
-files) carry no header, and neither does an imported file under
-`inherited/`, which is a verbatim copy; they are dated by the plan that
-owns them or the index that lists them. A tracked path that matches no genre in the
-checker's configuration is reported as unresolved; no default is assumed.
+Month YYYY; updated D Month YYYY`, italicized in a document and plain in a
+program's docstring, or in its leading comment where the language has
+none, so a reader knows how current it is. The
+updated date is the day of the last change to the body (a change confined
+to the header is bookkeeping, §2), read from the local clock, in the
+researcher's time zone, when the edit is made, never assumed or carried
+over from the start of a session, and set in the same edit as the change;
+an edit made after midnight takes the new day. The date is the only thing a
+current-state artifact says about its own history. In a project made from
+the template, a file carried over from it keeps the template's Created
+date, the day the file first existed there, and the template's updated date
+until the project changes the file. Non-prose files (data, images, rendered
+output, transcription files kept as data) carry no header, and neither
+does an attachment under `prompt_logs/attachments/`, which is kept as
+received, an imported file under `inherited/`, which is a verbatim copy
+unless its row in the import ledger records a correction made at the
+researcher's direction (`inherited/README.md`), a held source under
+`source_documents/`, which is never edited (`source_documents/README.md`),
+or a typeset source under `paper/`, which the linter does not read (a
+version among them still carries its header, §2, *Versioned
+write-ups*); they
+are dated by the plan that owns them or the index that lists them, and an
+attachment by the entry that received it. `LICENSE-CODE`, a license text
+kept in its standard form, and `VISION.md`, the template's statement of
+intent, carry none either, and the version history dates them. In a
+project, the copy of the template's
+configuration as it shipped, which the tools' self-tests read
+(`tools/README.md`), keeps the template's header and dates unchanged,
+and its header is not checked. A tracked path that
+matches no genre in the checker's configuration is reported as unresolved;
+no default is assumed.
 
 **The version history is the history of these files.** They carry no
 history of their own.
@@ -272,17 +331,18 @@ must never appear:
 
 **A statement about the subject of the research is content, not
 narrative, whatever words it uses**: a source's revisions, a dataset's
-release vintage, an institution's past, a published correction, an
-instrument's artifact. So is an internal cross-reference (*"established in
+release vintage, an institution's past, a published correction, a
+measurement artifact of an instrument. So is an internal cross-reference (*"established in
 the earlier sections"*), a proper noun (*"the corrected edition"*), the
 dated provenance of a directive (*"recorded <date>, prompt NNN"*), and a
 present-tense description of an operation a program performs.
 
 If a current-state document said something that is now wrong, **just make
 it say the right thing.** Do not announce the change in the document. The
-reason goes where `MANIFESTO.md` §12 puts it, the round's log entry or the
-commit message, and a reversal of a finding also gets a dated note in the
-same round, so that what changed and why stays readable.
+reason goes where `MANIFESTO.md` §12 puts it, the round's log entry, or the
+commit message where the researcher corrects by hand, and a reversal of a
+finding also gets a dated note in the same round, so that what changed and
+why stays readable.
 
 ### Dated records
 
@@ -299,7 +359,7 @@ Their subject *is* an event, and stripping the history from them would
 leave nothing. They are the counterpart of the prompt log: the place a
 reader goes for how a result was reached. This is what lets a
 current-state document drop every trace of a correction, provided the
-reason was recorded where §12 puts it.
+reason was recorded where `MANIFESTO.md` §12 puts it.
 
 The exemption is by path, not by plan: a dated note owned by an *open* plan
 is still a dated record. The exemption covers the *events they record*,
@@ -308,8 +368,10 @@ header and nothing else about itself. What the sweep, audit, or referee
 pass found on its day stays; how the note's own sentences came to read as
 they do is the version history's and the prompt log's.
 
-**A plan's `## Execution status` section, and a check's `## Executions`
-section, are progress ledgers**, and are exempt on the same ground: it records which task was done and when, which
+**A plan's `## Execution status` section, a check's `## Executions`
+section, and a derived file's `## Provenance` section are progress
+ledgers**, and are exempt on the same ground: each records what was done
+and when, which
 is exactly what lets a later reader, or a later session, resume the plan
 from the repository alone. The exemption stops there. The plan's **body**,
 its aspect, its directives, its task descriptions, states what is, like
@@ -323,7 +385,7 @@ the reader the plan is done.
 
 ## Indexes and cross-references are kept on purpose
 
-A project built from this template keeps indexes, ledgers, and
+A project built from the template keeps indexes, ledgers, and
 cross-references that point at information held elsewhere. That is not
 redundancy to be eliminated. It serves two readers at once: a human, who
 needs the material to be navigable, and an assistant, for which a good
@@ -349,28 +411,52 @@ already tracked elsewhere, and it must not add content of the wrong genre.
 The complete list of what `tools/lint_docs.py` checks for this file, each
 stated so that it can be implemented; the editorial checks are listed in
 `evidence_and_reasoning/editorial_standards.md`. A finding is reported to
-the researcher with its output (`MANIFESTO.md` §13).
+the researcher with its output (`MANIFESTO.md` §13). One the researcher
+has ruled to leave is entered, with the log entry of the ruling, in the
+list of accepted findings in `tools/artifacts.toml`, and is left out
+while the words the entry quotes stand and still begin on the line the
+finding names (`MANIFESTO.md` §16, *A ruled
+matter stays ruled*).
 
 1. **Header.** Every durable artifact, by the configured path patterns and
    excluding non-prose files, opens with a line matching `Created D Month
-   YYYY; updated D Month YYYY`, and nothing but a closing period and the
+   YYYY; updated D Month YYYY`, and nothing but a closing period and then the
    closing emphasis mark follows the second date on that line.
-2. **Immutable.** No committed file under `prompt_logs/`, other than its
-   `README.md` and its `_template.md`, differs from its committed version
-   or is deleted.
-3. **Frozen.** For a frozen artifact whose body differs from its committed
-   version, the updated date on the header line has changed. A change
-   confined to the header (pointers, dates, `Released`, `Reserved`,
-   `superseded by`) is free.
+2. **Immutable.** No committed file under `prompt_logs/`, an attachment
+   included, other than its `README.md` indexes and its `_template.md`,
+   differs from its committed version or is deleted.
+3. **Dates and frozen paths.** A durable artifact whose body, its text
+   other than its header lines, a program's code and a configuration's
+   values included, differs from its committed version carries as its
+   updated date the day the file was last written, by the local clock. A
+   change confined to the header (pointers, dates, `Released`, `Reserved`,
+   `superseded by`) is free; a log entry, which item 2 covers, an artifact
+   template, and an artifact not yet committed are outside this half, and
+   an artifact moved in the change counts as not yet committed at its new
+   path. The day is read from the file's modification time, which any later
+   write resets (a stash, or an edit to the header alone), so a file whose
+   body changed on an earlier day may be reported; such a finding is read
+   and left. A frozen artifact that carries a header, frozen as committed
+   and gone from its committed path (moved or deleted), is reported; a
+   headerless one, imported or non-prose, is outside this item. A row may
+   skip either half: `GENRES-3/dates` or `GENRES-3/gone`.
 4. **Genre resolution.** Every tracked path resolves to a genre: the
    configured path patterns assign a default; a `Plan: NNN` header line
-   overrides it to current state while that plan's `Status:` is DRAFT or
-   ENGAGED and to frozen when it is CLOSED; a path resolving to nothing is
-   reported.
+   overrides any default but `immutable`, `frozen`, `exempt`, and a
+   plan's `self` (`tools/artifacts.toml`) to current state while that
+   plan's `Status:` is DRAFT or ENGAGED and to frozen when it is CLOSED,
+   save on a released version of
+   a versioned write-up (a file whose name ends in `_vN` before its
+   extension and which carries its `Released` stamp), which is frozen
+   whatever that status; a path resolving to nothing is reported, and so
+   are a plan whose `Status:` line is missing or takes none of the three
+   forms of *Words used here*, a `Plan:` line naming no plan file, and an
+   owning plan with no `Status:` line.
 5. **Narrative.** On current-state paths, outside the two dated-record
-   patterns and outside any `## Execution status` or `## Executions`
-   section, the following
-   are matched case-insensitively as whole phrases, skipping text inside
+   patterns, outside any `## Execution status` or `## Executions`
+   section, and outside a derived file's `## Provenance` section, the
+   following are matched case-insensitively as whole
+   phrases within one line, skipping text inside
    backticks and the italicized examples in this file and the editorial
    standards: *previously* followed by *read*, *said*, *stated*,
    *reported*, or *recorded*; *used to* followed by *read*, *say*,
@@ -378,16 +464,63 @@ the researcher with its output (`MANIFESTO.md` §13).
    *says*, or *states*; *was found to* followed by *have* or *be*; *before
    the correction*; *since corrected*; *as of* followed by a date; *earlier
    versions of this file*; *supersedes the earlier*; *Correction of
-   record*; *Last updated:* followed by an opening parenthesis; and any of
+   record*; *Last updated:* opening a line and followed by an opening
+   parenthesis; and any of
    *Corrected*, *Updated*, *Extended*, *Hardened*, *Narrowed*, *Reserved*
    followed by a date and a colon, in every genre.
+
+   The last group, a stamp word followed by a date and a colon, is about
+   the *document*, and is checked in every genre and every section, the
+   italicized examples of the two files included. The rest is a phrase
+   list, and a phrase list cannot tell a document narrating its own past
+   from a subject matter whose sentences take the same shape: a source
+   that ceased to record something after a date, a parameter a search
+   returned, a holding stated to be current at a date. **A hit on
+   subject-matter prose is brought, not rewritten**: the check is
+   advisory, the sentence is content, and the round's log entry records
+   that it was read and left; once the researcher has ruled to leave it,
+   it is entered in the list of accepted findings. A project whose subject
+   matter collides with the list persistently silences that half alone,
+   `skip = ["GENRES-5/narrative"]` on the kind's row in
+   `tools/artifacts.toml` with the reason beside it, and keeps the stamp
+   half; the reverse skip is `GENRES-5/stamp`.
 6. **Ledger.** The status column of
    `evidence_and_reasoning/research_plans/ROADMAP.md` agrees with each plan's
-   `Status:` line.
+   `Status:` line in its first word, the plan's state; a date or verdict
+   copied beside the state is not compared. A row naming a plan that has
+   no file, and a plan with no row, are reported.
 7. **Paths.** Every repository path named in a current-state document
-   exists.
-8. **Index.** Every file in a directory that has an indexing `README.md`
-   appears in it.
+   other than an artifact template exists. A path is recognized by shape:
+   a markdown link's target, or a
+   backticked span made of letters from A to Z, digits, `_`, `.`, `/`, and
+   `-` that opens with a letter, a digit, `_`, `./`, or `../` and ends in a
+   slash or in one of the extensions the checker lists (`.md`, `.py`,
+   `.toml`, `.txt`, `.sh`, `.json`, `.tex`, `.pdf`). So a shelfmark, a
+   citation, or an identifier of that shape is read as a path and
+   reported; written without backticks, or in any other shape, it is not.
+   A project whose loci take that shape says so in its
+   glossary and writes them plainly. A path is looked for beside the
+   document and from the root, one that opens with a dot, as `./` and `../`
+   do, beside the document alone, and a bare file or folder name anywhere in the
+   repository; one with a placeholder or a pattern in it (`NNN`, `YYYY`,
+   `<name>`, `*`) is not checked. A section named in a pointer is checked
+   as well. The pointer is a backticked path to a markdown file followed
+   at once by a name set in italics with asterisks that opens with a
+   capital letter or a digit; between the two may stand a section number
+   written with the section sign (`§3`, `§1.2`), a comma or an opening
+   parenthesis, or the number and then one of those, and nothing else.
+   The named file carries that name in a heading written with hash
+   marks, a label set in bold with asterisks, or a table's column
+   heading, or the pointer is reported. So a work's title, a status word,
+   or an emphasized word in that position is read as a section's name,
+   and reported unless the named file carries it; an italic in any other
+   position, or one that opens in lower case, is not. Where the path
+   resolves to no file, or to more than one, no section is checked. A row
+   may skip either half: `GENRES-7/paths` or `GENRES-7/sections`.
+8. **Index.** Every file matching the `lists` pattern of an `[[index]]`
+   row of the configuration appears in that row's indexing file. The
+   indexing file is a `README.md`, except where the configuration names
+   another: the plan folder's is `ROADMAP.md`.
 
 The judgment items above (a sentence whose subject is a change; a section
 off its document's subject; the reason for a correction recorded where it
@@ -397,4 +530,4 @@ belongs) are the assistant's duty.
 
 | Slot | Meaning | Examples |
 |---|---|---|
-| `{{DELIVERABLE}}`: a short note in markdown under `paper/`, named `note_vN.md`, released as the file itself with nothing built | The publishable deliverable: its form, and what is released with a version of it (§2) | an article: its typeset source and rendered copy; an empirical paper: the rendered copy, the estimation code, the cleaned extract or its locator, and the run logs; a critical edition: the edited text, its apparatus, and the transcription files; a brief: the filed document |
+| `{{DELIVERABLE}}`: a short standalone note in markdown under paper/, released as the file itself, with a plain descriptive title, no version marker on the page, its Released stamp saying it is released, and nothing released with it but the text | The publishable deliverable: its form, its title convention, how a version marks itself on the page, and what is released with a version of it (§2). This file owns the slot; `evidence_and_reasoning/editorial_standards.md` carries a row pointing here | an article: its typeset source and rendered copy, its version and date under the title, and a draft marker on the title page until the release; an empirical paper: the rendered copy, the estimation code, the cleaned extract or its locator, and the run logs; a critical edition: the edited text, its apparatus, and the transcription files, with the edition statement on the title page; a brief: the filed document |

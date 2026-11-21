@@ -1,6 +1,6 @@
 # Evidence and reasoning
 
-*Created 3 September 2026; updated 6 September 2026.*
+*Created 3 September 2026; updated 20 November 2026.*
 
 The research record: what is claimed, why it is believed, and where every
 cited work lives. Every claim made anywhere in the repository is traceable
@@ -14,7 +14,7 @@ which the record relates its parts is `ONTOLOGY.md`; the trust levels are
     research_statement.md   the question as posed
     research_result.md      what has been established, condensed
     problem_statement.md    the thesis being tested, and the plans drawn from it
-    research_plans/ROADMAP.md   what is open, and what each plan settles
+    research_plans/ROADMAP.md   every plan, what it settles, and its status
     claims/README.md        the claims, by number
     the claims and checks the question in hand needs
 
@@ -36,7 +36,8 @@ a claim and its check. A claim needs an owning plan before it exists.
 | [checks/](checks/) | numbered checks: the record of each, and the procedure where a check is written rather than run |
 | [references/](references/) | the reference registry, one file per topic, repository, or data source |
 | [research_plans/](research_plans/) | numbered plans and the plan index |
-| [notes/](notes/) | dated working notes, of two kinds |
+| [derived/](derived/) | what a plan made from a source: transcriptions, collations, extracts, tables, figures |
+| [notes/](notes/) | dated notes, of two kinds: working and analytical |
 | [public_record_tensions.md](public_record_tensions.md) | the tension ledger |
 
 ## Conventions
@@ -47,15 +48,18 @@ a claim and its check. A claim needs an owning plan before it exists.
   folder's `README.md` and `_template.md` fall outside them.
 - A check and its program share a number: `checks/NNN_*.md` records what
   `python_project/src/check_NNN_*.py` does, or is itself the written
-  procedure. These are the defaults `tools/artifacts.toml` ships with.
-- Every file here carries the standard header stamp, and every claim,
-  check, and plan carries the field lines `ONTOLOGY.md` §1 fixes.
+  procedure. These are the defaults `tools/artifacts.toml` starts with.
+- Every prose file here carries the standard header stamp, and every
+  claim, check, plan, and prose derived file carries the field lines
+  `ONTOLOGY.md` §1 fixes; a non-prose file under `derived/` carries no
+  header at all (`DOCUMENT_GENRES.md` §3).
 
 ## Slots
 
-The templates in this directory carry no Slots table of their own; this
-table covers them.
+The artifact templates in the folders below carry no slot of their own:
+where one needs a slot's value, it points to the Slots table of the file
+that owns the slot. This table holds the one slot this file owns.
 
 | Slot | Meaning | Examples |
 |---|---|---|
-| `{{PROJECT_TITLE}}`: Market days in a synthetic market roll | the project's name, used in the statements | *Hospital admissions in one city, 1830 to 1850*; *Replicating the 2019 minimum-wage estimates*; *A close reading of one recent paper* |
+| `{{PROJECT_TITLE}}`: Market days in a synthetic market roll | the project's name, which opens the research statement's question and heads the front page | *Hospital admissions in one city, 1830 to 1850*; *Replicating the 2019 minimum-wage estimates*; *A close reading of one recent paper* |

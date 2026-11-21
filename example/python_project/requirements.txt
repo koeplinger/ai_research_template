@@ -1,4 +1,5 @@
 # Pin exact versions: the instrument of record is identified by its
-# version (CHECK_METHODOLOGY.md section 3). The checks of this example use
-# the standard library only; pytest runs the foundation suite.
-pytest==9.0.2
+# version (CHECK_METHODOLOGY.md section 3). Add the project's own pins,
+# and keep the one for pytest while the foundation suite is run with it
+# (README.md, Running).
+pytest==8.3.3

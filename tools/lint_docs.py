@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The genre and ontology linter: every statically decidable check, in one program.
 
-Created 4 September 2026; updated 19 November 2026.
+Created 4 September 2026; updated 21 November 2026.
 
 Reads tools/artifacts.toml, the single source of every path pattern
 (ONTOLOGY.md section 7) and of the closed vocabularies a project may
@@ -1472,7 +1472,7 @@ def check_check_3_mutation(t: Tree) -> None:
         if not mut or not mut[1]:
             report("CHECK-3", f, 1, f"no {F('mutation')}: line")
             continue
-        saw = True
+        saw = saw or bool(read_value(mut[1]))
         names = [x.strip() for x in mut[1].split(",") if x.strip()]
         if known:
             for n in names:
@@ -1603,9 +1603,9 @@ def fixture() -> dict[str, str]:
     }
 
 
-# Where a project keeps the template's configuration as it shipped: the
-# setup tool writes it beside the project's own, unchanged, and the template
-# itself has no such file (tools/README.md).
+# Where a project keeps the template's configuration as it shipped: beside
+# the project's own, unchanged, made by the setup tool or by hand; the
+# template itself has no such file (tools/README.md).
 SHIPPED_CONFIG = "tools/artifacts_shipped.toml"
 
 
@@ -1754,8 +1754,8 @@ def selftest() -> int:
               + ("" if hit else f": {[(x[0], x[3][:60]) for x in FINDINGS]}"))
 
     # The scratch projects carry the configuration as shipped: in a project,
-    # the copy the setup tool keeps beside the project's own, whatever the
-    # project has done to that one; where there is no copy, the configuration.
+    # the copy kept beside the project's own, whatever the project has done
+    # to that one; where there is no copy, the configuration.
     with tempfile.TemporaryDirectory() as d:
         root = Path(d)
         (root / "tools").mkdir()
@@ -2118,6 +2118,9 @@ def selftest() -> int:
     run_case("a check with no Mutation: line", "CHECK-3", K2, "no Mutation", sub(K2, "Mutation: variant-reading\n", ""))
     run_case("a mutation outside the project's set", "CHECK-3", K2, "not in the project's set", sub(K2, "Mutation: variant-reading", "Mutation: bogus"))
     run_case("the mutation set left unfilled", "CHECK-3", "tools/artifacts.toml", "unfilled", lambda t, f: w(t, "tools/artifacts.toml", cfg_text.replace('mutations = ["variant-reading"]', "mutations = []")))
+    absent_case("the mutation set left unfilled, where every Mutation: line holds only a comment", "CHECK-3", "tools/artifacts.toml", "unfilled",
+                lambda t, f: [w(t, r, f[r].replace("Mutation: variant-reading", "Mutation: <!-- the names -->")) for r in (K1, K2, P2)],
+                cfg=cfg_text.replace('mutations = ["variant-reading"]', "mutations = []"))
     run_case("the dash convention left unfilled", "EDIT-1", "tools/artifacts.toml", "unfilled", lambda t, f: w(t, "tools/artifacts.toml", cfg_text.replace('dashes = "no-em-dash"', 'dashes = ""')))
     absent_case("an em-dash inside a fence of tildes", "EDIT-1", "MANIFESTO.md", "", add("MANIFESTO.md", "\n~~~\nOne " + chr(0x2014) + " two.\n~~~\n"))
     run_case("an em-dash in a docstring of several lines", "EDIT-1", "python_project/conftest.py", "em-dash",

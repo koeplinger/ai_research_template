@@ -1,6 +1,6 @@
 # Findings
 
-*Created 3 September 2026; updated 3 September 2026.*
+*Created 3 September 2026; updated 21 November 2026.*
 
 <!-- A current-state document, not a point-in-time list: it holds whatever
      the record has established, and it grows as the work does. Every
@@ -10,9 +10,9 @@
 
 **Governance.** What counts as a finding is the researcher's decision; the
 assistant proposes and stops (`MANIFESTO.md` §12). A key is assigned once
-and never reused; an overturned finding keeps its key, its row states what
-now holds, and a reversal gets a dated note in the same round
-(`DOCUMENT_GENRES.md`).
+and never reused, and an overturned finding keeps its key (`ONTOLOGY.md`
+§1.3 and §2.5); its row states what now holds, and a reversal gets a dated
+note in the same round (`DOCUMENT_GENRES.md`).
 
 **Registers.** Each row states the register of the claim that backs it.
 The hypotheses of the keystone are SPECULATIVE and are not findings; where

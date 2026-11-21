@@ -1,6 +1,6 @@
 # Editorial standards
 
-*Created 2 September 2026; updated 19 November 2026.*
+*Created 2 September 2026; updated 21 November 2026.*
 
 The five standards, the conventions, and the corollaries below govern every
 prose change to every **durable artifact** (`MANIFESTO.md`, *Words used
@@ -106,9 +106,9 @@ The project's choices, recorded once and used throughout.
 
 ## Writing for publication
 
-*Scope: every artifact under `paper/` that is not frozen (`DOCUMENT_GENRES.md`
-§2 says when each freezes): drafts owned by an open plan, unreleased
-standalone notes and changelogs, and maintained companions. Frozen
+*Scope: every draft, standalone note, changelog, and maintained companion
+under `paper/` that is not frozen (`DOCUMENT_GENRES.md` §2 says when each
+freezes). Frozen
 `paper/` artifacts keep their own wording: a released version is succeeded
 by the next, and any other frozen artifact is corrected only under
 `MANIFESTO.md` §12. The mechanical part of this section is listed under
@@ -325,8 +325,9 @@ in the list of accepted findings in `tools/artifacts.toml` (`MANIFESTO.md`
 ## How to apply
 
 Check every prose change against the five standards, the conventions, and
-the corollaries; and every change to an unfrozen `paper/` artifact against
-*Writing for publication*, including its *Voice*, as well.
+the corollaries; and every change to an artifact in the scope of
+*Writing for publication* against that section, including its *Voice*,
+as well.
 
 A new section, or one a round rebuilds rather than corrects, is then read
 once from start to finish, as its intended reader would read it, before
@@ -355,4 +356,4 @@ and makes none.
 | `{{PAPER_PRONOUN}}` | The agent that performs the paper's acts | *we*, also for a single author, as in mathematics and physics; *I* for a single author, as in history and law; the document as agent (*this article argues*), with no first-person pronoun, as some humanities venues require |
 | `{{REFERENCE_ADEQUACY}}` | Which kind of reference is adequate for which kind of claim (`MANIFESTO.md` §2) | a journal article or monograph for any specialist claim, an archival document by shelfmark for any claim about what a source says, a dataset by release for any figure (history of medicine); a DOI-bearing source for every empirical claim, encyclopedic sources for background only (empirical economics) |
 | `{{DELIVERABLE}}` | Filled once in `DOCUMENT_GENRES.md`, which owns it (§2); this row points there | an article with results, discussion, and an appendix, descriptive title (mathematics); an empirical paper with a question or declarative title as the journal expects, and a replication package (economics); a monograph chapter with footnotes and no appendix (history) |
-| `{{VOICE}}` | The recorded voice rules for unfrozen drafts | the example record above (mathematics and history, mixed); a record read off a dissertation chapter and a first article; a house style the researcher adopts and names |
+| `{{VOICE}}` | The recorded voice rules for what *Writing for publication* covers | an example record kept as it stands (mathematics and history, mixed); a record read off a dissertation chapter and a first article; a house style the researcher adopts and names |

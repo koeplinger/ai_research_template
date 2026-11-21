@@ -1,6 +1,6 @@
 # Check methodology
 
-*Created 2 September 2026; updated 19 November 2026.*
+*Created 2 September 2026; updated 21 November 2026.*
 
 This file defines the unit of verification in a repository built from the
 template: the **check**. It owns four things the other rulebooks point to:
@@ -158,7 +158,7 @@ several.
 independent measurements, estimates, or readings where more than one
 exists, never to a single reported figure**, and any disagreement is
 recorded plainly. The verdict *in tension* is the same word
-`PRECEDENCE.md` uses for a divergence from the public record, and
+`PRECEDENCE.md` uses for a divergence, and
 deliberately so. An interpretive claim states what would count against it
 before the evidence is assembled.
 
@@ -381,7 +381,7 @@ What a sweep covers, at minimum:
    (`paper/reviews/README.md`).
 6. **The write-ups against each other**: any fact stated in two of
    them must be stated compatibly. A released version, and the changelog
-   that froze with it, is never brought into line with a later version
+   to it, is never brought into line with a later version
    (`DOCUMENT_GENRES.md`, *Versioned write-ups*).
 7. **The checks against their records and claims.**
 8. **The tension ledger against the claims and the references**
@@ -402,8 +402,8 @@ runs against a ruling of the researcher's is reported as such, with the
 ruling's prompt, and not proposed (`MANIFESTO.md` §16, *A ruled matter
 stays ruled*). Of the rest, a fix to a current-state artifact that is
 neither maintained nor one of the four `MANIFESTO.md` §12 names may be
-applied; every other fix is brought with its proposed wording, and the
-assistant stops.
+applied, unless it amends a rule (`FORKING.md`, *A rule*); every other fix
+is brought with its proposed wording, and the assistant stops.
 
 **This sweep reads the record.** Its counterpart over the *documentation*,
 which asks whether the rulebooks, the indexes, the artifact templates, and
@@ -496,9 +496,12 @@ The tools check the following and report what they find (`MANIFESTO.md`
    passes whatever the work does.
 3. **Mutation coverage.** Every check carries a `Mutation:` line naming
    members of the mutation set, as `[vocab] mutations` in
-   `tools/artifacts.toml` lists them. For a check that executes, the probe
-   applies exactly the mutations that check names to a scratch copy,
-   re-runs it, and reports it if it still passes. For a written check
+   `tools/artifacts.toml` lists them; while that list is empty the name
+   check is skipped, and the linter reports the skip once, at the
+   configuration, if a check carries a filled `Mutation:` line. For a
+   check that executes, the probe applies exactly the mutations that
+   check names to a scratch copy, re-runs it, and reports it if it still
+   passes. For a written check
    procedure the tools report only an absent or unrecognized `Mutation:`
    line; whether the planted alteration was caught is read from the check
    record.

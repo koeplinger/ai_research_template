@@ -1,10 +1,10 @@
 # Source documents
 
-*Created 3 September 2026; updated 19 November 2026.*
+*Created 3 September 2026; updated 21 November 2026.*
 
 The sources of record (`PRECEDENCE.md`, tier 2): what a source *actually
 says*, read against the source itself in the form the project designates.
-A work belongs here once a claim is collated against it, the `ATTESTED`
+A work belongs here once claims are to be read against it, whatever their
 register; a work merely cited lives in the registry alone. Only a source
 the researcher may redistribute is held here, each with its license note;
 every other source of record is consulted at its locator and indexed here

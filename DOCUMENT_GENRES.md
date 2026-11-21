@@ -1,6 +1,6 @@
 # Document genres
 
-*Created 2 September 2026; updated 19 November 2026.*
+*Created 2 September 2026; updated 21 November 2026.*
 
 Every artifact in a repository built from the template belongs to exactly
 one of three genres, and the genre determines how the artifact may be
@@ -102,12 +102,12 @@ reader who finds the one finds the other.
 | Artifact | Frozen when |
 |---|---|
 | a released version of the main write-up, together with what is released with it that no open plan owns (the deliverable, Slots below) | released by the researcher: a `Released <date>` header line on the version, and a row in the changelog; a first version has no changelog, and its stamp alone releases it |
-| a standalone note or write-up under `paper/` not owned by an open plan | on release, the same way |
-| a review under `paper/reviews/` not owned by an open plan | when the round that acts on it closes: a review is written across that round, and freezes with its last column filled |
-| a version changelog under `paper/` | on release of the later version |
-| **everything a plan owns**: the plan file, its claims, its check records, its check programs and written check procedures, its dated notes, its derived material (transcriptions, collations, extracts, tables, figures), which lives under `evidence_and_reasoning/derived/`, and the write-ups and reviews it produces | **when the plan closes**, with any verdict |
+| a standalone note or write-up under `paper/` that no plan owns | on release, the same way |
+| a review under `paper/reviews/` that no plan owns | when the round that acts on it closes: a review is written across that round, and freezes with its last column filled |
+| a version changelog under `paper/` that no plan owns | on release of the later version |
+| **everything a plan owns**: the plan file, its claims, its check records, its check programs and written check procedures, its dated notes, its derived material (transcriptions, collations, extracts, tables, figures), which lives under `evidence_and_reasoning/derived/`, and the write-ups, changelogs, and reviews it produces | **when the plan closes**, with any verdict |
 | a dated note not owned by an open plan | on writing |
-| a check program or written check procedure not owned by an open plan | when a claim, record, note, or paper cites its path, which the assistant judges: no tool looks for the citation. The shipped configuration requires a `Plan:` line on every numbered check, so this row has no filing home until a project adds one: a row for the unowned form, or a plan that owns the shared machinery |
+| a check program or written check procedure that no plan owns | when a claim, record, note, or paper cites its path, which the assistant judges: no tool looks for the citation. The shipped configuration requires a `Plan:` line on every numbered check, so what this row describes has no filing home until a project gives it one: a row for the unowned form, or a plan that owns the shared machinery |
 | imported material under `inherited/` | on import, at its original date (`MANIFESTO.md` §6) |
 | CLOSING_NOTE.md, a file at the root present only once the project has closed | on writing: it records why the project was closed, on the day it closed |
 
@@ -149,7 +149,8 @@ The main write-up has one living copy at a time. A released version is
 never corrected: it is succeeded by the next (`MANIFESTO.md` §12), and is marked
 `superseded by <path>` when that version releases. Each version carries
 the standard header like every artifact. Changes between versions go in a
-changelog, which is a living document until its version releases. A
+changelog, which is a living document until its version releases or,
+where a plan owns it, until that plan closes. A
 changelog from vN to vM records what changed between those two versions,
 with its ledgers, and nothing found after vM releases: a correction found
 then goes into the next changelog, with the version that makes it. A review, a note, a changelog
@@ -245,7 +246,7 @@ altitude that owns it, and referred to from below by link.
 | `CHECK_METHODOLOGY.md` | how a check is written; where register is defined |
 | `ONTOLOGY.md` | the predicates |
 | `CURRENT_STATE.md` | the state of the research |
-| `FINDINGS.md` | what the record has established; adding, removing, or substantially changing a finding requires the researcher's authorization |
+| `FINDINGS.md` | what the record has established; every change at the researcher's direction, a correction of wording or a pointer included (`MANIFESTO.md` §12) |
 | `ONBOARDING.md` | the session-onboarding file: what every assistant session must know before it works |
 | `GLOSSARY.md` | the method's own words |
 | `GETTING_STARTED.md`, `HOW_IT_FITS_TOGETHER.md`, `FORKING.md` | the guide |
@@ -255,7 +256,7 @@ altitude that owns it, and referred to from below by link.
 | every indexing `README.md` | what is in this folder, and what each file does |
 | `evidence_and_reasoning/research_statement.md` | the question as posed; maintained, and changed only on a significant deviation of the question |
 | `evidence_and_reasoning/problem_statement.md` | the keystone: the researcher's thesis, stated as questions or hypotheses precise enough that evidence could count against them, from which plans are drawn; maintained; in the SPECULATIVE register, it orders the reading and trumps nothing. Every plan states which of its hypotheses it serves, or why it serves none; a plan opened while no keystone is designated says so |
-| `evidence_and_reasoning/public_record_tensions.md` | the tension ledger: one row per point where a result of the project diverges from the public record, each brought and entered as `PRECEDENCE.md`, *Compliance*, says; maintained |
+| `evidence_and_reasoning/public_record_tensions.md` | the tension ledger: one row per point where a result of the project diverges from the public record or from registered material that is not published, each brought and entered as `PRECEDENCE.md`, *Compliance*, says; maintained |
 | `evidence_and_reasoning/research_result.md` | the condensed summary of `FINDINGS.md`, at the altitude of the write-up |
 | `evidence_and_reasoning/terminology.md` | the glossary |
 | `evidence_and_reasoning/editorial_standards.md` | the prose standards, including the recorded voice |

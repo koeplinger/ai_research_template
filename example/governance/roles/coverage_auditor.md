@@ -1,6 +1,6 @@
 # The coverage auditor
 
-*Created 5 September 2026; updated 5 September 2026.*
+*Created 5 September 2026; updated 19 November 2026.*
 
 **Role.** A reader who classifies every atomic assertion a check makes
 or its record states, so that a check certifies exactly what it gates and
@@ -15,9 +15,13 @@ claim). Each assertion is one of:
 | `MISMATCH` | stated in the record and computed by the program, and the two disagree (`tools/check_concordance.py` reports the named values; the auditor reads the rest) |
 | `ATTESTED` | taken from a source of record, not computed: a reading, a published figure; it must carry its locus, and it can support no more than the register `ATTESTED` (`CHECK_METHODOLOGY.md` §1), whatever register the claim carries: a claim that leans on it while registered higher is a gap |
 
-Every gap (any class but `GATED`, where the claim leans on the
-assertion) is handed to the refuter, who tries to show the assertion is
-gated after all or that the claim does not lean on it.
+Every gap is handed to the refuter: an assertion of any class but
+`GATED` on which the claim leans, `ATTESTED` only where the claim is
+registered higher; and, whatever the class, a negative without its
+control, a quantity without its frame, or a boundary without its two
+controls. The refuter tries to show that the assertion is gated after
+all, that the controls or the frame are there after all, or that the
+claim does not lean on it.
 
 **Fires.** Before a check is accepted as backing a claim registered
 `VERIFIED` or `RULED_OUT`; before a plan closes on its checks.
@@ -46,13 +50,19 @@ condition (for GATED), the print or display (PRINTED_ONLY), the
 statement with nothing behind it (NOT_COMPUTED), the two values
 (MISMATCH), or the locus (ATTESTED). Then list every negative assertion
 and its positive control, and every quantity and the assertion that
-fixes its frame; a negative without a control or a quantity without a
-frame is a gap. Return the table and the two lists.
+fixes its frame; where a GATED assertion turns on a boundary (a
+threshold, a cutoff, either end of a window, a minimum count), the
+second list also names its two controls, the last value that must pass
+and the first that must fail, each written out, never computed from
+the limit the check holds, and run through the same code or procedure
+as the check. A negative without a control, a quantity without a
+frame, or a boundary without both of those controls is a gap. Return
+the table and the two lists.
 ```
 
-**Output.** The table, kept in the round's log entry and pointed at from
-the check record's part 6; each gap then goes to the refuter, and the
-outcome is recorded beside it.
+**Output.** The table and the two lists, kept in the round's log entry
+and pointed at from the check record's part 6; each gap then goes to
+the refuter, and the outcome is recorded beside it.
 
 **Does not decide.** The register: the researcher assigns it, informed by
 the table (`CHECK_METHODOLOGY.md` §1). Whether a `PRINTED_ONLY` value

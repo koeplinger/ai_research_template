@@ -4,8 +4,9 @@
 
 <!-- One row per change between the versions, in the order a reader of
      vN meets them, and a last row for the release itself (ONTOLOGY.md
-     section 1.4); until that row is written the changelog is live, and
-     it freezes when vM releases (DOCUMENT_GENRES.md section 2). A change
+     section 1.4); the changelog is live until that row is written, or,
+     where a plan owns it, until that plan closes
+     (DOCUMENT_GENRES.md section 2). A change
      that follows a review names it; a change that follows a correction
      to a frozen claim names the authorizing prompt (MANIFESTO.md section
      12). Delete these comments in the instance. -->

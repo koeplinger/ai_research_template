@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The round check: every gate a round must pass, in one command.
 
-Created 5 September 2026; updated 5 September 2026.
+Created 5 September 2026; updated 19 November 2026.
 
 Run before work is handed back and before changes are reported ready to
 commit (MANIFESTO.md section 13).  Nothing here blocks the researcher: a
@@ -17,29 +17,41 @@ WHAT IT RUNS
   ROUND-1  the log's numbering: contiguous from 001, zero-padded to at
            least three digits, no number twice, every name of the form
            NNN_short_description.md (MANIFESTO.md section 8)
-  ROUND-2  the parts of an entry the researcher may still edit, that is,
-           one not yet committed or differing from its committed version:
-           the parts [log] names, each once and in order, searched after
-           the verbatim region, which ends at the first closing delimiter,
-           and outside fenced code; and, under the
-           last part, a fenced status block of the section-16 form with no
-           RUNNING line (prompt_logs/README.md, "The four parts of an
-           entry").  A committed entry is immutable and is completed by a
-           later entry, so it is not re-read here.
+  ROUND-2  an entry not yet committed, untracked or staged new: the
+           parts [log] names, in order: the two delimiters anywhere,
+           and each other part once, searched after the verbatim region,
+           which ends at the first closing delimiter, and outside fenced
+           code; and, under the last part, a
+           fenced status block of the section-16 form with no RUNNING line
+           (prompt_logs/README.md, "The four parts of an entry"), its
+           comments unread, so that a label still carrying the artifact
+           template's placeholder is reported as not written; and the
+           header's By: line, its comment unread the same way: the party
+           and, for the assistant, the AI model (MANIFESTO.md section 8).
+           A committed entry is immutable and is completed or corrected by
+           a later entry, so it is not read here, changed or not: a change
+           to it is GENRES-2's, whose remedy is to restore it.
   ROUND-3  the build, where [publication] is enabled: every output and the
            build log newer than every source, and the log matching no
            error marker.  "Newer" is by modification time, which a
            checkout does not preserve: the gate is meaningful on a tree
            where the build has run since the sources last changed, and a
            git-ignored log is absent on a fresh clone until then.  The
-           build is the researcher's to run; the finding names the
-           command.
-  ROUND-4  the bibliography, where [publication] names one: every entry
-           cited, no citation of an entry the bibliography lacks, no entry
-           defined twice, and the entries in the order of their first
-           citation, taking the sources in the configured order and
-           alphabetically within a glob, comments included, keys compared
-           as written.
+           check never runs the build; the finding names the command,
+           which the main thread may run within a round (paper/README.md,
+           Conventions).
+  ROUND-4  the bibliography, where [publication] is enabled and names one:
+           every entry cited, no citation of an entry the bibliography
+           lacks, no entry defined twice, and the entries in the order of
+           their first citation, taking the sources in the configured
+           order and alphabetically within a glob, comments included, keys
+           compared as written.
+
+A finding the researcher has ruled to leave, entered in the configuration's
+[[accepted]] list, is left out and counted, the linter's and the round's
+alike; an entry of a ROUND tag that matches nothing is reported here, as
+the linter reports its own (MANIFESTO.md section 16, "A ruled matter
+stays ruled").
 
 Usage
     python3 tools/check_round.py               exit 1 on any finding, 2 if misconfigured
@@ -101,16 +113,18 @@ def check_round_1_numbering(t: lint_docs.Tree) -> None:
             report("ROUND-1", log_index(t), 1, f"entry {n:03d} missing: numbering is not contiguous")
 
 
-def editable_entries(t: lint_docs.Tree) -> set[str]:
-    """Entries the researcher may still edit: untracked, or differing from HEAD."""
+def uncommitted_entries(t: lint_docs.Tree) -> set[str]:
+    """Entries not yet committed: untracked, or staged new, the set the
+    session brief counts as uncommitted.  A committed entry changed since
+    its commit is GENRES-2's, and is not read here."""
     d = t.dir_of_kind("log-entry")
     if not d:
         return set()
     if not lint_docs.git(t.root, "rev-parse", "--verify", "HEAD"):
         return set(log_entries(t))
-    changed = lint_docs.git(t.root, "diff", "--name-only", "-z", "HEAD", "--", d + "/")
+    staged = lint_docs.git(t.root, "diff", "--name-only", "-z", "--no-renames", "--diff-filter=A", "HEAD", "--", d + "/")
     new = lint_docs.git(t.root, "ls-files", "--others", "--exclude-standard", "-z", "--", d + "/")
-    return {f for f in (changed + new).split("\0") if f}
+    return {f for f in (staged + new).split("\0") if f}
 
 
 def check_round_2_parts(t: lint_docs.Tree) -> None:
@@ -118,11 +132,23 @@ def check_round_2_parts(t: lint_docs.Tree) -> None:
     if len(parts) < 3:
         report("ROUND-2", "tools/artifacts.toml", 1, "[log] parts needs the two delimiters and at least one further part")
         return
-    editable = editable_entries(t)
+    uncommitted = uncommitted_entries(t)
     for f in log_entries(t):
-        if f not in editable:
+        if f not in uncommitted:
             continue
         lines = t.text[f].splitlines()
+        # The header's By: line: the party and, for the assistant, the AI
+        # model as the harness reports it, or "not reported" (MANIFESTO.md
+        # section 8).  Its comment is unread, as the closing status's is, so
+        # the artifact template's placeholder is reported as not written.
+        by = lint_docs.fields_of(t.headers.get(f, ([], 1))[0]).get(lint_docs.F("by"))
+        if not by:
+            report("ROUND-2", f, 1, f"no {lint_docs.F('by')}: line under the stamp naming who did the work")
+        else:
+            party, _, model = lint_docs.read_value(by[1]).partition(",")
+            if not party.strip() or (party.strip() == "assistant" and not model.strip()):
+                report("ROUND-2", f, by[0], f"{lint_docs.F('by')}: not written: the party, and for the "
+                       "assistant the AI model as the harness reports it, or not reported")
         pos: list[int] = []
         # the two delimiters, anywhere; the verbatim region between them is read by no check
         for p in parts[:2]:
@@ -157,9 +183,16 @@ def check_round_2_parts(t: lint_docs.Tree) -> None:
                 report("ROUND-2", f, pos[-1], "closing status carries no fenced status block")
             continue
         fence_line = pos[-1] + tail[:m.start()].count("\n") + 1
-        for p in check_status_reply.check(m.group(2)):
+        # No check reads a comment as a status, so the artifact template's
+        # placeholder (`DONE: <!-- what finished -->`) is not one.
+        block = re.sub(r"<!--.*?-->", "", m.group(2), flags=re.S)
+        labels = "|".join(map(re.escape, check_status_reply.LABELS))
+        if re.search(rf"^(?:{labels}):\s*$", block, re.M):
+            report("ROUND-2", f, fence_line, "closing status not written: a label carries no text, or only a comment")
+            continue
+        for p in check_status_reply.check(block):
             report("ROUND-2", f, fence_line, f"closing status block: {p}")
-        if re.search(r"^RUNNING: ", m.group(2), re.M):
+        if re.search(r"^RUNNING: ", block, re.M):
             report("ROUND-2", f, fence_line, "closing status names RUNNING; a round that has closed runs nothing")
 
 
@@ -272,8 +305,10 @@ ITEMS = ["ROUND-1", "ROUND-2", "ROUND-3", "ROUND-4"]
 
 def run_round(root: Path) -> tuple[lint_docs.Tree, list[tuple[str, str, int, str]]]:
     t = lint_docs.run_checks(root)
+    lint_docs.honor(ITEMS)
     for c in CHECKS:
         c(t)
+    lint_docs.report_stale(ITEMS)
     return t, list(lint_docs.FINDINGS)
 
 
@@ -287,7 +322,8 @@ def run(root: Path) -> int:
         print(f"{item:9s} {path}:{line}: {msg}")
     n = len(found)
     pub = "enabled" if t.cfg.get("publication", {}).get("enabled") else "disabled"
-    print(f"\nround check: {n} finding(s) over {len(t.files)} files; publication gates {pub}")
+    note = lint_docs.accepted_note(lint_docs.ITEMS + ITEMS)
+    print(f"\nround check: {n} finding(s) over {len(t.files)} files{note}; publication gates {pub}")
     return 1 if n else 0
 
 
@@ -319,11 +355,13 @@ def selftest() -> int:
         (tmp / rel).write_text(body)
 
     def entry(n: int, name: str, closing: str = "DONE: setup", prompt: str = "x") -> str:
-        return (f"# Prompt {n:03d}: {name}\n\n{S}\n\n--- PROMPT START ---\n{prompt}\n--- PROMPT END ---\n\n"
+        return (f"# Prompt {n:03d}: {name}\n\n{S}\nBy: assistant, not reported\n\n--- PROMPT START ---\n{prompt}\n--- PROMPT END ---\n\n"
                 f"## What was done\n\nSetup.\n\n## Corrections and departures\n\nnone\n\n## Closing status\n\n```\n{closing}\n```\n")
 
     def index_logs(tmp: Path, files: dict, *names: str) -> None:
-        w(tmp, "prompt_logs/README.md", files["prompt_logs/README.md"] + "".join(f"| [{n[:3]}]({n}) |\n" for n in names))
+        # a committed file changed on purpose carries the day of the change (GENRES-3)
+        w(tmp, "prompt_logs/README.md", lint_docs.dated(files["prompt_logs/README.md"])
+          + "".join(f"| [{n[:3]}]({n}) |\n" for n in names))
 
     def second(tmp: Path, files: dict, body: str | None = None, name: str = LOG2) -> None:
         """A fresh, uncommitted, indexed entry: the one ROUND-2 reads."""
@@ -346,9 +384,9 @@ def selftest() -> int:
             # past the configuration's commented example where the two coincide
             assert cfg.count(a) == 1, a
             cfg = cfg.replace(a, b)
-        w(tmp, "tools/artifacts.toml", cfg)
+        w(tmp, "tools/artifacts.toml", lint_docs.dated(cfg))
         w(tmp, "paper/refs.bib", bib)
-        w(tmp, "paper/README.md", files["paper/README.md"] + "| [refs.bib](refs.bib) |\n| [main_v2.md](main_v2.md) |\n")
+        w(tmp, "paper/README.md", lint_docs.dated(files["paper/README.md"]) + "| [refs.bib](refs.bib) |\n| [main_v2.md](main_v2.md) |\n")
         w(tmp, "paper/main_v2.md", f"# Main, second version\n\n{S}\n\nThe write-up [claim 002]. {cite_text}\n")
         w(tmp, "paper/out/main.log", "! Undefined control sequence.\n" if log_error else "Output written on main.pdf.\n")
         (tmp / "paper" / "out" / "main.pdf").write_bytes(b"%PDF-1.4\n")
@@ -392,6 +430,24 @@ def selftest() -> int:
             print(f"  [{'PASS' if not found else 'FAIL'}] {name}"
                   + ("" if not found else f": {[(x[0], x[1], x[3][:50]) for x in found]}"))
 
+    def alone_case(name: str, item: str, path: str, mutate, before_commit=None) -> None:
+        """A change that draws findings of `item` at `path` and nothing else."""
+        nonlocal failures
+        covered.add(item)
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            files = lint_docs.fixture()
+            if before_commit:
+                before_commit(files)
+            lint_docs.scratch_project(tmp, files, cfg_text)
+            lint_docs.scratch_commit(tmp)
+            mutate(tmp, files)
+            _, found = run_round(tmp)
+            ok = bool(found) and all(x[0] == item and x[1] == path for x in found)
+            failures += 0 if ok else 1
+            print(f"  [{'PASS' if ok else 'FAIL'}] {item:9s} {name}"
+                  + ("" if ok else f"   (got: {[(x[0], x[1], x[3][:50]) for x in found]})"))
+
     clean_case("the unplanted tree is clean under every enabled gate", lambda t, f: None)
     clean_case("a second, uncommitted, indexed entry keeps the tree clean", lambda t, f: second(t, f))
     clean_case("a prompt that quotes a part heading is not read",
@@ -402,14 +458,17 @@ def selftest() -> int:
                before_commit=lambda f: f.__setitem__("prompt_logs/001_setup.md", entry(1, "setup", closing="Done: committed as is")))
     clean_case("a skip list on the entry row is honored",
                lambda t, f: (second(t, f, entry(2, "next", closing="Done: x")),
-                             w(t, "tools/artifacts.toml", cfg_text.replace('glob = "prompt_logs/[0-9]*.md"\ngenre = "immutable"',
-                                                                            'glob = "prompt_logs/[0-9]*.md"\ngenre = "immutable"\nskip = ["ROUND-2"]'))))
+                             w(t, "tools/artifacts.toml", lint_docs.dated(cfg_text.replace('glob = "prompt_logs/[0-9]*.md"\ngenre = "immutable"',
+                                                                                           'glob = "prompt_logs/[0-9]*.md"\ngenre = "immutable"\nskip = ["ROUND-2"]')))))
     clean_case("an enabled pipeline with fresh output and a cited, ordered bibliography is clean",
                lambda t, f: enable_publication(t, f))
     run_case("a linter finding passes through under its own tag", "GENRES-1", "MANIFESTO.md", "no header stamp",
              lambda t, f: w(t, "MANIFESTO.md", "# M\n\nRules.\n"))
     run_case("a committed entry edited is the linter's finding", "GENRES-2", "prompt_logs/001_setup.md", "modified",
              lambda t, f: w(t, "prompt_logs/001_setup.md", f["prompt_logs/001_setup.md"] + "\nafterthought\n"))
+    alone_case("a committed open entry edited is GENRES-2's alone, its closing status not re-read", "GENRES-2", "prompt_logs/001_setup.md",
+               lambda t, f: w(t, "prompt_logs/001_setup.md", f["prompt_logs/001_setup.md"] + "\nafterthought\n"),
+               before_commit=lambda f: f.__setitem__("prompt_logs/001_setup.md", entry(1, "setup", closing="DONE: <!-- what finished -->")))
     run_case("a gap in the numbering", "ROUND-1", "prompt_logs/README.md", "not contiguous",
              lambda t, f: second(t, f, entry(3, "later"), "prompt_logs/003_later.md"))
     run_case("a number used twice", "ROUND-1", "prompt_logs/001_zz_other.md", "used twice",
@@ -435,12 +494,28 @@ def selftest() -> int:
              lambda t, f: second(t, f, entry(2, "next").replace("```\nDONE: setup\n```\n", "```\nDONE: setup\n")))
     run_case("a closing status of the wrong form", "ROUND-2", LOG2, "not a status line",
              lambda t, f: second(t, f, entry(2, "next", closing="Done: setup")))
+    run_case("a closing status still holding the template's placeholder", "ROUND-2", LOG2, "not written",
+             lambda t, f: second(t, f, entry(2, "next", closing="DONE: <!-- what finished -->")))
+    run_case("an uncommitted entry with no By: line", "ROUND-2", LOG2, "no By: line",
+             lambda t, f: second(t, f, entry(2, "next").replace("By: assistant, not reported\n", "")))
+    run_case("an uncommitted entry naming the assistant with only a comment after the comma", "ROUND-2", LOG2, "not written: the party",
+             lambda t, f: second(t, f, entry(2, "next").replace("By: assistant, not reported", "By: assistant, <!-- the AI model -->")))
+    run_case("an uncommitted entry whose By: line is still the template's placeholder", "ROUND-2", LOG2, "not written: the party",
+             lambda t, f: second(t, f, entry(2, "next").replace("By: assistant, not reported",
+                                                                "By: <!-- who did the work: assistant, then a comma and the AI model -->")))
+    run_case("an uncommitted entry whose By: comment runs past its line", "ROUND-2", LOG2, "not written: the party",
+             lambda t, f: second(t, f, entry(2, "next").replace("By: assistant, not reported",
+                                                                "By: <!-- who did the work: assistant,\n     then the AI model -->")))
     run_case("a closing status with IDLE beside DONE", "ROUND-2", LOG2, "IDLE",
              lambda t, f: second(t, f, entry(2, "next", closing="DONE: setup\nIDLE: waiting")))
     run_case("a closing status naming RUNNING", "ROUND-2", LOG2, "RUNNING",
              lambda t, f: second(t, f, entry(2, "next", closing="RUNNING: the build")))
     run_case("a closing status in a tilde fence is read", "ROUND-2", LOG2, "not a status line",
              lambda t, f: second(t, f, entry(2, "next", closing="Done: x").replace("```", "~~~")))
+    run_case("a staged new entry is read though git would pair it with the committed one it replaces", "ROUND-2", LOG2, "not a status line",
+             lambda t, f: (lint_docs.git(t, "mv", "prompt_logs/001_setup.md", LOG2),
+                           w(t, LOG2, f["prompt_logs/001_setup.md"].replace("Prompt 001: setup", "Prompt 002: next").replace("DONE: setup", "Done: setup")),
+                           lint_docs.git(t, "add", LOG2)))
     run_case("an output older than a source", "ROUND-3", "paper/out/main.pdf", "older than",
              lambda t, f: enable_publication(t, f, stale_output=True))
     run_case("a build log older than a source", "ROUND-3", "paper/out/main.log", "older than",
@@ -455,6 +530,27 @@ def selftest() -> int:
              lambda t, f: enable_publication(t, f, extra=(('sources = ["paper/*.md", "paper/*.bib"]', 'sources = ["paper/none/*.md"]'),)))
     run_case("an unusable error-marker pattern", "ROUND-3", "tools/artifacts.toml", "log_errors pattern unusable",
              lambda t, f: enable_publication(t, f, extra=(("log_errors = ['^! ']", "log_errors = ['[']"),)))
+    # The configuration's commented example is what a project copies, so its
+    # error markers are taken as it writes them and through the gate itself:
+    # each of the three that tell of a build one pass behind, or of a label
+    # defined twice, catches the log line it is for, and a clean log passes.
+    example = re.search(r"^# (log_errors = \[.*\])$", cfg_text, re.M)
+    assert example, "the commented example's log_errors line"
+    copied = (("log_errors = ['^! ']", example.group(1)),)
+
+    def logged(tmp: Path, files: dict, line: str) -> None:
+        enable_publication(tmp, files, extra=copied)
+        log = tmp / "paper" / "out" / "main.log"
+        when = log.stat().st_mtime
+        log.write_text(line + "\n")
+        os.utime(log, (when, when))
+    for what, line in (("a request for another pass", "LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right."),
+                       ("the other request for another pass", "Please rerun LaTeX."),
+                       ("a label defined twice", "LaTeX Warning: There were multiply-defined labels.")):
+        run_case(f"the commented example's markers, copied, catch {what}", "ROUND-3", "paper/out/main.log", "error marker",
+                 lambda t, f, line=line: logged(t, f, line))
+    clean_case("the commented example's markers, copied, pass a clean build log",
+               lambda t, f: enable_publication(t, f, extra=copied))
     run_case("an entry cited nowhere", "ROUND-4", "paper/refs.bib", "cited nowhere",
              lambda t, f: enable_publication(t, f, bib="@misc{Key1,\n@misc{Key2,\n@misc{Key3,\n"))
     run_case("a citation the bibliography lacks", "ROUND-4", "paper/main_v2.md", "does not carry",
@@ -469,6 +565,22 @@ def selftest() -> int:
              lambda t, f: enable_publication(t, f, extra=(("cite = '\\[([A-Z][A-Za-z0-9]{2,31})(?:, [^\\]]*)?\\]'", "cite = '\\[[A-Z][A-Za-z0-9]{2,31}\\]'"),)))
     run_case("an unusable entry pattern", "ROUND-4", "tools/artifacts.toml", "unusable",
              lambda t, f: enable_publication(t, f, extra=(("\nentry = '^@\\w+\\{([^,\\s]+),'", "\nentry = '('"),)))
+
+    # A round finding the researcher has ruled to leave (MANIFESTO.md
+    # section 16): an uncited entry kept in the bibliography on purpose.
+    def accept(tmp: Path, tag: str, path: str, text: str) -> None:
+        cfg = (tmp / "tools" / "artifacts.toml").read_text()
+        w(tmp, "tools/artifacts.toml", cfg + f'\n[[accepted]]\ntag = "{tag}"\npath = "{path}"\ntext = "{text}"\n'
+                                             'ruling = "prompt_logs/001_setup.md"\n')
+    clean_case("a round finding accepted at the researcher's ruling is left out",
+               lambda t, f: (enable_publication(t, f, bib="@misc{Key1,\n@misc{Key2,\n@misc{Key3,\n"),
+                             accept(t, "ROUND-4", "paper/refs.bib", "@misc{Key3,")))
+    run_case("an accepted round finding that matches nothing is reported stale", "ROUND-4", "tools/artifacts.toml", "now matches nothing",
+             lambda t, f: (enable_publication(t, f), accept(t, "ROUND-4", "paper/refs.bib", "@misc{Key3,")))
+
+    ok = set(ITEMS) <= set(lint_docs.OTHER_TAGS)
+    failures += 0 if ok else 1
+    print(f"  [{'PASS' if ok else 'FAIL'}] the linter knows every ROUND tag as one the list covers")
 
     for i in [i for i in ITEMS if i not in covered]:
         failures += 1

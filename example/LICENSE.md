@@ -1,6 +1,6 @@
 # Licensing
 
-*Created 2 September 2026; updated 4 September 2026.*
+*Created 2 September 2026; updated 20 November 2026.*
 
 This repository combines written material and executable code. Different
 licenses apply to the two.
@@ -12,7 +12,12 @@ Markdown file, every document template, everything under
 `evidence_and_reasoning/`, every paper and note under `paper/`, every prompt
 log under `prompt_logs/`, and any figures, is licensed under the
 
-  **Creative Commons Attribution 4.0 International License (CC BY 4.0)**.
+  **Creative Commons Attribution 4.0 International License (CC BY 4.0)**,
+
+except the held sources under `source_documents/`, the imports under
+`inherited/`, the attachments under `prompt_logs/attachments/`, and what
+the project quotes or derives from them, which keep their own terms as far
+as those terms reach (*Material under its own terms*, below).
 
 You are free to share and adapt this material for any purpose, including
 commercially, provided you give appropriate credit and indicate if changes
@@ -30,8 +35,11 @@ Recommended citation for the template:
 
 Everything that executes, including but not limited to every program under
 `tools/`, every check program and test, every script, hook, and
-configuration file, is licensed under the **MIT License**. The full text is
-in [LICENSE-CODE](LICENSE-CODE).
+configuration file, is licensed under the **MIT License**, except the held
+sources under `source_documents/`, the imports under `inherited/`, the
+attachments under `prompt_logs/attachments/`, and what the project quotes
+or derives from them, which keep their own terms as far as those terms
+reach. The full text is in [LICENSE-CODE](LICENSE-CODE).
 
 ## Why two licenses
 
@@ -42,27 +50,40 @@ adapts it should be able to show what they started from and what they
 changed. Both licenses permit commercial use, modification, and
 redistribution.
 
-## Inherited material
+## Material under its own terms
 
-None. This template imports nothing from any other repository. A project
-built from this template lists every artifact it imports, with attribution
-and original dates, in the ledger of `inherited/README.md`, under the
-import policy stated there; this section then names the license each
-import is carried under.
+Material that came into this repository with terms of its own keeps them,
+and nothing in this file relicenses it: each source held under
+`source_documents/`, with the license note or access conditions its row in
+`source_documents/README.md` records; each artifact imported under
+`inherited/`, with the attribution, original date, and terms its row in the
+ledger of `inherited/README.md` records, under the import policy stated
+there; each attachment kept under `prompt_logs/attachments/`, with the
+terms its row in `prompt_logs/attachments/README.md` records; and what
+the project quotes or derives from any of them, as far as those terms
+reach.
 
-## In a project built from this template
+## In a project built from the template
 
-Add the project's own copyright holder to `LICENSE-CODE` beside the
-template's, and add the project's own recommended citation above. **Keep
-the template's citation**: the written material is under CC BY 4.0, which
-requires credit to the original and an indication that changes were made,
-so replacing it rather than adding to it would put the project out of
-compliance with the license it inherits. Keep the split between code and
-written material unless there is a reason to change it, and if there is,
-record the reason here.
+This project adds no copyright holder to `LICENSE-CODE` and no
+recommended citation of its own: "Keep the template's licenses and add
+no holder or citation: this example lives inside the template's
+repository." (prompt 001)
+
+**Keep the template's citation**, and say that the project's material is
+adapted from it. The written material is under CC BY 4.0, which requires
+that credit be given to the original and that changes be indicated; a
+project that replaces the citation rather than adding to it is out of
+compliance with the license it inherits. One line is enough:
+
+    Adapted from Jens Koeplinger, "AI Research Template"
+    (ai_research_template), 2026, under CC BY 4.0; changed for this project.
+
+Keep the split between code and written material unless there is a reason
+to change it, and if there is, record the reason here.
 
 ## No warranty
 
 Both licenses disclaim warranty, and the disclaimer is meant plainly: there
-is no guarantee of fitness for any purpose. A researcher using this template
-is responsible for their results.
+is no guarantee of fitness for any purpose. A researcher using this
+repository is responsible for their results.

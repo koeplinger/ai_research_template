@@ -1,6 +1,6 @@
 # Evidence and reasoning
 
-*Created 3 September 2026; updated 19 November 2026.*
+*Created 3 September 2026; updated 21 November 2026.*
 
 The research record: what is claimed, why it is believed, and where every
 cited work lives. Every claim made anywhere in the repository is traceable
@@ -14,7 +14,7 @@ which the record relates its parts is `ONTOLOGY.md`; the trust levels are
     research_statement.md   the question as posed
     research_result.md      what has been established, condensed
     problem_statement.md    the thesis being tested, and the plans drawn from it
-    research_plans/ROADMAP.md   what is open, and what each plan settles
+    research_plans/ROADMAP.md   every plan, what it settles, and its status
     claims/README.md        the claims, by number
     the claims and checks the question in hand needs
 

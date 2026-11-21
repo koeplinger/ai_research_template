@@ -1,0 +1,380 @@
+# How it fits together
+
+*Created 8 September 2026; updated 21 November 2026.*
+
+`GETTING_STARTED.md` gets a project moving. This file says what the parts
+are for, how they make one system rather than a folder of forms, and what
+to do at each stage of a project. Read it once early and again when
+something feels arbitrary; most of what looks arbitrary is one half of a
+pair whose other half is in another file.
+
+---
+
+## The commitment underneath
+
+**The repository is the primary artifact, and the paper is a projection of
+it.** A reader with the repository and nothing else, no conversation
+history, no memory of the sessions that produced it, should be able to
+follow the work, continue it, or attack it.
+
+Everything below follows from that. The log is immutable because a record
+of what was believed at each step is worthless if it can be edited later.
+Claims are files because a claim you can cite is a claim you can revisit.
+Registers exist because "we checked it" and "a source says so" are
+different, and a reader who cannot tell them apart is being misled by
+omission. Checks carry planted faults because a check that cannot fail
+tells you nothing.
+
+---
+
+## The three parts
+
+### Artifacts: where things live
+
+A project is a small number of kinds of document, each with an index, a
+rule for how it may change, and, where the thing recurs, a template.
+
+| Kind | Where | What it is |
+|---|---|---|
+| the question and the thesis | `evidence_and_reasoning/research_statement.md`, `problem_statement.md` | what the project is for, and the hypotheses it means to test |
+| plans | `evidence_and_reasoning/research_plans/` | the unit of work: one aspect isolated, with criteria fixed before execution |
+| claims | `evidence_and_reasoning/claims/` | one statement each, with its trust level, its kind, and what it does not claim |
+| checks | `evidence_and_reasoning/checks/`, `python_project/src/` | one investigation each, with a verdict and a planted fault it must fail under |
+| derived material | `evidence_and_reasoning/derived/` | what a plan made from a source: transcriptions, extracts, coded tables, figures |
+| sources | `source_documents/`, `evidence_and_reasoning/references/` | what claims are read against, held or indexed by locator |
+| notes | `evidence_and_reasoning/notes/` | dated working and analytical notes, including pre-registered protocols |
+| the ledgers | `FINDINGS.md`, `evidence_and_reasoning/public_record_tensions.md` | what is established, and where this project diverges from what is published or from registered material that is not |
+| the result | `evidence_and_reasoning/research_result.md` | what has been established, condensed to the altitude of the write-up |
+| the project's terms | `evidence_and_reasoning/terminology.md` | the subject-matter glossary, and the names the sources use for each thing |
+| imported material | `inherited/` | anything brought in from elsewhere, at its original date, with attribution, re-verified here |
+| the log | `prompt_logs/` | every prompt, verbatim, in order, immutable once committed |
+| the write-ups | `paper/`, `paper/reviews/` | the deliverable in its versions, and the reviews of each |
+
+**Three genres, and that is the whole state model.** An *immutable*
+artifact is never edited once committed (the log). A *frozen* artifact is
+a dated record, corrected only with the researcher's authorization (a
+closed plan and everything it owns). A *current-state* artifact describes
+what is and is corrected in place (the rulebooks, the indexes, the status
+files). `DOCUMENT_GENRES.md` says which is which and when each freezes.
+
+### The ontology: the vocabulary they share
+
+The artifacts are one system because they share a vocabulary, and the
+vocabulary is implemented rather than described. Most predicates are
+written in a fixed syntax, as a header field, a stamp, a citation token,
+or a governed file; they are checked mechanically and can be queried
+across the whole repository. The rest are carried in prose and are the
+business of the consistency sweep of the record.
+
+That is what lets you ask, by looking rather than remembering:
+
+- *What is this conclusion standing on?* `query_ontology.py rests-on NNN`
+- *Which of it is unverified?* `query_ontology.py unverified NNN`
+- *If I revisit this claim, what else moves?* `claim_sites.py NNN`
+- *Where might a claim be stronger than its backing?* `query_ontology.py sites`
+
+`ONTOLOGY.md` is the catalogue: each predicate, the surface syntax that
+carries it, the rulebook that owns it, the check that enforces it, and the
+question it answers.
+
+### Governance: what keeps it running when attention lapses
+
+Four kinds of mechanism, **all advisory**. They fire, they inform, and
+they leave the decision with you. One exception, marked as such: the
+privacy scan refuses a commit, because a leak cannot be undone by a later
+decision. It refuses only where a project has set up a stop-word list, and
+a commit can still be forced with the reason recorded.
+
+- **Reminders** say what the stage of work calls for before it is skipped.
+  `governance/reminders.md` names each, what fires it, and what it does
+  not decide. `tools/session_brief.py` prints the ones the record can
+  compute, at the start of a session.
+- **Checks** are the requirement that a class of claim be verified and the
+  verification recorded rather than asserted. `tools/check_round.py` runs
+  the linter and the round's own gates in one command; the concordance
+  check, the falsifiability probe, the residue check and the privacy scan
+  are run beside it, each at the moment `governance/README.md` names.
+- **Opposition** is structured argument against your own position, played
+  the same way each time by a standing role with a fixed prompt:
+  `governance/roles/`. An assistant is agreeable by default, and a process
+  that never contradicts you is not supporting you.
+- **Support** is the artifact templates and the indexes, so that the
+  right thing to do is also the easy thing.
+
+---
+
+## The round: the unit of time
+
+Everything is organized around one prompt and the work done in response to
+it.
+
+1. **The log entry opens the round**, before any work. The prompt goes in
+   verbatim.
+2. **The work happens**; a line of work is executed only through an
+   engaged plan.
+3. **The entry is completed**: what was done, by artifact; what was
+   brought to you and left for your decision; the reason for any
+   correction or departure.
+4. **The reply closes the round** with a status block, saying in five
+   seconds whether to wait, answer, or walk away. Where the harness allows
+   it, a hook checks the block's form after every reply.
+5. **The round check runs** before work is handed back, and again on
+   commit.
+
+A round with a process still running does not close with that reply: the
+reply reports it as running, and the round closes when the process is
+done, or at the next prompt if that comes first, the process then passing
+to the next round. An entry committed before its round closed is
+completed by the next round's entry, which points back (`MANIFESTO.md`
+§8).
+
+**Nothing is edited backwards.** A mistake is corrected forward: the
+current-state document is corrected in place, the frozen one is corrected
+in its running text with your authorization, and the reason lives in the
+round's log entry. A released version of a versioned write-up is frozen
+but never corrected, even with your authorization: it is succeeded by the
+next (`MANIFESTO.md` §12). The immutable record is
+where a reader goes to see what was believed and done at each step.
+
+---
+
+## The prompts this methodology suggests
+
+The mechanisms above are advisory, which means somebody has to ask. These
+are the prompts worth making, when to make each, and what comes back. None
+is magic wording: they are named so that the same thing is asked the same
+way each time, and so that a reader of the log can see which one was made.
+
+| Prompt | When | What comes back |
+|---|---|---|
+| **Make a documentation consistency sweep.** | After the round that states a new project's question (`GETTING_STARTED.md` §4); after a batch of edits to the rulebooks, indexes, artifact templates, or configuration; after amending a rule or removing or replacing a mechanism; before a release, and again after it, over what was changed since the last documentation sweep; before the project closes; and whenever a pointer sent a reader to a document that did not say what it promised, which is the sign that it is overdue | Every pointer that does not resolve or misdescribes its target, every index out of step, every state recorded twice, every rule restated wrongly, every file still speaking in the template's voice, every slot value that does not read where it was substituted or was filled twice differently, every term used in two senses or missing from the project glossary, every standing direction given in a prompt and written down in neither of its homes, and every count that a fresh count of the thing it counts does not bear out. `governance/roles/documentation_sweep.md` carries the prompt in full, with an item the project fills with its own |
+| **Make a consistency sweep of the record.** | After every correction batch, at your direction | The same defect class over the claims, checks, and ledgers instead of the documentation: a fact established in one place and restated wrongly in another. `CHECK_METHODOLOGY.md` §7 |
+| **Refute this finding.** | On every finding of any sweep or review, and on every gap the coverage auditor reports, before it is acted on | Stands, refuted with the reason, or narrowed to what survives. `governance/roles/refuter.md`. This is the one that keeps a review honest: a first reader's findings do not all survive a second |
+| **Referee this draft blind.** | Before a version of a write-up freezes | A structure lens, what the referee could re-derive from the page alone, findings ranked, and what the released document rests on. `governance/roles/blind_referee.md` |
+| **Audit this check's coverage.** | Before a check backs a claim registered `VERIFIED` or `RULED_OUT`, and before a plan closes on its checks | Every atomic assertion classified: gated, printed only, not computed, mismatched, attested. `governance/roles/coverage_auditor.md` |
+| **Probe this check.** | When a check is written, before it is relied on, and before a plan closes on it | The matrix: each named fault applied, and whether the check noticed. `governance/roles/falsifiability_probe.md`, and `tools/falsifiability_probe.py` for a program |
+| **Take a structure census of this section.** | At the head of a review, and before a review patches a section | Per sentence: what it is, where its facts are established, every restatement and cross-reference. `governance/roles/structure_census.md` |
+| **Check every program against its record.** | After a check program has been run, and before a plan closes on it | Every named value whose printed figure disagrees with part 4 of its record. `tools/check_concordance.py`; it prints the verdicts side by side and decides neither |
+| **Read the whole file for what the rebuild left.** | On every rebuild, after the deletion ledger, before the round closes | Seams, dangling and orphaned references, phantoms, echoes, heading structure, and a live changelog's ledgers against the draft, as candidates for your reading. `tools/check_residue.py`; a section-level comparison cannot see them, which is why the round ends with a reading of the whole file (`CHECK_METHODOLOGY.md` §7) |
+| **Give me the deletion ledger for this rebuild.** | On every rebuild of a section, as against a correction | Every cut sentence classified, the net word delta, and every sentence added. `governance/roles/deletion_ledger.md` |
+| **Make the strongest case against this conclusion.** | When you are about to rely on something and nothing has argued with it | That case, labeled as that case. `MANIFESTO.md` §17 |
+| **Finish this list, and look for nothing new.** | When what remains of a version or a plan is a list you have fixed; and whenever each round brings you new decisions instead of fewer, which is the sign that it is due | The list finished and nothing else, handed back once, in one reply, with everything noticed outside it listed and not put to you as a decision; a false statement in the text being finished and the trivial corrections of frozen artifacts still come in the round that finds them, and a release still runs each of its steps (*Finishing a version or a plan*, below) |
+| **Walk me through the plan-closure checklist.** | When an engaged plan's tasks are all done | The checklist item by item against the record, and the verdict the pre-registered criteria give. `governance/reminders.md` |
+| **What does this claim rest on, and what of it is unverified?** | Before relying on a claim, and before revisiting one | The dependency tree with each member's register, weaker members flagged. `tools/query_ontology.py` |
+| **Make a durable resume point.** | Before a planned stop: the end of a sitting, or a usage limit about to be reached in the middle of work | A round of its own, logged like any other, whose entry records the last commit, by its identifier, and what is uncommitted; what is drafted and not yet verified; where intermediate material is kept, a place you have named outside version control that a restart does not clear, never a temporary directory alone, and described without anything you have decided must never reach the repository; the exact steps to resume, citing each plan's execution status rather than restating it; and what waits on you. The next session starts from it (*Picking the work back up*, below) |
+
+Four rules about all of them. **Every finding goes to a refuter before it
+is acted on**, including the findings of a sweep you asked for yourself.
+**A sweep reports before it edits**: the findings, the files it would
+touch, and the edits, listed as `MANIFESTO.md` §14 sets out, then your
+direction. **A role is played by a reader with no access to the first
+pass's reasoning**: for an assistant, a fresh session or a subagent given
+the prompt and nothing else beyond the standing directions its task rests
+on, or else a human. A role played by the session that did the work is
+not opposition, and a subagent playing one writes nothing into the
+working tree: it returns its output, and the main thread records it
+where the role says. And **your rulings are the main
+thread's to apply**: an opposition role, the refuter and the blind
+referee among them, is not given them, so that it stays blind, and the
+main thread compares each finding it returns with your rulings before
+bringing it; one that runs against a ruling is reported as such, with the
+ruling's prompt, and not proposed
+(`MANIFESTO.md` §16, *A ruled matter stays ruled*).
+
+---
+
+## What to do at each stage
+
+**Picking the work back up**, at the start of every session. Run
+`python3 tools/session_brief.py`: it prints the reading order, every plan
+with its status and the count engaged, and the reminders the record can
+compute; where the harness can run a command at session start, it prints
+this for you. Then read the manifesto in full, and the latest log
+entry: a resume point says where
+to start, and an entry still open is closed first or, if it is
+committed, left for this round's entry to complete (`ONBOARDING.md`,
+*The first minutes*; `MANIFESTO.md` §8). Then open the round's log entry,
+which is the first act of the round.
+
+**Starting.** Setup, then the round that states the question (the
+research statement and the keystone), then the documentation consistency
+sweep, which catches what setup left behind. Nothing else yet.
+`GETTING_STARTED.md` §4 gives the order and what each round records.
+
+**Opening a line of work.** A plan, drafted and then engaged by you. Its
+criteria are fixed before the evidence is seen, which is the whole point;
+a plan written after the result is a summary, not a plan.
+
+**Executing.** One task at a time, each producing a check and the claim it
+backs. Propose the register with the evidence and stop; assigning it is
+yours. Probe every check before you lean on it.
+
+**When something disagrees with what is published, or with registered
+material that is not.** A row in the tension
+ledger, in the same round as the work that found it, with the caution that
+survives; while a list is being finished, a divergence found outside it is
+kept and listed when the list is handed back. `PRECEDENCE.md` says what
+governs what.
+
+**When the tasks are done.** The closure checklist, then the verdict
+against the pre-registered criteria, then your `CLOSED` line. The plan and
+everything it owns freeze.
+
+**Opening a write-up.** First the slots that waited for it, where setup
+left them open by decision: `{{DELIVERABLE}}` with its machine half, the
+write-up's pronoun, and its voice (`GETTING_STARTED.md` §3). Then one
+living copy of the main write-up at a time, in the form
+`{{DELIVERABLE}}` names. Everything it asserts is already in the
+record, with its register; the draft shows the evidence and says what to
+read off it. Its links to the claims are kept where no form it is released
+in carries them: in the version changelog's *Backed by* column, which
+names the claim behind each change (`paper/_template_changelog.md`) and
+which the linter and `tools/claim_sites.py` read; and in comments of a
+built source that is not itself released, where no tool resolves them.
+A first version, or a note, has no changelog: it keeps such links only in
+a source of that kind, and where it has none, its claims are reached
+through the record, from `FINDINGS.md`,
+`evidence_and_reasoning/research_result.md`, and the claims index,
+`evidence_and_reasoning/claims/README.md`. The *Writing for publication*
+rules of `evidence_and_reasoning/editorial_standards.md` apply to every
+unfrozen draft, standalone note, changelog, and maintained companion under
+the write-up folder, and the linter checks the part of them it can see.
+
+**Releasing a version.** The documentation consistency sweep, then the
+blind referee, every finding refuted or not, the fixes applied where the
+rules allow and brought where they do not, then your `Released` stamp and
+the changelog row that goes with it, and last the documentation
+consistency sweep again, over what was changed since the last
+documentation sweep (`paper/README.md`, *Releasing a version*, gives
+every step). A released
+version freezes and is succeeded rather than corrected: what a later
+reading asks for goes into the next version, and the released one is
+marked superseded when that version releases.
+
+**Finishing a version or a plan.** When what remains is a list you have
+fixed, *Finish this list, and look for nothing new* turns the work from
+looking for more to finishing that list. The list is either the tasks of
+a plan with no hypothesis, whose aspect says it exists to finish them and
+whose *Out of scope* is everything else, or a list you give in a prompt
+for a plan already engaged. Either way, the direction holds until what it
+finishes is released or closed, or until you lift it. A list given in a
+prompt, where the direction outlasts that round, is a standing direction
+(`MANIFESTO.md`, opening, says where it is written), and its line is
+removed in the round the direction ends.
+
+While it holds, an edit uses the terms the text being finished already
+uses, and coins none the list does not ask for. Whatever is noticed
+outside the list, a divergence included, is kept,
+in the plan's docket where the list is a plan's tasks and otherwise in the
+round's log entry, and is not acted on. Two things are still brought, in
+the reply of the round that finds them: a false statement in the text
+being finished, once, with its evidence (`MANIFESTO.md` §17); and the
+trivial corrections of frozen artifacts, as the one numbered list
+`MANIFESTO.md` §12 describes. The sweep that closes the list's edits
+covers their propagation alone (`CHECK_METHODOLOGY.md` §7), and the
+reminders that propose more looking are held (`governance/reminders.md`).
+
+The list is handed back once, in one reply, after each edited paragraph
+has been read in place as a first-time reader reads it
+(`evidence_and_reasoning/editorial_standards.md`, *How to apply*): every
+edit, each with its file, the text it replaces, and the new text
+(`MANIFESTO.md` §14), with those outside the text being finished proposed
+rather than made; everything noticed outside the list, listed once and not
+put as a decision; and the reminders held. What the reply proposes is made
+at your direction, in one round. If you lift the direction before the list
+is handed back, the reply of the round you lift it in still lists
+everything noticed outside the list, not put as a decision, and the
+reminders held. A release still runs each of its steps
+(*Releasing a version*, above): the blind referee reads the version before
+it freezes, and what it finds outside the list is left for the next
+version, as its review records; a false statement in the version is still
+brought once, as above.
+
+**After any batch of corrections.** The matching sweep: the record's, or
+the documentation's, or both; while a list is being finished, the
+propagation of its edits alone (*Finishing a version or a plan*, above).
+
+**When the project ends.** The documentation consistency sweep a last
+time, then a closing note at the root, named CLOSING_NOTE.md, saying why
+it closed, on the day it closed. It is the one file named in these
+rulebooks that does not exist until it is written, which is why it is
+named here in plain text.
+
+---
+
+## Where a rule lives
+
+When you want to know why something is the way it is, this is which file
+to open.
+
+| Question | File |
+|---|---|
+| Who does what, and what may an assistant do on its own? | `MANIFESTO.md` |
+| May I edit this file, and when does it freeze? | `DOCUMENT_GENRES.md` |
+| How far may this statement be trusted, and what would back it further? | `CHECK_METHODOLOGY.md` |
+| Two statements disagree; which governs? | `PRECEDENCE.md` |
+| What does this header field mean, and what reads it? | `ONTOLOGY.md` |
+| What does this word mean here, and may I rename it? | `GLOSSARY.md` |
+| How should this sentence be written? | `evidence_and_reasoning/editorial_standards.md` |
+| What fires when, and what does it not decide? | `governance/README.md` |
+| What does this tool do, and what does it read? | `tools/README.md` |
+
+---
+
+## Frequently asked questions
+
+**Why is the prompt log immutable?** Because its job is to show what was
+believed and asked at each step. A log you can revise is a log that agrees
+with the present, which is exactly the thing it exists to check.
+
+**Why must a check be able to fail?** A check that passes whatever the
+computation does is not evidence, and re-running it never reveals that.
+Planting a fault and confirming the check catches it is the cheapest
+available proof that the check is connected to the claim.
+
+**Why is a register assigned by the researcher and not the assistant?**
+Because declaring a claim established is the judgment the work exists to
+produce. The assistant proposes one with its evidence and stops. This is
+also why the four documents `MANIFESTO.md` §12 names, the findings file,
+the keystone, the research statement, and the manifesto itself, change
+only at your direction, down to a word or a pointer.
+
+**Why is everything advisory?** A mechanism that blocked work would be
+routed around within a week, and routing around it would leave no trace.
+One that speaks up and records what it said keeps the record honest either
+way. The single exception is the privacy scan, where a project has set one up,
+because a leak is not recoverable by a later decision; even that is
+overridable with the reason in the commit message.
+
+**Why so many small files instead of one document?** Because a claim needs
+to be citable, revisitable, and independently frozen, and because the
+tools answer questions by reading the fields rather than parsing prose. A
+claim inside a long document cannot be pointed at.
+
+**What if a check is expensive to run?** Cost is measurement, never a
+gate. Record it, use the run ledger to know when a check is stale, and run
+what the claim needs. A claim you cannot afford to check is a claim with a
+register lower than you wanted, which is an honest outcome.
+
+**Can two plans be engaged at once?** Yes, and a reminder says so while it
+is true, because two engaged plans touching the same material is how
+scope drifts. Each plan's *Out of scope* section says which owns what.
+
+**What happens when I am wrong about something already published?** The
+same as when you are wrong about anything: correct it forward. The claim
+is corrected or superseded, the finding's row says what now holds, the
+reversal gets a dated note in the same round, and the key is never reused.
+
+**Does this scale to a project with hundreds of claims?** The indexes and
+the queries are what make it scale; the reading does not. Group findings
+by line of inquiry once there are more than a handful, and let
+`query_ontology.py` answer what you would otherwise re-read.
+
+**What if I want to stop using part of it?** `FORKING.md`. Remove it on
+purpose and legibly, rather than leaving it standing unenforced.
+
+## Slots
+
+None. This file describes the system, which is the same in every project;
+the values a project chooses are the Slots tables of the files that own
+them.
